@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 #
-# Version 0.1 - Copyright (c) 2017 by 
+# Version 0.1 - Copyright (c) 2019 by 
 #
 # Updates:
 #
@@ -52,7 +52,7 @@ class ConversionThread:
 			print('\tExtracting temp db.lif..')
 			ConversionThread.extractLif(pathToLifTmp)
 		
-		filesToConvert =[]
+		filesToConvert = []
 		filesToConvert = glob.glob(os.path.join(pathToLifTmpDir + '/db/Primitives/LOD0', '*.g') )
 		print filesToConvert
 
