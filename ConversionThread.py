@@ -5,8 +5,7 @@
 #
 # Updates:
 #
-# License:
-#		   -  MIT License
+# License: MIT License
 #
 
 import os
@@ -25,16 +24,15 @@ import tempfile
 import zipfile
 import commands
 import shutil
+from BrickLoader import BrickLoader
 
 #Locate db.lif on OSX
-findDbLif = "mdfind -name db.lif"
-pathToLif = commands.getoutput(findDbLif)
+find_db_lif_command = "mdfind -name db.lif"
+path_to_lif = commands.getoutput(find_db_lif_command)
 
 # define the name of the temp directory to be created
-pathToLifTmpDir = os.getcwd() + '/liftmp'
-pathToLifTmp = pathToLifTmpDir + '/db.lif'
-print pathToLifTmpDir
-
+path_to_lif_tmp_dir = os.getcwd() + '/liftmp'
+path_to_lif_tmp = path_to_lif_tmp_dir + '/db.lif'
 
 class ConversionThread:
 
@@ -43,27 +41,31 @@ class ConversionThread:
 		#print('\tExtracting Assets.lif..')
 		#ConversionThread.extractLif('Assets.lif')
 		try:
-			os.mkdir(pathToLifTmpDir)
+			os.mkdir(path_to_lif_tmp_dir)
 		except OSError:
-			print ("Creation of the directory %s failed" % pathToLifTmpDir)
+			print ("Creation of the directory %s failed" % path_to_lif_tmp_dir)
 		else:
-			print ("Successfully created the directory %s " % pathToLifTmpDir)
-			shutil.copy2(pathToLif, pathToLifTmp)
+			print ("Successfully created the directory %s" % path_to_lif_tmp_dir)
+			shutil.copy2(path_to_lif, path_to_lif_tmp)
 			print('\tExtracting temp db.lif..')
-			ConversionThread.extractLif(pathToLifTmp)
+			ConversionThread.extract_lif(path_to_lif_tmp)
 		
-		filesToConvert = []
-		filesToConvert = glob.glob(os.path.join(pathToLifTmpDir + '/db/Primitives/LOD0', '*.g') )
-		print filesToConvert
+		files_to_convert = []
+		files_to_convert = glob.glob(os.path.join(path_to_lif_tmp_dir + '/db/Primitives/LOD0', '*.g'))
+		
+		for geometry_file in files_to_convert:
+			my_geo = BrickLoader.load_geometry_file(geometry_file)
+			BrickLoader.obj_saver(my_geo)
+
 
 	@staticmethod
-	def extractLif(LIFFilePath):
+	def extract_lif(LIFFilePath):
 	
-		LIFExtractorCommand = 'python LIFExtractor.py ' + '\'' + LIFFilePath +'\''
-		print LIFExtractorCommand
+		lif_extractor_command = 'python LIFExtractor.py ' + '\'' + LIFFilePath +'\''
+		print lif_extractor_command
 		try:
 		#this is hacky, should rather import LIFExtractor.py
-			os.system(LIFExtractorCommand)
+			os.system(lif_extractor_command)
 				
 		except IOError as e:
 			print('\tERROR: Failed to read LIF file.')

@@ -148,3 +148,4 @@ if(len(sys.argv) > 1):
         extract(sys.argv[i])
 else:
     print("LIF Extractor 1.0\n\nThis program will extract LIF archives to an adjacent folder.\n\nCOPYRIGHT:\n\t(C) 2012 JrMasterModelBuilder\n\nLICENSE:\n\tGNU GPLv3\n\tYou accept full responsibility for how you use this program.\n\nUSEAGE:\n\t" + runCommand + " <LIST_OF_FILE_PATHS>")
+

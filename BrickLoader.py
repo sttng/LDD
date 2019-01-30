@@ -5,8 +5,7 @@
 #
 # Updates:
 #
-# License:
-#		   -  MIT License
+# License: MIT License
 #
 
 import os
@@ -29,43 +28,45 @@ import shutil
 class BrickLoader:
 
 	@staticmethod
-	def loadGeometryFile(fileToConvert):
+	def load_geometry_file(file_to_convert):
 	
 		try:
-			with open(fileToConvert, 'rb') as f:
+			with open(file_to_convert, 'rb') as file_reader:
 	
-				if(not(os.path.isfile(fileToConvert)) or os.path.splitext(fileToConvert)[1] != ".g"):
+				if(not(os.path.isfile(file_to_convert)) or os.path.splitext(file_to_convert)[1] != ".g"):
 					print("\tERROR: The supplied file is not a LDD geometry .g file.")
 					return False
 				
-				verticesList= []
-				normalsList = []
-				indicesList = []
-				GeometryFileDict = dict()
+				vertices_list= []
+				normals_list = []
+				indices_list = []
+				geometry_file_dict = dict()
 				
-				print fileToConvert
-				skipData = f.read(4)
-				vertexCount = struct.unpack("<L", f.read(4))[0]
-				indexCount = struct.unpack("<L", f.read(4))[0]
+				partnumber = os.path.splitext(os.path.basename(file_to_convert))[0]
 				
-				skipData = f.read(4)
-				for i in range(0, 3*vertexCount):
-					x = struct.unpack("f", f.read(4))[0]
-					verticesList.append(x)
-					x
-				for i in range(0, 3*vertexCount):
-					x = struct.unpack("f", f.read(4))[0]
-					normalsList.append(x)
+				skip = file_reader.read(4)
+				vertex_count = struct.unpack("<L", file_reader.read(4))[0]
+				indices_count = struct.unpack("<L", file_reader.read(4))[0]
+				
+				skip = file_reader.read(4)
+				for i in range(0, 3*vertex_count):
+					vertex = struct.unpack("f", file_reader.read(4))[0]
+					vertices_list.append(vertex)
 					
-				for i in range(0, indexCount):
-					x = struct.unpack("<L", f.read(4))[0]
-					indicesList.append(x)
+				for i in range(0, 3*vertex_count):
+					normal = struct.unpack("f", file_reader.read(4))[0]
+					normals_list.append(normal)
+					
+				for i in range(0, indices_count):
+					index = struct.unpack("<L", file_reader.read(4))[0]
+					indices_list.append(index)
 				
-				GeometryFileDict["vertices"] = verticesList
-				GeometryFileDict["normals"] = normalsList
-				GeometryFileDict["indices"] = indicesList
+				geometry_file_dict["vertices"] = vertices_list
+				geometry_file_dict["normals"] = normals_list
+				geometry_file_dict["indices"] = indices_list
+				geometry_file_dict["partnumber"] = partnumber
 				
-				return GeometryFileDict
+				return geometry_file_dict
 				
 								
 		except IOError as e:
@@ -74,27 +75,26 @@ class BrickLoader:
 			
 			
 	@staticmethod
-	def OBJSaver(GeometryFileDict, fileToConvert):
-		partNumber = os.path.splitext(os.path.basename(fileToConvert))[0]
-		with open(partNumber + '.obj', 'w') as the_file:
-			the_file.write('o brick_' + partNumber + '\n')
-			the_file.write('g ' + partNumber + '\n')
-			for i in range(0, len(GeometryFileDict["vertices"]), 3):
-				the_file.write('v ' + str(GeometryFileDict["vertices"][i]) + ' ' + str(GeometryFileDict["vertices"][i + 1]) + ' ' + str(GeometryFileDict["vertices"][i + 2]) + ' ' + '\n')
-			the_file.write('\n')
-			for i in range(0, len(GeometryFileDict["normals"]), 3):
-				the_file.write('vn ' + str(GeometryFileDict["normals"][i]) + ' ' + str(GeometryFileDict["normals"][i + 1]) + ' ' + str(GeometryFileDict["normals"][i + 2]) + ' ' + '\n')
-			the_file.write('\n')
-			for i in range(0, len(GeometryFileDict["indices"]), 3):
-				index1 = GeometryFileDict["indices"][i + 0] + 1
-				index2 = GeometryFileDict["indices"][i + 1] + 1
-				index3 = GeometryFileDict["indices"][i + 2] + 1
+	def obj_saver(geometry_file_dict):
+		partnumber = geometry_file_dict["partnumber"]
+		with open(partnumber + '.obj', 'w') as file_writer:
+			file_writer.write('o brick_' + partnumber + '\n')
+			file_writer.write('g ' + partnumber + '\n')
+			for i in range(0, len(geometry_file_dict["vertices"]), 3):
+				file_writer.write('v ' + str(geometry_file_dict["vertices"][i]) + ' ' + str(geometry_file_dict["vertices"][i + 1]) + ' ' + str(geometry_file_dict["vertices"][i + 2]) + ' ' + '\n\n')
+			
+			for i in range(0, len(geometry_file_dict["normals"]), 3):
+				file_writer.write('vn ' + str(geometry_file_dict["normals"][i]) + ' ' + str(geometry_file_dict["normals"][i + 1]) + ' ' + str(geometry_file_dict["normals"][i + 2]) + ' ' + '\n\n')
+			
+			for i in range(0, len(geometry_file_dict["indices"]), 3):
+				index1 = geometry_file_dict["indices"][i + 0] + 1
+				index2 = geometry_file_dict["indices"][i + 1] + 1
+				index3 = geometry_file_dict["indices"][i + 2] + 1
 				
-				the_file.write('f ' + str(index1) + '//' + str(index1) + ' ' + str(index2) + '//' + str(index2) + " " + str(index3) + '//' + str(index3) + '\n')
+				file_writer.write('f ' + str(index1) + '//' + str(index1) + ' ' + str(index2) + '//' + str(index2) + " " + str(index3) + '//' + str(index3) + '\n')
 				
-			the_file.close()
+			file_writer.close()
 		return True
 		
-myGeo = BrickLoader.loadGeometryFile('./liftmp/db/Primitives/LOD0/95342.g')
-
-BrickLoader.OBJSaver(myGeo,'./liftmp/db/Primitives/LOD0/95342.g')
+#myGeo = BrickLoader.load_geometry_file('./liftmp/db/Primitives/LOD0/95342.g')
+#BrickLoader.obj_saver(myGeo)
