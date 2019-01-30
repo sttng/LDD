@@ -6,7 +6,7 @@
 # Updates:
 #
 # License:
-#		   -  BSD 3-Clause License
+#		   -  MIT License
 #
 
 import os
