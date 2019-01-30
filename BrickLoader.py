@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 #
-# Version 0.1 - Copyright (c) 2017 by 
+# Version 0.1 - Copyright (c) 2019 by 
 #
 # Updates:
 #
@@ -35,12 +35,12 @@ class BrickLoader:
 			with open(fileToConvert, 'rb') as f:
 	
 				if(not(os.path.isfile(fileToConvert)) or os.path.splitext(fileToConvert)[1] != ".g"):
-					print("\tERROR: The supplied file is not a .g file.")
+					print("\tERROR: The supplied file is not a LDD geometry .g file.")
 					return False
 				
 				verticesList= []
 				normalsList = []
-				indicesList =[]
+				indicesList = []
 				GeometryFileDict = dict()
 				
 				print fileToConvert
@@ -60,7 +60,6 @@ class BrickLoader:
 				for i in range(0, indexCount):
 					x = struct.unpack("<L", f.read(4))[0]
 					indicesList.append(x)
-				print 'indicesList:', indicesList
 				
 				GeometryFileDict["vertices"] = verticesList
 				GeometryFileDict["normals"] = normalsList
@@ -77,7 +76,6 @@ class BrickLoader:
 	@staticmethod
 	def OBJSaver(GeometryFileDict, fileToConvert):
 		partNumber = os.path.splitext(os.path.basename(fileToConvert))[0]
-		print partNumber
 		with open(partNumber + '.obj', 'w') as the_file:
 			the_file.write('o brick_' + partNumber + '\n')
 			the_file.write('g ' + partNumber + '\n')
@@ -88,7 +86,7 @@ class BrickLoader:
 				the_file.write('vn ' + str(GeometryFileDict["normals"][i]) + ' ' + str(GeometryFileDict["normals"][i + 1]) + ' ' + str(GeometryFileDict["normals"][i + 2]) + ' ' + '\n')
 			the_file.write('\n')
 			for i in range(0, len(GeometryFileDict["indices"]), 3):
-				index1 = GeometryFileDict["indices"][i] + 1
+				index1 = GeometryFileDict["indices"][i + 0] + 1
 				index2 = GeometryFileDict["indices"][i + 1] + 1
 				index3 = GeometryFileDict["indices"][i + 2] + 1
 				
@@ -97,6 +95,6 @@ class BrickLoader:
 			the_file.close()
 		return True
 		
-muGeo = BrickLoader.loadGeometryFile('./liftmp/db/Primitives/LOD0/95342.g')
+myGeo = BrickLoader.loadGeometryFile('./liftmp/db/Primitives/LOD0/95342.g')
 
-BrickLoader.OBJSaver(muGeo,'./liftmp/db/Primitives/LOD0/95342.g')
+BrickLoader.OBJSaver(myGeo,'./liftmp/db/Primitives/LOD0/95342.g')
