@@ -1,10 +1,18 @@
-##=============================================
-##
-##  OBJ To Rib Script
-##      -- this script will read in .obj files
-##          and construct geometry from them and write out
-##          a rib file for each of them
-##
+#!/usr/bin/env python
+
+#
+# Version 0.1 - Copyright (c) 2019 by 
+#
+# Info:
+# Obj To Rib Script
+# This script will read in .obj files, construct
+# geometry from them and write out a rib file
+# for each of them.
+#
+# Updates:
+#
+# License: MIT License
+#
 
 from subprocess import call
 from os import listdir
@@ -13,7 +21,7 @@ from os.path import isfile, join, splitext
 ## FILE INFO
 #fileLoc = "C:\\Maya_Tests\\scenes\\test\\"
 templatePath = "C:\\Desktop\\_CLASS\\2_Shading_I\\FINAL\\scripts\\"
-#templatePath = "D:\\FINAL_Backup\\scripts\\"
+#templatePath = "C:\\FINAL_Backup\\scripts\\"
 objPath = templatePath + "objFiles\\"
 ribFilePath = templatePath + "ribFiles\\"
 
