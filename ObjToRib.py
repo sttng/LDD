@@ -4,9 +4,8 @@
 # Version 0.1 - Copyright (c) 2019 by 
 #
 # Info:
-# This script will read in .obj files, construct
-# geometry from them and write out a rib file
-# for each of them.
+# This script will read in .obj files, construct geometry from them
+# and write out a rib file for each of them.
 #
 # Updates:
 #
@@ -18,7 +17,6 @@ from os import listdir
 from os.path import isfile, join, splitext
 
 # file information
-#fileLoc = '/test'
 template_path = os.getcwd() + '/templates'
 obj_path = template_path + '/obj_files'
 rib_path = template_path + '/rib_files'
@@ -37,9 +35,9 @@ for line in temp:
         line = line.split('\n')[0]
     template.append(line)
     
-for fileName in obj_files_list:
+for obj_file in obj_files_list:
     # read and store .obj file
-    f1 = open(obj_path + fileName)
+    f1 = open(obj_path + '/' + obj_file)
     lines = f1.readlines()
     f1lines = []
     for line in lines:
@@ -49,9 +47,9 @@ for fileName in obj_files_list:
     f1.close()
     
     
-    ## CREATE AND SETUP RIB FILE USING TEMPLATE
-    name = splitext(fileName)[0]
-    f2 = open(rib_path + name + '.rib', 'w')
+    # create and append rib file based on template
+    name = splitext(obj_file)[0]
+    f2 = open(rib_path + '/' + name + '.rib', 'w')
     lineNum = 0
     for line in template:
         lineNum += 1
@@ -64,7 +62,7 @@ for fileName in obj_files_list:
                 break
     
     
-    ## CONVERT F1LINES TO USABLE FORMAT
+    # convert obj file lines to rib compatible format
     verts = []
     faces = []
     for line in f1lines:
