@@ -8,3 +8,5 @@ ObjToRib.py will read in Alias|Wavefrom .obj files, construct geometry from them
 ## prman command
 prman -d it -t:-2 ribfile.rib
 
+oslc Primvar.osl
+
