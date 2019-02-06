@@ -29,7 +29,7 @@ obj_files_list = [ f for f in listdir(obj_path) if isfile(join(obj_path,f)) and 
 
 
 # read template file to allow easy adjustment later
-t = open(template_path + 'template.rib')
+t = open(template_path + '/template.rib')
 temp = t.readlines()
 template = []
 for line in temp:
@@ -57,7 +57,7 @@ for fileName in obj_files_list:
         lineNum += 1
         if ('RENAME' in line):
             n = splitext(fileName)[0]
-            f2.write("\t\"" + n + ".jpg\"\n")
+            f2.write('\t\"' + n + '.jpg\"\n')
         else:
             f2.write(line + '\n')
             if 'WorldBegin' in line:
@@ -68,28 +68,28 @@ for fileName in obj_files_list:
     verts = []
     faces = []
     for line in f1lines:
-        if "v " in line and "." in line:
-            l = ["%.3f" % float(num) for num in line.split(" ") if 'v' not in num]
+        if 'v ' in line and '.' in line:
+            l = ['%.3f' % float(num) for num in line.split(' ') if 'v' not in num]
             verts.append(l)
-        if "f " in line and "/" in line:
+        if 'f ' in line and '/' in line:
             l = []
-            for nums in line.split(" "):
+            for nums in line.split(' '):
                 if 'f' not in nums:
-                    l.append(int(nums.split("/")[0]))
+                    l.append(int(nums.split('/')[0]))
             faces.append(l)
     
-    ## CREATE POLYGONS
-    f2.write("\nAttributeBegin")
-    f2.write("\nSurface \"matte\"")
-    f2.write("\nColor [ 1 1 1 ]")
+    # create polygons
+    f2.write('\nAttributeBegin')
+    f2.write('\nSurface \"matte\"')
+    f2.write('\nColor [ 1 1 1 ]')
     for face in faces:
-        f2.write("\n\tPolygon")
+        f2.write('\n\tPolygon')
         newline = ''
         for i in xrange(0, len(face), 1):
             for j in xrange(0, len(verts[face[i]-1]), 1):
                 newline += str(verts[face[i]-1][j]) + ' '
         f2.write("\n\t\t\"P\" [ " + newline + "]")
-    f2.write("\nAttributeEnd")
+    f2.write('\nAttributeEnd')
     
     
     # finish and close file
