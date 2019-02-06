@@ -4,7 +4,6 @@
 # Version 0.1 - Copyright (c) 2019 by 
 #
 # Info:
-# Obj To Rib Script
 # This script will read in .obj files, construct
 # geometry from them and write out a rib file
 # for each of them.
@@ -18,53 +17,50 @@ from subprocess import call
 from os import listdir
 from os.path import isfile, join, splitext
 
-## FILE INFO
-#fileLoc = "C:\\Maya_Tests\\scenes\\test\\"
-templatePath = "C:\\Desktop\\_CLASS\\2_Shading_I\\FINAL\\scripts\\"
-#templatePath = "C:\\FINAL_Backup\\scripts\\"
-objPath = templatePath + "objFiles\\"
-ribFilePath = templatePath + "ribFiles\\"
+# file information
+#fileLoc = '/test'
+template_path = os.getcwd() + '/templates'
+obj_path = template_path + '/obj_files'
+rib_path = template_path + '/rib_files'
 
 
-## GET OBJ FILE LIST
+# get .obj file list
+obj_files_list = [ f for f in listdir(obj_path) if isfile(join(obj_path,f)) and '.obj' in f]
 
-fileNames = [ f for f in listdir(objPath) if isfile(join(objPath,f)) and ".obj" in f]
 
-
-## READ TEMPLATE FILE
-##  -- to allow for easy adjustment to the files later
-t = open(templatePath + "template.rib")
+# read template file to allow easy adjustment later
+t = open(template_path + 'template.rib')
 temp = t.readlines()
 template = []
 for line in temp:
-    if "\n" in line:
-        line = line.split("\n")[0]
+    if '\n' in line:
+        line = line.split('\n')[0]
     template.append(line)
     
-for fileName in fileNames:
-    ## READ AND STORE OBJ FILE
-    f1 = open(objPath + fileName)
+for fileName in obj_files_list:
+    # read and store .obj file
+    f1 = open(obj_path + fileName)
     lines = f1.readlines()
     f1lines = []
     for line in lines:
-        if "\n" in line:
-            line = line.split("\n")[0]
+        if '\n' in line:
+            line = line.split('\n')[0]
         f1lines.append(line)
     f1.close()
     
     
     ## CREATE AND SETUP RIB FILE USING TEMPLATE
     name = splitext(fileName)[0]
-    f2 = open(ribFilePath + name + ".rib", "w")
+    f2 = open(rib_path + name + '.rib', 'w')
     lineNum = 0
     for line in template:
         lineNum += 1
-        if ("RENAME" in line):
+        if ('RENAME' in line):
             n = splitext(fileName)[0]
             f2.write("\t\"" + n + ".jpg\"\n")
         else:
-            f2.write(line + "\n")
-            if "WorldBegin" in line:
+            f2.write(line + '\n')
+            if 'WorldBegin' in line:
                 break
     
     
@@ -96,7 +92,7 @@ for fileName in fileNames:
     f2.write("\nAttributeEnd")
     
     
-    ## FINISH AND CLOSE FILE
+    # finish and close file
     for i in range(lineNum, len(template)):
-        f2.write(template[i] + "\n")
+        f2.write(template[i] + '\n')
     f2.close()
