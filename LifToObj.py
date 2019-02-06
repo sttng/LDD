@@ -22,7 +22,6 @@ import shutil
 import argparse
 import tempfile
 import commands
-import shutil
 
 #Locate db.lif on OSX
 find_db_lif_command = "mdfind -name db.lif"
@@ -36,8 +35,8 @@ class LifToObj:
 
 	@staticmethod
 	def run():
-		#print('\tExtracting Assets.lif..')
-		#ConversionThread.extractLif('Assets.lif')
+		#print('\tExtracting db.lif..')
+		#ConversionThread.extractLif('db.lif')
 		try:
 			os.mkdir(path_to_lif_tmp_dir)
 		except OSError:
@@ -62,7 +61,7 @@ class LifToObj:
 		lif_extractor_command = 'python LIFExtractor.py ' + '\'' + LIFFilePath +'\''
 		print lif_extractor_command
 		try:
-		#this is hacky, should rather import LIFExtractor.py
+		# this is hacky, should rather import LIFExtractor.py
 			os.system(lif_extractor_command)
 				
 		except IOError as e:
@@ -80,7 +79,7 @@ class LifToObj:
 					print("\tERROR: The supplied file is not a LDD geometry .g file.")
 					return False
 				
-				vertices_list= []
+				vertices_list = []
 				normals_list = []
 				indices_list = []
 				geometry_file_dict = dict()
