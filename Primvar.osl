@@ -1,0 +1,16 @@
+shader Primvar[[
+ int rfm_nodeid = 110,
+ string rfm_classification = "rendernode/RenderMan/pattern",
+ string help = "Primvar"
+]]
+(
+ string PrimvarName = "",
+ output color OutColour = 0,
+ output float OutFloat = 0
+)
+{
+ color Cs;
+ getattribute("primvar", PrimvarName, Cs);
+ OutColour = Cs;
+ OutFloat = Cs[0];
+}
