@@ -4,3 +4,7 @@ LifToObj.py uses LIFExtractor.py from JrMasterModelBuilder to extract the Lego D
 
 ## ObjToRib
 ObjToRib.py will read in Alias|Wavefrom .obj files, construct geometry from them and write out a Renderman .rib file for each of them.
+
+## prman command
+prman -d it -t:-2 ribfile.rib
+
