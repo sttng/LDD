@@ -22,3 +22,4 @@ oslc Primvar.osl
 * https://www.rockraidersunited.com/topic/3764-lego-digital-designer-lif-extractor/?do=findComment&comment=133146
 * http://stefanmuller.com/exploring-lego-material-part-1/
 * http://stefanmuller.com/exploring-lego-material-part-2/
+* https://github.com/chipgw/LibLDD
