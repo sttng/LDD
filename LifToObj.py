@@ -86,7 +86,7 @@ class LifToObj:
 				
 				partnumber = os.path.splitext(os.path.basename(file_to_convert))[0]
 				
-				skip = file_reader.read(4)
+				fourcc = file_reader.read(4) # should implement check on GB10
 				vertex_count = struct.unpack("<L", file_reader.read(4))[0]
 				indices_count = struct.unpack("<L", file_reader.read(4))[0]
 				
