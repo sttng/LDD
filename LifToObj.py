@@ -86,11 +86,11 @@ class LifToObj:
 				
 				partnumber = os.path.splitext(os.path.basename(file_to_convert))[0]
 				
-				fourcc = file_reader.read(4) # should implement check on GB10
+				fourcc = file_reader.read(4) # should implement check on fourcc == GB10
 				vertex_count = struct.unpack("<L", file_reader.read(4))[0]
 				indices_count = struct.unpack("<L", file_reader.read(4))[0]
+				options = file_reader.read(4) # should inplement switch based on options flag
 				
-				skip = file_reader.read(4)
 				for i in range(0, 3*vertex_count):
 					vertex = struct.unpack("f", file_reader.read(4))[0]
 					vertices_list.append(vertex)
