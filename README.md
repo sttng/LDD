@@ -20,4 +20,5 @@ oslc Primvar.osl
 * http://cg.earlyworm.co.nz/renderman-commandline/
 * https://renderman.pixar.com/forum/showthread.php?s=&threadid=35595&s=3f67579b2c1d88a74b98ea5f86a3c546
 * https://www.rockraidersunited.com/topic/3764-lego-digital-designer-lif-extractor/?do=findComment&comment=133146
-
+* http://stefanmuller.com/exploring-lego-material-part-1/
+* http://stefanmuller.com/exploring-lego-material-part-2/
