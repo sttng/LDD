@@ -89,6 +89,13 @@ class LifToObj:
 				fourcc = file_reader.read(4) # should implement check on fourcc == GB10
 				vertex_count = struct.unpack("<L", file_reader.read(4))[0]
 				indices_count = struct.unpack("<L", file_reader.read(4))[0]
+				# options flag:
+				# 0x01 == uv_texture_coords_enabled then texture_coords_coubt = 2 * vertex_count
+				# 0x10 == unknown
+				# 0x20 == unknown
+				# 0x02 == then probably, vertices, normals
+				# 0x08 == then vertices only ?
+				
 				options = file_reader.read(4) # should inplement switch based on options flag
 				
 				for i in range(0, 3*vertex_count):
