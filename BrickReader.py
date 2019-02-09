@@ -17,15 +17,14 @@
 	#various similar extensions like g, .g1, .g2, …, .g8 exist if the brick is composed of multiple parts. The .g file is the 'base_brick'
 	for geometry_file in files_to_convert:
 	
-	filename, file_extension = os.path.splitext(files_to_convert)
-	
-	if ('.g' in file_extension):
-		base_brick = BrickReader.load_single_geometry_file(geometry_file)
+		filename, file_extension = os.path.splitext(files_to_convert)
+		
+		if ('.g' in file_extension):
+			base_brick = BrickReader.load_single_geometry_file(geometry_file)
+		else:
+			additional_primitive = BrickReader.load_single_geometry_file(geometry_file)
 			
-	else:
-		additional_primitive = BrickReader.load_single_geometry_file(geometry_file)
-			
-	base_brick = BrickReader.merge(base_brick, additional_primitive)
+		base_brick = BrickReader.merge(base_brick, additional_primitive)
 
 	return base_brick
 	
