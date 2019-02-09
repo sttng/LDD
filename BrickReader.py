@@ -35,6 +35,7 @@
 				vertices_list = []
 				normals_list = []
 				indices_list = []
+				tex_coords_list = []
 				geometry_file_dict = dict()
 				
 				partnumber = os.path.splitext(os.path.basename(geometry_file))[0]
@@ -51,8 +52,36 @@
 				
 				options = file_reader.read(4)
 				print 'Options: ' + options
+				# uv_texture_coords_enabled
 				if options == '0x01':
-    			# uv_texture_coords_enabled
+					
+					for i in range(0, 3 * vertex_count):
+						vertex = struct.unpack("f", file_reader.read(4))[0]
+						vertices_list.append(vertex)
+					
+					for i in range(0, 3 * vertex_count):
+						normal = struct.unpack("f", file_reader.read(4))[0]
+						normals_list.append(normal)
+						
+					for i in range(0, 2 * vertex_count):
+						tex_coord = struct.unpack("f", file_reader.read(4))[0]
+						tex_coord_list.append(tex_coord)
+					
+					for i in range(0, indices_count):
+						index = struct.unpack("<L", file_reader.read(4))[0]
+						indices_list.append(index)
+						
+					geometry_file_dict["vertices"] = vertices_list
+					geometry_file_dict["normals"] = normals_list
+					geometry_file_dict["tex_coords"] = tex_coords_list
+					geometry_file_dict["indices"] = indices_list
+					geometry_file_dict["partnumber"] = partnumber
+					
+						
+						
+				
+				
+    			# no uv_texture_coords
 				elif options == '0x02':
 				
 					for i in range(0, 3*vertex_count):
@@ -76,7 +105,6 @@
 					print 'unknown options: ' + options
 				
 				return geometry_file_dict
-				
 								
 		except IOError as e:
 			print('\tERROR: Failed to read .g file.')
