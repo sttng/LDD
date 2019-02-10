@@ -71,7 +71,7 @@
 						
 				for i in range(0, 2 * vertex_count):
 					tex_coord = struct.unpack("f", file_reader.read(4))[0]
-					tex_coord_list.append(tex_coord)
+					tex_coords_list.append(tex_coord)
 					
 				for i in range(0, indices_count):
 					index = struct.unpack("<L", file_reader.read(4))[0]
@@ -84,8 +84,7 @@
 				geometry_file_dict["uv_texture_coords_enabled"] = true
 				geometry_file_dict["indices"] = indices_list
 				geometry_file_dict["partnumber"] = partnumber						
-							
-    		# no uv_texture_coords
+			# no uv_texture_coords
 			elif options == '0x02':
 				
 				for i in range(0, 3*vertex_count):
