@@ -78,6 +78,7 @@
 					indices_list.append(index)
 						
 				geometry_file_dict["vertices"] = vertices_list
+								geometry_file_dict["vertex_count"] = vertex_count
 				geometry_file_dict["normals"] = normals_list
 				geometry_file_dict["tex_coords"] = tex_coords_list
 				geometry_file_dict["uv_texture_coords_enabled"] = true
