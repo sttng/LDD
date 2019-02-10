@@ -22,14 +22,14 @@
 		if (os.path.splitext(files_to_convert)[1] == ".g"):
 			base_brick = BrickReader.load_single_geometry_file(geometry_file)
 			geometry_file_dict_list.append(base_brick)
+			
 		else:
 			additional_primitive = BrickReader.load_single_geometry_file(geometry_file)
 			geometry_file_dict_list.append(additional_primitive)
 			
-		# base_brick = BrickReader.merge(base_brick, additional_primitive)
-		
+		BrickReader.export_to_obj(geometry_file_dict_list)
 
-	return base_brick
+	return True
 	
 @staticmethod
 	def load_single_geometry_file(geometry_file):
@@ -42,24 +42,23 @@
 			indices_list = []
 			tex_coords_list = []
 			geometry_file_dict = dict()
-				
 			partnumber = os.path.splitext(os.path.basename(geometry_file))[0]
 				
 			fourcc = file_reader.read(4) # should implement check on fourcc == GB10
 			vertex_count = struct.unpack("<L", file_reader.read(4))[0]
 			indices_count = struct.unpack("<L", file_reader.read(4))[0]
+			
 			# options flag:
-			# 0x01 == uv_texture_coords_enabled then texture_coords_coubt = 2 * vertex_count
+			# 0x01 == uv_texture_coords_enabled then texture_coords_count = 2 * vertex_count
 			# 0x10 == unknown
 			# 0x20 == unknown
-			# 0x02 == then probably, vertices, normals
+			# 0x02 == then vertices, normals
 			# 0x08 == then vertices only ?
-				
 			options = file_reader.read(4)
 			print 'Options: ' + options
 			
 			# uv_texture_coords_enabled
-			if options == '0x01':
+			if (options == '0x01'):
 					
 				for i in range(0, 3 * vertex_count):
 					vertex = struct.unpack("f", file_reader.read(4))[0]
@@ -81,17 +80,17 @@
 				geometry_file_dict["vertex_count"] = vertex_count
 				geometry_file_dict["normals"] = normals_list
 				geometry_file_dict["tex_coords"] = tex_coords_list
-				geometry_file_dict["uv_texture_coords_enabled"] = true
+				geometry_file_dict["uv_texture_coords_enabled"] = True
 				geometry_file_dict["indices"] = indices_list
 				geometry_file_dict["partnumber"] = partnumber						
 			# no uv_texture_coords
-			elif options == '0x02':
+			elif (options == '0x02'):
 				
-				for i in range(0, 3*vertex_count):
+				for i in range(0, 3 * vertex_count):
 					vertex = struct.unpack("f", file_reader.read(4))[0]
 					vertices_list.append(vertex)
 					
-				for i in range(0, 3*vertex_count):
+				for i in range(0, 3 * vertex_count):
 					normal = struct.unpack("f", file_reader.read(4))[0]
 					normals_list.append(normal)
 					
@@ -102,7 +101,7 @@
 				geometry_file_dict["vertices"] = vertices_list
 				geometry_file_dict["vertex_count"] = vertex_count
 				geometry_file_dict["normals"] = normals_list
-				geometry_file_dict["uv_texture_coords_enabled"] = false
+				geometry_file_dict["uv_texture_coords_enabled"] = False
 				geometry_file_dict["indices"] = indices_list
 				geometry_file_dict["partnumber"] = partnumber
 				
@@ -112,7 +111,7 @@
 			return geometry_file_dict
 								
 		except IOError as e:
-			print('\tERROR: Failed to read .g file.')
+			print('\tERROR: Failed to read .gX file.')
 			return False
 
 
@@ -137,7 +136,7 @@
 			for i in range(0, len(geometry_file_dict["normals"]), 3):
 				file_writer.write('vn ' + str(geometry_file_dict["normals"][i]) + ' ' + str(geometry_file_dict["normals"][i + 1]) + ' ' + str(geometry_file_dict["normals"][i + 2]) + ' ' + '\n\n')
 	
-				if (geometry_file_dict["uv_texture_coords_enabled"] == true):
+				if (geometry_file_dict["uv_texture_coords_enabled"] == True):
 					for i in range(0, len(geometry_file_dict["tex_coords"]), 2):
 						file_writer.write('vt ' + str(geometry_file_dict["tex_coords"][i]) + ' ' + str(geometry_file_dict["tex_coords"][i + 1]) + ' ' + '\n\n')
 			
@@ -154,16 +153,16 @@
 				elif:
 	
 					for i in range(0, len(geometry_file_dict["indices"]), 3):
-						index1 = geometry_file_dict["indices"][i + 0] + offset
-						index2 = geometry_file_dict["indices"][i + 1] + offset
-						index3 = geometry_file_dict["indices"][i + 2] + offset
+						index0 = geometry_file_dict["indices"][i + 0] + offset
+						index1 = geometry_file_dict["indices"][i + 1] + offset
+						index2 = geometry_file_dict["indices"][i + 2] + offset
 				
-						file_writer.write('f ' + str(index1) + '//' + str(index1) + ' ' + str(index2) + '//' + str(index2) + " " + str(index3) + '//' + str(index3) + '\n')
+						file_writer.write('f ' + str(index0) + '//' + str(index0) + ' ' + str(index1) + '//' + str(index1) + " " + str(index2) + '//' + str(index2) + '\n')
 	
 	fragment ++
 	offset += geometry_file_dict["vertex_count"]
 	
-	if (geometry_file_dict["uv_texture_coords_enabled"] == true):
+	if (geometry_file_dict["uv_texture_coords_enabled"] == True):
 			uv_offset += geometry_file_dict["vertex_count"]
 		
 				
