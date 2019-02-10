@@ -140,44 +140,35 @@
 	if (geometry_file_dict["uv_texture_coords_enabled"] == true):
 	
 		for i in range(0, len(geometry_file_dict["tex_coords"]), 2):
-	
-	
+		
+			file_writer.write('vt ' + str(geometry_file_dict["tex_coords"][i]) + ' ' + str(geometry_file_dict["tex_coords"][i + 1]) + ' ' + '\n\n')
+			
+			for i in range(0, len(geometry_file_dict["indices"]), 3):
+					index0 = geometry_file_dict["indices"][i + 0] + offset
+					index1 = geometry_file_dict["indices"][i + 1] + offset
+					index2 = geometry_file_dict["indices"][i + 2] + offset
+					index3 = geometry_file_dict["indices"][i + 0] + uv_offset
+					index4 = geometry_file_dict["indices"][i + 1] + uv_offset
+					index5 = geometry_file_dict["indices"][i + 2] + uv_offset
+				
+					file_writer.write('f ' + str(index0) + '/' + str(index3) + '/' + str(index0) + ' ' + str(index1) + "/" + str(index4) + '/' + str(index1) + ' ' + str(index2) + "/" + str(index5) + '/' + str(index2) + '\n')
 	
 	elif:
 	
-	
-	
-	fragment ++
-		offset += geometry_file_dict["vertex_count"]
-		
-		if (geometry_file_dict["uv_texture_coords_enabled"] == true):
-			uvOffset += geometry_file_dict["vertex_count"]
-		
-	
-	
-	
-	
-	if (geometry_file_dict["uv_texture_coords_enabled"] == false):
-		
-			
-				
-				
-				
-			
-				
-			
-				for i in range(0, len(geometry_file_dict["indices"]), 3):
-					index1 = geometry_file_dict["indices"][i + 0] + 1
-					index2 = geometry_file_dict["indices"][i + 1] + 1
-					index3 = geometry_file_dict["indices"][i + 2] + 1
+		for i in range(0, len(geometry_file_dict["indices"]), 3):
+					index1 = geometry_file_dict["indices"][i + 0] + offset
+					index2 = geometry_file_dict["indices"][i + 1] + offset
+					index3 = geometry_file_dict["indices"][i + 2] + offset
 				
 					file_writer.write('f ' + str(index1) + '//' + str(index1) + ' ' + str(index2) + '//' + str(index2) + " " + str(index3) + '//' + str(index3) + '\n')
+	
+	fragment ++
+	offset += geometry_file_dict["vertex_count"]
+	
+	if (geometry_file_dict["uv_texture_coords_enabled"] == true):
+			uv_offset += geometry_file_dict["vertex_count"]
+		
 				
 				file_writer.close()
-			elif (geometry_file_dict["uv_texture_coords_enabled"] == true):
 				
 		return True
-
-
-	
-	
