@@ -75,6 +75,7 @@
 				geometry_file_dict["vertices"] = vertices_list
 				geometry_file_dict["normals"] = normals_list
 				geometry_file_dict["tex_coords"] = tex_coords_list
+				geometry_file_dict["uv_texture_coords_enabled"] = true
 				geometry_file_dict["indices"] = indices_list
 				geometry_file_dict["partnumber"] = partnumber						
 							
@@ -95,6 +96,7 @@
 				
 				geometry_file_dict["vertices"] = vertices_list
 				geometry_file_dict["normals"] = normals_list
+				geometry_file_dict["uv_texture_coords_enabled"] = false
 				geometry_file_dict["indices"] = indices_list
 				geometry_file_dict["partnumber"] = partnumber
 				
