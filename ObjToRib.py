@@ -105,7 +105,7 @@ for obj_file in obj_files_list:
 			for j in xrange(0, len(verts[face[i]-1]), 1):
 				newline += str(verts[face[i]-1][j]) + ' '
 		f2.write("\n\t\t\"P\" [ " + newline + "]")
-	f2.write('\nAttributeEnd')
+	f2.write('\nAttributeEnd\n')
 	
 	
 	# finish and close file
