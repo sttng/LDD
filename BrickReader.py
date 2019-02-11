@@ -174,6 +174,7 @@ class BrickReader:
 			for geometry_file_dict in geometry_file_dict_list:
 				
 				file_writer.write('g ' + str(fragment) + '\n')
+				file_writer.write('# From file: ' + geometry_file_dict["partnumber"] + '.' + geometry_file_dict["part_extension"])
 			
 				for i in range(0, len(geometry_file_dict["vertices"]), 3):
 					file_writer.write('v ' + str(geometry_file_dict["vertices"][i]) + ' ' + str(geometry_file_dict["vertices"][i + 1]) + ' ' + str(geometry_file_dict["vertices"][i + 2]) + ' ' + '\n\n')
