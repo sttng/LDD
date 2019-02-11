@@ -194,6 +194,7 @@ class BrickReader:
 							index5 = geometry_file_dict["indices"][i + 2] + uv_offset
 					
 							file_writer.write('f ' + str(index0) + '/' + str(index3) + '/' + str(index0) + ' ' + str(index1) + "/" + str(index4) + '/' + str(index1) + ' ' + str(index2) + "/" + str(index5) + '/' + str(index2) + '\n\n')
+					
 					elif (geometry_file_dict["uv_texture_coords_enabled"] == False):
 					
 						for i in range(0, len(geometry_file_dict["indices"]), 3):
