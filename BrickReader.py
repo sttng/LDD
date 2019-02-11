@@ -57,11 +57,12 @@ class BrickReader:
 			
 			if os.path.splitext(geometry_file)[1] == ".g":
 				base_brick = BrickReader.load_single_geometry_file(geometry_file)
-				# Ensure base brick is 1st one
+				# Ensure base_brick is 1st one in the list.
 				geometry_file_dict_list[0] = base_brick
 				
 			else:
 				additional_primitive = BrickReader.load_single_geometry_file(geometry_file)
+				# Add other 'primitives' to the list AFTER the base_brick.
 				geometry_file_dict_list[i] = base_brick
 			
 			i += 1
@@ -77,17 +78,21 @@ class BrickReader:
 			with open(geometry_file, 'rb') as file_reader:
 				
 				vertices_list = []
+				vertices_list[:] = []
 				normals_list = []
+				normals_list[:] = []
 				indices_list = []
+				indices_list[:] = []
 				tex_coords_list = []
+				tex_coords_list[:] = []
 				geometry_file_dict = dict()
 				partnumber = os.path.splitext(os.path.basename(geometry_file))[0]
-					
+				
 				fourcc = file_reader.read(4) 
 				if(fourcc != "10GB"):
-
 					print("\tERROR: Not a gX file. Expected 10GB file header but read:" + fourcc)
 					return False
+				
 				vertex_count = struct.unpack("<L", file_reader.read(4))[0]
 				indices_count = struct.unpack("<L", file_reader.read(4))[0]
 				
@@ -148,7 +153,13 @@ class BrickReader:
 					geometry_file_dict["partnumber"] = partnumber
 					
 				else:
-					print 'Unknown Options: ' + options
+					geometry_file_dict["vertices"] = vertices_list
+					geometry_file_dict["vertex_count"] = vertex_count
+					geometry_file_dict["normals"] = normals_list
+					geometry_file_dict["uv_texture_coords_enabled"] = options
+					geometry_file_dict["indices"] = indices_list
+					geometry_file_dict["partnumber"] = partnumber
+					print '\tERROR: Unknown Options: ' + options
 					
 				return geometry_file_dict
 									
