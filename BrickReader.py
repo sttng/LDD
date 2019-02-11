@@ -25,10 +25,16 @@ import commands
 import shutil
 import array
 
-#Locate db.lif on OSX
-find_db_lif_command = "mdfind -name db.lif"
-path_to_lif = commands.getoutput(find_db_lif_command)
-
+#Locate db.lif on macOS
+if platform.system() == 'Darwin':
+	find_db_lif_command = "mdfind -name db.lif"
+	path_to_lif = commands.getoutput(find_db_lif_command)
+	
+#Locate db.lif on Windows	
+elif platform.system() == 'Windows':
+	find_db_lif_command = "dir db.lif /s /p"
+	path_to_lif = commands.getoutput(find_db_lif_command)
+	
 # define the name of the temp directory to be created
 path_to_lif_tmp_dir = os.getcwd() + '/liftmp'
 path_to_lif_tmp = path_to_lif_tmp_dir + '/db.lif'
@@ -44,17 +50,22 @@ class BrickReader:
 		geometry_file_dict_list = []
 		print 'Brick consist of ' + str(len(files_to_convert)) + ' files.\n'
 		
-		#various similar extensions like g, .g1, .g2, ..., .g8 exist if the brick is composed of multiple parts. The .g file is the 'base_brick'
+		# Various similar extensions like g, .g1, .g2, ..., .g8 exist if the brick is composed of multiple parts. 
+		# The .g file is the 'base_brick'.
+		i = 1
 		for geometry_file in files_to_convert:
 			
 			if os.path.splitext(geometry_file)[1] == ".g":
 				base_brick = BrickReader.load_single_geometry_file(geometry_file)
-				geometry_file_dict_list.append(base_brick)
+				# Ensure base brick is 1st one
+				geometry_file_dict_list[0] = base_brick
 				
 			else:
 				additional_primitive = BrickReader.load_single_geometry_file(geometry_file)
-				geometry_file_dict_list.append(additional_primitive)
-				
+				geometry_file_dict_list[i] = base_brick
+			
+			i += 1
+			
 		BrickReader.export_to_obj(geometry_file_dict_list)
 		
 		return True
