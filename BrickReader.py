@@ -52,7 +52,8 @@ class BrickReader:
 		geometry_file_dict_list = []
 		print 'Brick ' + partnumber + ' consist of ' + str(len(files_to_convert)) + ' files.\n'
 		
-		#various similar extensions like g, .g1, .g2, ..., .g8 exist if the brick is composed of multiple parts. The .g file is the 'base_brick'
+		# Various similar extensions like g, .g1, .g2, ..., .g8 exist if the brick is composed of multiple parts. 
+		# The .g file is the 'base_brick'
 		for geometry_file in files_to_convert:
 			
 			if os.path.splitext(geometry_file)[1] == ".g":
@@ -160,7 +161,7 @@ class BrickReader:
 	
 	@staticmethod
 	def export_to_obj(geometry_file_dict_list):
-		fragment = 0
+		primitive = 0
 		offset = 1
 		uv_offset = 1
 		partnumber = geometry_file_dict_list[0]["partnumber"]
@@ -170,7 +171,7 @@ class BrickReader:
 		
 			for geometry_file_dict in geometry_file_dict_list:
 				
-				file_writer.write('g ' + str(fragment) + '\n')
+				file_writer.write('g ' + str(primitive) + '\n')
 				file_writer.write('# From file: ' + geometry_file_dict["partnumber"] + geometry_file_dict["part_extension"] + '\n')
 				
 				for i in range(0, len(geometry_file_dict["vertices"]), 3):
@@ -202,7 +203,7 @@ class BrickReader:
 				
 						file_writer.write('f ' + str(index0) + '//' + str(index0) + ' ' + str(index1) + '//' + str(index1) + " " + str(index2) + '//' + str(index2) + '\n')
 		
-				fragment += 1
+				primitive += 1
 				offset += geometry_file_dict["vertex_count"]
 		
 				if (geometry_file_dict["uv_texture_coords_enabled"] == True):
