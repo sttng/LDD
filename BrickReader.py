@@ -156,7 +156,7 @@ class BrickReader:
 					geometry_file_dict["vertices"] = vertices_list
 					geometry_file_dict["vertex_count"] = vertex_count
 					geometry_file_dict["normals"] = normals_list
-					geometry_file_dict["uv_texture_coords_enabled"] = options
+					geometry_file_dict["uv_texture_coords_enabled"] = False
 					geometry_file_dict["indices"] = indices_list
 					geometry_file_dict["partnumber"] = partnumber
 					print '\tERROR: Unknown Options: ' + options
