@@ -51,7 +51,7 @@ class BrickReader:
 		print 'Brick consist of ' + str(len(files_to_convert)) + ' files.\n'
 		
 		# Various similar extensions like g, .g1, .g2, ..., .g8 exist if the brick is composed of multiple parts. 
-		# The .g file is the 'base_brick'.
+		# The .g file is the 'base_brick'. The .gX files are the 'additional_primitives'.
 		i = 1
 		for geometry_file in files_to_convert:
 			
@@ -91,18 +91,19 @@ class BrickReader:
 				
 				fourcc = file_reader.read(4) 
 				if(fourcc != "10GB"):
-					print("\tERROR: Not a gX file. Expected 10GB file header but read:" + fourcc)
+					print("\tERROR: Not a .g, .gX file. Expected 10GB file header but found:" + fourcc)
 					return False
 				
 				vertex_count = struct.unpack("<L", file_reader.read(4))[0]
 				indices_count = struct.unpack("<L", file_reader.read(4))[0]
 				
-				# options flag:
+				# Options flags:
 				# 0x01 / 0x3b == uv_texture_coords_enabled then texture_coords_count = 2 * vertex_count
+				# 0x02 / 0x3a == no uv_texture_coords, but vertices, normals
+				# 0x08 == then vertices only ?
 				# 0x10 == unknown
 				# 0x20 == unknown
-				# 0x02 /0x3a == vertices, normals
-				# 0x08 == then vertices only ?
+				
 				options = binascii.hexlify(file_reader.read(4))
 				
 				for i in range(0, 3 * vertex_count):
