@@ -96,8 +96,12 @@ for obj_file in obj_files_list:
 	
 	# create polygons
 	f2.write('\nAttributeBegin')
-	f2.write('\nSurface \"matte\"')
-	f2.write('\nColor [ 1 1 1 ]')
+	f2.write('\nAttribute \"identifier\" \"uniform string name\" [\"/root/world/geo/sphere\"]')
+	f2.write('\nTranslate 0 0.098009 -0.204513')
+	f2.write('\nRotate 45 0 0 1')
+	f2.write('\nRotate 145 0 1 0')
+	f2.write('\nRotate 45 1 0 0')
+	f2.write('\nScale 0.3 0.3 0.3')
 	for face in faces:
 		f2.write('\n\tPolygon')
 		newline = ''
