@@ -95,11 +95,11 @@ class BrickReader:
 				indices_count = struct.unpack("<L", file_reader.read(4))[0]
 				
 				# options flag:
-				# 0x01 == uv_texture_coords_enabled then texture_coords_count = 2 * vertex_count
-				# 0x10 == unknown
-				# 0x20 == unknown
-				# 0x02 == then vertices, normals
-				# 0x08 == then vertices only ?
+				# 0x3b (or & 0x01) == uv_texture_coords_enabled then texture_coords_count = 2 * vertex_count
+				# 0x3a (or & 0x02) == then vertices, normals
+				# & 0x10 == unknown
+				# & 0x20 == unknown
+				# & 0x08 == then vertices only ?
 				options = binascii.hexlify(file_reader.read(4))
 				
 				for i in range(0, 3 * vertex_count):
