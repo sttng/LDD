@@ -11,6 +11,10 @@
 #
 # License: MIT License
 #
+# Polygon "P" [ 1 1 0 0 4 5 0 9 0 ]
+# Polygon "P" [ 0 1 0 0 8 0 4 4 0 ] "N" [ 1 0 0 1 0 0 0 1 0 ]
+# RiPolygon (3, "P", (float *)p, "N", (float *)n, RI_NULL);
+#
 
 import os
 import io
