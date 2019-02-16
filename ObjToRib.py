@@ -61,11 +61,11 @@ for line in f1lines:
 		line = line.rstrip()
 		l = ['%.3f' % float(num) for num in line.split(' ') if 'v' not in num]
 		verts.append(l)
+	
 	if 'vn ' in line and '.' in line:
 		line = line.rstrip()
 		l = ['%.3f' % float(num) for num in line.split(' ') if 'vn' not in num]
 		normals.append(l)
-		
 	
 	if 'f ' in line and '/' in line:
 		l = []
@@ -86,13 +86,13 @@ for face in faces:
 	for i in xrange(0, len(face), 1):
 		for j in xrange(0, len(verts[face[i]-1]), 1):
 			newline += str(verts[face[i]-1][j]) + ' '
-	f2.write("\n\t\t\"P\" [ " + newline + "]")
+	f2.write('\n\t\t\"P\" [ ' + newline + ']')
 	
 	newline = ''
 	for i in xrange(0, len(face), 1):
 		for j in xrange(0, len(normals[face[i]-1]), 1):
 			newline += str(normals[face[i]-1][j]) + ' '
-	f2.write("\n\t\t\"N\" [ " + newline + "]")
+	f2.write(' \"N\" [ ' + newline + ']')
 	
 f2.write('\nAttributeEnd\n')
 f2.close()
