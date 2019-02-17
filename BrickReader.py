@@ -213,4 +213,4 @@ class BrickReader:
 					
 		return True
 		
-#BrickReader.read_brick(input_brick)
+BrickReader.read_brick(input_brick)
