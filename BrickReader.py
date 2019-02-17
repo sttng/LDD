@@ -67,8 +67,7 @@ class BrickReader:
 		BrickReader.export_to_obj(geometry_file_dict_list)
 		
 		return True
-	
-	
+		
 	@staticmethod
 	def load_single_geometry_file(geometry_file):
 	
@@ -76,9 +75,13 @@ class BrickReader:
 			with open(geometry_file, 'rb') as file_reader:
 				
 				vertices_list = []
+				vertices_list[:] = []
 				normals_list = []
+				normals_list[:] = []
 				indices_list = []
+				indices_list[:] = []
 				tex_coords_list = []
+				tex_coords_list[:] = []
 				geometry_file_dict = dict()
 				partnumber = os.path.splitext(os.path.basename(geometry_file))[0]
 				part_extension = os.path.splitext(os.path.basename(geometry_file))[1]
@@ -92,11 +95,11 @@ class BrickReader:
 				indices_count = struct.unpack("<L", file_reader.read(4))[0]
 				
 				# options flag:
-				# 0x3b (or & 0x01) == uv_texture_coords_enabled then texture_coords_count = 2 * vertex_count
-				# 0x3a (or & 0x02) == then vertices, normals
-				# & 0x10 == unknown
-				# & 0x20 == unknown
-				# & 0x08 == then vertices only ?
+				# 0x01 == uv_texture_coords_enabled then texture_coords_count = 2 * vertex_count
+				# 0x10 == unknown
+				# 0x20 == unknown
+				# 0x02 == then vertices, normals
+				# 0x08 == then vertices only ?
 				options = binascii.hexlify(file_reader.read(4))
 				
 				for i in range(0, 3 * vertex_count):
@@ -106,10 +109,6 @@ class BrickReader:
 				for i in range(0, 3 * vertex_count):
 					normal = struct.unpack("f", file_reader.read(4))[0]
 					normals_list.append(normal)
-				
-				geometry_file_dict["vertices"] = vertices_list
-				geometry_file_dict["vertex_count"] = vertex_count
-				geometry_file_dict["normals"] = normals_list
 				
 				# uv_texture_coords_enabled
 				if (options == '3b000000'):
@@ -122,6 +121,9 @@ class BrickReader:
 						index = struct.unpack("<L", file_reader.read(4))[0]
 						indices_list.append(index)
 							
+					geometry_file_dict["vertices"] = vertices_list
+					geometry_file_dict["vertex_count"] = vertex_count
+					geometry_file_dict["normals"] = normals_list
 					geometry_file_dict["tex_coords"] = tex_coords_list
 					geometry_file_dict["uv_texture_coords_enabled"] = True
 					geometry_file_dict["indices"] = indices_list
@@ -137,6 +139,9 @@ class BrickReader:
 						index = struct.unpack("<L", file_reader.read(4))[0]
 						indices_list.append(index)
 					
+					geometry_file_dict["vertices"] = vertices_list
+					geometry_file_dict["vertex_count"] = vertex_count
+					geometry_file_dict["normals"] = normals_list
 					geometry_file_dict["uv_texture_coords_enabled"] = False
 					geometry_file_dict["indices"] = indices_list
 					geometry_file_dict["partnumber"] = partnumber
@@ -207,6 +212,5 @@ class BrickReader:
 		file_writer.close()
 					
 		return True
-	
-	
-BrickReader.read_brick(input_brick)
+		
+#BrickReader.read_brick(input_brick)
