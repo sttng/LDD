@@ -61,11 +61,13 @@ class ObjToRib:
 			if 'v ' in line and '.' in line:
 				line = line.rstrip()
 				l = ['%.3f' % float(num) for num in line.split(' ') if 'v' not in num]
+				l[2] = ((-1) * float(l[2])) #obj is right handed, rib is left handed coordinate system -> the z-axis is inverted
 				verts.append(l)
 			
 			if 'vn ' in line and '.' in line:
 				line = line.rstrip()
 				l = ['%.3f' % float(num) for num in line.split(' ') if 'vn' not in num]
+				l[2] = ((-1) * float(l[2])) #obj is right handed, rib is left handed coordinate system -> the z-axis is inverted
 				normals.append(l)
 			
 			if 'f ' in line and '/' in line:
