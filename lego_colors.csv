@@ -1,0 +1,101 @@
+LEGO ID,LEGO Name,Bricklink ID,Bricklink Name,Pantone,Pantone HEX,Red,Green,Blue
+1,White,1,White,CoolGray 1 C,D9D9D6,217,217,214
+2,Grey,9,Light Gray,422 C,9EA2A2,158,162,162
+3,Light Yellow,33,Light Yellow,1215 C,FBD872,251,216,114
+4,Brick Red,106,Fabuland Brown,7416 C,E56A54,229,106,84
+5,Brick Yellow,2,Tan*,467 C,D3BC8D,211,188,141
+6,Light Green,38,Light Green,351 C,A2E4B8,162,228,184
+7,Orange,,,715 C,F68D2E,246,141,46
+9,Light Reddish Violet,23,Pink*,203 C,ECB3CB,236,179,203
+11,Pastel Blue,72,Maersk Blue,277 C,ABCAE9,171,202,233
+12,Light Orange Brown,29,Earth Orange,1385 C,D57800,213,120,0
+13,Red Orange,,,151 C,FF8200,255,130,0
+15,Lemon,,,395 C,ECE81A,236,232,26
+18,Nougat,28,Flesh,472 C,E59E6D,229,158,109
+19,Light Brown,160,Fabuland Orange,7564 C,DB8A06,219,138,6
+21,Bright Red,5,Red,Red 032 C,EF3340,239,51,64
+22,Medium Reddish Violet,47,Dark Pink*,2375 C,E277CD,226,119,205
+23,Bright Blue,7,Blue,293 C,003DA5,0,61,165
+24,Bright Yellow,3,Yellow,116 C,FFCD00,255,205,0
+25,Earth Orange,8,Brown,469 C,693F23,105,63,35
+26,Black,11,Black,Process Black C,27251F,39,37,31
+27,Dark Grey,10,Dark Gray,418 C,51534A,81,83,74
+28,Dark Green,6,Green,348 C,00843D,0,132,61
+29,Medium Green,37,Medium Green,353 C,80E0A7,128,224,167
+36,Light Yellowish Orange,96,Very Light Orange,148 C,FECB8B,254,203,139
+37,Bright Green,36,Bright Green,355 C,9639,0,150,57
+38,Dark Orange,68,Dark Orange,471 C,B86125,184,97,37
+39,Light Bluish Violet,44,Light Violet,2706 C,CBD3EB,203,211,235
+45,Light Blue,62,Light Blue,545 C,C6DAE7,198,218,231
+100,Light Red,26,Light Salmon,169 C,FFB3AB,255,179,171
+101,Medium Red,25,Salmon,170 C,FF8674,255,134,116
+102,Medium Blue,42,Medium Blue,284 C,6CACE4,108,172,228
+103,Light Grey,49,Very Light Gray,421 C,B2B4B2,178,180,178
+104,Bright Violet,24,Purple,2592 C,9B26B6,155,38,182
+105,Bright Yellowish Orange,31,Medium Orange,137 C,FFA300,255,163,0
+106,Bright Orange,4,Orange,151 C,FF8200,255,130,0
+107,Bright Bluish Green,39,Dark Turquoise,327 C,8675,0,134,117
+108,Earth Yellow,,,1405 C,6E4C1E,110,76,30
+110,Bright Bluish Violet,43,Violet,2736 C,1E22AA,30,34,170
+112,Medium Bluish Violet,73,Medium Violet*,2726 C,485CC7,72,92,199
+115,Medium Yellowish Green,76,Medium Lime,381 C,CEDC00,206,220,0
+116,Medium Bluish Green,40,Light Turquoise,326 C,00B2A9,0,178,169
+118,Light Bluish Green,41,Aqua,324 C,9CDBD9,156,219,217
+119,Bright Yellowish Green,34,Lime,390 C,B5BD00,181,189,0
+120,Light Yellowish Green,35,Light Lime,365 C,C2E189,194,225,137
+121,Medium Yellowish Orange,32,Light Orange,1365 C,FFB549,255,181,73
+123,Bright Reddish Orange,,,165 C,FF671F,255,103,31
+124,Bright Reddish Violet,71,Magenta,241 C,AF1685,175,22,133
+125,Light Orange,,,1555 C,FFB990,255,185,144
+128,Dark Nougat,,,471 C,B86125,184,97,37
+133,Neon Orange,,,165 C,FF671F,255,103,31
+134,Neon Green,,,374 C,C5E86C,197,232,108
+135,Sand Blue,55,Sand Blue,5415 C,5B7F95,91,127,149
+136,Sand Violet,54,Sand Purple,666 C,A192B2,161,146,178
+137,Medium Orange,,,1575 C,FF7F32,255,127,50
+138,Sand Yellow,69,Dark Tan,451 C,9B945F,155,148,95
+140,Earth Blue,63,Dark Blue,2955 C,3865,0,56,101
+141,Earth Green,80,Dark Green,350 C,2C5234,44,82,52
+144,Dark Army Green,,,5487 C,5D7975,93,121,117
+151,Sand Green,48,Sand Green,624 C,789F90,120,159,144
+153,Sand Red,58,Sand Red,4995 C,9C6169,156,97,105
+154,(New) Dark Red,59,Dark Red,194 C,9B2743,155,39,67
+180,Curry,161,Dark Yellow,131 C,CC8A00,204,138,0
+190,Fire Yellow,,,Yellow 012 C,FFD700,255,215,0
+191,Flame Yellowish Orange,110,Bright Light Orange,137 C,FFA300,255,163,0
+192,Reddish Brown,88,Reddish Brown,499 C,7A3E3A,122,62,58
+193,Flame Reddish Orange,,,173 C,CF4520,207,69,32
+194,Medium Stone Grey,86,Light Bluish Gray,429 C,A2AAAD,162,170,173
+195,Royal Blue,97,Blue-Violet,2728 C,0047BB,0,71,187
+196,Dark Royal Blue,109,Dark Blue-Violet,286 C,0033A0,0,51,160
+198,Bright Reddish Lilac,93,Light Purple,254 C,981D97,152,29,151
+199,Dark Stone Grey,85,Dark Bluish Gray,431 C,5B6770,91,103,112
+208,Light Stone Grey,99,Very Light Bluish Gray,428 C,C1C6C8,193,198,200
+209,Dark Curry,,,118 C,AC8400,172,132,0
+210,Faded Green,,,364 C,4A7729,74,119,41
+211,Turquoise,,,3255 C,2CD5C4,44,213,196
+212,Light Royal Blue,105,Bright Light Blue,292 C,69B3E7,105,179,231
+213,Medium Royal Blue,,,2727 C,307FE2,48,127,226
+216,Rust,,,174 C,963821,150,56,33
+217,Brown,91,Dark Flesh,161 C,603D20,96,61,32
+218,Reddish Lilac,,,2573 C,B884CB,184,132,203
+219,Lilac,73,Medium Violet*,2725 C,685BC7,104,91,199
+220,Light Lilac,,,2716 C,9FAEE5,159,174,229
+221,Bright Purple,47,Dark Pink*,232 C,E93CAC,233,60,172
+222,Light Purple,104,Bright Pink,236 C,F1A7DC,241,167,220
+223,Light Pink,,,183 C,FC9BB3,252,155,179
+224,Light Brick Yellow,,,7501 C,D9C89E,217,200,158
+225,Warm Yellowish Orange,,,713 C,FDBE87,253,190,135
+226,Cool Yellow,103,Bright Light Yellow,120 C,FBDB65,251,219,101
+232,Dove Blue,87,Sky Blue,311 C,05C3DE,5,195,222
+268,Medium Lilac,89,Dark Purple,2685 C,330072,51,0,114
+269,Tiny-Medium Blue,,,7459 C,4298B5,66,152,181
+283,Light Nougat,90,Light Flesh,712 C,FCC89B,252,200,155
+308,Dark Brown,120,Dark Brown,Black 4 C,31261D,49,38,29
+322,Medium Azur,156,Medium Azure,297 C,71C5E8,113,197,232
+323,Aqua,152,Light Aqua,566 C,B9DCD2,185,220,210
+324,Medium Lavender,157,Medium Lavender,2583 C,A05EB5,160,94,181
+325,Lavender,154,Lavender,529 C,CAA2DD,202,162,221
+326,Spring Yellowish Green,158,Yellowish Green,372 C,D4EB8E,212,235,142
+330,Olive Green,155,Olive Green,5763 C,737B4C,115,123,76
+,,56,Light Pink,7436 C,EEDAEA,238,218,234
