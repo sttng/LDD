@@ -3,104 +3,130 @@
 #
 # Version 0.1 - Copyright (c) 2019 by 
 #
-# Info:
-# This script will read in  a.obj file, construct geometry from it
-# and write out a rib file of it.
-#
 # Updates:
 #
 # License: MIT License
 #
-#
 
 import os
-import io
 import sys
-import glob
-import platform
-import subprocess
-import binascii
-import signal
-import stat
-import struct
-import shutil
-import argparse
-import tempfile
-import commands
-import shutil
-import array
+import re
+import unicodedata
+import zipfile
+import math
+from BrickReader import BrickReader
+from ObjToRib import ObjToRib
+import xml.etree.ElementTree as ET
+import numpy as np
 
 
-obj_file = sys.argv[1]
+# Checks if a matrix is a valid rotation matrix.
+def isRotationMatrix(R) :
+	Rt = np.transpose(R)
+	shouldBeIdentity = np.dot(Rt, R)
+	I = np.identity(3, dtype = R.dtype)
+	n = np.linalg.norm(I - shouldBeIdentity)
+	return n < 1e-6
 
 
-class ObjToRib:
+# Calculates rotation matrix to euler angles.
+def rotationMatrixToEulerAngles(R) :
+ 
+	#assert(isRotationMatrix(R))
+	
+	sy = math.sqrt(R[0,0] * R[0,0] +  R[1,0] * R[1,0])
+	
+	singular = sy < 1e-6
 
-	@staticmethod
-	def export_obj_to_rib(obj_file):
+	if not singular :
+		x = math.atan2(R[2,1] , R[2,2])
+		y = math.atan2(-R[2,0], sy)
+		z = math.atan2(R[1,0], R[0,0])
+	else :
+		x = math.atan2(-R[1,2], R[1,1])
+		y = math.atan2(-R[2,0], sy)
+		z = 0
+ 
+	return np.array([x, y, z])
 
-		f1 = open(obj_file)
-		lines = f1.readlines()
-		f1lines = []
-		for line in lines:
-			if '\n' in line:
-				line = line.split('\n')[0]
-			f1lines.append(line)
-		f1.close()
-		
-		
-		name = obj_file.split(".")
-		name = name[0]
-		f2 = open(name + '.rib', 'w')
-		
-		# Convert obj file lines to rib compatible format
-		verts = []
-		faces = []
-		normals =[]
-		for line in f1lines:
-			if 'v ' in line and '.' in line:
-				line = line.rstrip()
-				l = ['%.3f' % float(num) for num in line.split(' ') if 'v' not in num]
-				l[2] = ((-1) * float(l[2])) #obj is right handed, rib is left handed coordinate system -> the z-axis is inverted
-				verts.append(l)
+	
+def generate_bricks(lxf_filename):
+
+	archive = zipfile.ZipFile(lxf_filename, 'r')
+	lxfml_file = archive.read('IMAGE100.LXFML')
+	
+	tree = ET.fromstring(lxfml_file)
+	lst = tree.findall('Bricks/Brick')
+	for item in lst:
+		design_id = item.get('designID')
+		print design_id
+		BrickReader.read_brick(design_id)
+		ObjToRib.export_obj_to_rib(design_id + '.obj')
+
+
+
+def export_to_rib(lxf_filename):
+
+	archive = zipfile.ZipFile(lxf_filename, 'r')
+	lxfml_file = archive.read('IMAGE100.LXFML')
+	trans_xyz =[]
+	
+	
+	ribfile = os.path.splitext(os.path.basename(lxf_filename))[0]
+	with open(ribfile + '.rib', 'w') as file_writer:
+	
+		file_writer.write('WorldBegin\n')
+		file_writer.write('\tTranslate 0 0 10\n')
+		file_writer.write('\tScale 0.7 0.7 0.7\n')
+		file_writer.write('\tRotate -25 1 0 0\n')
+		file_writer.write('\tRotate 45 0 1 0\n')
+		file_writer.write('\tLight \"PxrDomeLight\" \"domeLight\" \"string lightColorMap\" [\"GriffithObservatory.tex\"]\n')
+	
+		tree = ET.fromstring(lxfml_file)
+		lst = tree.findall('Bricks/Brick')
+		for item in lst:
+			design_id = item.get('designID')
+			for subelem in item:
+				material_id = subelem.get('materials')
+				for sub in subelem:
+					transformation = sub.get('transformation')
+					print transformation
+					
+			transformation_array = transformation.split(',')
+			trans_xyz = (transformation_array[9], transformation_array[10], str((-1) * float(transformation_array[11])))
 			
-			if 'vn ' in line and '.' in line:
-				line = line.rstrip()
-				l = ['%.3f' % float(num) for num in line.split(' ') if 'vn' not in num]
-				l[2] = ((-1) * float(l[2])) #obj is right handed, rib is left handed coordinate system -> the z-axis is inverted
-				normals.append(l)
+			R = np.array([[float(transformation_array[0]), float(transformation_array[1]) ,float(transformation_array[2])], [ float(transformation_array[3]), float(transformation_array[4]) ,float(transformation_array[5])], [ float(transformation_array[6]), float(transformation_array[7]) ,float(transformation_array[8])]])
+			b = np.array([1, 0, 0])
+			#print isRotationMatrix(R)
 			
-			if 'f ' in line and '/' in line:
-				l = []
-				for nums in line.split(' '):
-					if 'f' not in nums:
-						l.append(int(nums.split('/')[0]))
-				faces.append(l)
-		
-		# Create polygons
-		f2.write('# Brick' + name)
-		f2.write('\nAttributeBegin')
-		f2.write('\nAttribute \"identifier\" \"uniform string name\" [\"' + name + '\"]')
-		
-		for face in faces:
-			f2.write('\n\tPolygon')
+			rotx, roty, rotz = rotationMatrixToEulerAngles(R)
+			rotz = (-1) * rotz
+			#print math.degrees(rotx)
 			
-			newline = ''
-			for i in xrange(0, len(face), 1):
-				for j in xrange(0, len(verts[face[i]-1]), 1):
-					newline += str(verts[face[i]-1][j]) + ' '
-			f2.write('\n\t\t\"P\" [ ' + newline + ']')
+			file_writer.write('\tTransformBegin\n')
+			file_writer.write('\t\tTranslate ' + trans_xyz[0] + ' ' + trans_xyz[1] + ' ' + trans_xyz[2] + '\n')
+			file_writer.write('\t\tRotate ' + str(math.degrees(rotx)) + ' 1 0 0\n')
+			file_writer.write('\t\tRotate ' + str(math.degrees(roty)) + ' 0 1 0\n')
+			file_writer.write('\t\tRotate ' + str(math.degrees(rotz)) + ' 0 0 1\n')
+			file_writer.write('\t\tScale 1 1 1\n')
+			file_writer.write('\t\tBxdf \"PxrSurface\" \"terminal.bxdf\" \"color diffuseColor\" [1 0 0] \"float specularRoughness\" [0.008] \"color specularEdgeColor\" [0.45 0.45 0.45]\n')
+			file_writer.write('\t\tAttribute \"identifier\" \"name" [\"'+ design_id +'\"]\n')
+			file_writer.write('\t\tReadArchive \"'+ design_id + '.rib\"\n')
+			file_writer.write('\tTransformEnd\n\n')
 			
-			newline = ''
-			for i in xrange(0, len(face), 1):
-				for j in xrange(0, len(normals[face[i]-1]), 1):
-					newline += str(normals[face[i]-1][j]) + ' '
-			f2.write(' \"N\" [ ' + newline + ']')
-			
-		f2.write('\nAttributeEnd\n')
-		f2.close()
-		
-		return True
-
-
-#ObjToRib.export_obj_to_rib(obj_file)
+		file_writer.write('WorldEnd\n')
+	
+	file_writer.close()
+	return True
+	
+	
+def main():
+	lxf_filename = sys.argv[1]
+	
+	generate_bricks(lxf_filename)
+	
+	export_to_rib(lxf_filename)
+	
+	
+if __name__ == "__main__":
+	main()
