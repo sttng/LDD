@@ -32,7 +32,7 @@ def isRotationMatrix(R) :
 # Calculates rotation matrix to euler angles.
 def rotationMatrixToEulerAngles(R) :
  
-	assert(isRotationMatrix(R))
+	#assert(isRotationMatrix(R))
 	
 	sy = math.sqrt(R[0,0] * R[0,0] +  R[1,0] * R[1,0])
 	
@@ -79,7 +79,7 @@ def export_to_rib(lxf_filename):
 		file_writer.write('\tTranslate 0 0 10\n')
 		file_writer.write('\tScale 0.7 0.7 0.7\n')
 		file_writer.write('\tRotate -25 1 0 0\n')
-		file_writer.write('\tRotate 235 0 1 0\n')
+		file_writer.write('\tRotate 45 0 1 0\n')
 		file_writer.write('\tLight \"PxrDomeLight\" \"domeLight\" \"string lightColorMap\" [\"GriffithObservatory.tex\"]\n')
 	
 		tree = ET.fromstring(lxfml_file)
@@ -93,20 +93,21 @@ def export_to_rib(lxf_filename):
 					print transformation
 					
 			transformation_array = transformation.split(',')
-			trans_xyz = (str((-1) * float(transformation_array[9])), transformation_array[10], transformation_array[11])
+			trans_xyz = (transformation_array[9], transformation_array[10], str((-1) * float(transformation_array[11])))
 			
 			R = np.array([[float(transformation_array[0]), float(transformation_array[1]) ,float(transformation_array[2])], [ float(transformation_array[3]), float(transformation_array[4]) ,float(transformation_array[5])], [ float(transformation_array[6]), float(transformation_array[7]) ,float(transformation_array[8])]])
 			b = np.array([1, 0, 0])
 			#print isRotationMatrix(R)
 			
 			rotx, roty, rotz = rotationMatrixToEulerAngles(R)
+			rotz = (-1) * rotz
 			#print math.degrees(rotx)
 			
 			file_writer.write('\tTransformBegin\n')
+			file_writer.write('\t\tTranslate ' + trans_xyz[0] + ' ' + trans_xyz[1] + ' ' + trans_xyz[2] + '\n')
 			file_writer.write('\t\tRotate ' + str(math.degrees(rotx)) + ' 1 0 0\n')
 			file_writer.write('\t\tRotate ' + str(math.degrees(roty)) + ' 0 1 0\n')
 			file_writer.write('\t\tRotate ' + str(math.degrees(rotz)) + ' 0 0 1\n')
-			file_writer.write('\t\tTranslate ' + trans_xyz[0] + ' ' + trans_xyz[1] + ' ' + trans_xyz[2] + '\n')
 			file_writer.write('\t\tScale 1 1 1\n')
 			file_writer.write('\t\tBxdf \"PxrSurface\" \"terminal.bxdf\" \"color diffuseColor\" [1 0 0] \"float specularRoughness\" [0.008] \"color specularEdgeColor\" [0.45 0.45 0.45]\n')
 			file_writer.write('\t\tAttribute \"identifier\" \"name" [\"'+ design_id +'\"]\n')
