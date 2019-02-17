@@ -14,6 +14,8 @@ import re
 import unicodedata
 import zipfile
 import math
+from BrickReader import BrickReader
+from ObjToRib import ObjToRib
 import xml.etree.ElementTree as ET
 import numpy as np
 
@@ -47,6 +49,22 @@ def rotationMatrixToEulerAngles(R) :
  
 	return np.array([x, y, z])
 
+	
+def generate_bricks(lxf_filename):
+
+	archive = zipfile.ZipFile(lxf_filename, 'r')
+	lxfml_file = archive.read('IMAGE100.LXFML')
+	
+	tree = ET.fromstring(lxfml_file)
+	lst = tree.findall('Bricks/Brick')
+	for item in lst:
+		design_id = item.get('designID')
+		print design_id
+		BrickReader.read_brick(design_id)
+		ObjToRib.export_obj_to_rib(design_id + '.obj')
+
+
+
 def export_to_rib(lxf_filename):
 
 	archive = zipfile.ZipFile(lxf_filename, 'r')
@@ -72,6 +90,7 @@ def export_to_rib(lxf_filename):
 				material_id = subelem.get('materials')
 				for sub in subelem:
 					transformation = sub.get('transformation')
+					print transformation
 					
 			transformation_array = transformation.split(',')
 			trans_xyz = (str((-1) * float(transformation_array[9])), transformation_array[10], transformation_array[11])
@@ -102,6 +121,8 @@ def export_to_rib(lxf_filename):
 	
 def main():
 	lxf_filename = sys.argv[1]
+	
+	generate_bricks(lxf_filename)
 	
 	export_to_rib(lxf_filename)
 	
