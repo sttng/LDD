@@ -18,6 +18,7 @@ from BrickReader import BrickReader
 from ObjToRib import ObjToRib
 import xml.etree.ElementTree as ET
 import numpy as np
+import csv
 
 
 # Checks if a matrix is a valid rotation matrix.
@@ -71,6 +72,14 @@ def export_to_rib(lxf_filename):
 	lxfml_file = archive.read('IMAGE100.LXFML')
 	trans_xyz =[]
 	
+	material_id_dict = {}
+	with open('lego_colors.csv', 'r') as csvfile:
+		reader = csv.reader(csvfile, delimiter=',')
+		next(csvfile) # skip the first row
+		for row in reader:
+			material_id_dict[row[0]] = row[6], row[7], row[8]
+			#print(row)
+			
 	
 	ribfile = os.path.splitext(os.path.basename(lxf_filename))[0]
 	with open(ribfile + '.rib', 'w') as file_writer:
@@ -88,31 +97,41 @@ def export_to_rib(lxf_filename):
 			design_id = item.get('designID')
 			for subelem in item:
 				material_id = subelem.get('materials')
+				
 				for sub in subelem:
 					transformation = sub.get('transformation')
-					print transformation
 					
 			transformation_array = transformation.split(',')
 			trans_xyz = (transformation_array[9], transformation_array[10], str((-1) * float(transformation_array[11])))
 			
 			R = np.array([[float(transformation_array[0]), float(transformation_array[1]) ,float(transformation_array[2])], [ float(transformation_array[3]), float(transformation_array[4]) ,float(transformation_array[5])], [ float(transformation_array[6]), float(transformation_array[7]) ,float(transformation_array[8])]])
 			b = np.array([1, 0, 0])
-			#print isRotationMatrix(R)
+			
+			try:
+				color_r, color_g, color_b = material_id_dict[material_id]
+			except KeyError:
+				color_r = round((float(100) / 255),2)
+				color_g = round((float(100) / 255),2)
+				color_b = round((float(100) / 255),2)
+
+			
+			color_r = round((float(color_r) / 255),2)
+			color_g = round((float(color_g) / 255),2)
+			color_b = round((float(color_b) / 255),2)
 			
 			rotx, roty, rotz = rotationMatrixToEulerAngles(R)
 			rotz = (-1) * rotz
-			#print math.degrees(rotx)
 			
-			file_writer.write('\tTransformBegin\n')
+			file_writer.write('\tAttributeBegin\n')
 			file_writer.write('\t\tTranslate ' + trans_xyz[0] + ' ' + trans_xyz[1] + ' ' + trans_xyz[2] + '\n')
 			file_writer.write('\t\tRotate ' + str(math.degrees(rotx)) + ' 1 0 0\n')
 			file_writer.write('\t\tRotate ' + str(math.degrees(roty)) + ' 0 1 0\n')
 			file_writer.write('\t\tRotate ' + str(math.degrees(rotz)) + ' 0 0 1\n')
 			file_writer.write('\t\tScale 1 1 1\n')
-			file_writer.write('\t\tBxdf \"PxrSurface\" \"terminal.bxdf\" \"color diffuseColor\" [1 0 0] \"float specularRoughness\" [0.008] \"color specularEdgeColor\" [0.45 0.45 0.45]\n')
+			file_writer.write('\t\tBxdf \"PxrSurface\" \"terminal.bxdf\" \"color diffuseColor\" [' + str(color_r) + ' ' + str(color_g) + ' ' + str(color_b) + '] \"float specularRoughness\" [0.008] \"color specularEdgeColor\" [0.45 0.45 0.45]\n')
 			file_writer.write('\t\tAttribute \"identifier\" \"name" [\"'+ design_id +'\"]\n')
 			file_writer.write('\t\tReadArchive \"'+ design_id + '.rib\"\n')
-			file_writer.write('\tTransformEnd\n\n')
+			file_writer.write('\tAttributeEnd\n\n')
 			
 		file_writer.write('WorldEnd\n')
 	
