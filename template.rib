@@ -5,6 +5,16 @@ Option "searchpath" "string texture" [".:@:/Applications/Pixar/RenderManProServe
 Display "rgb.exr" "it" "rgba" 
 Format 1920 1080 1
 Integrator "PxrPathTracer" "handle" 
+
+#Integrator "PxrVisualizer" "PxrVisualizer1"
+#               "string style" ["bxdf"] #["shaded"]
+#               "int wireframe" [1]
+#               "int normalCheck" [0]
+#               "string matCap" [""]
+#               "color wireframeColor" [0.0 0.0 0.0]
+#               "float wireframeOpacity" [0.5]
+#               "float wireframeWidth" [1.0]
+
 Hider "raytrace" "int minsamples" [32] "int maxsamples" [64] "float darkfalloff" [0.025] "int incremental" [1] "string pixelfiltermode" ["importance"]
 ShadingRate 0.001
 PixelVariance 0.001
