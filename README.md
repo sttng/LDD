@@ -23,3 +23,4 @@ oslc Primvar.osl
 * http://stefanmuller.com/exploring-lego-material-part-1/
 * http://stefanmuller.com/exploring-lego-material-part-2/
 * https://github.com/chipgw/LibLDD
+* https://sdm.scad.edu/faculty/mkesson/vsfx502/wip/best/fall11/kevin_george/rib_teapot/index.html
