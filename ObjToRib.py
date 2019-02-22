@@ -4,7 +4,7 @@
 # Version 0.1 - Copyright (c) 2019 by 
 #
 # Info:
-# This script will read in  a.obj file, construct geometry from it
+# This script will read in a.obj file, construct geometry from it
 # and write out a rib file of it.
 #
 # Updates:
@@ -96,6 +96,8 @@ class ObjToRib:
 				for j in xrange(0, len(normals[face[i]-1]), 1):
 					newline += str(normals[face[i]-1][j]) + ' '
 			f2.write(' \"N\" [ ' + newline + ']')
+			#f2.write(' \"facevarying float [2] uv1\" [ ' + newline + ']')
+			#f2.write(' \"facevarying float [2] uv2\" [ ' + newline + ']')
 			
 		f2.write('\nAttributeEnd\n')
 		f2.close()
