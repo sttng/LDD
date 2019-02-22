@@ -26,3 +26,4 @@ oslc Primvar.osl
 * https://github.com/chipgw/LibLDD
 * https://sdm.scad.edu/faculty/mkesson/vsfx502/wip/best/fall11/kevin_george/rib_teapot/index.html
 * http://julius-ihle.de/?p=547
+* https://sdm.scad.edu/faculty/mkesson/vsfx755/wip/best/spring2011/zichuan_zhao/lemon/lemon.html
