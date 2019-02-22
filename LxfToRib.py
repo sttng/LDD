@@ -65,7 +65,6 @@ def generate_bricks(lxf_filename):
 		ObjToRib.export_obj_to_rib(design_id + '.obj')
 
 
-
 def export_to_rib(lxf_filename):
 
 	archive = zipfile.ZipFile(lxf_filename, 'r')
@@ -80,7 +79,6 @@ def export_to_rib(lxf_filename):
 			material_id_dict[row[0]] = row[6], row[7], row[8]
 			#print(row)
 			
-	
 	ribfile = os.path.splitext(os.path.basename(lxf_filename))[0]
 	with open(ribfile + '.rib', 'w') as file_writer:
 	
@@ -93,6 +91,7 @@ def export_to_rib(lxf_filename):
 	
 		tree = ET.fromstring(lxfml_file)
 		lst = tree.findall('Bricks/Brick')
+		
 		for item in lst:
 			design_id = item.get('designID')
 			for subelem in item:
@@ -109,26 +108,26 @@ def export_to_rib(lxf_filename):
 			
 			try:
 				color_r, color_g, color_b = material_id_dict[material_id]
+				
 			except KeyError:
-				color_r = round((float(100) / 255),2)
-				color_g = round((float(100) / 255),2)
-				color_b = round((float(100) / 255),2)
+				color_r, color_g, color_b = [100, 100, 100]
+				#color_r = round((float(100) / 255),2)
+				#color_g = round((float(100) / 255),2)
+				#color_b = round((float(100) / 255),2)
 
-			
 			color_r = round((float(color_r) / 255),2)
 			color_g = round((float(color_g) / 255),2)
 			color_b = round((float(color_b) / 255),2)
 			
 			rotx, roty, rotz = rotationMatrixToEulerAngles(R)
-			rotz = (-1) * rotz
+			rotz = (-1) * rotz #Renderman is lefthanded coordinate system, but LDD is right handed.
 			
 			file_writer.write('\tAttributeBegin\n')
 			file_writer.write('\t\tTranslate ' + trans_xyz[0] + ' ' + trans_xyz[1] + ' ' + trans_xyz[2] + '\n')
 			file_writer.write('\t\tRotate ' + str(math.degrees(rotx)) + ' 1 0 0\n')
 			file_writer.write('\t\tRotate ' + str(math.degrees(roty)) + ' 0 1 0\n')
 			file_writer.write('\t\tRotate ' + str(math.degrees(rotz)) + ' 0 0 1\n')
-
-file_writer.write('\t\t# Transform Transformation matrices can also be directly given as an array of 16 float values.\n')
+			file_writer.write('\t\t#Transform Transformation matrices can also be directly given as an array of 16 float values.\n')
 
 			file_writer.write('\t\tScale 1 1 1\n')
 			file_writer.write('\t\tBxdf \"PxrSurface\" \"terminal.bxdf\" \"color diffuseColor\" [' + str(color_r) + ' ' + str(color_g) + ' ' + str(color_b) + '] \"float specularRoughness\" [0.008] \"color specularEdgeColor\" [0.45 0.45 0.45]\n')
