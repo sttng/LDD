@@ -23,9 +23,7 @@ import binascii
 import signal
 import stat
 import struct
-import shutil
 import argparse
-import tempfile
 import commands
 import shutil
 import array
@@ -78,8 +76,9 @@ class ObjToRib:
 				faces.append(l)
 		
 		# Create polygons
-		f2.write('# Brick' + name)
-		f2.write('\nAttributeBegin')
+		
+		f2.write('##RenderMan RIB-Structure 1.1 Entity')
+		f2.write('\nAttributeBegin #begin Brick ' + name)
 		f2.write('\nAttribute \"identifier\" \"uniform string name\" [\"' + name + '\"]')
 		
 		for face in faces:
@@ -96,10 +95,11 @@ class ObjToRib:
 				for j in xrange(0, len(normals[face[i]-1]), 1):
 					newline += str(normals[face[i]-1][j]) + ' '
 			f2.write(' \"N\" [ ' + newline + ']')
+			# Add code for uv texture coords later here
 			#f2.write(' \"facevarying float [2] uv1\" [ ' + newline + ']')
 			#f2.write(' \"facevarying float [2] uv2\" [ ' + newline + ']')
 			
-		f2.write('\nAttributeEnd\n')
+		f2.write('\nAttributeEnd #end Brick ' + name + '\n')
 		f2.close()
 		
 		return True
