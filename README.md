@@ -18,7 +18,6 @@ oslc Primvar.osl
 ## Useful links
 
 * https://sdm.scad.edu/faculty/mkesson/vsfx502/wip/best/spring11/miho_tomimasu/rib_archives/index.html
-* RIB Entity files section: https://renderman.pixar.com/resources/RenderMan_20/ribBinding.html
 * https://rmanwiki.pixar.com/display/REN/PxrSurface.mobile.phone
 * http://cg.earlyworm.co.nz/renderman-commandline/
 * https://renderman.pixar.com/forum/showthread.php?s=&threadid=35595&s=3f67579b2c1d88a74b98ea5f86a3c546
