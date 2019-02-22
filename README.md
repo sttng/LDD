@@ -6,7 +6,7 @@ LifToObj.py uses LIFExtractor.py from JrMasterModelBuilder to extract the Lego D
 ObjToRib.py will read in a Alias|Wavefrom .obj file, construct geometry from it and write out a Renderman .rib file of it.
 
 ## LxfRoRib
-LxfRoRib.py will read in a Lego Digital Designer .lxf scene file and construct a Renderman .rib file of the scene by using ObjToRib to concert the bricks of the scenes and use the relevant scene information to place the bricks accordingly (rotation, translation).
+LxfRoRib.py will read in a Lego Digital Designer .lxf scene file and construct a Renderman .rib file of the scene by using ObjToRib to convert the bricks of the scenes and use the relevant scene information to place the bricks accordingly (rotation, translation).
 
 ## prman commands
 ```terminal
