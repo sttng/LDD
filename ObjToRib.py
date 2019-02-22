@@ -56,7 +56,8 @@ class ObjToRib:
 		# Convert obj file lines to rib compatible format
 		verts = []
 		faces = []
-		normals =[]
+		normals = []
+		uv_coords = []
 		for line in f1lines:
 			if 'v ' in line and '.' in line:
 				line = line.rstrip()
@@ -69,6 +70,12 @@ class ObjToRib:
 				l = ['%.3f' % float(num) for num in line.split(' ') if 'vn' not in num]
 				l[2] = ((-1) * float(l[2])) #obj is right handed, rib is left handed coordinate system -> the z-axis is inverted
 				normals.append(l)
+				
+			if 'vt ' in line and '.' in line:
+				line = line.rstrip()
+				l = ['%.3f' % float(num) for num in line.split(' ') if 'vt' not in num]
+				#obj is right handed, rib is left handed coordinate system -> still need to check if uv implication.
+				uv_coords.append(l)
 			
 			if 'f ' in line and '/' in line:
 				l = []
@@ -84,6 +91,7 @@ class ObjToRib:
 		f2.write('\nAttribute \"identifier\" \"uniform string name\" [\"' + name + '\"]')
 		
 		for face in faces:
+			uv_num = 1
 			f2.write('\n\tPolygon')
 			
 			newline = ''
@@ -97,9 +105,13 @@ class ObjToRib:
 				for j in xrange(0, len(normals[face[i]-1]), 1):
 					newline += str(normals[face[i]-1][j]) + ' '
 			f2.write(' \"N\" [ ' + newline + ']')
-			# Add code for uv texture coords later here
-			#f2.write(' \"facevarying float [2] uv1\" [ ' + newline + ']')
-			#f2.write(' \"facevarying float [2] uv2\" [ ' + newline + ']')
+			
+			newline = ''
+			for i in xrange(0, len(face), 1):
+				for j in xrange(0, len(uv_coords[face[i]-1]), 1):
+					newline += str(uv_coords[face[i]-1][j]) + ' '
+			f2.write(' \"facevarying float [2] uv' + str(uv_num) + '\" [ ' + newline + ']')
+			uv_num = uv_num + 1
 			
 		f2.write('\nAttributeEnd #end Brick ' + name + '\n')
 		f2.close()
