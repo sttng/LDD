@@ -144,7 +144,6 @@ class BrickReader:
 
 	@staticmethod
 	def export_to_rib(geometry_file_dict_list):
-		primitive = 0
 		offset = 1
 		uv_offset = 1
 		partnumber = geometry_file_dict_list[0]["partnumber"]
@@ -187,7 +186,6 @@ class BrickReader:
 				
 						file_writer.write('f ' + str(index0) + '//' + str(index0) + ' ' + str(index1) + '//' + str(index1) + " " + str(index2) + '//' + str(index2) + '\n')
 		
-				primitive += 1
 				offset += geometry_file_dict["vertex_count"]
 		
 				if (geometry_file_dict["uv_texture_coords_enabled"] == True):
