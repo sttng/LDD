@@ -155,8 +155,7 @@ class BrickReader:
 			
 				file_writer.write('\nAttributeBegin #begin Brick ' + geometry_file_dict["partnumber"] + geometry_file_dict["part_extension"])
 				file_writer.write('\nAttribute \"identifier\" \"uniform string name\" [\"' + geometry_file_dict["partnumber"] + geometry_file_dict["part_extension"] + '\"]'
-				
-				
+								
 				for i in range(0, len(geometry_file_dict["vertices"]), 3):
 					file_writer.write('\n\t\t\"P\" [' + str(geometry_file_dict["vertices"][i]) + ' ' + str(geometry_file_dict["vertices"][i + 1]) + ' ' + str(geometry_file_dict["vertices"][i + 2]) + ' ' + ']')
 		
@@ -174,8 +173,7 @@ class BrickReader:
 						index3 = geometry_file_dict["indices"][i + 0] + uv_offset
 						index4 = geometry_file_dict["indices"][i + 1] + uv_offset
 						index5 = geometry_file_dict["indices"][i + 2] + uv_offset
-				
-						file_writer.write('f ' + str(index0) + '/' + str(index3) + '/' + str(index0) + ' ' + str(index1) + "/" + str(index4) + '/' + str(index1) + ' ' + str(index2) + "/" + str(index5) + '/' + str(index2) + '\n')
+						#file_writer.write('f ' + str(index0) + '/' + str(index3) + '/' + str(index0) + ' ' + str(index1) + "/" + str(index4) + '/' + str(index1) + ' ' + str(index2) + "/" + str(index5) + '/' + str(index2) + '\n')
 				
 				elif (geometry_file_dict["uv_texture_coords_enabled"] == False):
 				
@@ -183,13 +181,14 @@ class BrickReader:
 						index0 = geometry_file_dict["indices"][i + 0] + offset
 						index1 = geometry_file_dict["indices"][i + 1] + offset
 						index2 = geometry_file_dict["indices"][i + 2] + offset
-				
-						file_writer.write('f ' + str(index0) + '//' + str(index0) + ' ' + str(index1) + '//' + str(index1) + " " + str(index2) + '//' + str(index2) + '\n')
+						#file_writer.write('f ' + str(index0) + '//' + str(index0) + ' ' + str(index1) + '//' + str(index1) + " " + str(index2) + '//' + str(index2) + '\n')
 		
 				offset += geometry_file_dict["vertex_count"]
 		
 				if (geometry_file_dict["uv_texture_coords_enabled"] == True):
 					uv_offset += geometry_file_dict["vertex_count"]
+				
+				file_writer.write('\nAttributeEnd #end Brick ' + geometry_file_dict["partnumber"] + geometry_file_dict["part_extension"])
 					
 		file_writer.close()
 					
@@ -248,4 +247,4 @@ class BrickReader:
 					
 		return True
 		
-BrickReader.read_brick(input_brick)
+BrickReaderRib.read_brick(input_brick)
