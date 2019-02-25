@@ -43,7 +43,7 @@ path_to_lif_tmp_dir = os.getcwd() + '/liftmp'
 path_to_lif_tmp = path_to_lif_tmp_dir + '/db.lif'
 
 
-class BrickReader:
+class BrickReaderRib:
 
 	@staticmethod
 	def read_brick(partnumber):
@@ -57,11 +57,10 @@ class BrickReader:
 		# The .g file is the 'base_brick'. Currently no difference between 'base_brick' and 'additional geometry' implemented.
 		for geometry_file in files_to_convert:
 		
-			geometry_file_dict = BrickReader.load_single_geometry_file(geometry_file)
+			geometry_file_dict = BrickReaderRib.load_single_geometry_file(geometry_file)
 			geometry_file_dict_list.append(geometry_file_dict)
 				
-		BrickReader.export_to_rib(geometry_file_dict_list)
-		
+		BrickReaderRib.export_to_rib(geometry_file_dict_list)
 		return True
 	
 	
@@ -76,8 +75,11 @@ class BrickReader:
 				indices_list = []
 				tex_coords_list = []
 				geometry_file_dict = dict()
+				
 				partnumber = os.path.splitext(os.path.basename(geometry_file))[0]
 				part_extension = os.path.splitext(os.path.basename(geometry_file))[1]
+				geometry_file_dict["partnumber"] = partnumber
+				geometry_file_dict["part_extension"] = part_extension
 					
 				fourcc = file_reader.read(4) 
 				if(fourcc != "10GB"):
@@ -86,6 +88,8 @@ class BrickReader:
 					
 				vertex_count = struct.unpack("<L", file_reader.read(4))[0]
 				indices_count = struct.unpack("<L", file_reader.read(4))[0]
+				geometry_file_dict["vertex_count"] = vertex_count
+				geometry_file_dict["indices_count"] = indices_count
 				
 				# options flag:
 				# options & 0x01 == uv_texture_coords_enabled then texture_coords_count = 2 * vertex_count
@@ -104,11 +108,8 @@ class BrickReader:
 					normals_list.append(normal)
 					
 				geometry_file_dict["vertices"] = vertices_list
-				geometry_file_dict["vertex_count"] = vertex_count
 				geometry_file_dict["normals"] = normals_list
-				geometry_file_dict["partnumber"] = partnumber
-				geometry_file_dict["part_extension"] = part_extension
-				
+
 				# uv_texture_coords_enabled
 				if (options == '3b000000'):
 							
@@ -190,8 +191,7 @@ class BrickReader:
 				
 				file_writer.write('\nAttributeEnd #end Brick ' + geometry_file_dict["partnumber"] + geometry_file_dict["part_extension"])
 					
-		file_writer.close()
-					
+		file_writer.close()		
 		return True
 		
 	
@@ -243,8 +243,7 @@ class BrickReader:
 				if (geometry_file_dict["uv_texture_coords_enabled"] == True):
 					uv_offset += geometry_file_dict["vertex_count"]
 					
-		file_writer.close()
-					
+		file_writer.close()	
 		return True
 		
 BrickReaderRib.read_brick(input_brick)
