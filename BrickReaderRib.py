@@ -60,7 +60,7 @@ class BrickReader:
 			geometry_file_dict = BrickReader.load_single_geometry_file(geometry_file)
 			geometry_file_dict_list.append(geometry_file_dict)
 				
-		BrickReader.export_to_obj(geometry_file_dict_list)
+		BrickReader.export_to_rib(geometry_file_dict_list)
 		
 		return True
 		
