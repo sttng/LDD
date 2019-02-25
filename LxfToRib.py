@@ -127,8 +127,7 @@ def export_to_rib(lxf_filename):
 			file_writer.write('\t\tRotate ' + str(math.degrees(rotx)) + ' 1 0 0\n')
 			file_writer.write('\t\tRotate ' + str(math.degrees(roty)) + ' 0 1 0\n')
 			file_writer.write('\t\tRotate ' + str(math.degrees(rotz)) + ' 0 0 1\n')
-			file_writer.write('\t\t#Transform Transformation matrices can also be directly given as an array of 16 float values.\n')
-
+			file_writer.write('\t\t#Transform [1 0 0 0   0 1 0 0   0 0 1 0   ' + trans_xyz[0] + ' ' + trans_xyz[1] + ' ' + trans_xyz[2] + ' 1]\n')
 			file_writer.write('\t\tScale 1 1 1\n')
 			file_writer.write('\t\tBxdf \"PxrSurface\" \"terminal.bxdf\" \"color diffuseColor\" [' + str(color_r) + ' ' + str(color_g) + ' ' + str(color_b) + '] \"float specularRoughness\" [0.008] \"color specularEdgeColor\" [0.45 0.45 0.45]\n')
 			file_writer.write('\t\tAttribute \"identifier\" \"name" [\"'+ design_id +'\"]\n')
