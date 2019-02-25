@@ -101,7 +101,7 @@ def export_to_rib(lxf_filename):
 					transformation = sub.get('transformation')
 					
 			transformation_array = transformation.split(',')
-			trans_xyz = (transformation_array[9], transformation_array[10], str((-1) * float(transformation_array[11])))
+			trans_xyz = (transformation_array[9], transformation_array[10], str((-1) * float(transformation_array[11]))) # left vs right handed coord system
 			
 			R = np.array([[float(transformation_array[0]), float(transformation_array[1]) ,float(transformation_array[2])], [ float(transformation_array[3]), float(transformation_array[4]) ,float(transformation_array[5])], [ float(transformation_array[6]), float(transformation_array[7]) ,float(transformation_array[8])]])
 			b = np.array([1, 0, 0])
@@ -127,7 +127,7 @@ def export_to_rib(lxf_filename):
 			file_writer.write('\t\tRotate ' + str(math.degrees(rotx)) + ' 1 0 0\n')
 			file_writer.write('\t\tRotate ' + str(math.degrees(roty)) + ' 0 1 0\n')
 			file_writer.write('\t\tRotate ' + str(math.degrees(rotz)) + ' 0 0 1\n')
-			file_writer.write('\t\t#Transform [1 0 0 0   0 1 0 0   0 0 1 0   ' + trans_xyz[0] + ' ' + trans_xyz[1] + ' ' + trans_xyz[2] + ' 1]\n')
+			file_writer.write('\t\t#Transform [' + transformation_array[0] + ' ' + transformation_array[1] + ' ' + transformation_array[2] + ' 0' + transformation_array[3] + ' ' + transformation_array[4] + ' ' + transformation_array[5] + ' 0' + transformation_array[6] + ' ' + transformation_array[7] + ' ' + transformation_array[8] + ' 0' + trans_xyz[0] + ' ' + trans_xyz[1] + ' ' + trans_xyz[2] + ' 1]\n')
 			file_writer.write('\t\tScale 1 1 1\n')
 			file_writer.write('\t\tBxdf \"PxrSurface\" \"terminal.bxdf\" \"color diffuseColor\" [' + str(color_r) + ' ' + str(color_g) + ' ' + str(color_b) + '] \"float specularRoughness\" [0.008] \"color specularEdgeColor\" [0.45 0.45 0.45]\n')
 			file_writer.write('\t\tAttribute \"identifier\" \"name" [\"'+ design_id +'\"]\n')
