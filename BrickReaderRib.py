@@ -63,7 +63,8 @@ class BrickReader:
 		BrickReader.export_to_rib(geometry_file_dict_list)
 		
 		return True
-		
+	
+	
 	@staticmethod
 	def load_single_geometry_file(geometry_file):
 	
@@ -195,13 +196,10 @@ class BrickReader:
 		file_writer.close()
 					
 		return True
-
-
-			
+		
 	
 	@staticmethod
 	def export_to_obj(geometry_file_dict_list):
-		primitive = 0
 		offset = 1
 		uv_offset = 1
 		partnumber = geometry_file_dict_list[0]["partnumber"]
@@ -211,7 +209,7 @@ class BrickReader:
 		
 			for geometry_file_dict in geometry_file_dict_list:
 				
-				file_writer.write('g ' + str(primitive) + '\n')
+				file_writer.write('g ' + geometry_file_dict["partnumber"] + geometry_file_dict["part_extension"] + '\n')
 				file_writer.write('# From file: ' + geometry_file_dict["partnumber"] + geometry_file_dict["part_extension"] + '\n')
 				
 				for i in range(0, len(geometry_file_dict["vertices"]), 3):
@@ -243,7 +241,6 @@ class BrickReader:
 				
 						file_writer.write('f ' + str(index0) + '//' + str(index0) + ' ' + str(index1) + '//' + str(index1) + " " + str(index2) + '//' + str(index2) + '\n')
 		
-				primitive += 1
 				offset += geometry_file_dict["vertex_count"]
 		
 				if (geometry_file_dict["uv_texture_coords_enabled"] == True):
