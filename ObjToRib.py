@@ -104,13 +104,13 @@ class ObjToRib:
 			for i in xrange(0, len(face), 1):
 				for j in xrange(0, len(normals[face[i]-1]), 1):
 					newline += str(normals[face[i]-1][j]) + ' '
-			f2.write(' \"N\" [ ' + newline + ']')
+			f2.write('\n\t\t\"N\" [ ' + newline + ']')
 			
 			newline = ''
 			for i in xrange(0, len(face), 1):
 				for j in xrange(0, len(uv_coords[face[i]-1]), 1):
 					newline += str(uv_coords[face[i]-1][j]) + ' '
-			f2.write(' \"facevarying float [2] uv' + str(uv_num) + '\" [ ' + newline + ']')
+			f2.write('\n\t\t\"facevarying float [2] uv' + str(uv_num) + '\" [ ' + newline + ']')
 			uv_num = uv_num + 1
 			
 		f2.write('\nAttributeEnd #end Brick ' + name + '\n')
