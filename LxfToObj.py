@@ -90,9 +90,9 @@ def export_to_obj(lxf_filename):
 			# Read the current brick into a list (as bricks my be build of sub-bricks)
 			geometry_file_dict_list = read_brick(design_id)
 			
-			T=np.array([[transformation_array[0], transformation_array[1], transformation_array[2], 0],
-						[transformation_array[3], transformation_array[4], transformation_array[5], 0],
-						[transformation_array[6], transformation_array[7], transformation_array[8], 0],
+			T=np.array([[transformation_array[0], transformation_array[1],  transformation_array[2],  0],
+						[transformation_array[3], transformation_array[4],  transformation_array[5],  0],
+						[transformation_array[6], transformation_array[7],  transformation_array[8],  0],
 						[transformation_array[9], transformation_array[10], transformation_array[11], 1]])
 			
 			# Rotate and transpose (T matrix) the brick based on the LXF file info
@@ -106,14 +106,22 @@ def export_to_obj(lxf_filename):
 				file_writer.write('# From file: ' + geometry_file_dict["partnumber"] + geometry_file_dict["part_extension"] + '\n')
 				
 				for i in range(0, len(geometry_file_dict["vertices"]), 3):
-					file_writer.write('v ' + str(geometry_file_dict["vertices"][i]) + ' ' + str(geometry_file_dict["vertices"][i + 1]) + ' ' + str(geometry_file_dict["vertices"][i + 2]) + ' ' + '\n\n')
+					file_writer.write('v ' 
+						+ str(geometry_file_dict["vertices"][i]) + ' ' 
+						+ str(geometry_file_dict["vertices"][i + 1]) + ' ' 
+						+ str(geometry_file_dict["vertices"][i + 2]) + '\n\n')
 		
 				for i in range(0, len(geometry_file_dict["normals"]), 3):
-					file_writer.write('vn ' + str(geometry_file_dict["normals"][i]) + ' ' + str(geometry_file_dict["normals"][i + 1]) + ' ' + str(geometry_file_dict["normals"][i + 2]) + ' ' + '\n\n')
+					file_writer.write('vn ' 
+						+ str(geometry_file_dict["normals"][i]) + ' ' 
+						+ str(geometry_file_dict["normals"][i + 1]) + ' ' 
+						+ str(geometry_file_dict["normals"][i + 2]) + '\n\n')
 		
 				if (geometry_file_dict["uv_texture_coords_enabled"] == True):
 					for i in range(0, len(geometry_file_dict["tex_coords"]), 2):
-						file_writer.write('vt ' + str(geometry_file_dict["tex_coords"][i]) + ' ' + str(geometry_file_dict["tex_coords"][i + 1]) + ' ' + '\n\n')
+						file_writer.write('vt ' 
+							+ str(geometry_file_dict["tex_coords"][i]) + ' ' 
+							+ str(geometry_file_dict["tex_coords"][i + 1]) + '\n\n')
 			
 					for i in range(0, len(geometry_file_dict["indices"]), 3):
 						index0 = geometry_file_dict["indices"][i + 0] + offset
@@ -123,7 +131,10 @@ def export_to_obj(lxf_filename):
 						index4 = geometry_file_dict["indices"][i + 1] + uv_offset
 						index5 = geometry_file_dict["indices"][i + 2] + uv_offset
 				
-						file_writer.write('f ' + str(index0) + '/' + str(index3) + '/' + str(index0) + ' ' + str(index1) + "/" + str(index4) + '/' + str(index1) + ' ' + str(index2) + "/" + str(index5) + '/' + str(index2) + '\n')
+						file_writer.write('f ' 
+							+ str(index0) + '/' + str(index3) + '/' + str(index0) + ' ' 
+							+ str(index1) + "/" + str(index4) + '/' + str(index1) + ' ' 
+							+ str(index2) + "/" + str(index5) + '/' + str(index2) + '\n')
 				
 				elif (geometry_file_dict["uv_texture_coords_enabled"] == False):
 				
@@ -132,7 +143,10 @@ def export_to_obj(lxf_filename):
 						index1 = geometry_file_dict["indices"][i + 1] + offset
 						index2 = geometry_file_dict["indices"][i + 2] + offset
 				
-						file_writer.write('f ' + str(index0) + '//' + str(index0) + ' ' + str(index1) + '//' + str(index1) + " " + str(index2) + '//' + str(index2) + '\n')
+						file_writer.write('f ' 
+							+ str(index0) + '//' + str(index0) + ' ' 
+							+ str(index1) + '//' + str(index1) + ' ' 
+							+ str(index2) + '//' + str(index2) + '\n')
 		
 				offset += geometry_file_dict["vertex_count"]
 		
