@@ -45,13 +45,15 @@ def transform_brick(geometry_file_dict_list, T):
 		
 			v = np.array([geometry_file_dict["vertices"][i], geometry_file_dict["vertices"][i+1], geometry_file_dict["vertices"][i+2], 1])
 			v_t = dot(v,T)
+			
 			n = np.array([geometry_file_dict["normals"][i], geometry_file_dict["normals"][i+1], geometry_file_dict["normals"][i+2], 1])
 			n_t = dot(n,T)
-			for i in range(0, 2): #take x,y,z value, omit the 'added' 1
+			
+			for i in range(0, len(v_t) - 1): #take x,y,z value, omit the 'added' 1
 				vertices_list.append(v_t[i])
 				normals_list.append(n_t[i])
 		
-		# update the list with the new values (which are the result of the vector x matrix multiplication 
+		# update the list with the new values (which are the result of the vector x matrix multiplication)
 		geometry_file_dict["vertices"] = vertices_list
 		geometry_file_dict["normals"] = normals_list
 	
@@ -69,7 +71,6 @@ def export_to_obj(lxf_filename):
 		next(csvfile) # skip the first row
 		for row in reader:
 			material_id_dict[row[0]] = row[6], row[7], row[8]
-			#print(row)
 			
 	objfile = os.path.splitext(os.path.basename(lxf_filename))[0]
 	with open(objfile + '.obj', 'w') as file_writer:
@@ -86,7 +87,6 @@ def export_to_obj(lxf_filename):
 					transformation = sub.get('transformation')
 					
 			transformation_array = transformation.split(',')
-			#trans_xyz = (transformation_array[9], transformation_array[10], str((-1) * float(transformation_array[11]))) # left vs right handed coord system
 			
 			# Read the current brick into a list (as bricks my be build of sub-bricks)
 			geometry_file_dict_list = read_brick(design_id)
@@ -148,8 +148,6 @@ def export_to_obj(lxf_filename):
 	
 def main():
 	lxf_filename = sys.argv[1]
-	
-	#generate_bricks(lxf_filename)
 	
 	export_to_obj(lxf_filename)
 	
