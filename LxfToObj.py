@@ -90,10 +90,10 @@ def export_to_obj(lxf_filename):
 			# Read the current brick into a list (as bricks my be build of sub-bricks)
 			geometry_file_dict_list = read_brick(design_id)
 			
-			T = np.array([[transformation_array[0], transformation_array[1], transformation_array[2], 0],
-                     [transformation_array[3], transformation_array[4], transformation_array[5], 0],
-					 [transformation_array[6], transformation_array[7], transformation_array[8], 0],
-                     [transformation_array[9], transformation_array[10], transformation_array[11], 1]])
+			T=np.array([[transformation_array[0], transformation_array[1], transformation_array[2], 0],
+						[transformation_array[3], transformation_array[4], transformation_array[5], 0],
+						[transformation_array[6], transformation_array[7], transformation_array[8], 0],
+						[transformation_array[9], transformation_array[10], transformation_array[11], 1]])
 			
 			# Rotate and transpose (T matrix) the brick based on the LXF file info
 			geometry_file_dict_list = transform_brick(geometry_file_dict_list, T)
