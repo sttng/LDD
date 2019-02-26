@@ -15,7 +15,6 @@ import unicodedata
 import zipfile
 import math
 from BrickReader import BrickReader
-from ObjToRib import ObjToRib
 import xml.etree.ElementTree as ET
 import numpy as np
 import csv
@@ -31,7 +30,7 @@ def read_brick(partnumber):
 	# The .g file is the 'base_brick'. Currently no difference between 'base_brick' and 'additional geometry' implemented.
 	for geometry_file in files_to_convert:
 		
-		geometry_file_dict = BrickReaderRib.load_single_geometry_file(geometry_file)
+		geometry_file_dict = BrickReader.load_single_geometry_file(geometry_file)
 		geometry_file_dict_list.append(geometry_file_dict)
 				
 	return geometry_file_dict_list
