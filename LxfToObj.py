@@ -11,6 +11,9 @@
 import os
 import sys
 import re
+import glob
+import platform
+import commands
 import unicodedata
 import zipfile
 import math
@@ -18,6 +21,22 @@ from BrickReader import BrickReader
 import xml.etree.ElementTree as ET
 import numpy as np
 import csv
+
+#Locate db.lif on macOS
+if platform.system() == 'Darwin':
+	find_db_lif_command = "mdfind -name db.lif"
+	path_to_lif = commands.getoutput(find_db_lif_command)
+	
+#Locate db.lif on Windows	
+elif platform.system() == 'Windows':
+	find_db_lif_command = "dir db.lif /s /p"
+	path_to_lif = commands.getoutput(find_db_lif_command)
+	
+# define the name of the temp directory to be created
+path_to_lif_tmp_dir = os.getcwd() + '/liftmp'
+path_to_lif_tmp = path_to_lif_tmp_dir + '/db.lif'
+
+
 		
 def read_brick(partnumber):
 	
@@ -38,15 +57,18 @@ def read_brick(partnumber):
 	
 def transform_brick(geometry_file_dict_list, T):
 
+	vertices_list = []
+	normals_list = []
+
 	for geometry_file_dict in geometry_file_dict_list:
 	
 		for i in range(0, len(geometry_file_dict["vertices"]), 3):
 		
-			v = np.array([geometry_file_dict["vertices"][i], geometry_file_dict["vertices"][i+1], geometry_file_dict["vertices"][i+2], 1])
-			v_t = dot(v,T)
+			v = np.array([float(geometry_file_dict["vertices"][i]), float(geometry_file_dict["vertices"][i+1]), float(geometry_file_dict["vertices"][i+2]), 1])
+			v_t = np.dot(v,T)
 			
-			n = np.array([geometry_file_dict["normals"][i], geometry_file_dict["normals"][i+1], geometry_file_dict["normals"][i+2], 1])
-			n_t = dot(n,T)
+			n = np.array([float(geometry_file_dict["normals"][i]), float(geometry_file_dict["normals"][i+1]), float(geometry_file_dict["normals"][i+2]), 1])
+			n_t = np.dot(n,T)
 			
 			for i in range(0, len(v_t) - 1): #take x,y,z value, omit the 'added' 1
 				vertices_list.append(v_t[i])
@@ -90,13 +112,17 @@ def export_to_obj(lxf_filename):
 			# Read the current brick into a list (as bricks my be build of sub-bricks)
 			geometry_file_dict_list = read_brick(design_id)
 			
-			T=np.array([[transformation_array[0], transformation_array[1],  transformation_array[2],  0],
-						[transformation_array[3], transformation_array[4],  transformation_array[5],  0],
-						[transformation_array[6], transformation_array[7],  transformation_array[8],  0],
-						[transformation_array[9], transformation_array[10], transformation_array[11], 1]])
+			T=np.array([[float(transformation_array[0]), float(transformation_array[1]), float(transformation_array[2]), 0],
+						[float(transformation_array[3]), float(transformation_array[4]), float(transformation_array[5]), 0],
+						[float(transformation_array[6]), float(transformation_array[7]), float(transformation_array[8]), 0],
+						[float(transformation_array[9]), float(transformation_array[10]), float(transformation_array[11]), 1]])
 			
 			# Rotate and transpose (T matrix) the brick based on the LXF file info
 			geometry_file_dict_list = transform_brick(geometry_file_dict_list, T)
+			
+			offset = 1
+			uv_offset = 1
+			partnumber = geometry_file_dict_list[0]["partnumber"]
 			
 			file_writer.write('o brick_' + partnumber + '\n')	
 			
