@@ -111,9 +111,6 @@ def export_to_rib(lxf_filename):
 				
 			except KeyError:
 				color_r, color_g, color_b = [100, 100, 100]
-				#color_r = round((float(100) / 255),2)
-				#color_g = round((float(100) / 255),2)
-				#color_b = round((float(100) / 255),2)
 
 			color_r = round((float(color_r) / 255),2)
 			color_g = round((float(color_g) / 255),2)
@@ -123,11 +120,15 @@ def export_to_rib(lxf_filename):
 			rotz = (-1) * rotz #Renderman is lefthanded coordinate system, but LDD is right handed.
 			
 			file_writer.write('\tAttributeBegin\n')
-			file_writer.write('\t\tTranslate ' + trans_xyz[0] + ' ' + trans_xyz[1] + ' ' + trans_xyz[2] + '\n')
-			file_writer.write('\t\tRotate ' + str(math.degrees(rotx)) + ' 1 0 0\n')
-			file_writer.write('\t\tRotate ' + str(math.degrees(roty)) + ' 0 1 0\n')
-			file_writer.write('\t\tRotate ' + str(math.degrees(rotz)) + ' 0 0 1\n')
-			file_writer.write('\t\t#Transform [' + transformation_array[0] + ' ' + transformation_array[1] + ' ' + transformation_array[2] + ' 0' + transformation_array[3] + ' ' + transformation_array[4] + ' ' + transformation_array[5] + ' 0' + transformation_array[6] + ' ' + transformation_array[7] + ' ' + transformation_array[8] + ' 0' + trans_xyz[0] + ' ' + trans_xyz[1] + ' ' + trans_xyz[2] + ' 1]\n')
+			file_writer.write('\t\t#Translate ' + trans_xyz[0] + ' ' + trans_xyz[1] + ' ' + trans_xyz[2] + '\n')
+			file_writer.write('\t\t#Rotate ' + str(math.degrees(rotx)) + ' 1 0 0\n')
+			file_writer.write('\t\t#Rotate ' + str(math.degrees(roty)) + ' 0 1 0\n')
+			file_writer.write('\t\t#Rotate ' + str(math.degrees(rotz)) + ' 0 0 1\n')
+			file_writer.write('\t\tConcatTransform [' 
+			+ transformation_array[0] + ' ' + transformation_array[1] + ' ' + str((-1) * float(transformation_array[2])) + ' 0 ' 
+			+ transformation_array[3] + ' ' + transformation_array[4] + ' ' + str((-1) * float(transformation_array[5])) + ' 0 ' 
+			+ str((-1) * float(transformation_array[6])) + ' ' + str((-1) * float(transformation_array[7])) + ' ' + transformation_array[8] + ' 0 ' 
+			+ trans_xyz[0] + ' ' + trans_xyz[1] + ' ' + trans_xyz[2] + ' 1]\n')
 			file_writer.write('\t\tScale 1 1 1\n')
 			file_writer.write('\t\tBxdf \"PxrSurface\" \"terminal.bxdf\" \"color diffuseColor\" [' + str(color_r) + ' ' + str(color_g) + ' ' + str(color_b) + '] \"float specularRoughness\" [0.008] \"color specularEdgeColor\" [0.45 0.45 0.45]\n')
 			file_writer.write('\t\tAttribute \"identifier\" \"name" [\"'+ design_id +'\"]\n')
