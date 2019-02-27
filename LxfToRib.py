@@ -82,6 +82,33 @@ def export_to_rib(lxf_filename):
 	ribfile = os.path.splitext(os.path.basename(lxf_filename))[0]
 	with open(ribfile + '.rib', 'w') as file_writer:
 	
+		cam_tree = ET.fromstring(lxfml_file)
+		cam_lst = cam_tree.findall('Cameras/Camera')
+		for item in cam_lst:
+			fov = item.get('fieldOfView')
+			dist = item.get('distance')
+			cam_trans = item.get('transformation')
+			
+		print fov
+		print dist
+		
+		transformation_array = cam_trans.split(',')
+		
+		R = np.array([[float(transformation_array[0]), float(transformation_array[1]) ,float(transformation_array[2])], [ float(transformation_array[3]), float(transformation_array[4]) ,float(transformation_array[5])], [ float(transformation_array[6]), float(transformation_array[7]) ,float(transformation_array[8])]])
+		
+		rotx, roty, rotz = rotationMatrixToEulerAngles(R)
+		rotz = (-1) * rotz #Renderman is lefthanded coordinate system, but LDD is right handed.
+			
+		file_writer.write('#Rotate ' + str(math.degrees(rotx)) + ' 1 0 0\n')
+		file_writer.write('#Rotate ' + str(math.degrees(roty)) + ' 0 1 0\n')
+		file_writer.write('#Rotate ' + str(math.degrees(rotz)) + ' 0 0 1\n')
+		
+		file_writer.write('#ConcatTransform [' 
+			+ transformation_array[0] + ' ' + transformation_array[1] + ' ' + str((-1) * float(transformation_array[2])) + ' 0 ' 
+			+ transformation_array[3] + ' ' + transformation_array[4] + ' ' + str((-1) * float(transformation_array[5])) + ' 0 ' 
+			+ str((-1) * float(transformation_array[6])) + ' ' + str((-1) * float(transformation_array[7])) + ' ' + transformation_array[8] + ' 0 ' 
+			+ transformation_array[9] + ' ' + transformation_array[10] + ' ' + transformation_array[11] + ' 1]\n')
+	
 		file_writer.write('WorldBegin\n')
 		file_writer.write('\tTranslate 0 0 10\n')
 		file_writer.write('\tScale 0.7 0.7 0.7\n')
