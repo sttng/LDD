@@ -63,6 +63,10 @@ def generate_bricks(lxf_filename):
 		print design_id
 		BrickReader.read_brick(design_id)
 		ObjToRib.export_obj_to_rib(design_id + '.obj')
+		with zipfile.ZipFile('Bricks_Archive.zip', 'w') as myzip:
+			myzip.write(design_id + '.rib')
+		os.remove(design_id + '.rib')
+		os.remove(design_id + '.obj')
 
 
 def export_to_rib(lxf_filename):
@@ -159,7 +163,7 @@ def export_to_rib(lxf_filename):
 			file_writer.write('\t\tScale 1 1 1\n')
 			file_writer.write('\t\tBxdf \"PxrSurface\" \"terminal.bxdf\" \"color diffuseColor\" [' + str(color_r) + ' ' + str(color_g) + ' ' + str(color_b) + '] \"float specularRoughness\" [0.008] \"color specularEdgeColor\" [0.45 0.45 0.45]\n')
 			file_writer.write('\t\tAttribute \"identifier\" \"name" [\"'+ design_id +'\"]\n')
-			file_writer.write('\t\tReadArchive \"'+ design_id + '.rib\"\n')
+			file_writer.write('\t\tReadArchive \"Bricks_Archive.zip!'+ design_id + '.rib\"\n')
 			file_writer.write('\tAttributeEnd\n\n')
 			
 		file_writer.write('WorldEnd\n')
