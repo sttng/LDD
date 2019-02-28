@@ -162,7 +162,8 @@ def export_to_rib(lxf_filename):
 			+ str((-1) * float(transformation_array[6])) + ' ' + str((-1) * float(transformation_array[7])) + ' ' + transformation_array[8] + ' 0 ' 
 			+ trans_xyz[0] + ' ' + trans_xyz[1] + ' ' + trans_xyz[2] + ' 1]\n')
 			file_writer.write('\t\tScale 1 1 1\n')
-			file_writer.write('\t\tBxdf \"PxrSurface\" \"terminal.bxdf\" \"color diffuseColor\" [' + str(color_r) + ' ' + str(color_g) + ' ' + str(color_b) + '] \"float specularRoughness\" [0.008] \"color specularEdgeColor\" [0.45 0.45 0.45]\n')
+			file_writer.write('\t\tBxdf \"PxrSurface\" \"PxrSurface1\" \"float diffuseGain\" [1.0] \"color diffuseColor\" [' + str(color_r) + ' ' + str(color_g) + ' ' + str(color_b) + '] \"int diffuseDoubleSided\" [1] \"color specularFaceColor\" [0.1 0.1 0.15] \"float specularRoughness\" [0.2] \"int specularDoubleSided\" [0] \"float presence\" [1]\n')
+			#file_writer.write('\t\tBxdf \"PxrSurface\" \"terminal.bxdf\" \"color diffuseColor\" [' + str(color_r) + ' ' + str(color_g) + ' ' + str(color_b) + '] \"float specularRoughness\" [0.008] \"color specularEdgeColor\" [0.45 0.45 0.45]\n')
 			file_writer.write('\t\tAttribute \"identifier\" \"name" [\"'+ design_id +'\"]\n')
 			file_writer.write('\t\tReadArchive \"Bricks_Archive.zip!'+ design_id + '.rib\"\n')
 			file_writer.write('\tAttributeEnd\n\n')
