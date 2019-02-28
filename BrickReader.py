@@ -50,19 +50,14 @@ class BrickReader:
 		files_to_convert = []
 		files_to_convert = glob.glob(os.path.join(path_to_lif_tmp_dir + '/db/Primitives/LOD0', str(partnumber) + '.g*'))
 		geometry_file_dict_list = []
-		print 'Brick ' + partnumber + ' consist of ' + str(len(files_to_convert)) + ' files.\n'
+		#print 'Brick ' + partnumber + ' consist of ' + str(len(files_to_convert)) + ' files.\n'
 		
 		# Various similar extensions like g, .g1, .g2, ..., .g8 exist if the brick is composed of multiple parts. 
 		# The .g file is the 'base_brick'
 		for geometry_file in files_to_convert:
 			
-			if os.path.splitext(geometry_file)[1] == ".g":
-				base_brick = BrickReader.load_single_geometry_file(geometry_file)
-				geometry_file_dict_list.append(base_brick)
-				
-			else:
-				additional_primitive = BrickReader.load_single_geometry_file(geometry_file)
-				geometry_file_dict_list.append(additional_primitive)
+			brick = BrickReader.load_single_geometry_file(geometry_file)
+			geometry_file_dict_list.append(brick)
 				
 		BrickReader.export_to_obj(geometry_file_dict_list)
 		
@@ -130,7 +125,7 @@ class BrickReader:
 					geometry_file_dict["partnumber"] = partnumber
 					geometry_file_dict["part_extension"] = part_extension
 					
-					print partnumber + part_extension
+					#print partnumber + part_extension
 					
 				# no uv_texture_coords
 				elif (options == '3a000000'):
@@ -147,7 +142,7 @@ class BrickReader:
 					geometry_file_dict["partnumber"] = partnumber
 					geometry_file_dict["part_extension"] = part_extension
 					
-					print partnumber + part_extension
+					#print partnumber + part_extension
 					
 				else:
 					print 'Unknown Options: ' + options
@@ -213,4 +208,4 @@ class BrickReader:
 					
 		return True
 		
-BrickReader.read_brick(input_brick)
+#BrickReader.read_brick(input_brick)
