@@ -19,6 +19,8 @@ from ObjToRib import ObjToRib
 import xml.etree.ElementTree as ET
 import numpy as np
 import csv
+import zlib
+compression = zipfile.ZIP_DEFLATED
 
 
 # Checks if a matrix is a valid rotation matrix.
@@ -58,15 +60,14 @@ def generate_bricks(lxf_filename):
 	
 	tree = ET.fromstring(lxfml_file)
 	lst = tree.findall('Bricks/Brick')
-	for item in lst:
-		design_id = item.get('designID')
-		print design_id
-		BrickReader.read_brick(design_id)
-		ObjToRib.export_obj_to_rib(design_id + '.obj')
-		with zipfile.ZipFile('Bricks_Archive.zip', 'w') as myzip:
-			myzip.write(design_id + '.rib')
-		os.remove(design_id + '.rib')
-		os.remove(design_id + '.obj')
+	with zipfile.ZipFile('Bricks_Archive.zip', 'w') as myzip:
+		for item in lst:
+			design_id = item.get('designID')
+			BrickReader.read_brick(design_id)
+			ObjToRib.export_obj_to_rib(design_id + '.obj')
+			myzip.write(design_id + '.rib', compress_type=compression)
+			os.remove(design_id + '.rib')
+			os.remove(design_id + '.obj')
 
 
 def export_to_rib(lxf_filename):
@@ -92,9 +93,6 @@ def export_to_rib(lxf_filename):
 			fov = item.get('fieldOfView')
 			dist = item.get('distance')
 			cam_trans = item.get('transformation')
-			
-		print fov
-		print dist
 		
 		transformation_array = cam_trans.split(',')
 		
@@ -118,8 +116,7 @@ def export_to_rib(lxf_filename):
 		file_writer.write('\tScale 0.7 0.7 0.7\n')
 		file_writer.write('\tRotate -25 1 0 0\n')
 		file_writer.write('\tRotate 45 0 1 0\n')
-		file_writer.write('\tLight \"PxrDomeLight\" \"domeLight\" \"string lightColorMap\" [\"GriffithObservatory.tex\"]\n')
-	
+		file_writer.write('\tAttributeBegin\n\t\tAttribute \"visibility\" \"int indirect\" [0] \"int transmission\" [0]\n\t\tAttribute \"visibility\" \"int camera\" [1]\n\t\tRotate 50 0 1 0\n\t\tRotate -90 1 0 0\n\t\tLight \"PxrDomeLight\" \"domeLight\" \"string lightColorMap\" [\"GriffithObservatory.tex\"]\n\tAttributeEnd\n')
 		tree = ET.fromstring(lxfml_file)
 		lst = tree.findall('Bricks/Brick')
 		
@@ -127,6 +124,9 @@ def export_to_rib(lxf_filename):
 			design_id = item.get('designID')
 			for subelem in item:
 				material_id = subelem.get('materials')
+				# Hack to work around decals.
+				material_id = material_id.split(',')
+				material_id =material_id[0]
 				
 				for sub in subelem:
 					transformation = sub.get('transformation')
@@ -140,9 +140,10 @@ def export_to_rib(lxf_filename):
 			try:
 				color_r, color_g, color_b = material_id_dict[material_id]
 				
-			except KeyError:
+			except KeyError as e:
 				color_r, color_g, color_b = [100, 100, 100]
-
+				print e.args[0] + ' Material_ID not found'
+				
 			color_r = round((float(color_r) / 255),2)
 			color_g = round((float(color_g) / 255),2)
 			color_b = round((float(color_b) / 255),2)
