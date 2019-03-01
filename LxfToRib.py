@@ -13,6 +13,7 @@ import sys
 import re
 import unicodedata
 import zipfile
+import shutil
 import math
 from BrickReader import BrickReader
 from ObjToRib import ObjToRib
@@ -20,6 +21,7 @@ import xml.etree.ElementTree as ET
 import numpy as np
 import csv
 import zlib
+import random
 compression = zipfile.ZIP_DEFLATED
 
 
@@ -33,7 +35,7 @@ def isRotationMatrix(R) :
 
 
 # Calculates rotation matrix to euler angles.
-def rotationMatrixToEulerAngles(R) :
+def rotationMatrixToEulerAngles(R):
  
 	#assert(isRotationMatrix(R))
 	
@@ -152,6 +154,8 @@ def export_to_rib(lxf_filename):
 			rotz = (-1) * rotz #Renderman is lefthanded coordinate system, but LDD is right handed.
 			
 			file_writer.write('\tAttributeBegin\n')
+			rand = 0.9 #random.uniform(0.999, 1)
+			file_writer.write('\tScale ' + str(rand) + ' ' + str(rand) + ' ' + str(rand) + '\n') #Random brick sie for seams
 			file_writer.write('\t\t#Translate ' + trans_xyz[0] + ' ' + trans_xyz[1] + ' ' + trans_xyz[2] + '\n')
 			file_writer.write('\t\t#Rotate ' + str(math.degrees(rotx)) + ' 1 0 0\n')
 			file_writer.write('\t\t#Rotate ' + str(math.degrees(roty)) + ' 0 1 0\n')
@@ -161,7 +165,7 @@ def export_to_rib(lxf_filename):
 			+ transformation_array[3] + ' ' + transformation_array[4] + ' ' + str((-1) * float(transformation_array[5])) + ' 0 ' 
 			+ str((-1) * float(transformation_array[6])) + ' ' + str((-1) * float(transformation_array[7])) + ' ' + transformation_array[8] + ' 0 ' 
 			+ trans_xyz[0] + ' ' + trans_xyz[1] + ' ' + trans_xyz[2] + ' 1]\n')
-			file_writer.write('\t\tScale 1 1 1\n')
+			#file_writer.write('\t\tScale 1 1 1\n')
 			file_writer.write('\t\tBxdf \"PxrSurface\" \"PxrSurface1\" \"float diffuseGain\" [1.0] \"color diffuseColor\" [' + str(color_r) + ' ' + str(color_g) + ' ' + str(color_b) + '] \"int diffuseDoubleSided\" [1] \"color specularFaceColor\" [0.1 0.1 0.15] \"float specularRoughness\" [0.2] \"int specularDoubleSided\" [0] \"float presence\" [1]\n')
 			#file_writer.write('\t\tBxdf \"PxrSurface\" \"terminal.bxdf\" \"color diffuseColor\" [' + str(color_r) + ' ' + str(color_g) + ' ' + str(color_b) + '] \"float specularRoughness\" [0.008] \"color specularEdgeColor\" [0.45 0.45 0.45]\n')
 			file_writer.write('\t\tAttribute \"identifier\" \"name" [\"'+ design_id +'\"]\n')
@@ -172,6 +176,14 @@ def export_to_rib(lxf_filename):
 	
 	file_writer.close()
 	return True
+
+
+def generate_master_scene(lxf_filename):
+	lxf_filename = os.path.splitext(os.path.basename(lxf_filename))[0]
+	with open('test_scene.rib','wb') as wfd:
+		for f in ['template.rib',lxf_filename + '.rib']:
+			with open(f,'rb') as fd:
+				shutil.copyfileobj(fd, wfd, 1024*1024*10)
 	
 	
 def main():
@@ -181,6 +193,7 @@ def main():
 	
 	export_to_rib(lxf_filename)
 	
+	generate_master_scene(lxf_filename)
 	
 if __name__ == "__main__":
 	main()
