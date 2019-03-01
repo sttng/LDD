@@ -6,6 +6,7 @@ Display "rgb.exr" "it" "rgba"
 Format 1920 1080 1
 Integrator "PxrPathTracer" "handle" 
 
+#Integrator "PxrOcclusion" "Cosine" 
 #Integrator "PxrVisualizer" "PxrVisualizer1"
 #               "string style" ["bxdf"] #["shaded"]
 #               "int wireframe" [1]
