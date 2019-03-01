@@ -62,21 +62,28 @@ def generate_bricks(lxf_filename):
 	
 	tree = ET.fromstring(lxfml_file)
 	lst = tree.findall('Bricks/Brick')
+	processed_brick = dict()
+	
 	with zipfile.ZipFile('Bricks_Archive.zip', 'w') as myzip:
 		for item in lst:
 			design_id = item.get('designID')
-			BrickReader.read_brick(design_id)
-			ObjToRib.export_obj_to_rib(design_id + '.obj')
-			myzip.write(design_id + '.rib', compress_type=compression)
-			os.remove(design_id + '.rib')
-			os.remove(design_id + '.obj')
+			
+			if design_id in processed_brick:
+				continue
+			else:
+				BrickReader.read_brick(design_id)
+				ObjToRib.export_obj_to_rib(design_id + '.obj')
+				myzip.write(design_id + '.rib', compress_type=compression)
+				os.remove(design_id + '.rib')
+				os.remove(design_id + '.obj')
+				processed_brick[design_id] = True 
 
 
 def export_to_rib(lxf_filename):
 
 	archive = zipfile.ZipFile(lxf_filename, 'r')
 	lxfml_file = archive.read('IMAGE100.LXFML')
-	trans_xyz =[]
+	trans_xyz = []
 	
 	material_id_dict = {}
 	with open('lego_colors.csv', 'r') as csvfile:
@@ -144,7 +151,7 @@ def export_to_rib(lxf_filename):
 				
 			except KeyError as e:
 				color_r, color_g, color_b = [100, 100, 100]
-				print e.args[0] + ' Material_ID not found'
+				print 'Warning: Material_ID ' + e.args[0] + ' not found.'
 				
 			color_r = round((float(color_r) / 255),2)
 			color_g = round((float(color_g) / 255),2)
@@ -154,8 +161,7 @@ def export_to_rib(lxf_filename):
 			rotz = (-1) * rotz #Renderman is lefthanded coordinate system, but LDD is right handed.
 			
 			file_writer.write('\tAttributeBegin\n')
-			rand = 0.9 #random.uniform(0.999, 1)
-			file_writer.write('\tScale ' + str(rand) + ' ' + str(rand) + ' ' + str(rand) + '\n') #Random brick sie for seams
+			rand = str(0.9) #str(random.uniform(0.999, 1))
 			file_writer.write('\t\t#Translate ' + trans_xyz[0] + ' ' + trans_xyz[1] + ' ' + trans_xyz[2] + '\n')
 			file_writer.write('\t\t#Rotate ' + str(math.degrees(rotx)) + ' 1 0 0\n')
 			file_writer.write('\t\t#Rotate ' + str(math.degrees(roty)) + ' 0 1 0\n')
@@ -165,6 +171,7 @@ def export_to_rib(lxf_filename):
 			+ transformation_array[3] + ' ' + transformation_array[4] + ' ' + str((-1) * float(transformation_array[5])) + ' 0 ' 
 			+ str((-1) * float(transformation_array[6])) + ' ' + str((-1) * float(transformation_array[7])) + ' ' + transformation_array[8] + ' 0 ' 
 			+ trans_xyz[0] + ' ' + trans_xyz[1] + ' ' + trans_xyz[2] + ' 1]\n')
+			file_writer.write('\tScale ' + rand + ' ' + rand + ' ' + rand + '\n') #Random brick size for seams.
 			#file_writer.write('\t\tScale 1 1 1\n')
 			file_writer.write('\t\tBxdf \"PxrSurface\" \"PxrSurface1\" \"float diffuseGain\" [1.0] \"color diffuseColor\" [' + str(color_r) + ' ' + str(color_g) + ' ' + str(color_b) + '] \"int diffuseDoubleSided\" [1] \"color specularFaceColor\" [0.1 0.1 0.15] \"float specularRoughness\" [0.2] \"int specularDoubleSided\" [0] \"float presence\" [1]\n')
 			#file_writer.write('\t\tBxdf \"PxrSurface\" \"terminal.bxdf\" \"color diffuseColor\" [' + str(color_r) + ' ' + str(color_g) + ' ' + str(color_b) + '] \"float specularRoughness\" [0.008] \"color specularEdgeColor\" [0.45 0.45 0.45]\n')
