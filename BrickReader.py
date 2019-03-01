@@ -50,6 +50,10 @@ class BrickReader:
 		files_to_convert = []
 		files_to_convert = glob.glob(os.path.join(path_to_lif_tmp_dir + '/db/Primitives/LOD0', str(partnumber) + '.g*'))
 		geometry_file_dict_list = []
+		
+		if not files_to_convert:
+			#print("Brick not. Found possibly assembly")
+			return False
 		#print 'Brick ' + partnumber + ' consist of ' + str(len(files_to_convert)) + ' files.\n'
 		
 		# Various similar extensions like g, .g1, .g2, ..., .g8 exist if the brick is composed of multiple parts. 
