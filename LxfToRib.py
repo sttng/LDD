@@ -8,6 +8,7 @@
 # License: MIT License
 #
 
+
 import os
 import sys
 import re
@@ -86,6 +87,7 @@ def export_to_rib(lxf_filename):
 	archive = zipfile.ZipFile(lxf_filename, 'r')
 	lxfml_file = archive.read('IMAGE100.LXFML')
 	trans_xyz = []
+	minx = 1000
 	
 	material_id_dict = {}
 	with open('lego_colors.csv', 'r') as csvfile:
@@ -146,6 +148,10 @@ def export_to_rib(lxf_filename):
 			transformation_array = transformation.split(',')
 			trans_xyz = (transformation_array[9], transformation_array[10], str((-1) * float(transformation_array[11]))) # left vs right handed coord system
 			
+			# get lowest brick translation for floor plane
+			if minx > float(transformation_array[9]):
+				minx = transformation_array[9]
+			
 			R = np.array([[float(transformation_array[0]), float(transformation_array[1]) ,float(transformation_array[2])], [ float(transformation_array[3]), float(transformation_array[4]) ,float(transformation_array[5])], [ float(transformation_array[6]), float(transformation_array[7]) ,float(transformation_array[8])]])
 			b = np.array([1, 0, 0])
 			
@@ -181,7 +187,14 @@ def export_to_rib(lxf_filename):
 			file_writer.write('\t\tAttribute \"identifier\" \"name" [\"'+ design_id +'\"]\n')
 			file_writer.write('\t\tReadArchive \"Bricks_Archive.zip!'+ design_id + '.rib\"\n')
 			file_writer.write('\tAttributeEnd\n\n')
-			
+		
+		file_writer.write('\tAttributeBegin\n')
+		file_writer.write('\t\tAttribute \"identifier\" \"string name\" [\"plane1\"]')
+		file_writer.write('\t\tTranslate ' + minx + ' ' +'0 10\n')
+		file_writer.write('\t\tScale 100 1 100')
+		file_writer.write('\t\tPolygon \"P\" [-0.5 0 -0.5  -0.5 0 0.5  0.5 0 0.5  0.5 0 -0.5]')
+		file_writer.write('\t\t\"st\" [0 0  0 1  1 1  1 0]')
+		file_writer.write('\tAttributeEnd\n\n')
 		file_writer.write('WorldEnd\n')
 	
 	file_writer.close()
@@ -189,11 +202,14 @@ def export_to_rib(lxf_filename):
 
 
 def generate_master_scene(lxf_filename):
+	lxf_extension = os.path.splitext(os.path.basename(lxf_filename))[1]
 	lxf_filename = os.path.splitext(os.path.basename(lxf_filename))[0]
 	with open('test_scene.rib','wb') as wfd:
 		for f in ['template.rib',lxf_filename + '.rib']:
 			with open(f,'rb') as fd:
 				shutil.copyfileobj(fd, wfd, 1024*1024*10)
+	os.remove(lxf_filename + '.rib')
+	print 'Success: Created rib scene from ' + lxf_filename + lxf_extension
 	
 	
 def main():
