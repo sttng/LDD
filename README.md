@@ -28,3 +28,8 @@ oslc Primvar.osl
 * http://julius-ihle.de/?p=547
 * https://sdm.scad.edu/faculty/mkesson/vsfx755/wip/best/spring2011/zichuan_zhao/lemon/lemon.html
 * https://nccastaff.bournemouth.ac.uk/jmacey/Renderman/
+
+## Lego plastic materials
+
+* Virtually all plastic used by LEGO is a proprietary version of Lanxess’ Novodur ABS, Makrolon polycarbonate (for transparent elements) and Macrolex dyes for coloring.   Delrin or nylon variants are used to make cloth and string elements. http://www.craftechind.com/which-plastic-material-is-used-in-lego-sets/
+* Tyres are made from a slightly different polymer to ABS, styrene butadiene styrene (SBS). https://www.compoundchem.com/2018/04/09/lego/
