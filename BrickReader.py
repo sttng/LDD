@@ -74,31 +74,32 @@ class BrickReader:
 			with open(geometry_file, 'rb') as file_reader:
 				
 				vertices_list = []
-				vertices_list[:] = []
 				normals_list = []
-				normals_list[:] = []
 				indices_list = []
-				indices_list[:] = []
 				tex_coords_list = []
-				tex_coords_list[:] = []
 				geometry_file_dict = dict()
+				
 				partnumber = os.path.splitext(os.path.basename(geometry_file))[0]
 				part_extension = os.path.splitext(os.path.basename(geometry_file))[1]
+				geometry_file_dict["partnumber"] = partnumber
+				geometry_file_dict["part_extension"] = part_extension
 					
 				fourcc = file_reader.read(4) 
 				if(fourcc != "10GB"):
-					print("\tERROR: Not a gX file. Expected 10GB file header but read:" + fourcc)
+					print("\tERROR: Not a .gX file. Expected 10GB file header but read:" + fourcc)
 					return False
 					
 				vertex_count = struct.unpack("<L", file_reader.read(4))[0]
 				indices_count = struct.unpack("<L", file_reader.read(4))[0]
+				geometry_file_dict["vertex_count"] = vertex_count
+				geometry_file_dict["indices_count"] = indices_count
 				
 				# options flag:
-				# 0x01 == uv_texture_coords_enabled then texture_coords_count = 2 * vertex_count
-				# 0x10 == unknown
-				# 0x20 == unknown
-				# 0x02 == then vertices, normals
-				# 0x08 == then vertices only ?
+				# options & 0x01 == uv_texture_coords_enabled then texture_coords_count = 2 * vertex_count
+				# options & 0x10 == unknown
+				# options & 0x20 == unknown
+				# options & 0x02 == then vertices, normals
+				# options & 0x08 == then vertices only ?
 				options = binascii.hexlify(file_reader.read(4))
 				
 				for i in range(0, 3 * vertex_count):
@@ -108,7 +109,10 @@ class BrickReader:
 				for i in range(0, 3 * vertex_count):
 					normal = struct.unpack("f", file_reader.read(4))[0]
 					normals_list.append(normal)
-				
+					
+				geometry_file_dict["vertices"] = vertices_list
+				geometry_file_dict["normals"] = normals_list
+
 				# uv_texture_coords_enabled
 				if (options == '3b000000'):
 							
@@ -116,41 +120,43 @@ class BrickReader:
 						tex_coord = struct.unpack("f", file_reader.read(4))[0]
 						tex_coords_list.append(tex_coord)
 						
-					for i in range(0, indices_count):
-						index = struct.unpack("<L", file_reader.read(4))[0]
-						indices_list.append(index)
-							
-					geometry_file_dict["vertices"] = vertices_list
-					geometry_file_dict["vertex_count"] = vertex_count
-					geometry_file_dict["normals"] = normals_list
-					geometry_file_dict["tex_coords"] = tex_coords_list
 					geometry_file_dict["uv_texture_coords_enabled"] = True
-					geometry_file_dict["indices"] = indices_list
-					geometry_file_dict["partnumber"] = partnumber
-					geometry_file_dict["part_extension"] = part_extension
-					
-					#print partnumber + part_extension
+					geometry_file_dict["tex_coords"] = tex_coords_list
+					# print partnumber + part_extension
 					
 				# no uv_texture_coords
 				elif (options == '3a000000'):
-						
-					for i in range(0, indices_count):
-						index = struct.unpack("<L", file_reader.read(4))[0]
-						indices_list.append(index)
 					
-					geometry_file_dict["vertices"] = vertices_list
-					geometry_file_dict["vertex_count"] = vertex_count
-					geometry_file_dict["normals"] = normals_list
 					geometry_file_dict["uv_texture_coords_enabled"] = False
-					geometry_file_dict["indices"] = indices_list
-					geometry_file_dict["partnumber"] = partnumber
-					geometry_file_dict["part_extension"] = part_extension
+					# print partnumber + part_extension
+				
+				# no uv_texture_coords, flex part
+				elif (options == '3e000000'):
 					
-					#print partnumber + part_extension
+					geometry_file_dict["uv_texture_coords_enabled"] = False
+					print 'Options: ' + options + ' in ' + partnumber + part_extension
+				
+				# uv_texture_coords, flex part
+				elif (options == '3f000000'):
 					
+					for i in range(0, 2 * vertex_count):
+						tex_coord = struct.unpack("f", file_reader.read(4))[0]
+						tex_coords_list.append(tex_coord)
+						
+					geometry_file_dict["uv_texture_coords_enabled"] = True
+					geometry_file_dict["tex_coords"] = tex_coords_list
+					print 'Options: ' + options + ' in ' + partnumber + part_extension
+				
 				else:
-					print 'Unknown Options: ' + options
-					
+					print '\tERROR: Unknown Options: ' + options + ' in ' + partnumber + part_extension
+					return false
+				
+				for i in range(0, indices_count):
+					index = struct.unpack("<L", file_reader.read(4))[0]
+					indices_list.append(index)
+				
+				geometry_file_dict["indices"] = indices_list
+				
 				return geometry_file_dict
 									
 		except IOError as e:
