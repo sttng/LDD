@@ -89,9 +89,10 @@ class ObjToRib:
 		f2.write('##RenderMan RIB-Structure 1.1 Entity')
 		f2.write('\nAttributeBegin #begin Brick ' + name)
 		f2.write('\nAttribute \"identifier\" \"uniform string name\" [\"' + name + '\"]')
+		print name
+		uv_num = 1
 		
 		for face in faces:
-			uv_num = 1
 			f2.write('\n\tPolygon')
 			
 			newline = ''
@@ -106,12 +107,12 @@ class ObjToRib:
 					newline += str(normals[face[i]-1][j]) + ' '
 			f2.write('\n\t\t\"N\" [ ' + newline + ']')
 			
-			newline = ''
-			for i in xrange(0, len(face), 1):
-				for j in xrange(0, len(uv_coords[face[i]-1]), 1):
-					newline += str(uv_coords[face[i]-1][j]) + ' '
-			f2.write('\n\t\t\"facevarying float [2] uv' + str(uv_num) + '\" [ ' + newline + ']')
-			uv_num = uv_num + 1
+			#newline = ''
+			#for i in xrange(0, len(face), 1):
+			#	for j in xrange(0, len(uv_coords[face[i]-1]), 1):
+			#		newline += str(uv_coords[face[i]-1][j]) + ' '
+			#print ('\n\t\t\"facevarying float [2] uv' + str(uv_num) + '\" [ ' + newline + ']')
+			#uv_num = uv_num + 1
 			
 		f2.write('\nAttributeEnd #end Brick ' + name + '\n')
 		f2.close()
