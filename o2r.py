@@ -38,13 +38,19 @@ def ObjToRib(obj_file):
 			elif(tokens[0] == "v"):
 				#print "found vert"
 				# create a tuple of the vertex point values
-				vert = [round(float(tokens[1]),Round),round(float(tokens[2]),Round),round(float(tokens[3]),Round)]
+				#*****************************************************************
+				# NOTE RENDERMAN is left handed coordinate system, obj is right handed -> the z-axis is inverted
+				#
+				vert = [round(float(tokens[1]),Round),round(float(tokens[2]),Round),(-1) * round(float(tokens[3]),Round)]
 				# then add it to our list
 				verts[group] += [vert]
 			elif(tokens[0] == "vn"):
 				#print "found normal"
 				# create a tuple of the normal values
-				normal = [round(float(tokens[1]),Round),round(float(tokens[2]),Round),round(float(tokens[3]),Round)]
+				#*****************************************************************
+				# NOTE RENDERMAN is left handed coordinate system, obj is right handed -> the z-axis is inverted
+				#
+				normal = [round(float(tokens[1]),Round),round(float(tokens[2]),Round),(-1) *round(float(tokens[3]),Round)]
 				# then add it to our list
 				norm[group] += [normal]
 			elif(tokens[0] == "vt"):
@@ -84,9 +90,9 @@ def ObjToRib(obj_file):
 			points = [] 
 			tx = []
 			fd = f.split() 
-			# the face is in the structure shown below Vert / TX / Norm. We are gaurenteed to have a
-			# Vert but the others may not be there
-			#1/1/1 3/2/2 4/3/3 2/4/4
+			# the face is in the structure shown below Vertex / Texture / Normal. We are gaurenteed to have a
+			# Vertex but the others may not be there.
+			# 1/1/1 3/2/2 4/3/3 2/4/4
 
 			for perface in fd[1:]:
 				index = perface.split("/")
@@ -118,7 +124,7 @@ def ObjToRib(obj_file):
 		op.close()
 			#"
 			# create a dictionary to store the polygon data, we always have a point so we can add
-			#this directly
+			# this directly
 			#PolyData={ri.P:points}
 			# now see if we have any texture co-ordinates and add them to the dictionary if we do
 			#if index[1] !="" :
