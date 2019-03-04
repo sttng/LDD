@@ -34,7 +34,7 @@ def ObjToRib(obj_file):
 				#print "found group "
 				group = tokens[1]
 				# then add it to our list
-				# groups += [group]
+				groups += [group]
 			elif(tokens[0] == "v"):
 				#print "found vert"
 				# create a tuple of the vertex point values
@@ -71,56 +71,59 @@ def ObjToRib(obj_file):
 	op = open(name + '.rib', 'w')
 	
 	op.write('##RenderMan RIB-Structure 1.1 Entity')
-	op.write('\nAttributeBegin #begin Brick ' + name)
-	op.write('\nAttribute \"identifier\" \"uniform string name\" [\"' + name + '\"]')
-	#"
-	for f in face :
-		# create some empty data structures to be filled as we go
-		vertices = []
-		normals = []
-		points = [] 
-		tx = []
-		fd = f.split() 
-		# the face is in the structure shown below Vert / TX / Norm. We are gaurenteed to have a
-		# Vert but the others may not be there
-		#1/1/1 3/2/2 4/3/3 2/4/4
 
-		for perface in fd[1:]:
-			index = perface.split("/")
-			# get the point array index
-			pind = int(index[0])-1
-			points.append(round(float(verts[pind][0]),Round))
-			points.append(round(float(verts[pind][1]),Round))
-			points.append(round(float(verts[pind][2]),Round))
-			op.write('\n\tPolygon')
-			op.write('\n\t\t\"P\" [' + points + ']')
-			# check for textures and add if there
-			if(index[1] != ""):
-				tind=int(index[1])-1
-				tx.append(round(float(text[tind][0]),Round))
-				tx.append(round(float(text[tind][1]),Round))
-				op.write('\n\t\t\"facevarying float [2] uv1\" [' + tx + ']')
-			# check for normals and check they are there
-			if(index[2] != ""):
-				nind=int(index[2])-1
-				normals.append(round(float(norm[nind][0]),Round))
-				normals.append(round(float(norm[nind][1]),Round))
-				normals.append(round(float(norm[nind][2]),Round))
-				op.write('\n\t\t\"N\" [' + normals + ']')
-				
-	op.write('\nAttributeEnd #end Brick ' + File + '\n')
-	op.close()
-		#"
-		# create a dictionary to store the polygon data, we always have a point so we can add
-		#this directly
-		#PolyData={ri.P:points}
-		# now see if we have any texture co-ordinates and add them to the dictionary if we do
-		#if index[1] !="" :
-		#	PolyData[ri.ST]=tx
-		# check for normals and add them to the dictionary as well
-		#if index[2] !="" :
-		#	PolyData[ri.N]=normals
-		# finally we generate the Polygon from the data
-		#ri.Polygon(PolyData) #{ri.P:points,ri.N:normals,ri.ST:tx})
+	#"
+	for group in groups:
+		op.write('\nAttributeBegin #begin Brick ' + name + '.' + group)
+		op.write('\nAttribute \"identifier\" \"uniform string name\" [\"' + name + '.' + group '\"]')
+	
+		for f in face[group]:
+			# create some empty data structures to be filled as we go
+			vertices = []
+			normals = []
+			points = [] 
+			tx = []
+			fd = f.split() 
+			# the face is in the structure shown below Vert / TX / Norm. We are gaurenteed to have a
+			# Vert but the others may not be there
+			#1/1/1 3/2/2 4/3/3 2/4/4
+
+			for perface in fd[1:]:
+				index = perface.split("/")
+				# get the point array index
+				pind = int(index[0])-1
+				points.append(round(float(verts[group][pind][0]),Round))
+				points.append(round(float(verts[group][pind][1]),Round))
+				points.append(round(float(verts[group][pind][2]),Round))
+				op.write('\n\tPolygon')
+				op.write('\n\t\t\"P\" [' + points + ']')
+				# check for textures and add if there
+				if(index[1] != ""):
+					tind=int(index[1])-1
+					tx.append(round(float(text[group][tind][0]),Round))
+					tx.append(round(float(text[group][tind][1]),Round))
+					op.write('\n\t\t\"facevarying float [2] uv1\" [' + tx + ']')
+				# check for normals and check they are there
+				if(index[2] != ""):
+					nind=int(index[2])-1
+					normals.append(round(float(norm[group][nind][0]),Round))
+					normals.append(round(float(norm[group][nind][1]),Round))
+					normals.append(round(float(norm[group][nind][2]),Round))
+					op.write('\n\t\t\"N\" [' + normals + ']')
+					
+		op.write('\nAttributeEnd #end Brick ' + name + '.' + group '\n')
+		op.close()
+			#"
+			# create a dictionary to store the polygon data, we always have a point so we can add
+			#this directly
+			#PolyData={ri.P:points}
+			# now see if we have any texture co-ordinates and add them to the dictionary if we do
+			#if index[1] !="" :
+			#	PolyData[ri.ST]=tx
+			# check for normals and add them to the dictionary as well
+			#if index[2] !="" :
+			#	PolyData[ri.N]=normals
+			# finally we generate the Polygon from the data
+			#ri.Polygon(PolyData) #{ri.P:points,ri.N:normals,ri.ST:tx})
 
 ObjToRib(File)
