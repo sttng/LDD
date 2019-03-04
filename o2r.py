@@ -10,12 +10,11 @@ obj_file = sys.argv[1]
 
 def export_obj_to_rib(obj_file):
 	Round = 6
-	#print "opening : "+File
 	# open the file
 	ip = open(obj_file,'r')
 	#grab the data as lines
 	data = ip.readlines()
-	groups= []
+	groups = []
 	group = 'no_group'
 	verts = []
 	norm = []
