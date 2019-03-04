@@ -32,4 +32,5 @@ oslc Primvar.osl
 ## Lego plastic materials
 
 * Virtually all plastic used by LEGO is a proprietary version of Lanxess’ Novodur acrylonitrile butadiene styrene (ABS), Makrolon polycarbonate (for transparent elements) and Macrolex dyes for coloring.   Delrin or nylon variants are used to make cloth and string elements. http://www.craftechind.com/which-plastic-material-is-used-in-lego-sets/
-* Tyres are made from a slightly different polymer to ABS, styrene butadiene styrene (SBS). https://www.compoundchem.com/2018/04/09/lego/
+* Tyres and elastic materials are made from a slightly different polymer to ABS, styrene butadiene styrene (SBS). https://www.compoundchem.com/2018/04/09/lego/
+* Green leaves, bushes, and trees in their products will be made from polyethene derived from sustainable sugar cane sources. https://www.compoundchem.com/2018/04/09/lego/
