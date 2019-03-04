@@ -77,7 +77,8 @@ def export_obj_to_rib(obj_file):
 	
 	op.write('##RenderMan RIB-Structure 1.1 Entity')
 
-	#" Should cover obj. files with no groups. Currently however the LXF (LIF) to OBJ exporter writes groups in any case.
+	#" Later this should cover obj. files with no groups also. Currently however the LXF
+	# (LIF) to OBJ exporter writes groups in any case.
 	for group in groups:
 		op.write('\nAttributeBegin #begin Brick ' + name + '.' + group)
 		op.write('\nAttribute \"identifier\" \"uniform string name\" [\"' + name + '.' + group '\"]')
