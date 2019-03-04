@@ -202,12 +202,20 @@ def export_to_rib(lxf_filename):
 
 
 def generate_master_scene(lxf_filename):
+	# create 'header.rib' to add current working dir to rib filer and concat header, template and lxf->rib into scene.
+	
 	lxf_extension = os.path.splitext(os.path.basename(lxf_filename))[1]
 	lxf_filename = os.path.splitext(os.path.basename(lxf_filename))[0]
+	current_working_dir = os.getcwd()
+	with open('header.rib', 'w') as file_writer:
+		file_writer.write('##RenderMan RIB\nversion 3.04\nOption \"searchpath\" \"string archive\" [\"' + current_working_dir + '\"]\n')
+	file_writer.close()
 	with open('test_scene.rib','wb') as wfd:
-		for f in ['template.rib',lxf_filename + '.rib']:
+		for f in ['header.rib', 'template.rib', lxf_filename + '.rib']:
 			with open(f,'rb') as fd:
 				shutil.copyfileobj(fd, wfd, 1024*1024*10)
+	wfd.close()
+	os.remove('header.rib')
 	os.remove(lxf_filename + '.rib')
 	print 'Success: Created rib scene from ' + lxf_filename + lxf_extension
 	
