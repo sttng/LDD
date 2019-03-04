@@ -1,4 +1,6 @@
 # Lego Digital Designer related scripts
+The Python scripts have been tested to work on Pythonon macOS 10.14: Mojave.
+
 ## LifToObj 
 LifToObj.py uses LIFExtractor.py from JrMasterModelBuilder (https://github.com/JrMasterModelBuilder/LIF-Extractor) to extract the Lego Digital Designer LIF library first and then converts the LDD .g geometry files to Alias|Waveform .obj files.
 
