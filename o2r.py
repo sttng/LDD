@@ -95,23 +95,20 @@ def ObjToRib(obj_file):
 			points.append(round(float(verts[pind][1]),Round))
 			points.append(round(float(verts[pind][2]),Round))
 			op.write('\n\tPolygon')
-			p = ' '.join( str(points))
-			op.write('\n\t\t\"P\" [' + p + ']')
+			op.write('\n\t\t\"P\" [' + points + ']')
 			# check for textures and add if there
 			if(index[1] !="") :
 				tind=int(index[1])-1
 				tx.append(round(float(text[tind][0]),Round))
 				tx.append(round(float(text[tind][1]),Round))
-				t = ' '.join( str(tx))
-				op.write('\n\t\t\"facevarying float [2] uv1\" [' + t + ']')
+				op.write('\n\t\t\"facevarying float [2] uv1\" [' + tx + ']')
 			# check for normals and check they are there
 			if(index[2] !="") :
 				nind=int(index[2])-1
 				normals.append(round(float(norm[nind][0]),Round))
 				normals.append(round(float(norm[nind][1]),Round))
 				normals.append(round(float(norm[nind][2]),Round))
-				n = ' '.join( str(normals))
-				op.write('\n\t\t\"N\" [' + n + ']')
+				op.write('\n\t\t\"N\" [' + normals + ']')
 				
 	op.write('\nAttributeEnd #end Brick ' + File + '\n')
 	op.close()
