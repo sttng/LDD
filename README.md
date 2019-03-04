@@ -1,6 +1,6 @@
-# LDD related scripts
+# Lego Digital Designer related scripts
 ## LifToObj 
-LifToObj.py uses LIFExtractor.py from JrMasterModelBuilder to extract the Lego Digital Designer LIF library first and then converts the LDD .g geometry files to Alias|Wavefrom .obj files.
+LifToObj.py uses LIFExtractor.py from JrMasterModelBuilder to extract the Lego Digital Designer LIF library first and then converts the LDD .g geometry files to Alias|Waveform .obj files.
 
 ## ObjToRib
 ObjToRib.py will read in a Alias|Waveform .obj file, construct geometry from it and write out a Renderman .rib file of it.
@@ -31,5 +31,5 @@ oslc Primvar.osl
 
 ## Lego plastic materials
 
-* Virtually all plastic used by LEGO is a proprietary version of Lanxess’ Novodur ABS, Makrolon polycarbonate (for transparent elements) and Macrolex dyes for coloring.   Delrin or nylon variants are used to make cloth and string elements. http://www.craftechind.com/which-plastic-material-is-used-in-lego-sets/
+* Virtually all plastic used by LEGO is a proprietary version of Lanxess’ Novodur acrylonitrile butadiene styrene (ABS), Makrolon polycarbonate (for transparent elements) and Macrolex dyes for coloring.   Delrin or nylon variants are used to make cloth and string elements. http://www.craftechind.com/which-plastic-material-is-used-in-lego-sets/
 * Tyres are made from a slightly different polymer to ABS, styrene butadiene styrene (SBS). https://www.compoundchem.com/2018/04/09/lego/
