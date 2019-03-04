@@ -123,6 +123,6 @@ def ObjToRib(obj_file):
 		#if index[2] !="" :
 		#	PolyData[ri.N]=normals
 		# finally we generate the Polygon from the data
-#ri.Polygon(PolyData) #{ri.P:points,ri.N:normals,ri.ST:tx})
+		#ri.Polygon(PolyData) #{ri.P:points,ri.N:normals,ri.ST:tx})
 
 ObjToRib(File)
