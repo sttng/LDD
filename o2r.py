@@ -6,10 +6,10 @@ import time,random
 import sys
 import argparse
 
-File = sys.argv[1]
+obj_file = sys.argv[1]
 
-def ObjToRib(obj_file):
-	Round = 4
+def export_obj_to_rib(obj_file):
+	Round = 6
 	#print "opening : "+File
 	# open the file
 	ip = open(obj_file,'r')
@@ -135,4 +135,4 @@ def ObjToRib(obj_file):
 			# finally we generate the Polygon from the data
 			#ri.Polygon(PolyData) #{ri.P:points,ri.N:normals,ri.ST:tx})
 
-ObjToRib(File)
+export_obj_to_rib(obj_file)
