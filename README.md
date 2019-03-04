@@ -12,6 +12,8 @@ LxfRoRib.py will read in a Lego Digital Designer .lxf scene file and construct a
 
 ## prman commands
 ```terminal
+export RMANTREE=/Applications/Pixar/RenderManProServer-22.3/
+
 prman -d it -t:-2 ribfile.rib
 
 oslc Primvar.osl
