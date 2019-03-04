@@ -16,7 +16,7 @@ def ObjToRib(obj_file):
 	#grab the data as lines
 	data = ip.readlines()
 	groups= []
-	group = False
+	group = 'no_group'
 	verts = []
 	norm = []
 	text = []
@@ -32,23 +32,21 @@ def ObjToRib(obj_file):
 		if(len(tokens) >0 ):
 			if(tokens[0] == "g"):
 				#print "found group "
-				if (tokens[1] != group):
-					print 'New Group'
 				group = tokens[1]
 				# then add it to our list
-				groups += [group]
+				# groups += [group]
 			elif(tokens[0] == "v"):
 				#print "found vert"
 				# create a tuple of the vertex point values
 				vert = [round(float(tokens[1]),Round),round(float(tokens[2]),Round),round(float(tokens[3]),Round)]
 				# then add it to our list
-				verts += [vert]
+				verts[group] += [vert]
 			elif(tokens[0] == "vn"):
 				#print "found normal"
 				# create a tuple of the normal values
 				normal = [round(float(tokens[1]),Round),round(float(tokens[2]),Round),round(float(tokens[3]),Round)]
 				# then add it to our list
-				norm += [normal]
+				norm[group] += [normal]
 			elif(tokens[0] == "vt"):
 				#print "found texture"
 				# create a tuple of the texture values
@@ -60,11 +58,11 @@ def ObjToRib(obj_file):
 				#
 				#*****************************************************************
 				# then add it to our list
-				text += [tx]
+				text[group] += [tx]
 			# now we have a face value
 			elif(tokens[0] == "f"):
 				# add the face to the list and we will process it later (see below)
-				face += [line]
+				face[group] += [line]
 			
 	# close the file
 	ip.close()
