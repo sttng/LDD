@@ -98,12 +98,13 @@ def export_obj_to_rib(obj_file):
 			normals = []
 			points = [] 
 			tx = []
-			fd = f.split() 
-			# the face is in the structure shown below Vertex / Texture / Normal. We are gaurenteed to have a
-			# Vertex but the others may not be there.
-			# 1/1/1 3/2/2 4/3/3 2/4/4
-
+			fd = f.split()
+			
 			for perface in fd[1:]:
+				
+				# the face is in the structure shown below Vertex / Texture / Normal. We are gaurenteed to have a
+				# Vertex but the others may not be there.
+				# 1/1/1 3/2/2 4/3/3 2/4/4
 				index = perface.split("/")
 				# get the point array index
 				pind = int(index[0])-1
@@ -115,14 +116,14 @@ def export_obj_to_rib(obj_file):
 				op.write('\n\t\t\"P\" [' + points_str + ']')
 				# check for textures and add if there
 				if(index[1] != ""):
-					tind=int(index[1])-1
+					tind = int(index[1])-1
 					tx.append(round(float(text_d[group][tind][0]),Round))
 					tx.append(round(float(text_d[group][tind][1]),Round))
 					tx_str = " ".join(map(str, tx))
 					op.write('\n\t\t\"facevarying float [2] uv1\" [' + tx_str + ']')
 				# check for normals and check they are there
 				if(index[2] != ""):
-					nind=int(index[2])-1
+					nind = int(index[2])-1
 					normals.append(round(float(norm_d[group][nind][0]),Round))
 					normals.append(round(float(norm_d[group][nind][1]),Round))
 					normals.append(round(float(norm_d[group][nind][2]),Round))
