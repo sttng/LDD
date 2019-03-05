@@ -42,7 +42,7 @@ def export_obj_to_rib(obj_file):
 				#print "found vert"
 				# create a tuple of the vertex point values
 				#*****************************************************************
-				# NOTE RENDERMAN is left handed coordinate system, obj is right handed -> the z-axis is inverted
+				# NOTE RENDERMAN is left handed coordinate system, obj is right handed -> z-axis inverted
 				#
 				vert = [round(float(tokens[1]),Round),round(float(tokens[2]),Round),(-1) * round(float(tokens[3]),Round)]
 				# then add it to our list
@@ -52,7 +52,7 @@ def export_obj_to_rib(obj_file):
 				#print "found normal"
 				# create a tuple of the normal values
 				#*****************************************************************
-				# NOTE RENDERMAN is left handed coordinate system, obj is right handed -> the z-axis is inverted
+				# NOTE RENDERMAN is left handed coordinate system, obj is right handed -> z-axis inverted
 				#
 				normal = [round(float(tokens[1]),Round),round(float(tokens[2]),Round),(-1) *round(float(tokens[3]),Round)]
 				# then add it to our list
