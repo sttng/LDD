@@ -2,7 +2,7 @@
 
 #
 import getpass
-import time,random
+import time, random
 import sys
 import argparse
 
@@ -11,7 +11,7 @@ obj_file = sys.argv[1]
 def export_obj_to_rib(obj_file):
 	Round = 6
 	# open the file
-	ip = open(obj_file,'r')
+	ip = open(obj_file, 'r')
 	#grab the data as lines
 	data = ip.readlines()
 	groups = []
@@ -30,35 +30,35 @@ def export_obj_to_rib(obj_file):
 	for line in data:
 		# we assume that our Tokens are always the first element of the line (which IIRC the spec specifies)
 		# so we split each line and look at the first element
-		tokens=line.split()	
+		tokens = line.split()	
 		# make sure we have a token to check against
-		if(len(tokens) >0 ):
-			if(tokens[0] == "g"):
+		if(len(tokens) > 0):
+			if(tokens[0] == 'g'):
 				#print "found group"
 				group = tokens[1]
 				# then add it to our list
 				groups += [group]
-			elif(tokens[0] == "v"):
+			elif(tokens[0] == 'v'):
 				#print "found vert"
 				# create a tuple of the vertex point values
 				#*****************************************************************
 				# NOTE RENDERMAN is left handed coordinate system, obj is right handed -> z-axis inverted
 				#
-				vert = [round(float(tokens[1]),Round),round(float(tokens[2]),Round),(-1) * round(float(tokens[3]),Round)]
+				vert = [round(float(tokens[1]), Round),round(float(tokens[2]), Round), (-1) * round(float(tokens[3]), Round)]
 				# then add it to our list
 				verts += [vert]
 				verts_d[group] = verts
-			elif(tokens[0] == "vn"):
+			elif(tokens[0] == 'vn'):
 				#print "found normal"
 				# create a tuple of the normal values
 				#*****************************************************************
 				# NOTE RENDERMAN is left handed coordinate system, obj is right handed -> z-axis inverted
 				#
-				normal = [round(float(tokens[1]),Round),round(float(tokens[2]),Round),(-1) *round(float(tokens[3]),Round)]
+				normal = [round(float(tokens[1]), Round),round(float(tokens[2]), Round), (-1) * round(float(tokens[3]), Round)]
 				# then add it to our list
 				norm += [normal]
 				norm_d[group] = norm
-			elif(tokens[0] == "vt"):
+			elif(tokens[0] == 'vt'):
 				#print "found texture"
 				# create a tuple of the texture values
 				#*****************************************************************
@@ -72,7 +72,7 @@ def export_obj_to_rib(obj_file):
 				text += [tx]
 				text_d[group] = text
 			# now we have a face value
-			elif(tokens[0] == "f"):
+			elif(tokens[0] == 'f'):
 				# add the face to the list and we will process it later (see below)
 				face += [line]
 				face_d[group] = face
@@ -107,27 +107,27 @@ def export_obj_to_rib(obj_file):
 				# 1/1/1 3/2/2 4/3/3 2/4/4
 				index = perface.split("/")
 				# get the point array index
-				pind = int(index[0])-1
-				points.append(round(float(verts_d[group][pind][0]),Round))
-				points.append(round(float(verts_d[group][pind][1]),Round))
-				points.append(round(float(verts_d[group][pind][2]),Round))
+				pind = int(index[0]) - 1
+				points.append(round(float(verts_d[group][pind][0]), Round))
+				points.append(round(float(verts_d[group][pind][1]), Round))
+				points.append(round(float(verts_d[group][pind][2]), Round))
 				op.write('\n\tPolygon')
-				points_str = " ".join(map(str, points))
+				points_str = ' '.join(map(str, points))
 				op.write('\n\t\t\"P\" [' + points_str + ']')
 				# check for textures and add if there
 				if(index[1] != ""):
-					tind = int(index[1])-1
-					tx.append(round(float(text_d[group][tind][0]),Round))
-					tx.append(round(float(text_d[group][tind][1]),Round))
-					tx_str = " ".join(map(str, tx))
+					tind = int(index[1]) - 1
+					tx.append(round(float(text_d[group][tind][0]), Round))
+					tx.append(round(float(text_d[group][tind][1]), Round))
+					tx_str = ' '.join(map(str, tx))
 					op.write('\n\t\t\"facevarying float [2] uv1\" [' + tx_str + ']')
 				# check for normals and check they are there
 				if(index[2] != ""):
-					nind = int(index[2])-1
-					normals.append(round(float(norm_d[group][nind][0]),Round))
-					normals.append(round(float(norm_d[group][nind][1]),Round))
-					normals.append(round(float(norm_d[group][nind][2]),Round))
-					normals_str = " ".join(map(str, normals))
+					nind = int(index[2]) - 1
+					normals.append(round(float(norm_d[group][nind][0]), Round))
+					normals.append(round(float(norm_d[group][nind][1]), Round))
+					normals.append(round(float(norm_d[group][nind][2]), Round))
+					normals_str = ' '.join(map(str, normals))
 					op.write('\n\t\t\"N\" [' + normals_str + ']')
 					
 		op.write('\nAttributeEnd #end Brick ' + name + '.' + group + '\n')
@@ -135,14 +135,15 @@ def export_obj_to_rib(obj_file):
 			#"
 			# create a dictionary to store the polygon data, we always have a point so we can add
 			# this directly
-			#PolyData={ri.P:points}
+			#PolyData = {ri.P:points}
 			# now see if we have any texture co-ordinates and add them to the dictionary if we do
-			#if index[1] !="" :
-			#	PolyData[ri.ST]=tx
+			#if index[1] != "" :
+			#	PolyData[ri.ST] = tx
 			# check for normals and add them to the dictionary as well
-			#if index[2] !="" :
-			#	PolyData[ri.N]=normals
+			#if index[2] != "" :
+			#	PolyData[ri.N] = normals
 			# finally we generate the Polygon from the data
-			#ri.Polygon(PolyData) #{ri.P:points,ri.N:normals,ri.ST:tx})
+			#ri.Polygon(PolyData)
+			#{ri.P:points,ri.N:normals,ri.ST:tx})
 
 export_obj_to_rib(obj_file)
