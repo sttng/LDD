@@ -60,7 +60,7 @@ class BrickReader:
 		# The .g file is the 'base_brick'
 		for geometry_file in files_to_convert:
 			
-			brick = BrickReader.load_single_geometry_file(geometry_file)
+			brick = load_single_geometry_file(geometry_file)
 			geometry_file_dict_list.append(brick)
 				
 		BrickReader.export_to_obj(geometry_file_dict_list)
