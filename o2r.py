@@ -106,6 +106,7 @@ def export_obj_to_rib(obj_file):
 				# the face is in the structure shown below Vertex / Texture / Normal. We are gaurenteed to have a
 				# Vertex but the others may not be there.
 				# 1/1/1 3/2/2 4/3/3 2/4/4
+				i = 1
 				index = perface.split("/")
 				# get the point array index
 				pind = int(index[0]) - 1
@@ -121,7 +122,7 @@ def export_obj_to_rib(obj_file):
 					tx.append(round(float(text_d[group][tind][0]), Round))
 					tx.append(round(float(text_d[group][tind][1]), Round))
 					tx_str = ' '.join(map(str, tx))
-					op.write('\n\t\t\"facevarying float [2] uv1\" [' + tx_str + ']')
+					op.write('\n\t\t\"facevarying float [2] uv' + i + '\" [' + tx_str + ']')
 				# check for normals and check they are there
 				if(index[2] != ""):
 					nind = int(index[2]) - 1
@@ -130,7 +131,7 @@ def export_obj_to_rib(obj_file):
 					normals.append(round(float(norm_d[group][nind][2]), Round))
 					normals_str = ' '.join(map(str, normals))
 					op.write('\n\t\t\"N\" [' + normals_str + ']')
-					
+				i += 1
 		op.write('\nAttributeEnd #end Brick ' + name + '.' + group + '\n')
 	op.close()
 			#"
