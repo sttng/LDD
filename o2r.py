@@ -87,12 +87,13 @@ def export_obj_to_rib(obj_file):
 
 	# Later this should cover obj. files with no groups also. Currently however the LXF
 	# (LIF) to OBJ exporter writes groups in any case.
-	print groups
-	for group in face_d:
+	groups = face_d.keys()
+	for group in groups:
+		print group
 		op.write('\nAttributeBegin #begin Brick ' + name + '.' + group)
 		op.write('\nAttribute \"identifier\" \"uniform string name\" [\"' + name + '.' + group + '\"]')
-	
-		for f in face_d[group]:
+		face = face_d[group]
+		for f in face:
 			# create some empty data structures to be filled as we go
 			vertices = []
 			normals = []
