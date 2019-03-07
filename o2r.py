@@ -36,7 +36,7 @@ def export_obj_to_rib(obj_file):
 				#print "found group"
 				group = tokens[1]
 				# then add it to our list
-				# reset others
+				# Reset lists in case new group is found, so data of the 'old' group isn't spilled to the 'new'  group.
 				verts = []
 				norm = []
 				text = []
@@ -88,7 +88,7 @@ def export_obj_to_rib(obj_file):
 	
 	op.write('##RenderMan RIB-Structure 1.1 Entity')
 	
-	#get max pind per group later
+	# get max pind per group later. Here just initialized.
 	maxpind = 0 
 	maxpind_ded = 0
 	
