@@ -80,14 +80,14 @@ class BrickReaderRib:
 				file_writer.write('\nAttribute \"identifier\" \"uniform string name\" [\"' + geometry_file_dict["partnumber"] + geometry_file_dict["part_extension"] + '\"]'
 								
 				for i in range(0, len(geometry_file_dict["vertices"]), 3):
-					file_writer.write('\n\t\t\"P\" [' + str(geometry_file_dict["vertices"][i]) + ' ' + str(geometry_file_dict["vertices"][i + 1]) + ' ' + str(geometry_file_dict["vertices"][i + 2]) + ' ' + ']')
+					file_writer.write('\n\t\t"P" [' + str(geometry_file_dict["vertices"][i]) + ' ' + str(geometry_file_dict["vertices"][i + 1]) + ' ' + str(geometry_file_dict["vertices"][i + 2]) + ' ' + ']')
 		
 				for i in range(0, len(geometry_file_dict["normals"]), 3):
-					file_writer.write('\n\t\t\"N\" [' + str(geometry_file_dict["normals"][i]) + ' ' + str(geometry_file_dict["normals"][i + 1]) + ' ' + str(geometry_file_dict["normals"][i + 2]) + ' ' + ']')
+					file_writer.write('\n\t\t"N" [' + str(geometry_file_dict["normals"][i]) + ' ' + str(geometry_file_dict["normals"][i + 1]) + ' ' + str(geometry_file_dict["normals"][i + 2]) + ' ' + ']')
 		
 				if (geometry_file_dict["uv_texture_coords_enabled"] == True):
 					for i in range(0, len(geometry_file_dict["tex_coords"]), 2):
-						file_writer.write('\n\t\t\"facevarying float [2] uv0\" [' + str(geometry_file_dict["tex_coords"][i]) + ' ' + str(geometry_file_dict["tex_coords"][i + 1]) + ' ' + ']')
+						file_writer.write('\n\t\t"facevarying float [2] uv0" [' + str(geometry_file_dict["tex_coords"][i]) + ' ' + str(geometry_file_dict["tex_coords"][i + 1]) + ' ' + ']')
 			
 					for i in range(0, len(geometry_file_dict["indices"]), 3):
 						index0 = geometry_file_dict["indices"][i + 0] + offset
