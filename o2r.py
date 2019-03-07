@@ -14,7 +14,6 @@ def export_obj_to_rib(obj_file):
 	ip = open(obj_file, 'r')
 	#grab the data as lines
 	data = ip.readlines()
-	groups = []
 	group = 'no_group'
 	verts = []
 	verts_d = {}
@@ -37,7 +36,11 @@ def export_obj_to_rib(obj_file):
 				#print "found group"
 				group = tokens[1]
 				# then add it to our list
-				groups += [group]
+				# reset others
+				verts = []
+				norm = []
+				text = []
+				face = []
 			elif(tokens[0] == 'v'):
 				#print "found vert"
 				# create a tuple of the vertex point values
@@ -88,9 +91,8 @@ def export_obj_to_rib(obj_file):
 	# Later this should cover obj. files with no groups also. Currently however the LXF
 	# (LIF) to OBJ exporter writes groups in any case.
 	for group in face_d.keys():
-		print group
 		op.write('\nAttributeBegin #begin Brick ' + name + '.' + group)
-		op.write('\nAttribute \"identifier\" \"uniform string name\" [\"' + name + '.' + group + '\"]')
+		op.write('\nAttribute "identifier" "uniform string name" ["' + name + '.' + group + '"]')
 		face = face_d[group]
 		for f in face:
 			# create some empty data structures to be filled as we go
@@ -101,7 +103,6 @@ def export_obj_to_rib(obj_file):
 			fd = f.split()
 			
 			for perface in fd[1:]:
-				
 				# the face is in the structure shown below Vertex / Texture / Normal. We are gaurenteed to have a
 				# Vertex but the others may not be there.
 				# 1/1/1 3/2/2 4/3/3 2/4/4
@@ -114,14 +115,14 @@ def export_obj_to_rib(obj_file):
 				points.append(round(float(verts_d[group][pind][2]), Round))
 				op.write('\n\tPolygon')
 				points_str = ' '.join(map(str, points))
-				op.write('\n\t\t\"P\" [' + points_str + ']')
+				op.write('\n\t\t"P" [' + points_str + ']')
 				# check for textures and add if there
 				if(index[1] != ""):
 					tind = int(index[1]) - 1
 					tx.append(round(float(text_d[group][tind][0]), Round))
 					tx.append(round(float(text_d[group][tind][1]), Round))
 					tx_str = ' '.join(map(str, tx))
-					op.write('\n\t\t\"facevarying float [2] uv' + i + '\" [' + tx_str + ']')
+					op.write('\n\t\t"facevarying float [2] uv' + str(i) + '" [' + tx_str + ']')
 				# check for normals and check they are there
 				if(index[2] != ""):
 					nind = int(index[2]) - 1
@@ -129,11 +130,11 @@ def export_obj_to_rib(obj_file):
 					normals.append(round(float(norm_d[group][nind][1]), Round))
 					normals.append(round(float(norm_d[group][nind][2]), Round))
 					normals_str = ' '.join(map(str, normals))
-					op.write('\n\t\t\"N\" [' + normals_str + ']')
+					op.write('\n\t\t"N" [' + normals_str + ']')
 				i += 1
 		op.write('\nAttributeEnd #end Brick ' + name + '.' + group + '\n')
 	op.close()
-			#"
+			#
 			# create a dictionary to store the polygon data, we always have a point so we can add
 			# this directly
 			#PolyData = {ri.P:points}
