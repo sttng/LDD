@@ -87,7 +87,11 @@ def export_obj_to_rib(obj_file):
 	op = open(name + '.rib', 'w')
 	
 	op.write('##RenderMan RIB-Structure 1.1 Entity')
-
+	
+	#get max pind per group later
+	maxpind = 0 
+	maxpind_ded = 0
+	
 	# Later this should cover obj. files with no groups also. Currently however the LXF
 	# (LIF) to OBJ exporter writes groups in any case.
 	for group in face_d.keys():
@@ -109,7 +113,8 @@ def export_obj_to_rib(obj_file):
 				i = 1
 				index = perface.split("/")
 				# get the point array index
-				pind = int(index[0]) - 1
+				#pind = int(index[0]) - 1
+				pind = int(index[0]) - 1 - maxpind_ded
 				points.append(round(float(verts_d[group][pind][0]), Round))
 				points.append(round(float(verts_d[group][pind][1]), Round))
 				points.append(round(float(verts_d[group][pind][2]), Round))
@@ -132,6 +137,12 @@ def export_obj_to_rib(obj_file):
 					normals_str = ' '.join(map(str, normals))
 					op.write('\n\t\t"N" [' + normals_str + ']')
 				i += 1
+				# collect the max pind found
+				if (pind > maxpind):
+					maxpind = pind
+			#in case of new group we need to "deduct" the value of of the highest vertex ind from the last group (see above).
+			# this is set here. maxpind_ded = maxpind
+			maxpind_ded = maxpind
 		op.write('\nAttributeEnd #end Brick ' + name + '.' + group + '\n')
 	op.close()
 			#
