@@ -66,7 +66,11 @@ def export_obj_to_rib(File) :
 
 	# now we've grabbed all the data we can process each of the faces and write out the rib
 	# Assume faces are group specific
-	obj_group = {}{}
+	obj_group = {}
+	obj_group['no_group'= {}
+	obj_group['no_group'['faces'] = {}
+	obj_group['no_group']['faces']['VTN'] = {}
+	
 	for group in face_d.keys():
 		face = face_d[group]
 	
@@ -112,6 +116,7 @@ def export_obj_to_rib(File) :
 				i += 1
 				
 		# Now the dict should have everything
+		del obj_group['no_group'] 
 		for group in obj_group.keys():
 			for f in obj_group[group].keys():
 				print obj_group[group][f]["P"]
