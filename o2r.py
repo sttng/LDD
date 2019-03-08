@@ -133,7 +133,7 @@ def export_obj_to_rib(obj_file):
 					#tind = int(index[1]) - 1
 					tind = int(index[1]) - 1 - maxtind_ded
 					# collect the max tind found
-					if (tind > maxtind): #
+					if (tind > maxtind): #or is it int(index[1]) ? 
 						maxtind = tind
 					tx.append(round(float(text_d[group][tind][0]), Round))
 					tx.append(round(float(text_d[group][tind][1]), Round))
