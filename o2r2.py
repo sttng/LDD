@@ -8,7 +8,8 @@ import argparse
 obj_file = sys.argv[1]
 
 
-def ObjToRib(ri,File,Round) :
+def export_obj_to_rib(File) :
+	Round = 6
 	print "opening : "+File
 	# open the file
 	ip = open(File,'r')
@@ -79,6 +80,7 @@ def ObjToRib(ri,File,Round) :
 			# the face is in the structure shown below Vert / TX / Norm we are gaurenteed to have a
 			# Vert but the others may not be there
 			#1/1/1 3/2/2 4/3/3 2/4/4 
+			i = 0
 			for perface in fd[1:] :
 				index=perface.split("/")
 				# get the point array index
@@ -87,27 +89,37 @@ def ObjToRib(ri,File,Round) :
 				points.append(round(float(verts[pind][1]),Round))
 				points.append(round(float(verts[pind][2]),Round))
 				points_str = ' '.join(map(str, points))
-				obj_group[group]["P"] = points_str
+				obj_group[group][i]["P"] = points_str
 				# check for textures and add if there
 				if(index[1] !="") :
 					tind=int(index[1])-1
 					tx.append(round(float(text[tind][0]),Round))
 					tx.append(round(float(text[tind][1]),Round))
+					tx_str = ' '.join(map(str, tx))
+					obj_group[group][i]["T"] = tx_str
+				else:
+					obj_group[group][i]["T"] = '' #just to ensure
 				# check for normals and check they are there
 				if(index[2] !="") :
 					nind=int(index[2])-1
 					normals.append(round(float(norm[nind][0]),Round))
 					normals.append(round(float(norm[nind][1]),Round))
 					normals.append(round(float(norm[nind][2]),Round))
-		
+					normals_str = ' '.join(map(str, normals))
+					obj_group[group][i]["N"] = normals_str
+				else:
+					obj_group[group][i]["N"] = ''
+				i += 1
+				
+		# Now the dict should have everything
+		for group in obj_group.keys():
+			for f in obj_group[group].keys():
+				print obj_group[group][f]["P"]
+				print obj_group[group][f]["T"]
+				print obj_group[group][f]["N"]
+			
 		# create a dictionary to store the polygon data, we always have a point so we can add
 		#this directly
-		PolyData={ri.P:points}
-		# now see if we have any texture co-ordinates and add them to the dictionary if we do
-		if index[1] !="" :
-			PolyData[ri.ST]=tx
-		# check for normals and add them to the dictionary as well
-		if index[2] !="" :
-			PolyData[ri.N]=normals
-		# finally we generate the Polygon from the data
-		ri.Polygon(PolyData)  #{ri.P:points,ri.N:normals,ri.ST:tx})
+
+		
+export_obj_to_rib(obj_file)
