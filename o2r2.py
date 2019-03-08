@@ -20,11 +20,47 @@ import time, random
 import sys
 import argparse
 import collections
+import csv
 
 obj_file = sys.argv[1]
 
+def material_ids_to_ri(material_id_list):
+	material_ids = material_id_list
+	
+	material_id_dict = {}
+	with open('lego_colors.csv', 'r') as csvfile:
+		reader = csv.reader(csvfile, delimiter=',')
+		next(csvfile) # skip the first row
+		for row in reader:
+			material_id_dict[row[0]] = row[6], row[7], row[8]
+	i = 0
+	bxdf_mat = {}
+	for material_id in material_ids:
+		
+		# Under the assumption the 1st mat is never 0
+		if (int(material_id) == 0):
+			print "Here"
+			bxdf_mat[i] = bxdf_mat[0]
+			i += 1
+			continue
+				
+		try:
+			color_r, color_g, color_b = material_id_dict[material_id]	
+		except KeyError as e:
+			color_r, color_g, color_b = [100, 100, 100]
+			print 'Warning: Material_ID ' + e.args[0] + ' not found.'
+					
+		color_r = round((float(color_r) / 255),2)
+		color_g = round((float(color_g) / 255),2)
+		color_b = round((float(color_b) / 255),2)
+		
+		bxdf_mat[i] = '\t\tBxdf "PxrSurface" "Material' + material_id + '" "float diffuseGain" [1.0] "color diffuseColor" [' + str(color_r) + ' ' + str(color_g) + ' ' + str(color_b) + '] "int diffuseDoubleSided" [1] "color specularFaceColor" [0.1 0.1 0.15] "float specularRoughness" [0.2] "int specularDoubleSided" [0] "float presence" [1]\n'
+		i += 1
+	
+	return bxdf_mat
 
-def export_obj_to_rib(obj_file):
+def export_obj_to_rib(obj_file, mats):
+	bxdf_mat = material_ids_to_ri(mats)
 	Round = 6
 	# open the file
 	ip = open(obj_file,'r')
@@ -39,7 +75,7 @@ def export_obj_to_rib(obj_file):
 	name = obj_file.split(".")
 	name = name[0]
 	# for each line check for one of our tokens
-	for line in data :
+	for line in data:
 		# we assume that our Tokens are always the first element of the line (which IIRC the rispec specifies)
 		# so we split each line and look at the first element
 		tokens=line.split()	
@@ -48,6 +84,8 @@ def export_obj_to_rib(obj_file):
 			if(tokens[0] == 'g'):
 				#print "found group"
 				group = tokens[1]
+				# Reset face list in case new group is found, so data of the 'old' face group isn't spilled to the 'new'  group.
+				face = []
 			elif(tokens[0] == 'v'):
 				#print "found vert"
 				# create a tuple of the vertex point values
@@ -151,6 +189,7 @@ def export_obj_to_rib(obj_file):
 	for group in obj_group.keys():
 		op.write('AttributeBegin #begin Brick ' + name + '.' + group + '\n')
 		op.write('Attribute "identifier" "uniform string name" ["Brick ' + name + '.' + group + '"]\n')
+		op.write(bxdf_mat[int(group)])
 		uv_num = 1
 		for f in obj_group[group].keys():
 			op.write('\tPolygon\n')
@@ -166,4 +205,4 @@ def export_obj_to_rib(obj_file):
 		op.write('AttributeEnd #end Brick ' + name + '.' + group + '\n\n')
 
 		
-export_obj_to_rib(obj_file)
+#export_obj_to_rib(obj_file)
