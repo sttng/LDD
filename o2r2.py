@@ -25,7 +25,10 @@ def ObjToRib(ri,File,Round) :
 		tokens=line.split()	
 		# make sure we have a token to check against
 		if(len(tokens) >0 ) :
-			if(tokens[0] =="v") :
+			if(tokens[0] == 'g'):
+				#print "found group"
+				group = tokens[1]
+			elif(tokens[0] == 'v'):
 				#print "found vert"
 				# create a tuple of the vertex point values
 				vert=[round(float(tokens[1]),Round),round(float(tokens[2]),Round),round(float(tokens[3]),Round)]
