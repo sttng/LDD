@@ -18,6 +18,8 @@ def ObjToRib(ri,File,Round) :
 	norm=[]
 	text=[]
 	face=[]
+	face_d= {}
+	group = 'no_group'
 	# for each line check for one of our tokens
 	for line in data :
 		# we assume that our Tokens are always the first element of the line (which IIRC the rispec specifies)
@@ -56,39 +58,47 @@ def ObjToRib(ri,File,Round) :
 			elif(tokens[0] =="f") :
 				# add the face to the list and we will process it later (see below)
 				face+=[line]
+				face_d[group] = face
 			
 	# close the file
 	ip.close()
 
 	# now we've grabbed all the data we can process each of the faces and write out the rib
-	for f in face :
-		# create some empty data structures to be filled as we go
-		vertices=[]
-		normals=[]
-		points=[] 
-		tx=[]
-		fd=f.split() 
-		# the face is in the structure shown below Vert / TX / Norm we are gaurenteed to have a
-		# Vert but the others may not be there
-		#1/1/1 3/2/2 4/3/3 2/4/4 
-		for perface in fd[1:] :
-			index=perface.split("/")
-			# get the point array index
-			pind=int(index[0])-1
-			points.append(round(float(verts[pind][0]),Round))
-			points.append(round(float(verts[pind][1]),Round))
-			points.append(round(float(verts[pind][2]),Round))
-			# check for textures and add if there
-			if(index[1] !="") :
-				tind=int(index[1])-1
-				tx.append(round(float(text[tind][0]),Round))
-				tx.append(round(float(text[tind][1]),Round))
-			# check for normals and check they are there
-			if(index[2] !="") :
-				nind=int(index[2])-1
-				normals.append(round(float(norm[nind][0]),Round))
-				normals.append(round(float(norm[nind][1]),Round))
-				normals.append(round(float(norm[nind][2]),Round))
+	# Assume faces are group specific
+	obj_group = {}{}
+	for group in face_d.keys():
+		face = face_d[group]
+	
+		for f in face :
+			# create some empty data structures to be filled as we go
+			vertices=[]
+			normals=[]
+			points=[] 
+			tx=[]
+			fd=f.split() 
+			# the face is in the structure shown below Vert / TX / Norm we are gaurenteed to have a
+			# Vert but the others may not be there
+			#1/1/1 3/2/2 4/3/3 2/4/4 
+			for perface in fd[1:] :
+				index=perface.split("/")
+				# get the point array index
+				pind=int(index[0])-1
+				points.append(round(float(verts[pind][0]),Round))
+				points.append(round(float(verts[pind][1]),Round))
+				points.append(round(float(verts[pind][2]),Round))
+				points_str = ' '.join(map(str, points))
+				obj_group[group]["P"] = points_str
+				# check for textures and add if there
+				if(index[1] !="") :
+					tind=int(index[1])-1
+					tx.append(round(float(text[tind][0]),Round))
+					tx.append(round(float(text[tind][1]),Round))
+				# check for normals and check they are there
+				if(index[2] !="") :
+					nind=int(index[2])-1
+					normals.append(round(float(norm[nind][0]),Round))
+					normals.append(round(float(norm[nind][1]),Round))
+					normals.append(round(float(norm[nind][2]),Round))
 		
 		# create a dictionary to store the polygon data, we always have a point so we can add
 		#this directly
