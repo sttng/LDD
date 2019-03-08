@@ -17,12 +17,13 @@ import zipfile
 import shutil
 import math
 from BrickReader import BrickReader
-from ObjToRib import ObjToRib
+#from ObjToRib import ObjToRib
 import xml.etree.ElementTree as ET
 import numpy as np
 import csv
 import zlib
 import random
+import o2r2
 compression = zipfile.ZIP_DEFLATED
 
 
@@ -70,15 +71,16 @@ def generate_bricks(lxf_filename):
 			design_id = item.get('designID')
 			
 			if design_id in processed_brick:
+				# Don't process bricks twice
 				continue
 			else:
 				
 				BrickReader.read_brick(design_id)
 				
-				ObjToRib.export_obj_to_rib(design_id + '.obj')
+				o2r2.export_obj_to_rib(design_id + '.obj')
 				myzip.write(design_id + '.rib', compress_type=compression)
-				os.remove(design_id + '.rib')
-				os.remove(design_id + '.obj')
+				#os.remove(design_id + '.rib')
+				#os.remove(design_id + '.obj')
 				processed_brick[design_id] = True
 			
 
@@ -129,7 +131,7 @@ def export_to_rib(lxf_filename):
 		file_writer.write('\tScale 0.7 0.7 0.7\n')
 		file_writer.write('\tRotate -25 1 0 0\n')
 		file_writer.write('\tRotate 45 0 1 0\n')
-		file_writer.write('\tAttributeBegin\n\t\tAttribute \"visibility\" \"int indirect\" [0] \"int transmission\" [0]\n\t\tAttribute \"visibility\" \"int camera\" [1]\n\t\tRotate 50 0 1 0\n\t\tRotate -90 1 0 0\n\t\tLight \"PxrDomeLight\" \"domeLight\" \"string lightColorMap\" [\"GriffithObservatory.tex\"]\n\tAttributeEnd\n')
+		file_writer.write('\tAttributeBegin\n\t\tAttribute "visibility" "int indirect" [0] "int transmission" [0]\n\t\tAttribute "visibility" "int camera" [1]\n\t\tRotate 50 0 1 0\n\t\tRotate -90 1 0 0\n\t\tLight "PxrDomeLight" "domeLight" "string lightColorMap" ["GriffithObservatory.tex"]\n\tAttributeEnd\n')
 		tree = ET.fromstring(lxfml_file)
 		
 		lst = tree.findall('Bricks/Brick/Part')
@@ -139,8 +141,8 @@ def export_to_rib(lxf_filename):
 			design_id = item.get('designID')
 			material_id = item.get('materials')
 			# Hack to work around decals.
-			material_id = material_id.split(',')
-			material_id =material_id[0]
+			material_ids = material_id.split(',')
+			material_id =material_ids[0]
 				
 			for sub in item:
 				transformation = sub.get('transformation')
@@ -182,19 +184,19 @@ def export_to_rib(lxf_filename):
 			+ trans_xyz[0] + ' ' + trans_xyz[1] + ' ' + trans_xyz[2] + ' 1]\n')
 			#file_writer.write('\tScale ' + rand + ' ' + rand + ' ' + rand + '\n') #Random brick size for seams.
 			file_writer.write('\t\tScale 1 1 1\n')
-			file_writer.write('\t\tBxdf \"PxrSurface\" \"PxrSurface1\" \"float diffuseGain\" [1.0] \"color diffuseColor\" [' + str(color_r) + ' ' + str(color_g) + ' ' + str(color_b) + '] \"int diffuseDoubleSided\" [1] \"color specularFaceColor\" [0.1 0.1 0.15] \"float specularRoughness\" [0.2] \"int specularDoubleSided\" [0] \"float presence\" [1]\n')
-			#file_writer.write('\t\tBxdf \"PxrSurface\" \"terminal.bxdf\" \"color diffuseColor\" [' + str(color_r) + ' ' + str(color_g) + ' ' + str(color_b) + '] \"float specularRoughness\" [0.008] \"color specularEdgeColor\" [0.45 0.45 0.45]\n')
-			file_writer.write('\t\tAttribute \"identifier\" \"name" [\"'+ design_id +'\"]\n')
-			file_writer.write('\t\tReadArchive \"Bricks_Archive.zip!'+ design_id + '.rib\"\n')
+			file_writer.write('\t\tBxdf "PxrSurface" "PxrSurface1" "float diffuseGain" [1.0] "color diffuseColor" [' + str(color_r) + ' ' + str(color_g) + ' ' + str(color_b) + '] "int diffuseDoubleSided" [1] "color specularFaceColor" [0.1 0.1 0.15] "float specularRoughness" [0.2] "int specularDoubleSided" [0] "float presence" [1]\n')
+			#file_writer.write('\t\tBxdf "PxrSurface" "terminal.bxdf" "color diffuseColor" [' + str(color_r) + ' ' + str(color_g) + ' ' + str(color_b) + '] "float specularRoughness" [0.008] "color specularEdgeColor" [0.45 0.45 0.45]\n')
+			file_writer.write('\t\tAttribute "identifier" "name" ["'+ design_id +'"]\n')
+			file_writer.write('\t\tReadArchive "Bricks_Archive.zip!'+ design_id + '.rib"\n')
 			file_writer.write('\tAttributeEnd\n\n')
 		
-		file_writer.write('\tAttributeBegin\n')
-		file_writer.write('\t\tAttribute \"identifier\" \"string name\" [\"plane1\"]')
-		file_writer.write('\t\tTranslate ' + minx + ' ' +'0 10\n')
-		file_writer.write('\t\tScale 100 1 100')
-		file_writer.write('\t\tPolygon \"P\" [-0.5 0 -0.5  -0.5 0 0.5  0.5 0 0.5  0.5 0 -0.5]')
-		file_writer.write('\t\t\"st\" [0 0  0 1  1 1  1 0]')
-		file_writer.write('\tAttributeEnd\n\n')
+		#file_writer.write('\tAttributeBegin\n')
+		#file_writer.write('\t\tAttribute "identifier" "string name" ["plane1"]')
+		#file_writer.write('\t\tTranslate ' + minx + ' ' +'0 10\n')
+		#file_writer.write('\t\tScale 100 1 100')
+		#file_writer.write('\t\tPolygon "P" [-0.5 0 -0.5  -0.5 0 0.5  0.5 0 0.5  0.5 0 -0.5]')
+		#file_writer.write('\t\t"st" [0 0  0 1  1 1  1 0]')
+		#file_writer.write('\tAttributeEnd\n\n')
 		file_writer.write('WorldEnd\n')
 	
 	file_writer.close()
@@ -202,20 +204,12 @@ def export_to_rib(lxf_filename):
 
 
 def generate_master_scene(lxf_filename):
-	# create 'header.rib' to add current working dir to rib filer and concat header, template and lxf->rib into scene.
-	
 	lxf_extension = os.path.splitext(os.path.basename(lxf_filename))[1]
 	lxf_filename = os.path.splitext(os.path.basename(lxf_filename))[0]
-	current_working_dir = os.getcwd()
-	with open('header.rib', 'w') as file_writer:
-		file_writer.write('##RenderMan RIB\nversion 3.04\nOption \"searchpath\" \"string archive\" [\"' + current_working_dir + '\"]\n')
-	file_writer.close()
 	with open('test_scene.rib','wb') as wfd:
-		for f in ['header.rib', 'template.rib', lxf_filename + '.rib']:
+		for f in ['template.rib',lxf_filename + '.rib']:
 			with open(f,'rb') as fd:
 				shutil.copyfileobj(fd, wfd, 1024*1024*10)
-	wfd.close()
-	os.remove('header.rib')
 	os.remove(lxf_filename + '.rib')
 	print 'Success: Created rib scene from ' + lxf_filename + lxf_extension
 	
