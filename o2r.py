@@ -91,6 +91,10 @@ def export_obj_to_rib(obj_file):
 	# get max pind per group later. Here just initialized.
 	maxpind = 0 
 	maxpind_ded = 0
+	maxtind = 0 
+	maxtind_ded = 0
+	maxnind = 0 
+	maxnind_ded = 0
 	
 	# Later this should cover obj. files with no groups also. Currently however the LXF
 	# (LIF) to OBJ exporter writes groups in any case.
@@ -115,6 +119,9 @@ def export_obj_to_rib(obj_file):
 				# get the point array index
 				#pind = int(index[0]) - 1
 				pind = int(index[0]) - 1 - maxpind_ded
+				# collect the max pind found
+				if (pind > maxpind):
+					maxpind = pind
 				points.append(round(float(verts_d[group][pind][0]), Round))
 				points.append(round(float(verts_d[group][pind][1]), Round))
 				points.append(round(float(verts_d[group][pind][2]), Round))
@@ -123,26 +130,32 @@ def export_obj_to_rib(obj_file):
 				op.write('\n\t\t"P" [' + points_str + ']')
 				# check for textures and add if there
 				if(index[1] != ""):
-					tind = int(index[1]) - 1
+					#tind = int(index[1]) - 1
+					tind = int(index[1]) - 1 - maxtind_ded
+					# collect the max tind found
+					if (tind > maxtind): #
+						maxtind = tind
 					tx.append(round(float(text_d[group][tind][0]), Round))
 					tx.append(round(float(text_d[group][tind][1]), Round))
 					tx_str = ' '.join(map(str, tx))
 					op.write('\n\t\t"facevarying float [2] uv' + str(i) + '" [' + tx_str + ']')
 				# check for normals and check they are there
 				if(index[2] != ""):
-					nind = int(index[2]) - 1
+					#nind = int(index[2]) - 1
+					nind = int(index[2]) - 1 - maxnind_ded
+					if (nind > maxnind):
+						maxnind = nind
 					normals.append(round(float(norm_d[group][nind][0]), Round))
 					normals.append(round(float(norm_d[group][nind][1]), Round))
 					normals.append(round(float(norm_d[group][nind][2]), Round))
 					normals_str = ' '.join(map(str, normals))
 					op.write('\n\t\t"N" [' + normals_str + ']')
 				i += 1
-				# collect the max pind found
-				if (pind > maxpind):
-					maxpind = pind
 			#in case of new group we need to "deduct" the value of of the highest vertex ind from the last group (see above).
 			# this is set here. maxpind_ded = maxpind
 			maxpind_ded = maxpind
+			maxtind_ded = maxtind
+			maxnind_ded = maxnind
 		op.write('\nAttributeEnd #end Brick ' + name + '.' + group + '\n')
 	op.close()
 			#
