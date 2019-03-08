@@ -1,5 +1,20 @@
 #!/usr/bin/env python
 
+#
+# Version 0.1 - Copyright (c) 2019 by 
+#
+# Info:
+# This script will read in a.obj file, construct geometry from it
+# and write out a .rib entity file of it. RIB Entity Files are incomplete 
+# as they do not contain enough information to render them. RIB Entity 
+# Files need to be integrated or added to into "legal," or complete, RIB Files.
+#
+# Updates:
+#
+# License: MIT License
+#
+#
+
 import getpass
 import time, random
 import sys
@@ -98,28 +113,33 @@ def export_obj_to_rib(obj_file):
 				points.append(round(float(verts[pind][0]),Round))
 				points.append(round(float(verts[pind][1]),Round))
 				points.append(round(float(verts[pind][2]),Round))
-				points_str = ' '.join(map(str, points))
-				obj_group[group][i]["P"] = points_str
 				# check for textures and add if there
-				if(index[1] !="") :
+				if(index[1] != "") :
 					tind=int(index[1])-1
 					tx.append(round(float(text[tind][0]),Round))
 					tx.append(round(float(text[tind][1]),Round))
-					tx_str = ' '.join(map(str, tx))
-					obj_group[group][i]["T"] = tx_str
-				else:
-					obj_group[group][i]["T"] = '' #just to ensure there is no dict error later
 				# check for normals and check they are there
-				if(index[2] !="") :
+				if(index[2] != "") :
 					nind=int(index[2])-1
 					normals.append(round(float(norm[nind][0]),Round))
 					normals.append(round(float(norm[nind][1]),Round))
 					normals.append(round(float(norm[nind][2]),Round))
 					normals_str = ' '.join(map(str, normals))
-					obj_group[group][i]["N"] = normals_str
-				else:
-					obj_group[group][i]["N"] = '' #just to ensure no dict error later
-				i += 1
+					
+			points_str = ' '.join(map(str, points))
+			obj_group[group][i]["P"] = points_str
+			# now see if we have any texture co-ordinates and add them to the dictionary if we do
+			if index[1] != "" :
+				tx_str = ' '.join(map(str, tx))
+				obj_group[group][i]["T"] = tx_str
+			else:
+				obj_group[group][i]["T"] = '' #just to ensure there is no dict error later
+			# check for normals and add them to the dictionary as well
+			if index[2] != "" :
+				obj_group[group][i]["N"] = normals_str
+			else:
+				obj_group[group][i]["N"] = '' #just to ensure no dict error later
+			i += 1
 				
 	# Now the dict should have everything
 	
@@ -134,14 +154,14 @@ def export_obj_to_rib(obj_file):
 		uv_num = 1
 		for f in obj_group[group].keys():
 			op.write('\tPolygon\n')
-			op.write('\t\t"P" [' + str(obj_group[group][f]["P"]) + ']\n')
+			op.write('\t\t"P" [ ' + str(obj_group[group][f]["P"]) + ' ]\n')
 			# check for textures
 			if(str(obj_group[group][f]["T"]) != ''):
-				op.write('\t\t"facevarying float [2] uv' + str(uv_num) + '" [' + str(obj_group[group][f]["T"]) + ']\n')
+				op.write('\t\t"facevarying float [2] uv' + str(uv_num) + '" [ ' + str(obj_group[group][f]["T"]) + ' ]\n')
 				uv_num += 1
 			# check for normals
 			if(str(obj_group[group][f]["N"]) != ''):
-				op.write('\t\t"N" [' + str(obj_group[group][f]["N"]) + ']\n')
+				op.write('\t\t"N" [ ' + str(obj_group[group][f]["N"]) + ' ]\n')
 
 		op.write('AttributeEnd #end Brick ' + name + '.' + group + '\n\n')
 
