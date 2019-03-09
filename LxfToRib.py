@@ -82,8 +82,8 @@ def generate_bricks(lxf_filename):
 				BrickReader.read_brick(design_id)
 				
 				ObjToRib2.export_obj_to_rib(design_id + '.obj', material_ids)
-				myzip.write(design_id + '.rib', compress_type=compression)
-				os.remove(design_id + '.rib')
+				myzip.write(design_id + '_' + material_string + '.rib', compress_type=compression)
+				os.remove(design_id + '_' + material_string + '.rib')
 				os.remove(design_id + '.obj')
 				processed_brick[processed] = True
 			
@@ -135,6 +135,9 @@ def export_to_rib(lxf_filename):
 		
 		for item in lst:
 			design_id = item.get('designID')
+			materials = item.get('materials')
+			material_ids = materials.split(',')
+			material_string = '_'.join(material_ids)
 				
 			for sub in item:
 				transformation = sub.get('transformation')
@@ -165,17 +168,17 @@ def export_to_rib(lxf_filename):
 			+ trans_xyz[0] + ' ' + trans_xyz[1] + ' ' + trans_xyz[2] + ' 1]\n')
 			#file_writer.write('\tScale ' + rand + ' ' + rand + ' ' + rand + '\n') #Random brick size for seams.
 			file_writer.write('\t\tScale 1 1 1\n')
-			file_writer.write('\t\tAttribute "identifier" "name" ["'+ design_id +'"]\n')
-			file_writer.write('\t\tReadArchive "Bricks_Archive.zip!'+ design_id + '.rib"\n')
+			file_writer.write('\t\tAttribute "identifier" "name" ["'+ design_id + '_' + material_string +'"]\n')
+			file_writer.write('\t\tReadArchive "Bricks_Archive.zip!'+ design_id + '_' + material_string + '.rib"\n')
 			file_writer.write('\tAttributeEnd\n\n')
 		
-		#file_writer.write('\tAttributeBegin\n')
-		#file_writer.write('\t\tAttribute "identifier" "string name" ["plane1"]')
-		#file_writer.write('\t\tTranslate ' + minx + ' ' +'0 10\n')
-		#file_writer.write('\t\tScale 100 1 100')
-		#file_writer.write('\t\tPolygon "P" [-0.5 0 -0.5  -0.5 0 0.5  0.5 0 0.5  0.5 0 -0.5]')
-		#file_writer.write('\t\t"st" [0 0  0 1  1 1  1 0]')
-		#file_writer.write('\tAttributeEnd\n\n')
+		file_writer.write('\tAttributeBegin\n')
+		file_writer.write('\t\tAttribute "identifier" "string name" ["plane1"]')
+		file_writer.write('\t\tTranslate ' + minx + ' ' +'0 10\n')
+		file_writer.write('\t\tScale 100 1 100')
+		file_writer.write('\t\tPolygon "P" [-0.5 0 -0.5  -0.5 0 0.5  0.5 0 0.5  0.5 0 -0.5]')
+		file_writer.write('\t\t"st" [0 0  0 1  1 1  1 0]')
+		file_writer.write('\tAttributeEnd\n\n')
 		file_writer.write('WorldEnd\n')
 	
 	file_writer.close()
