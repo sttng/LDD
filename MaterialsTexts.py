@@ -54,8 +54,7 @@ def material_ids_to_ri(material_id_list):
 	return bxdf_mat
 
 
-materials="24,0,0,0"
-material_ids = materials.split(',')
-		
-a = material_ids_to_ri(material_ids)
-print a
+#materials="24,0,0,0"
+#material_ids = materials.split(',')		
+#a = material_ids_to_ri(material_ids)
+#print a
