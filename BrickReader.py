@@ -52,15 +52,15 @@ class BrickReader:
 		geometry_file_dict_list = []
 		
 		if not files_to_convert:
-			#print("Brick not. Found possibly assembly")
+			#print("Brick not found. Possibly assembly")
 			return False
 		#print 'Brick ' + partnumber + ' consist of ' + str(len(files_to_convert)) + ' files.\n'
 		
-		# Various similar extensions like g, .g1, .g2, ..., .g8 exist if the brick is composed of multiple parts. 
-		# The .g file is the 'base_brick'
+		# Various similar extensions like g, .g1, .g2, ..., .g8 exist if the brick is composed of multiple parts.
+		# The .g file is the 'base_brick' usually.
 		for geometry_file in files_to_convert:
 			
-			brick = load_single_geometry_file(geometry_file)
+			brick = BrickReader.load_single_geometry_file(geometry_file)
 			geometry_file_dict_list.append(brick)
 				
 		BrickReader.export_to_obj(geometry_file_dict_list)
@@ -134,7 +134,7 @@ class BrickReader:
 				elif (options == '3e000000'):
 					
 					geometry_file_dict["uv_texture_coords_enabled"] = False
-					print 'Options: ' + options + ' in ' + partnumber + part_extension
+					#print 'Options: ' + options + ' in ' + partnumber + part_extension
 				
 				# uv_texture_coords, flex part
 				elif (options == '3f000000'):
@@ -145,7 +145,7 @@ class BrickReader:
 						
 					geometry_file_dict["uv_texture_coords_enabled"] = True
 					geometry_file_dict["tex_coords"] = tex_coords_list
-					print 'Options: ' + options + ' in ' + partnumber + part_extension
+					#print 'Options: ' + options + ' in ' + partnumber + part_extension
 				
 				else:
 					print '\tERROR: Unknown Options: ' + options + ' in ' + partnumber + part_extension
