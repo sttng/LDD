@@ -25,9 +25,12 @@ import MaterialsTexts
 obj_file = sys.argv[1]
 
 
-def export_obj_to_rib(obj_file, mats):
-	if (mats):
-		bxdf_mat = MaterialsTexts.material_ids_to_ri(mats)
+def export_obj_to_rib(obj_file, material_id_list):
+	if (material_id_list):
+		bxdf_mat = MaterialsTexts.material_ids_to_ri(material_id_list)
+	
+	material_string = '_'.join(material_id_list)
+	
 		
 	Round = 6
 	# open the file
@@ -42,6 +45,7 @@ def export_obj_to_rib(obj_file, mats):
 	group = 'no_group'
 	name = obj_file.split(".")
 	name = name[0]
+	name = name + '_' + material_string
 	# for each line check for one of our tokens
 	for line in data:
 		# we assume that our Tokens are always the first element of the line (which IIRC the rispec specifies)
