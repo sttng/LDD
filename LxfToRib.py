@@ -17,13 +17,13 @@ import zipfile
 import shutil
 import math
 from BrickReader import BrickReader
-#from ObjToRib import ObjToRib
+import ObjToRib2
 import xml.etree.ElementTree as ET
 import numpy as np
 import csv
 import zlib
 import random
-import o2r2
+
 compression = zipfile.ZIP_DEFLATED
 
 
@@ -69,19 +69,23 @@ def generate_bricks(lxf_filename):
 		processed_brick = dict()
 		for item in lst:
 			design_id = item.get('designID')
+			materials = item.get('materials')
+			material_ids = materials.split(',')
+			material_string = '_'.join(material_ids)
+			processed = design_id + '_' + material_string
 			
-			if design_id in processed_brick:
+			if processed in processed_brick:
 				# Don't process bricks twice
 				continue
 			else:
 				
 				BrickReader.read_brick(design_id)
 				
-				o2r2.export_obj_to_rib(design_id + '.obj')
+				ObjToRib2.export_obj_to_rib(design_id + '.obj', material_ids)
 				myzip.write(design_id + '.rib', compress_type=compression)
-				#os.remove(design_id + '.rib')
-				#os.remove(design_id + '.obj')
-				processed_brick[design_id] = True
+				os.remove(design_id + '.rib')
+				os.remove(design_id + '.obj')
+				processed_brick[processed] = True
 			
 
 def export_to_rib(lxf_filename):
@@ -90,14 +94,6 @@ def export_to_rib(lxf_filename):
 	lxfml_file = archive.read('IMAGE100.LXFML')
 	trans_xyz = []
 	minx = 1000
-	
-	material_id_dict = {}
-	with open('lego_colors.csv', 'r') as csvfile:
-		reader = csv.reader(csvfile, delimiter=',')
-		next(csvfile) # skip the first row
-		for row in reader:
-			material_id_dict[row[0]] = row[6], row[7], row[8]
-			#print(row)
 			
 	ribfile = os.path.splitext(os.path.basename(lxf_filename))[0]
 	with open(ribfile + '.rib', 'w') as file_writer:
@@ -139,10 +135,6 @@ def export_to_rib(lxf_filename):
 		
 		for item in lst:
 			design_id = item.get('designID')
-			material_id = item.get('materials')
-			# Hack to work around decals.
-			material_ids = material_id.split(',')
-			material_id =material_ids[0]
 				
 			for sub in item:
 				transformation = sub.get('transformation')
@@ -156,17 +148,6 @@ def export_to_rib(lxf_filename):
 			
 			R = np.array([[float(transformation_array[0]), float(transformation_array[1]) ,float(transformation_array[2])], [ float(transformation_array[3]), float(transformation_array[4]) ,float(transformation_array[5])], [ float(transformation_array[6]), float(transformation_array[7]) ,float(transformation_array[8])]])
 			b = np.array([1, 0, 0])
-			
-			try:
-				color_r, color_g, color_b = material_id_dict[material_id]
-				
-			except KeyError as e:
-				color_r, color_g, color_b = [100, 100, 100]
-				print 'Warning: Material_ID ' + e.args[0] + ' not found.'
-				
-			color_r = round((float(color_r) / 255),2)
-			color_g = round((float(color_g) / 255),2)
-			color_b = round((float(color_b) / 255),2)
 			
 			rotx, roty, rotz = rotationMatrixToEulerAngles(R)
 			rotz = (-1) * rotz #Renderman is lefthanded coordinate system, but LDD is right handed.
@@ -184,8 +165,6 @@ def export_to_rib(lxf_filename):
 			+ trans_xyz[0] + ' ' + trans_xyz[1] + ' ' + trans_xyz[2] + ' 1]\n')
 			#file_writer.write('\tScale ' + rand + ' ' + rand + ' ' + rand + '\n') #Random brick size for seams.
 			file_writer.write('\t\tScale 1 1 1\n')
-			file_writer.write('\t\tBxdf "PxrSurface" "PxrSurface1" "float diffuseGain" [1.0] "color diffuseColor" [' + str(color_r) + ' ' + str(color_g) + ' ' + str(color_b) + '] "int diffuseDoubleSided" [1] "color specularFaceColor" [0.1 0.1 0.15] "float specularRoughness" [0.2] "int specularDoubleSided" [0] "float presence" [1]\n')
-			#file_writer.write('\t\tBxdf "PxrSurface" "terminal.bxdf" "color diffuseColor" [' + str(color_r) + ' ' + str(color_g) + ' ' + str(color_b) + '] "float specularRoughness" [0.008] "color specularEdgeColor" [0.45 0.45 0.45]\n')
 			file_writer.write('\t\tAttribute "identifier" "name" ["'+ design_id +'"]\n')
 			file_writer.write('\t\tReadArchive "Bricks_Archive.zip!'+ design_id + '.rib"\n')
 			file_writer.write('\tAttributeEnd\n\n')
