@@ -92,10 +92,28 @@ LEGO ID,LEGO Name,Bricklink ID,Bricklink Name,Pantone,Pantone HEX,Red,Green,Blue
 269,Tiny-Medium Blue,,,7459 C,4298B5,66,152,181
 283,Light Nougat,90,Light Flesh,712 C,FCC89B,252,200,155
 308,Dark Brown,120,Dark Brown,Black 4 C,31261D,49,38,29
+321,Dark Azur,153,Dark Azure,7461 C,,0,150,200
 322,Medium Azur,156,Medium Azure,297 C,71C5E8,113,197,232
 323,Aqua,152,Light Aqua,566 C,B9DCD2,185,220,210
 324,Medium Lavender,157,Medium Lavender,2583 C,A05EB5,160,94,181
 325,Lavender,154,Lavender,529 C,CAA2DD,202,162,221
 326,Spring Yellowish Green,158,Yellowish Green,372 C,D4EB8E,212,235,142
 330,Olive Green,155,Olive Green,5763 C,737B4C,115,123,76
-,,56,Light Pink,7436 C,EEDAEA,238,218,234
+10,Clear,,,,,255,255,189
+40,Transparent,12,Trans-Clear,Cool Gray C,,238,238,238
+41,Transparent Red,17,Trans-Red,1795 C,,184,0,0
+42,Transparent Light Blue,15,Trans-Light Blue,629 C,,173,221,237
+43,Transparent Blue,14,Trans-Dark Blue,2985 C,,0,133,184
+44,Transparent Yellow,19,Trans-Yellow,101 C,,255,230,34
+47,Transparent Fluorescent Reddish Orange,18,Trans-Neon Orange,1655 C,,203,78,41
+48,Transparent Green,20,Trans-Green,360 C,,115,180,100
+49,Transparent Fluorescent Green,16,Trans-Neon Green,395 C,,250,241,91
+109,PC Black IR,,,,,0,20,20
+111,Transparent Brown,13,Trans-Black,7529 C,,187,178,158
+113,Transparent Medium Reddish Violet,50,Trans-Dark Pink,230 C,,253,142,207
+126,Transparent Bright Bluish Violet,51,Trans-Purple,270 C,,111,122,184
+143,Transparent Fluorescent Blue,74,Trans-Medium Blue,291 C,,165,205,240
+157,Transparent Fluorescent Yellow,121,Trans-Neon Yellow,395 C,,255,246,92
+158,Transparent Fluorescent Red,50,Trans-Dark Pink*,211 C,,241,142,187
+182,Transparent Bright Orange,98,Trans-Orange,,,225,141,10
+311,Transparent Bright Green,108,Transparent Bright Green,375 C,,175,210,70
