@@ -4,11 +4,12 @@ The Python scripts have been tested to work on Pythonon macOS 10.14: Mojave.
 ## LifToObj 
 LifToObj.py uses LIFExtractor.py from JrMasterModelBuilder (https://github.com/JrMasterModelBuilder/LIF-Extractor) to extract the Lego Digital Designer LIF library first and then converts the LDD .g geometry files to Alias|Waveform .obj files.
 
-## ObjToRib
-ObjToRib.py will read in a Alias|Waveform .obj file, construct geometry from it and write out a Renderman .rib file of it.
+## ObjToRib2
+ObjToRib2.py will read in a Alias|Waveform .obj file, construct geometry from it and write out a Renderman .rib file of it.
+It is an improved version of ObjToRib with support for groups.
 
 ## LxfRoRib
-LxfRoRib.py will read in a Lego Digital Designer .lxf scene file and construct a Renderman .rib file of the scene by using BrickReader.py and ObjToRib.py to convert the bricks of the scenes (from .g to .obj and finally to .rib) and use the relevant scene information to place the bricks accordingly (rotation, translation).
+LxfRoRib.py will read in a Lego Digital Designer .lxf scene file and construct a Renderman .rib file of the scene by using BrickReader.py and ObjToRib2.py to convert the bricks of the scenes (from .g to .obj and finally to .rib) and use the relevant scene information to place the bricks accordingly (rotation, translation).
 
 ## prman commands
 ```terminal
