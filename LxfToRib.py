@@ -111,27 +111,25 @@ def export_to_rib(lxf_filename):
 		
 		rotx, roty, rotz = rotationMatrixToEulerAngles(R)
 		rotz = (-1) * rotz #Renderman is lefthanded coordinate system, but LDD is right handed.
-			
-		file_writer.write('#Rotate ' + str(math.degrees(rotx)) + ' 1 0 0\n')
-		file_writer.write('#Rotate ' + str(math.degrees(roty)) + ' 0 1 0\n')
-		file_writer.write('#Rotate ' + str(math.degrees(rotz)) + ' 0 0 1\n')
 		
+		file_writer.write('WorldBegin\n')
+		file_writer.write('\tTranslate 0 0 40\n')
+		file_writer.write('#\tRotate ' + str(math.degrees(roty)) + ' 1 0 0\n')
+		file_writer.write('\tRotate -25 1 0 0\n')
+		file_writer.write('\tRotate ' + str(math.degrees(rotx)) + ' 0 1 0\n')
+		file_writer.write('#\tRotate 45 0 1 0\n')
+		file_writer.write('#\tRotate ' + str(math.degrees(rotz)) + ' 0 0 1\n')	
 		file_writer.write('#ConcatTransform [' 
 			+ transformation_array[0] + ' ' + transformation_array[1] + ' ' + str((-1) * float(transformation_array[2])) + ' 0 ' 
 			+ transformation_array[3] + ' ' + transformation_array[4] + ' ' + str((-1) * float(transformation_array[5])) + ' 0 ' 
 			+ str((-1) * float(transformation_array[6])) + ' ' + str((-1) * float(transformation_array[7])) + ' ' + transformation_array[8] + ' 0 ' 
 			+ transformation_array[9] + ' ' + transformation_array[10] + ' ' + transformation_array[11] + ' 1]\n')
-	
-		file_writer.write('WorldBegin\n')
-		file_writer.write('\tTranslate 0 0 10\n')
+		
 		file_writer.write('\tScale 0.7 0.7 0.7\n')
-		file_writer.write('\tRotate -25 1 0 0\n')
-		file_writer.write('\tRotate 45 0 1 0\n')
 		file_writer.write('\tAttributeBegin\n\t\tAttribute "visibility" "int indirect" [0] "int transmission" [0]\n\t\tAttribute "visibility" "int camera" [1]\n\t\tRotate 50 0 1 0\n\t\tRotate -90 1 0 0\n\t\tLight "PxrDomeLight" "domeLight" "string lightColorMap" ["GriffithObservatory.tex"]\n\tAttributeEnd\n')
 		tree = ET.fromstring(lxfml_file)
 		
 		lst = tree.findall('Bricks/Brick/Part')
-		
 		
 		for item in lst:
 			design_id = item.get('designID')
@@ -149,18 +147,8 @@ def export_to_rib(lxf_filename):
 			if minx > float(transformation_array[9]):
 				minx = transformation_array[9]
 			
-			R = np.array([[float(transformation_array[0]), float(transformation_array[1]) ,float(transformation_array[2])], [ float(transformation_array[3]), float(transformation_array[4]) ,float(transformation_array[5])], [ float(transformation_array[6]), float(transformation_array[7]) ,float(transformation_array[8])]])
-			b = np.array([1, 0, 0])
-			
-			rotx, roty, rotz = rotationMatrixToEulerAngles(R)
-			rotz = (-1) * rotz #Renderman is lefthanded coordinate system, but LDD is right handed.
-			
 			file_writer.write('\tAttributeBegin\n')
 			rand = str(0.9) #str(random.uniform(0.999, 1))
-			file_writer.write('\t\t#Translate ' + trans_xyz[0] + ' ' + trans_xyz[1] + ' ' + trans_xyz[2] + '\n')
-			file_writer.write('\t\t#Rotate ' + str(math.degrees(rotx)) + ' 1 0 0\n')
-			file_writer.write('\t\t#Rotate ' + str(math.degrees(roty)) + ' 0 1 0\n')
-			file_writer.write('\t\t#Rotate ' + str(math.degrees(rotz)) + ' 0 0 1\n')
 			file_writer.write('\t\tConcatTransform [' 
 			+ transformation_array[0] + ' ' + transformation_array[1] + ' ' + str((-1) * float(transformation_array[2])) + ' 0 ' 
 			+ transformation_array[3] + ' ' + transformation_array[4] + ' ' + str((-1) * float(transformation_array[5])) + ' 0 ' 
