@@ -1,6 +1,6 @@
 ##RenderMan RIB
 version 3.04
-Option "searchpath" "string archive" ["/Users/username/Downloads/"]
+Option "searchpath" "string archive" ["/Users/hannes/Downloads/"]
 Option "searchpath" "string texture" [".:@:/Applications/Pixar/RenderManProServer-22.3/lib/RenderManAssetLibrary/EnvironmentMaps/Outdoor/GriffithObservatory.rma"]
 Display "rgb.exr" "it" "rgba" 
 Format 1920 1080 1
@@ -26,3 +26,4 @@ Hider "raytrace" "int minsamples" [32] "int maxsamples" [64] "float darkfalloff"
 ShadingRate 0.001
 PixelVariance 0.001
 Projection "perspective" "uniform float fov" [70]
+#DepthOfField 6.0 1 15
