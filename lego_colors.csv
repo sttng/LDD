@@ -117,3 +117,50 @@ LEGO ID,LEGO Name,Bricklink ID,Bricklink Name,Pantone,Pantone HEX,Red,Green,Blue
 158,Transparent Fluorescent Red,50,Trans-Dark Pink*,211 C,,241,142,187
 182,Transparent Bright Orange,98,Trans-Orange,,,225,141,10
 311,Transparent Bright Green,108,Transparent Bright Green,375 C,,175,210,70
+127,Gold,61,Pearl Light Gold,156 C,Pearl_Light_Gold,222,172,102
+131,Silver,66,Pearl Light Gray or Flat Silver,429 C,Pearl_Light_Gray,160,160,160
+301,Silver,66,Pearl Light Gray or Flat Silver,429 C,Pearl_Light_Gray,160,160,160
+139,Copper,84,Copper*,,Copper,118,77,59
+145,Metallic Sand Blue,78,Metal Blue*,652 C,Metal_Blue,91,117,144
+146,Metallic Sand Violet,,,5285 C,,129,117,144
+147,Metallic Sand Yellow,81,Flat Dark Gold,873 C,Flat_Dark_Gold,131,114,79
+148,Metallic Dark Grey,77,Pearl Dark Gray*,446 C,Pearl_Dark_Gray,72,77,72
+149,Metallic Black,,,2767 C,Metallic_Black,10,19,39
+150,Metallic Light Grey,119,Pearl Very Light Gray,422 C,Pearl_Very_Light_Gray,152,155,153
+168,Gun Metallic,,,WarmGrey 11 C,,96,86,76
+176,Red Flip/Flop,,,483 C,,148,81,72
+178,Yellow Flip/Flop,,,160 C,,171,103,58
+179,Silver Flip/Flop,95,,410 C,,115,114,113
+183,Metallic White,83,Pearl White,,Pearl_White,246,242,223
+184,Metallic Bright Red,,,,,214,0,38
+185,Metallic Bright Blue,,,,,0,89,163
+186,Metallic Dark Green,,,,,0,142,60
+187,Metallic Earth Orange,,,,,87,57,44
+189,Reddish Gold / Gold Metallic,,,,,172,130,71
+200,Lemon Metallic,70,Metallic Green*,5767 C,,106,121,68
+296,Cool Silver,61,Pearl Light Gray*,,,173,173,173
+297,Warm Gold,115,Pearl Gold,1255 C,Pearl_Gold,185,149,59
+315,Silver Metallic,95,Flat Silver*,430 C,,140,140,140
+316,Titanium Metallic,77,Pearl Dark Gray*,425 C,Metallic_Dark_Gray,62,60,57
+309,Metalized Silver,22,Chrome Silver,,Chrome_Silver,206,206,206
+310,Metalized Gold,21,Chrome Gold,,Chrome_Gold,223,193,118
+298,Cool Silver or Drum Lacquered,67,Metallic Silver,,Metallic_Silver,118,118,118
+299,Warm Gold or Drum Lacquered / Gold Metalized / Gold Laquered,65,Metallic Gold,,Metallic Gold,,,
+300,Copper or Drum Lacquered",,,,,,,
+20,Nature,60,Milky White,,Milky_White,223,223,223
+50,Phosphorescent White,46,Glow In Dark Opaque,427 C,Glow_In_Dark_Opaque,229,223,211
+294,Phosphorescent Green,118,Glow In Dark Trans,,Glow_In_Dark_Trans,213,220,138
+329,White Glow,159,Glow in Dark White,7485 C,,245,243,215
+114,Transparent Pink Glitter / Transparent Medium Reddish Violet Glitter,100,Glitter Trans-Dark Pink,,Glitter_Trans_Dark_Pink,254,0,254
+117,Transparent with Glitter,101,Glitter Trans-Clear,,Glitter_Trans_Clear,247,247,247
+122,Nature with Glitter,,,,,254,203,152
+129,Transparent Bluish Violet (Glitter),102,Glitter Trans-Purple,,Glitter_Trans_Purple,67,84,147
+132,Black Glitter,,,,Speckle_Black_Silver,,,
+173,(transparent red glitter)*,,,,,,,
+174,(transparent blue glitter)*,,,,,,,
+175,Transparent Green with Glitter,,,,,,,
+302,Transparent Light Blue with Glitter,162,Glitter Trans-Light Blue,,,,,
+339,Transparent Fluorescent Green with Glitter,163,Glitter Trans-Neon Green,,,,,
+304,Cool Silver, Diffuse,111 or 117,Speckle Black-Silver or Speckle DBGray-Silver,,Speckle_Dark_Bluish_Gray_Silver,,,
+306,Copper or Diffuse,116,Speckle Black-Copper,,Speckle_Black_Copper,,,
+342,Conductive Black,,,,,,,
