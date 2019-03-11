@@ -73,10 +73,10 @@ def generate_bricks(lxf_filename):
 			decorations = item.get('decoration')
 			material_ids = materials.split(',')
 			material_string = '_'.join(material_ids)
-
 			decoration_ids = False
+			
 			if decorations != None and decorations != '0':
-				print 'here' + decorations
+				# We have decorations
 				decoration_ids = decorations.split(',')
 				decoration_string = '_'.join(decoration_ids)
 			processed = design_id + '_' + material_string
@@ -145,6 +145,7 @@ def export_to_rib(lxf_filename):
 			material_ids = materials.split(',')
 			material_string = '_'.join(material_ids)
 			if decorations != None and decorations != '0':
+				# We have decorations
 				decoration_ids = decorations.split(',')
 				decoration_string = '_'.join(decoration_ids)
 				
