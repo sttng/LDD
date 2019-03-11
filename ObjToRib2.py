@@ -25,13 +25,14 @@ import MaterialsTexts
 obj_file = sys.argv[1]
 
 
-def export_obj_to_rib(obj_file, material_id_list):
+def export_obj_to_rib(obj_file, material_id_list, decoration_id_list):
 	if (material_id_list):
 		bxdf_mat = MaterialsTexts.material_ids_to_ri(material_id_list)
+		if (decoration_id_list != False):
+			bxdf_mat = MaterialsTexts.decoration_ids_to_ri(material_id_list, decoration_id_list)
 	
 	material_string = '_'.join(material_id_list)
 	
-		
 	Round = 6
 	# open the file
 	ip = open(obj_file,'r')
