@@ -1,5 +1,5 @@
 # Lego Digital Designer related scripts
-The Python scripts have been tested to work on Pythonon macOS 10.14 Mojave and Renderman 22.3 and 22.4.
+The Python scripts have been tested to work on Python on macOS 10.14 Mojave, Renderman 22.3 and 22.4.
 
 ## LifToObj 
 LifToObj.py uses LIFExtractor.py from JrMasterModelBuilder (https://github.com/JrMasterModelBuilder/LIF-Extractor) to extract the Lego Digital Designer LIF library first and then converts the LDD .g geometry files to Alias|Waveform .obj files.
@@ -13,7 +13,7 @@ LxfRoRib.py will read in a Lego Digital Designer .lxf scene file and construct a
 
 ## prman commands
 ```terminal
-export RMANTREE=/Applications/Pixar/RenderManProServer-22.3/
+export RMANTREE=/Applications/Pixar/RenderManProServer-22.4/
 
 prman -d it -t:-2 ribfile.rib
 
