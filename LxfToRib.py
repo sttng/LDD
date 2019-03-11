@@ -70,8 +70,15 @@ def generate_bricks(lxf_filename):
 		for item in lst:
 			design_id = item.get('designID')
 			materials = item.get('materials')
+			decorations = item.get('decoration')
 			material_ids = materials.split(',')
 			material_string = '_'.join(material_ids)
+
+			decoration_ids = False
+			if decorations != None and decorations != '0':
+				print 'here' + decorations
+				decoration_ids = decorations.split(',')
+				decoration_string = '_'.join(decoration_ids)
 			processed = design_id + '_' + material_string
 			
 			if processed in processed_brick:
@@ -81,7 +88,7 @@ def generate_bricks(lxf_filename):
 				
 				BrickReader.read_brick(design_id)
 				
-				ObjToRib2.export_obj_to_rib(design_id + '.obj', material_ids)
+				ObjToRib2.export_obj_to_rib(design_id + '.obj', material_ids, decoration_ids)
 				myzip.write(design_id + '_' + material_string + '.rib', compress_type=compression)
 				os.remove(design_id + '_' + material_string + '.rib')
 				os.remove(design_id + '.obj')
@@ -134,8 +141,12 @@ def export_to_rib(lxf_filename):
 		for item in lst:
 			design_id = item.get('designID')
 			materials = item.get('materials')
+			decorations = item.get('decoration')
 			material_ids = materials.split(',')
 			material_string = '_'.join(material_ids)
+			if decorations != None and decorations != '0':
+				decoration_ids = decorations.split(',')
+				decoration_string = '_'.join(decoration_ids)
 				
 			for sub in item:
 				transformation = sub.get('transformation')
