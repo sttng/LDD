@@ -68,8 +68,6 @@ def decoration_ids_to_ri(material_id_list, decoration_id_list):
 	# Insert 0 at the beginning. Decorations are never for the "main" brick, the .g brick.
 	decoration_ids.insert(0, "0")
 	
-	print decoration_ids
-	
 	material_id_dict = {}
 	with open('lego_colors.csv', 'r') as csvfile:
 		reader = csv.reader(csvfile, delimiter=',')
@@ -83,7 +81,6 @@ def decoration_ids_to_ri(material_id_list, decoration_id_list):
 	# materials="24,0,0,0" decoration="0,55125,0,600053"
 	
 	for i, material_id in enumerate(material_ids):
-		print "here" + str(i)
 		
 		# Under the assumption the 1st mat is never 0
 		if (int(material_id) == 0):
@@ -102,27 +99,37 @@ def decoration_ids_to_ri(material_id_list, decoration_id_list):
 		
 		if decoration_ids[i] != '0':
 		# We have a decoration
-			if material_type == 'Transparent':
-				bxdf_mat[i] = '\t\tBxdf "PxrSurface" "Trans Decoration ' + material_id + '" "float diffuseGain" [0] "color diffuseColor" [0.5 0.5 0.5] "int diffuseDoubleSided" [1] "int diffuseBackUseDiffuseColor" [1] "color diffuseBackColor" [1 1 1] "color specularFaceColor" [' + str(color_r) + ' ' + str(color_g) + ' ' + str(color_b) + '] "color specularEdgeColor" [0.2 0.2 0.2] "float specularRoughness" [0.1]    "int specularDoubleSided" [1] "color clearcoatFaceColor" [0 0 0] "color clearcoatEdgeColor" [0 0 0] "color clearcoatIor" [1.5 1.5 1.5] "color clearcoatExtinctionCoeff" [0.0 0.0 0.0] "float clearcoatRoughness" [0.0] "float iridescenceFaceGain" [0] "float iridescenceEdgeGain" [0] "color iridescencePrimaryColor" [1 0 0] "color iridescenceSecondaryColor" [0 0 1] "float iridescenceRoughness" [0.2] "float fuzzGain" [0.0] "color fuzzColor" [1 1 1] "float fuzzConeAngle" [8] "float refractionGain" [1] "float reflectionGain" [0.2] "color refractionColor" [1 1 1] "float glassRoughness" [0.1] "float glassIor" [1.49] "int thinGlass" [1] "float glowGain" [0.0] "color glowColor" [1 1 1] "float presence" [1]'
-			
-			elif material_type == 'Metallic':
-				bxdf_mat[i] = '\t\tBxdf "PxrSurface" "Metallic Decoration' + material_id + '" "float diffuseGain" [0] "color diffuseColor" [1 1 1] "int diffuseDoubleSided" [1] "int diffuseBackUseDiffuseColor" [1] "color diffuseBackColor" [0.18 0.18 0.18] "color specularFaceColor" [' + str(color_r) + ' ' + str(color_g) + ' ' + str(color_b) + '] "float specularRoughness" [.39] "float presence" [1] "float reflectionGain" [.7]\n'
-			
-			else:
-				bxdf_mat[i] = '\t\tBxdf "PxrSurface" "Material Decoration' + material_id + '" "float diffuseGain" [1.0] "color diffuseColor" [' + str(color_r) + ' ' + str(color_g) + ' ' + str(color_b) + '] "int diffuseDoubleSided" [1] "color specularFaceColor" [0.1 0.1 0.15] "float specularRoughness" [0.2] "int specularDoubleSided" [0] "float presence" [1]\n'
+			bxdf_mat[i] = gen_pxrsurface(color_r, color_b, color_g, material_id, material_type, decoration_ids[i])
 
 		if decoration_ids[i] == '0':
 		# No decoration
-			if material_type == 'Transparent':
-				bxdf_mat[i] = '\t\tBxdf "PxrSurface" "Transparent ' + material_id + '" "float diffuseGain" [0] "color diffuseColor" [0.5 0.5 0.5] "int diffuseDoubleSided" [1] "int diffuseBackUseDiffuseColor" [1] "color diffuseBackColor" [1 1 1] "color specularFaceColor" [' + str(color_r) + ' ' + str(color_g) + ' ' + str(color_b) + '] "color specularEdgeColor" [0.2 0.2 0.2] "float specularRoughness" [0.1]    "int specularDoubleSided" [1] "color clearcoatFaceColor" [0 0 0] "color clearcoatEdgeColor" [0 0 0] "color clearcoatIor" [1.5 1.5 1.5] "color clearcoatExtinctionCoeff" [0.0 0.0 0.0] "float clearcoatRoughness" [0.0] "float iridescenceFaceGain" [0] "float iridescenceEdgeGain" [0] "color iridescencePrimaryColor" [1 0 0] "color iridescenceSecondaryColor" [0 0 1] "float iridescenceRoughness" [0.2] "float fuzzGain" [0.0] "color fuzzColor" [1 1 1] "float fuzzConeAngle" [8] "float refractionGain" [1] "float reflectionGain" [0.2] "color refractionColor" [1 1 1] "float glassRoughness" [0.1] "float glassIor" [1.49] "int thinGlass" [1] "float glowGain" [0.0] "color glowColor" [1 1 1] "float presence" [1]'
-			
-			elif material_type == 'Metallic':
-				bxdf_mat[i] = '\t\tBxdf "PxrSurface" "Metallic ' + material_id + '" "float diffuseGain" [0] "color diffuseColor" [1 1 1] "int diffuseDoubleSided" [1] "int diffuseBackUseDiffuseColor" [1] "color diffuseBackColor" [0.18 0.18 0.18] "color specularFaceColor" [' + str(color_r) + ' ' + str(color_g) + ' ' + str(color_b) + '] "float specularRoughness" [.39] "float presence" [1] "float reflectionGain" [.7]\n'
-			
-			else:
-				bxdf_mat[i] = '\t\tBxdf "PxrSurface" "Material ' + material_id + '" "float diffuseGain" [1.0] "color diffuseColor" [' + str(color_r) + ' ' + str(color_g) + ' ' + str(color_b) + '] "int diffuseDoubleSided" [1] "color specularFaceColor" [0.1 0.1 0.15] "float specularRoughness" [0.2] "int specularDoubleSided" [0] "float presence" [1]\n'
+			bxdf_mat[i] = gen_pxrsurface(color_r, color_b, color_g, material_id, material_type, decoration_ids[i])
 	
 	return bxdf_mat
+	
+def gen_pxrsurface(r, g, b, material_id, material_type, decoration_id):
+
+	text_strg = ''
+
+	if decoration_id != None and decoration_id != '0':
+	# We have decorations
+		rgb_or_dec_str = 'PxrTexture' + decoration_id + ':resultRGB'
+		text_strg = '\t\tPattern "PxrManifold2D" "PxrManifold2D1"\n\t\t"float angle" [0]\n\t\t"float scaleS" [1]\n\t\t"float scaleT" [1]\n\t\t"int invertT" [0]\n\t\tPattern "PxrTexture" "PxrTexture' + decoration_id + '"\n\t\t"string filename" ["' + decoration_id + '.tex"]\n\t\t"int invertT" [0]\n\t\t"int linearize" [1]\n\t\t"reference struct manifold" ["PxrManifold2D1:result"]\n'
+	
+	else:
+	# We don't have decorations
+		rgb_or_dec_str = str(r) + ' ' + str(g) + ' ' + str(b)
+		
+	if material_type == 'Transparent':
+		bxdf_mat_str = '\t\tBxdf "PxrSurface" "Transparent ' + material_id + '" "float diffuseGain" [0] "color diffuseColor" [0.5 0.5 0.5] "int diffuseDoubleSided" [1] "int diffuseBackUseDiffuseColor" [1] "color diffuseBackColor" [1 1 1] "color specularFaceColor" [' + rgb_or_dec_str + '] "color specularEdgeColor" [0.2 0.2 0.2] "float specularRoughness" [0.1]    "int specularDoubleSided" [1] "color clearcoatFaceColor" [0 0 0] "color clearcoatEdgeColor" [0 0 0] "color clearcoatIor" [1.5 1.5 1.5] "color clearcoatExtinctionCoeff" [0.0 0.0 0.0] "float clearcoatRoughness" [0.0] "float iridescenceFaceGain" [0] "float iridescenceEdgeGain" [0] "color iridescencePrimaryColor" [1 0 0] "color iridescenceSecondaryColor" [0 0 1] "float iridescenceRoughness" [0.2] "float fuzzGain" [0.0] "color fuzzColor" [1 1 1] "float fuzzConeAngle" [8] "float refractionGain" [1] "float reflectionGain" [0.2] "color refractionColor" [1 1 1] "float glassRoughness" [0.1] "float glassIor" [1.49] "int thinGlass" [1] "float glowGain" [0.0] "color glowColor" [1 1 1] "float presence" [1]\n' + text_strg
+		
+	elif material_type == 'Metallic':
+		bxdf_mat_str = '\t\tBxdf "PxrSurface" "Metallic ' + material_id + '" "float diffuseGain" [0] "color diffuseColor" [1 1 1] "int diffuseDoubleSided" [1] "int diffuseBackUseDiffuseColor" [1] "color diffuseBackColor" [0.18 0.18 0.18] "color specularFaceColor" [' + rgb_or_dec_str + '] "float specularRoughness" [.39] "float presence" [1] "float reflectionGain" [.7]\n' + text_strg
+		
+	else:
+		bxdf_mat_str = '\t\tBxdf "PxrSurface" "Solid ' + material_id + '" "float diffuseGain" [1.0] "color diffuseColor" [' + rgb_or_dec_str + '] "int diffuseDoubleSided" [1] "color specularFaceColor" [0.1 0.1 0.15] "float specularRoughness" [0.2] "int specularDoubleSided" [0] "float presence" [1]\n' + text_strg
+		
+	return bxdf_mat_str
 
 #materials="24,0,0,0"
 #material_ids = materials.split(',')		
