@@ -41,6 +41,7 @@ def material_ids_to_ri(material_id_list):
 			color_r, color_g, color_b, material_type = material_id_dict[material_id]
 		except KeyError as e:
 			color_r, color_g, color_b = [100, 100, 100]
+			material_type = 'Transparent'
 			print 'Warning: Material_ID ' + e.args[0] + ' not found.'
 				
 		color_r = round((float(color_r) / 255),2)
@@ -124,28 +125,23 @@ def decoration_ids_to_ri(material_id_list, decoration_id_list):
 	for i, material_id in enumerate(material_ids):
 		
 		# Under the assumption the 1st mat is never 0
-		if (int(material_id) == 0):
-			# IF mat is 0 we are processing it like the 1st ma.
+		if (material_id == '0'):
+			# If mat is 0 we are processing it like the 1st mat.
 			material_id = material_ids[0]
 				
 		try:
 			color_r, color_g, color_b, material_type = material_id_dict[material_id]
 		except KeyError as e:
 			color_r, color_g, color_b = [100, 100, 100]
+			material_type = 'Transparent'
 			print 'Warning: Material_ID ' + e.args[0] + ' not found.'
 				
 		color_r = round((float(color_r) / 255),2)
 		color_g = round((float(color_g) / 255),2)
 		color_b = round((float(color_b) / 255),2)
 		
-		if decoration_ids[i] != '0':
-		# We have a decoration
-			bxdf_mat[i] = gen_pxrsurface(color_r, color_b, color_g, material_id, material_type, decoration_ids[i])
-
-		if decoration_ids[i] == '0':
-		# No decoration
-			bxdf_mat[i] = gen_pxrsurface(color_r, color_b, color_g, material_id, material_type, decoration_ids[i])
-	
+		bxdf_mat[i] = gen_pxrsurface(color_r, color_b, color_g, material_id, material_type, decoration_ids[i])
+			
 	return bxdf_mat
 	
 def gen_pxrsurface(color_r, color_g, color_b, material_id, material_type, decoration_id):
