@@ -155,7 +155,7 @@ def gen_pxrsurface(color_r, color_g, color_b, material_id, material_type, decora
 	if decoration_id != None and decoration_id != '0':
 	# We have decorations
 		rgb_or_dec_str = 'PxrTexture' + decoration_id + ':resultRGB'
-		text_strg = '''\t\tPattern "PxrManifold2D" "PxrManifold2D1"\n
+		texture_strg = '''\t\tPattern "PxrManifold2D" "PxrManifold2D1"\n
 		\t\t"float angle" [0]\n
 		\t\t"float scaleS" [1]\n
 		\t\t"float scaleT" [1]\n
