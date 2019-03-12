@@ -126,8 +126,6 @@ def decoration_ids_to_ri(material_id_list, decoration_id_list):
 			
 	bxdf_mat = {}
 	
-	
-	
 	for i, material_id in enumerate(material_ids):
 		
 		# Under the assumption the 1st mat is never 0
