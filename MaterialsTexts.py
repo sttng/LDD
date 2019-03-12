@@ -106,9 +106,15 @@ def material_ids_to_ri(material_id_list):
 
 
 def decoration_ids_to_ri(material_id_list, decoration_id_list):
+	# Materials and Decorations come in the form:
+	# materials="24,0,0,0" decoration="55125,0,600053"
+	# This means: 
+	# Main brick has color 24, 3 sub-bricks have the same color as the main brick.
+	# Sub brick 1 and 3 have decorations (55125, 600053), sub brick 2 doesn't (0)
 	material_ids = material_id_list
 	decoration_ids = decoration_id_list
-	# Insert 0 at the beginning. Decorations are never for the "main" brick, the .g brick.
+	# Insert 0 at the beginning. Assume decorations are never for the "main" brick (the .g brick).
+	# "55125,0,600053" -> "0,55125,0,600053"
 	decoration_ids.insert(0, "0")
 	
 	material_id_dict = {}
@@ -120,7 +126,7 @@ def decoration_ids_to_ri(material_id_list, decoration_id_list):
 			
 	bxdf_mat = {}
 	
-	# materials="24,0,0,0" decoration="0,55125,0,600053"
+	
 	
 	for i, material_id in enumerate(material_ids):
 		
@@ -169,6 +175,7 @@ def gen_pxrsurface(color_r, color_g, color_b, material_id, material_type, decora
 	return bxdf_mat_str
 
 #materials="24,0,0,0"
+#decoration="55125,0,600053"
 #material_ids = materials.split(',')		
 #a = material_ids_to_ri(material_ids)
 #print a
