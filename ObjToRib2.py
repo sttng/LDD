@@ -52,7 +52,7 @@ def export_obj_to_rib(obj_file, material_id_list, decoration_id_list):
 		# so we split each line and look at the first element
 		tokens=line.split()	
 		# make sure we have a token to check against
-		if(len(tokens) >0 ) :
+		if(len(tokens) > 0):
 			if(tokens[0] == 'g'):
 				#print "found group"
 				group = tokens[1]
