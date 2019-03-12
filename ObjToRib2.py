@@ -168,8 +168,9 @@ def export_obj_to_rib(obj_file, material_id_list, decoration_id_list):
 			op.write('\t\t"P" [ ' + str(obj_group[group][f]["P"]) + ' ]\n')
 			# check for textures
 			if(str(obj_group[group][f]["T"]) != ''):
-				op.write('\t\t"facevarying float [2] uv' + str(uv_num) + '" [ ' + str(obj_group[group][f]["T"]) + ' ]\n')
-				uv_num += 1
+				#op.write('\t\t"facevarying float [2] uv' + str(uv_num) + '" [ ' + str(obj_group[group][f]["T"]) + ' ]\n')
+				#uv_num += 1
+				op.write('\t\t"st" [ ' + str(obj_group[group][f]["T"]) + ' ]\n')
 			# check for normals
 			if(str(obj_group[group][f]["N"]) != ''):
 				op.write('\t\t"N" [ ' + str(obj_group[group][f]["N"]) + ' ]\n')
