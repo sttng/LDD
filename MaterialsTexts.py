@@ -150,7 +150,7 @@ def decoration_ids_to_ri(material_id_list, decoration_id_list):
 	
 def gen_pxrsurface(color_r, color_g, color_b, material_id, material_type, decoration_id):
 
-	text_strg = ''
+	texture_strg = ''
 
 	if decoration_id != None and decoration_id != '0':
 	# We have decorations
@@ -171,13 +171,13 @@ def gen_pxrsurface(color_r, color_g, color_b, material_id, material_type, decora
 		rgb_or_dec_str = str(color_r) + ' ' + str(color_g) + ' ' + str(color_b)
 		
 	if material_type == 'Transparent':
-		bxdf_mat_str = '\t\tBxdf "PxrSurface" "Transparent ' + material_id + '" "float diffuseGain" [0] "color diffuseColor" [0.5 0.5 0.5] "int diffuseDoubleSided" [1] "int diffuseBackUseDiffuseColor" [1] "color diffuseBackColor" [1 1 1] "color specularFaceColor" [' + rgb_or_dec_str + '] "color specularEdgeColor" [0.2 0.2 0.2] "float specularRoughness" [0.1]    "int specularDoubleSided" [1] "color clearcoatFaceColor" [0 0 0] "color clearcoatEdgeColor" [0 0 0] "color clearcoatIor" [1.5 1.5 1.5] "color clearcoatExtinctionCoeff" [0.0 0.0 0.0] "float clearcoatRoughness" [0.0] "float iridescenceFaceGain" [0] "float iridescenceEdgeGain" [0] "color iridescencePrimaryColor" [1 0 0] "color iridescenceSecondaryColor" [0 0 1] "float iridescenceRoughness" [0.2] "float fuzzGain" [0.0] "color fuzzColor" [1 1 1] "float fuzzConeAngle" [8] "float refractionGain" [1] "float reflectionGain" [0.2] "color refractionColor" [1 1 1] "float glassRoughness" [0.1] "float glassIor" [1.49] "int thinGlass" [1] "float glowGain" [0.0] "color glowColor" [1 1 1] "float presence" [1]\n' + text_strg
+		bxdf_mat_str = texture_strg + '\t\tBxdf "PxrSurface" "Transparent ' + material_id + '" "float diffuseGain" [0] "color diffuseColor" [0.5 0.5 0.5] "int diffuseDoubleSided" [1] "int diffuseBackUseDiffuseColor" [1] "color diffuseBackColor" [1 1 1] "color specularFaceColor" [' + rgb_or_dec_str + '] "color specularEdgeColor" [0.2 0.2 0.2] "float specularRoughness" [0.1]    "int specularDoubleSided" [1] "color clearcoatFaceColor" [0 0 0] "color clearcoatEdgeColor" [0 0 0] "color clearcoatIor" [1.5 1.5 1.5] "color clearcoatExtinctionCoeff" [0.0 0.0 0.0] "float clearcoatRoughness" [0.0] "float iridescenceFaceGain" [0] "float iridescenceEdgeGain" [0] "color iridescencePrimaryColor" [1 0 0] "color iridescenceSecondaryColor" [0 0 1] "float iridescenceRoughness" [0.2] "float fuzzGain" [0.0] "color fuzzColor" [1 1 1] "float fuzzConeAngle" [8] "float refractionGain" [1] "float reflectionGain" [0.2] "color refractionColor" [1 1 1] "float glassRoughness" [0.1] "float glassIor" [1.49] "int thinGlass" [1] "float glowGain" [0.0] "color glowColor" [1 1 1] "float presence" [1]\n'
 		
 	elif material_type == 'Metallic':
-		bxdf_mat_str = '\t\tBxdf "PxrSurface" "Metallic ' + material_id + '" "float diffuseGain" [0] "color diffuseColor" [1 1 1] "int diffuseDoubleSided" [1] "int diffuseBackUseDiffuseColor" [1] "color diffuseBackColor" [0.18 0.18 0.18] "color specularFaceColor" [' + rgb_or_dec_str + '] "float specularRoughness" [.39] "float presence" [1] "float reflectionGain" [.7]\n' + text_strg
+		bxdf_mat_str = texture_strg + '\t\tBxdf "PxrSurface" "Metallic ' + material_id + '" "float diffuseGain" [0] "color diffuseColor" [1 1 1] "int diffuseDoubleSided" [1] "int diffuseBackUseDiffuseColor" [1] "color diffuseBackColor" [0.18 0.18 0.18] "color specularFaceColor" [' + rgb_or_dec_str + '] "float specularRoughness" [.39] "float presence" [1] "float reflectionGain" [.7]\n'
 		
 	else:
-		bxdf_mat_str = '\t\tBxdf "PxrSurface" "Solid ' + material_id + '" "float diffuseGain" [1.0] "color diffuseColor" [' + rgb_or_dec_str + '] "int diffuseDoubleSided" [1] "color specularFaceColor" [0.1 0.1 0.15] "float specularRoughness" [0.2] "int specularDoubleSided" [0] "float presence" [1]\n' + text_strg
+		bxdf_mat_str = texture_strg + '\t\tBxdf "PxrSurface" "Solid ' + material_id + '" "float diffuseGain" [1.0] "color diffuseColor" [' + rgb_or_dec_str + '] "int diffuseDoubleSided" [1] "color specularFaceColor" [0.1 0.1 0.15] "float specularRoughness" [0.2] "int specularDoubleSided" [0] "float presence" [1]\n'
 		
 	return bxdf_mat_str
 
