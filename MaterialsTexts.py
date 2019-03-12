@@ -155,7 +155,16 @@ def gen_pxrsurface(color_r, color_g, color_b, material_id, material_type, decora
 	if decoration_id != None and decoration_id != '0':
 	# We have decorations
 		rgb_or_dec_str = 'PxrTexture' + decoration_id + ':resultRGB'
-		text_strg = '\t\tPattern "PxrManifold2D" "PxrManifold2D1"\n\t\t"float angle" [0]\n\t\t"float scaleS" [1]\n\t\t"float scaleT" [1]\n\t\t"int invertT" [0]\n\t\tPattern "PxrTexture" "PxrTexture' + decoration_id + '"\n\t\t"string filename" ["' + decoration_id + '.tex"]\n\t\t"int invertT" [0]\n\t\t"int linearize" [1]\n\t\t"reference struct manifold" ["PxrManifold2D1:result"]\n'
+		text_strg = '''\t\tPattern "PxrManifold2D" "PxrManifold2D1"\n
+		\t\t"float angle" [0]\n
+		\t\t"float scaleS" [1]\n
+		\t\t"float scaleT" [1]\n
+		\t\t"int invertT" [0]\n
+		\t\tPattern "PxrTexture" "PxrTexture' + decoration_id + '"\n
+		\t\t"string filename" ["' + decoration_id + '.tex"]\n
+		\t\t"int invertT" [0]\n
+		\t\t"int linearize" [1]\n
+		\t\t"reference struct manifold" ["PxrManifold2D1:result"]\n'''
 	
 	else:
 	# We don't have decorations
