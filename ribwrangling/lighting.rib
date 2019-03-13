@@ -1,0 +1,88 @@
+AttributeBegin
+	Attribute "visibility" "int indirect" [01 "int transmission" [0] 
+	Attribute "visibility" "int camera" [0]
+	Rotate -20 0 1 0 # orbital 
+	Rotate -60 1 0 0 # elevation 
+	Translate 10 0 10 
+	Scale 9 9 -1
+	Light "PxrRectLight" "PxrRectLightl_Left"
+	"float intensity" [1.0]
+	"float exposure" [1.9]
+	"color lightColor" [1 1 1]
+	"int enableTemperature" [0]
+	"float temperature" [6500]
+	"float emissionFocus" [0.0]
+	"color emissionFocusTint" [0 0 0]
+	"float specular" [1.0]
+	"float diffuse" [1.0]
+	"float intensityNearDist" [0.0]
+	"float coneAngle" [120.0]
+	"float coneSoftness" [2.0]
+	
+AttributeEnd
+
+AttributeBegin
+	Attribute "visibility" "int indirect" [0] "int transmission" [0] 
+	Attribute "visibility" "int camera" [0]
+	Rotate 0 0 1 0 # orbital 
+	Rotate -90 1 0 0 # elevation 
+	Translate 0 0 12 
+	Scale 8 8 -1
+	Light "PxrRectLight" "PxrRectLight2"
+	"float intensity" [1.0]
+	"float exposure" [2]
+	"color lightColor" [1 1 1]
+	"int enableTemperature" [0]
+	"float temperature" [6500]
+	"float emissionFocus" [0.0]
+	"color emissionFocusTint" [0 0 0]
+	"float specular" [1.0]
+	"float diffuse" [1.0]
+	"float intensityNearDist" [0.0]
+	"float coneAngle" [120.0]
+	"float coneSoftness" [0.0]
+AttributeEnd
+
+AttributeBegin
+	Attribute "visibility" "int indirect" [0] "int transmission" [0] 
+	Attribute "visibility" "int camera" [0]
+	Rotate -80 0 1 0 # orbital 
+	Rotate -35 1 0 0 # elevation 
+	Translate -1 0 10 
+	Scale 2 2 -1
+	Light "PxrRectLight" "PxrRectLight3"
+	"float intensity" [1.0]
+	"float exposure" [2]
+	"color lightColor" [1 1 1]
+	"int enableTemperature" [0]
+	"float temperature" [6500]
+	"float emissionFocus" [0.0]
+	"color emissionFocusTint" [0 0 0]
+	"float specular" [1.0]
+	"float diffuse" [1.0]
+	"float intensityNearDist" [0.0]
+	"float coneAngle" [120.0]
+	"float coneSoftness" [0.0]
+AttributeEnd
+
+AttributeBegin
+Attribute "visibility" "int indirect" [0] "int transmission" [0] 
+	Attribute "visibility" "int camera" [0]
+	Rotate -45 0 1 0 # orbital 
+	Rotate -45 1 0 0 # elevation 
+	Translate 0 0 35 
+	Scale 2.5 2.5 -1
+	Light "PxrRectLight" "PxrRectLightPlate"
+	"float intensity" [1.0]
+	"float exposure" [2]
+	"color lightColor" [1 1 1]
+	"int enableTemperature" [0]
+	"float temperature" [6500]
+	"float emissionFocus" [0.0]
+	"color emissionFocusTint" [0 0 0]
+	"float specular" [1.0]
+	"float diffuse" [1.0]
+	"float intensityNearDist" [0.0]
+	"float coneAngle" [120.0]
+	"float coneSoftness" [0.5]
+AttributeEnd
