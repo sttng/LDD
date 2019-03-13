@@ -1,0 +1,42 @@
+Bxdf "PxrSurface" "PxrSurface1"
+		#"float inputMaterial" []
+		"float diffuseGain" [.8]
+		"color diffuseColor" [0.18 0.18 0.18]
+		"float diffuseRoughness" [0.0]
+		"float diffuseExponent" [1.0]
+		
+		"color specularIor" [1.5 1.5 1.5]
+		"color specularExtinctionCoeff" [0.0 0.0 0.0]
+		"float specularRoughness" [0.2]
+		"int specularModelType" [0]
+		"float specularAnisotropy" [0.0]
+		"vector specularAnisotropyDirection" [0 0 0]
+		"normal specularBumpNormal" [0 0 0]
+		"int specularDoubleSided" [0]
+		"int roughSpecularFresnelMode" [0]
+	
+	#glass
+		"float refractionGain" [1.3]
+		"float reflectionGain" [1.2]
+		
+		"color refractionColor" [1 1 1]
+		"float glassRoughness" [0.2]
+		"float glassIor" [1.5]
+		"int thinGlass" [0]
+		"int ignoreAccumOpacity" [0]
+		"color ssAlbedo" [0.0 0.0 0.0]
+		"color extinction" [0.0 0.0 0.0]
+		"float g" [0.0]
+		"int multiScatter" [0]
+		"int enableOverlappingVolumes" [0]
+		"float glowGain" [0.0]
+		"color glowColor" [1 1 1]
+		"normal bumpNormal" [0 0 0]
+		"color shadowColor" [0.0 0.0 0.0]
+		"int shadowMode" [0]
+		"float presence" [1]
+		"int presenceCached" [1]
+		"int utilityPattern" [0]
+
+	
+	
