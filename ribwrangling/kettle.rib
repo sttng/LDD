@@ -1,0 +1,30 @@
+AttributeBegin
+	Attribute "identifier" "string name" ["KettleCoverTop"] Scale 0.2 0.2 0.2
+	ReadArchive "materials/KettleBodyTop_Gold.rib" ReadArchive "geo/KettleCoverTop.rib"
+AttributeEnd
+
+AttributeBegin
+	Attribute "identifier" "string name" ["KettleCoverBody"] Scale 0.2 0.2 0.2
+	ReadArchive "materials/KettleBody_GreenGloss.rib" ReadArchive "geo/KettleCoverBody.rib"
+AttributeEnd
+
+AttributeBegin
+	Attribute "identifier" "string name" ["KettleBodyTop"] Scale 0.2 0.2 0.2
+	ReadArchive "materials/KettleBodyTop_Gold.rib" ReadArchive "geo/KettleBodyTop.rib"
+AttributeEnd
+
+AttributeBegin
+	Attribute "identifier" "string name" ["KettleBodyMain"] Scale 0.2 0.2 0.2
+	ReadArchive "materials/KettleBody_GreenGloss.rib" ReadArchive "geo/KettleBodyMain.rib"
+AttributeEnd
+
+AttributeBegin
+	Attribute "identifier" "string name" ["KettleHandle"] Scale 0.2 0.2 0.2
+	ReadArchive "materials/KettleBodyTop_Gold. rib" ReadArchive "geo/KettleHandle.rib"
+AttributeEnd
+
+AttributeBegin
+	Attribute "identifier" "string name" ("KettleNeck"]
+	Scale 0.2 0.2 0.2
+	ReadArchive "materials/KettleBodyTop_Gold.rib" ReadArchive "geo/KettleNeck.rib"
+AttributeEnd
