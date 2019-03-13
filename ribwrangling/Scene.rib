@@ -54,12 +54,12 @@ WorldBegin
 		Attribute "identifier" "string name" ["planel"]
 		Scale 90 1 90
 		ReadArchive "materials/plane_vood.rib"
-		Polygon "P" [-0.5 0 -0.5	-0.5 0 0.5	0.5 0 0.5	0.5 0 -0.5]
+		Polygon "P" [-0.5 0 -0.5  -0.5 0 0.5  0.5 0 0.5  0.5 0 -0.5]
 		"st" [0 0  0 1  1 1  1 0]
 	AttributeEnd 
 	
 	#AttributeBegin
-		#Attribute "identifier" "string name" [ "StudioBGAll"]
+		#Attribute "identifier" "string name" ["StudioBGAll"]
 		#ReadArchive "geo/StudioBG_All.rib"
 	#AttributeEnd
 WorldEnd
