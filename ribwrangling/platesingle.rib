@@ -1,0 +1,13 @@
+AttributeBegin
+	Attribute "identifier" "string name" ["PlateEdge"] 
+	Scale 0.2 0.2 0.2
+	ReadArchive "materials/KettleBodyTop_Gold.rib" 
+	ReadArchive "geo/PlateEdge.rib"
+AttributeEnd
+
+AttributeBegin
+	Attribute "identifier" "string name" ["PlateBody"] 
+	Scale 0.2 0.2 0.2
+	ReadArchive "materials/KettleBody_GreenGloss.rib" 
+	ReadArchive "geo/PlateBody.rib"
+AttributeEnd
