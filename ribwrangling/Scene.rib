@@ -27,19 +27,19 @@ AttributeBegin
 Attribute "identifier" "string name" ["JarFullBody"]
 Translate 3.8 3.40 3.7 Rotate 40 0 1 0
 ReadArchive "geo/jarAllBody.rib"
-Att ributeEnd
-Att ributeBegin
+AttributeEnd
+AttributeBegin
 Attribute "identifier" "string name" ["spherel"]
 Translate -0.8 1.6 8
 ReadArchive "materials/plastic_yellov.rib"
-Sphere 1-11 360A Att ributeEnd
+Sphere 1-11 360A AttributeEnd
 AttributeBegin
 Attribute "identifier" "string name" ["planel"]
 Scale 90 1 90
 ReadArchive "materials/plane_vood.rib"
 Polygon "P" [-0.5 0 -0.5	-0.5 0 0.5	0.5 0 0.5	0.5 0 -0.5]
 "st" [00	01	11	1 0]
-Att ributeEnd #Att ributeBegin
+AttributeEnd #AttributeBegin
 #Attribute "identifier" "string name" [ "StudioBGAll"]
 #ReadArchive "geo/StudioBG_All.rib"
 #AttributeEnd
