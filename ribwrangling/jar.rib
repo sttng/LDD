@@ -1,0 +1,13 @@
+AttributeBegin
+	Attribute "identifier" "string name" ["JarBody"] 
+	Scale 0.2 0.2 0.2
+	ReadArchive "materials/KettleBody_GreenGloss.rib" 
+	ReadArchive "geo/jar.rib"
+AttributeEnd
+
+AttributeBegin
+	Attribute "identifier" "string name" ["JarEdge"] 
+	Scale 0.2 0.2 0.2
+	ReadArchive "materials/KettleBodyTop_Gold.rib" 
+	ReadArchive "geo/jarEdge.rib"
+AttributeEnd
