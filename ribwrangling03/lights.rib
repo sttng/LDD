@@ -1,0 +1,74 @@
+	#------------------------------------------------------------------------
+	AttributeBegin
+		Rotate  0  0 1 0 # orbital
+		Rotate -50 1 0 0 # elevation
+		Translate 0 0 30 # distance
+		Scale 2 2 -1
+
+		Attribute "visibility" "int indirect" [0] "int transmission" [0]
+		Attribute "visibility" "int camera" [0]
+		Light "PxrRectLight" "PxrRectShade1"
+				"float exposure" [9]
+				"color lightColor" [1 1 1]
+				"float coneAngle" [90]
+				"int enableShadows" [1]
+				"color shadowColor" [0 0 0]
+	AttributeEnd
+	AttributeBegin
+		Rotate  0  0 1 0 # orbital
+		Rotate -90 1 0 0 # elevation
+		Rotate -30 0 0 1
+		Translate 0 0 19  # distance
+		Translate 8 0 0
+		Scale 2 2 -1
+
+		Attribute "visibility" "int indirect" [0] "int transmission" [0]
+		Attribute "visibility" "int camera" [0]
+		Light "PxrRectLight" "PxrRectShade2"
+				"float exposure" [6]
+				"color lightColor" [1 1 1]
+				"float coneAngle" [100]
+				"int enableShadows" [1]
+				"color shadowColor" [0 0 0]
+	AttributeEnd
+	#------------------------
+	AttributeBegin
+		Rotate  0  0 1 0 # orbital
+		Rotate -40 1 0 0 # elevation
+		Rotate 80 0 0 1
+		Translate  2 4 25  # distance
+		
+		Scale 2 2 -1
+
+		Attribute "visibility" "int indirect" [0] "int transmission" [0]
+		Attribute "visibility" "int camera" [0]
+		Light "PxrRectLight" "PxrRectShade2"
+				"float exposure" [6]
+				"color lightColor" [1 1 1]
+				"float coneAngle" [100]
+				"int enableShadows" [1]
+				"color shadowColor" [0 0 0]
+	AttributeEnd
+	#-------------------------
+	AttributeBegin
+		Rotate  170  0 1 0 # orbital
+		Rotate -60 1 0 0 # elevation
+		Rotate -20 0 1 0
+		Translate 8 0 27 # distance
+		Translate  0 1 0
+		Translate 0 0 40
+		Rotate -20 1 0 0 
+		Translate 10 0 1 0
+		Scale 2 2 -1
+
+		Attribute "visibility" "int indirect" [0] "int transmission" [0]
+		Attribute "visibility" "int camera" [0]
+		Light "PxrRectLight" "PxrRectShade3"
+				"float exposure" [1]
+				"color lightColor" [1 1 1]
+				"float coneAngle" [100]
+				"int enableShadows" [1]
+				"color shadowColor" [0 0 0]
+	AttributeEnd
+#-------------------------------------------------------------------------
+	
