@@ -1,0 +1,35 @@
+	
+Pattern "PxrManifold2D" "PxrManifold2D1"
+		"float angle" [0]
+		"float scaleS" [1]
+		"float scaleT" [1]
+		"float offsetS" [0]
+		"float offsetT" [0]
+		"int invertT" [1]
+		"string primvarS" [""]
+		"string primvarT" [""]
+		# "PxrManifold2D1:result"
+
+# txmake -mode periodic ../tiffs/swazi.tif ../textures/swazi.tex
+Pattern "PxrTexture" "PxrTexture1"
+		"string filename" ["tea_texture.tex"]
+		"int firstChannel" [0]
+		"int atlasStyle" [0]
+		"int invertT" [0]
+		"int filter" [0]
+		"float blur" [0.0]
+		"int lerp" [1]
+		"color missingColor" [1. 0. 1.]
+		"float missingAlpha" [1.0]
+		"int linearize" [1]
+		# Example manifold connection
+		"reference struct manifold" ["PxrManifold2D1:result"]
+		# "PxrTexture1:resultRGB"
+
+Bxdf "PxrSurface" "PxrSurface1"
+		"float diffuseGain" [1.0]
+		"reference color diffuseColor" ["PxrTexture1:resultRGB"]
+		"color specularFaceColor" [0.2 0.2 0.2]
+		"float specularRoughness" [0.2]
+
+	
