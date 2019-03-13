@@ -1,0 +1,43 @@
+Pattern "PxrManifold2D" "PxrManifold2D1"
+        "float angle" [0]
+        "float scaleS" [1]
+        "float scaleT" [1]
+        "float offsetS" [0]
+        "float offsetT" [0]
+        "string primvarS" [""]
+        "string primvarT" [""]
+  
+Pattern "PxrTexture" "PxrTexture1"
+        "string filename" ["../textures/spoon.tex"]
+        "int invertT" [1]
+        "float blur" [0.0]
+        "int linearize" [1]
+        # Example manifold connection
+        "reference struct manifold" ["PxrManifold2D1:result"] # <<- remove comment
+  
+Pattern "PxrTexture" "PxrTexture2"
+        "string filename" ["../textures/spoonPresence.tex"]
+        "int invertT" [1]
+        "float blur" [0.0]
+        "int linearize" [1]
+        # Example manifold connection
+        "reference struct manifold" ["PxrManifold2D1:result"] # <<- remove comment
+  
+Bxdf "PxrDisney" "PxrDisney4"
+        "color baseColor" [0.847 0.650 0.211]
+        "float metallic" [1]
+        "float specular" [0.5]
+        "reference float presence" ["PxrTexture2:resultR"]
+  
+    
+Attribute "trace" "int displacements" [1]
+Attribute "displacementbound" "string coordinatesystem" ["shader"] "float sphere" [0.1]
+Surface "RMSDisplacement"
+    "float disableDisplacement" [0]
+    "float mask" [1]
+    "float dispMode" [1]
+    "float vectorEncoding" [1]
+    "reference float displacementScalar" ["PxrTexture1:resultR"]
+    "vector displacementVector" [0 0 0]
+    "float displacementAmount" [0.03]
+    "float displacementCenter" [0.5]
