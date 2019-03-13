@@ -1,0 +1,47 @@
+Format 3840 2160 1
+ReadArchive "./DenoiseOptions.rib"
+Display "untitled" "it" "rgba"
+Projection "perspective" "fov" [20]
+DepthOfField 6 1 28
+Translate 0 0 0 Translate 1 -1.7 32 Rotate -10 1 0 0 Rotate 0 0 10 Scale 11-1
+#DisplayFilter "PxrBackgroundDisplayFilter" "background" "color backgroundColor" [111] [tfo rldBegin
+Bxdf "PxrSurface" "default"
+"color diffuseColor" [0.6 0.6 0.6]
+"float diffuseGain" [1.0]
+"int diffuseDoubleSided" [1]
+"color specularFaceColor" [0.2 0.2 0.2]
+TransformBegin
+ReadArchive "Lights/Env.rib"
+TransformEnd
+Att ributeBegin
+Attribute "identifier" "string name" [ "PlateAllBodySet"]
+Translate 0 -0.1 0 Translate 0 0 3 Rotate -50 0 1 0
+ReadArchive "geo/PlateAllBodySet. rib"
+Att ributeEnd
+Att ributeBegin
+Attribute "identifier" "string name" ["kettlefull"]
+Translate -3 2 0 Rotate 25 0 1 0
+ReadArchive "geo/KettleAllBody.rib"
+AttributeEnd
+AttributeBegin
+Attribute "identifier" "string name" ["JarFullBody"]
+Translate 3.8 3.40 3.7 Rotate 40 0 1 0
+ReadArchive "geo/jarAllBody.rib"
+Att ributeEnd
+Att ributeBegin
+Attribute "identifier" "string name" ["spherel"]
+Translate -0.8 1.6 8
+ReadArchive "materials/plastic_yellov.rib"
+Sphere 1-11 360A Att ributeEnd
+AttributeBegin
+Attribute "identifier" "string name" ["planel"]
+Scale 90 1 90
+ReadArchive "materials/plane_vood.rib"
+Polygon "P" [-0.5 0 -0.5	-0.5 0 0.5	0.5 0 0.5	0.5 0 -0.5]
+"st" [00	01	11	1 0]
+Att ributeEnd #Att ributeBegin
+#Attribute "identifier" "string name" [ "StudioBGAll"]
+#ReadArchive "geo/StudioBG_All.rib"
+#AttributeEnd
+WorldEnd
+ReadArchive "./Denoise.rib
