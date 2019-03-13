@@ -1,0 +1,120 @@
+			Option "ribparse" "string varsubst" ["$"]
+IfBegin "!defined(RMSTREE)"
+	Option "user" "string RMSTREE" ["/opt/pixar/RenderManForMaya-21.6-maya2018"]
+IfEnd
+Option "searchpath" "shader"    ["../../maya/projects/RfM_osl:@"]
+Option "searchpath" "rixplugin" ["${RMSTREE}/lib/shaders:../../maya/projects/RfM_ris:@"]
+Option "searchpath" "texture"   ["../textures:@"]
+Option "searchpath" "archive"   ["../archives:Cutter_Help/templates/Rib:custom_templates/Rib"]
+#Option "statistics" "endofframe" [1]
+
+Hider "raytrace" "int incremental" [1] "int minsamples" [0] "int maxsamples" [128] "float darkfalloff" [0.025]
+Integrator "PxrPathTracer" "PxrPathTracer" "int maxPathLength" [10] "int allowCaustics" [0]
+PixelVariance 0.05
+#---------------------camara---------------------------
+Format 3840 2160 1
+#Format 1280 720 1
+
+
+ReadArchive "./DenoiseOptions.rib"
+Display "untitled" "it" "rgba"
+Projection "perspective" "fov" [20]
+
+#Translate 4.5 -1 70
+Translate 9 -5 45
+
+#Rotate -20 1 0 0
+#Rotate -15 1 0 0
+#Rotate -1 0 1 0
+
+#Rotate 5 0 1 0
+
+#2
+Rotate -5 1 0 0
+Rotate -10 1 0 0
+Rotate -1 0 1 0
+
+
+#Translate -5 -1 1
+#Rotate -1 1 0 0
+#Rotate -75 0 1 0
+#Rotate -1 0 1 0
+
+
+
+
+
+Scale 1 1 -1
+DisplayFilter "PxrBackgroundDisplayFilter" "background" "color backgroundColor" [1 1 1]
+#-----------------------------------------------------------------------------------
+WorldBegin
+	Bxdf "PxrSurface" "default"
+			"color diffuseColor" [0.6 0.6 0.6]
+			"float diffuseGain" [1.0]
+			"int diffuseDoubleSided" [1]
+	TransformBegin
+		Scale 10 10 10
+	#ReadArchive "cutrAxes.rib"
+	TransformEnd
+	ReadArchive "lights/rig.rib"
+	TransformBegin
+
+	#Translate 0 -83 0
+	
+	#1
+	Rotate -15 1 0 0
+	Rotate 103 0 1 0
+	Rotate 1 0 0 1
+	
+	#2
+	#Rotate -15 1 0 0
+	#Rotate 103 0 1 0
+	#Rotate 1 0 0 1
+	ReadArchive "lights/dome.rib"
+	TransformEnd
+	#-------------------------------------Assembly Hw: ------------------
+
+	TransformBegin
+			Scale 0.2 0.2 0.2
+		
+			ReadArchive "geo/kettle.rib"
+	TransformEnd
+	#-----------------------
+	AttributeBegin
+		Translate 0 0 0
+		Scale 0.2 0.2 0.2
+		ReadArchive "materials/silver.rib"
+		ReadArchive "geo/silver.rib"
+	AttributeEnd
+	
+	#-----------------------------------
+
+	AttributeBegin
+		Translate 0 0 0
+		Scale 0.2 0.2 0.2
+		ReadArchive "materials/table.rib"
+		ReadArchive "geo/table.rib"
+	AttributeEnd
+
+	#-----------------
+	AttributeBegin
+		Translate 0 0 0
+		Scale 0.2 0.2 0.2
+		ReadArchive "materials/wood.rib"
+		ReadArchive "geo/cut_board.rib"
+	AttributeEnd
+#---------------adds-------------------
+	TransformBegin
+		Translate 0 0 0
+		Scale 0.2 0.2 0.2
+	
+		ReadArchive "geo/adds.rib"
+	TransformEnd
+
+
+WorldEnd
+
+
+
+ReadArchive "./Denoise.rib"
+			
