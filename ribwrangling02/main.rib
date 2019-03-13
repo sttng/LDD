@@ -1,0 +1,97 @@
+Option "ribparse" "string varsubst" ["$"]
+Option "searchpath" "shader"    "../shaders:@"
+Option "searchpath" "rixplugin" "${RMSTREE}/lib/shaders:@"
+Option "searchpath" "texture"   "../textures:@"
+Option "searchpath" "archive"   "../archives:Cutter_Help/templates/Rib:custom_templates/Rib"
+#Option "statistics" "endofframe" [1]
+Hider "raytrace" "string integrationmode" ["path"] "int incremental" [1]
+        "int minsamples" [0] "int maxsamples" [256]
+Integrator "PxrPathTracer" "PxrPathTracer" "int maxPathLength" [10] "int allowCaustics" [0]
+PixelVariance 0.001
+  
+Format 1280 720 1
+DepthOfField 5 1 6.5
+Display "untitled" "it" "rgba"
+Projection "perspective" "fov" [20]
+  
+#VIEW 1
+Translate  -0.3 -0.6 7
+Rotate -10 1 0 0
+Rotate -12 0 1 0
+Scale 1 1 -1
+  
+WorldBegin
+    Bxdf "PxrLMDiffuse" "default"
+    TransformBegin
+        Scale 4 4 4
+        #ReadArchive "cutrAxes.rib"
+    TransformEnd
+    #LIGHTS
+    AttributeBegin
+        Translate 0 3 0
+        Rotate 10 0 1 0
+        #Lights On/Off
+        Attribute "visibility" "int camera" [1]
+        Sides 2
+        ReadArchive "lights/3point.rib"
+    AttributeEnd
+    TransformBegin
+        Translate -0.25 0 -0.1
+        #TEAPOT
+        AttributeBegin
+            Rotate -25 0 1 0
+            Scale 0.59 0.59 0.59
+            Translate 0 -0.63 0
+            ReadArchive "geo/teapotNew.rib"
+        AttributeEnd
+        #CLOTH
+        AttributeBegin
+            Translate -0.01 1.02 0.03
+            ReadArchive "materials/cloth.rib"
+            Scale 2 2 2
+            Translate 0 -0.5 0
+            Polygon "P" [-1.1 0 -1.1  -1.1 0 1.1  1.1 0 1.1  1.1 0 -1.1]
+                    "st" [0 0  0 1  1 1  1 0]
+        AttributeEnd
+    TransformEnd
+    #CUPS
+    TransformBegin
+        Translate -0.35 0.03 0.45
+        #SPOON
+        AttributeBegin
+            Scale 0.4 0.4 0.4
+            Translate 5.1 -0.55 5.2
+            Rotate -27 0 1 0
+            ReadArchive "geo/spoon.rib"
+        AttributeEnd
+        AttributeBegin
+            Scale 0.21 0.21 0.21
+            Translate  9 0.87 8
+            ReadArchive "geo/cups.rib"
+        AttributeEnd
+    TransformEnd
+    TransformBegin
+        Translate -0.45 0 -0.2
+        AttributeBegin
+            Scale 0.21 0.21 0.21
+            Translate  -3 0.7 12
+            Rotate -15 0 1 0
+            ReadArchive "geo/fullCup.rib"
+        AttributeEnd
+        #SPOON
+        AttributeBegin
+            Scale 0.4 0.4 0.4
+            Translate -0.8 -0.60 5
+            Rotate -160 0 1 0
+            ReadArchive "geo/spoon.rib"
+        AttributeEnd
+    TransformEnd
+    #TABLE
+    AttributeBegin
+        ReadArchive "materials/tableCloth2.rib"
+        Scale 5 1 5
+        Translate 0.7 -0.026 0
+        Polygon "P" [-2 0 -2  -2 0 2  2 0 2  2 0 -2]
+                "st" [0 0  0 1  1 1  1 0]
+    AttributeEnd
+WorldEnd
