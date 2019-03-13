@@ -1,0 +1,12 @@
+# txmake -mode periodic ../tiffs/planevoodvhite.tif ../textures/planewoodwhite.tex 
+Pattern "PxrTexture" "PxrTexture1"
+	"string filename" ["planewoodwhite.tex"]
+	"int invertT" [0]
+	"int linearize" [1]
+	# Example manifold connection
+	#"reference struct manifold" ["PxrManifold2D1:result"]
+	# "PxrTexturel:resultRGB"
+	
+Bxdf "PxrSurface" "PxrSurface1"
+	"float diffuseGain" [1.0]
+	"reference color diffuseColor" ["PxrTexture1:resultRGB"]
