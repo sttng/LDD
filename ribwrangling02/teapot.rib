@@ -1,0 +1,31 @@
+#CUP1
+TransformBegin
+    Translate 0 0.12 0
+    #BASE
+    TransformBegin
+        ReadArchive "geo/cupBase.rib"
+    TransformEnd
+    #BODY
+    AttributeBegin
+        ReadArchive "materials/pinkTeapot.rib"
+        TransformBegin
+            Translate 0 1.2 0
+            Rotate -90 1 0 0
+            Attribute "identifier" "name" ["body"]
+            Sphere 2 -2 0.5 360
+        TransformEnd
+    AttributeEnd
+    #HANDLE
+    AttributeBegin
+        ReadArchive "geo/handle.rib"
+    AttributeEnd
+    ReadArchive "geo/plateMain.rib"
+    #TEA
+    AttributeBegin
+        ReadArchive "materials/tea.rib"
+        Translate 0 1.5 0
+        Scale 0.95 0.95 0.95
+        Polygon "P" [-2 0 -2  -2 0 2  2 0 2  2 0 -2]
+                "st" [0 0  0 1  1 1  1 0]
+    AttributeEnd
+TransformEnd
