@@ -1,0 +1,83 @@
+			#additionals
+
+	AttributeBegin
+		Translate 0 0 0
+		Scale 1 1 1
+		ReadArchive "materials/rose_g.rib"
+			ReadArchive "geo/base1.rib"
+	AttributeEnd
+-------------
+	AttributeBegin
+		Translate 0 0 0
+		Scale 1 1 1
+		ReadArchive "materials/glass.rib"
+		ReadArchive "geo/bases_g.rib"
+	AttributeEnd
+#-------------
+	AttributeBegin
+		Translate 0 0 0
+		Scale 1 1 1
+		ReadArchive "materials/towel.rib"
+		ReadArchive "geo/cloth.rib"
+	AttributeEnd
+#	--------------------
+	AttributeBegin
+		Translate 0 0 0
+		Scale 1 1 1
+		ReadArchive "materials/galletas.rib"
+		ReadArchive "geo/cookies.rib"
+	AttributeEnd
+#---------------------
+	AttributeBegin
+		Translate 0 0 0
+		Scale 1 1 1
+		ReadArchive "materials/bread.rib"
+		ReadArchive "geo/pan1.rib"
+	AttributeEnd
+#----------------
+	AttributeBegin
+		Translate 0 0 0
+		Scale 1 1 1
+		ReadArchive "materials/wood.rib"
+		ReadArchive "geo/cuchara1.rib"
+	AttributeEnd
+#--------------
+	AttributeBegin
+		Translate 0 0 0
+		Scale 1 1 1
+		ReadArchive "materials/wood.rib"
+		ReadArchive "geo/cuchara2.rib"
+	AttributeEnd
+	
+
+#------------------
+	AttributeBegin
+		Translate 0 0 0
+		Scale 1 1 1
+		ReadArchive "materials/bread.rib"
+		ReadArchive "geo/pan2.rib"
+	AttributeEnd
+#--------------------
+	AttributeBegin
+		Translate 0 0 0
+		Scale 1 1 1
+		ReadArchive "materials/bread.rib"
+		ReadArchive "geo/pan3.rib"
+	AttributeEnd
+#--------------------
+	AttributeBegin
+		Translate 0 0 0
+		Scale 1 1 1
+		ReadArchive "materials/sticker.rib"
+		ReadArchive "geo/sticker.rib"
+	AttributeEnd
+#--------------------
+		AttributeBegin
+		Translate 0 0 0
+		Scale 1 1 1
+		ReadArchive "materials/rose_g.rib"
+		ReadArchive "geo/tapitas.rib"
+	AttributeEnd
+#--------------------
+			
+			
