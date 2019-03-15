@@ -1,0 +1,365 @@
+#Material code breakdown that I saved as separate rib file into the  materials folder under the archives folder. 			
+#Coral
+Pattern "PxrManifold2D" "PxrManifold2D1"
+		"float angle" [0]
+		"float scaleS" [1]
+		"float scaleT" [1]
+		"float offsetS" [0]
+		"float offsetT" [0]
+		"int invertT" [0]
+		"string primvarS" [""]
+		"string primvarT" [""]
+		# "PxrManifold2D1:result"
+
+# txmake -mode periodic ../tiffs/coral.tif ../textures/coral.tex
+Pattern "PxrTexture" "PxrTexture1"
+		"string filename" ["coral.tex"]
+		"int firstChannel" [0]
+		"int atlasStyle" [0]
+		"int invertT" [1]
+		"int filter" [1]
+		"float blur" [0.0]
+		"int lerp" [1]
+		"color missingColor" [1. 0. 1.]
+		"float missingAlpha" [1.0]
+		"int linearize" [1]
+		# Example manifold connection
+		"reference struct manifold" ["PxrManifold2D1:result"]
+		# "PxrTexture1:resultRGB"
+
+Bxdf "PxrSurface" "PxrSurface1"
+		"float diffuseGain" [1.0]
+		"reference color diffuseColor" ["PxrTexture1:resultRGB"]
+------------------------------------------------------------------------------------
+
+#Sand
+Pattern "PxrManifold2D" "PxrManifold2D1"
+		"float angle" [0]
+		"float scaleS" [1]
+		"float scaleT" [1]
+		"float offsetS" [0]
+		"float offsetT" [0]
+		"int invertT" [0]
+		"string primvarS" [""]
+		"string primvarT" [""]
+		# "PxrManifold2D1:result"
+
+# txmake -mode periodic ../tiffs/sand.tif ../textures/sand.tex
+Pattern "PxrTexture" "PxrTexture1"
+		"string filename" ["sand.tex"]
+		"int firstChannel" [0]
+		"int atlasStyle" [0]
+		"int invertT" [1]
+		"int filter" [1]
+		"float blur" [0.0]
+		"int lerp" [1]
+		"color missingColor" [1. 0. 1.]
+		"float missingAlpha" [1.0]
+		"int linearize" [1]
+		# Example manifold connection
+		"reference struct manifold" ["PxrManifold2D1:result"]
+		# "PxrTexture1:resultRGB"
+
+Bxdf "PxrSurface" "PxrSurface1"
+		"float diffuseGain" [1.0]
+		"reference color diffuseColor" ["PxrTexture1:resultRGB"]
+-----------------------------------------------------------------------------------
+
+
+
+#Coral_Top
+Pattern "PxrManifold2D" "PxrManifold2D1"
+		"float angle" [0]
+		"float scaleS" [1]
+		"float scaleT" [1]
+		"float offsetS" [0]
+		"float offsetT" [0]
+		"int invertT" [0]
+		"string primvarS" [""]
+		"string primvarT" [""]
+		# "PxrManifold2D1:result"
+
+Pattern "PxrMix" "PxrMix1"
+		"color color1" [1 0.961 0.833]
+		"color color2" [0.591 0.658 0.597]
+		"reference float mix" ["PxrManifold2D1:resultS"]
+		# "PxrMix1:resultRGB"    uses->|color|vector|normal|point| 
+		# "PxrMix1:resultR"    uses->|float| 
+		# "PxrMix1:resultG"    uses->|float| 
+		# "PxrMix1:resultB"    uses->|float| 
+
+
+Bxdf "PxrSurface" "PxrSurface1"
+		"float diffuseGain" [1.0]
+		"reference color diffuseColor" ["PxrMix1:resultRGB"]
+		"int diffuseDoubleSided" [1]
+		"color specularFaceColor" [0.665 0.738 0.672]
+		"float specularRoughness" [0.8]
+		"int specularDoubleSided" [1]
+		"float presence" [1]
+---------------------------------------------------------------------------------------
+
+#Teapot Base Color
+Bxdf "PxrSurface" "PxrSurface1"
+		"float diffuseGain" [0.7]
+		"color diffuseColor" [0.962 1 0.984]
+		"int diffuseDoubleSided" [1]
+		"color specularFaceColor" [0.793 0.890 0.815]
+		"float specularRoughness" [0.8]
+		"int specularDoubleSided" [0]
+		"float presence" [1]
+-----------------------------------------------------------------------------------------
+
+#Ceramic
+Pattern "PxrManifold2D" "PxrManifold2D1"
+		"float angle" [0]
+		"float scaleS" [1]
+		"float scaleT" [1]
+		"float offsetS" [0]
+		"float offsetT" [1]
+		"int invertT" [0]
+		"string primvarS" [""]
+		"string primvarT" [""]
+		# "PxrManifold2D1:result"
+
+Pattern "PxrMix" "PxrMix1"
+		"color color1" [0.617 0.687 0.610]
+		"color color2" [0.526 0.738 0.624]
+		"reference float mix" ["PxrManifold2D1:resultS"]
+		# "PxrMix1:resultRGB"    uses->|color|vector|normal|point| 
+		# "PxrMix1:resultR"    uses->|float| 
+		# "PxrMix1:resultG"    uses->|float| 
+		# "PxrMix1:resultB"    uses->|float| 
+
+
+Bxdf "PxrSurface" "PxrSurface1"
+		"float diffuseGain" [1.0]
+		"reference color diffuseColor" ["PxrMix1:resultRGB"]
+		"int diffuseDoubleSided" [1]
+		"color specularFaceColor" [0.665 0.738 0.672]
+		"float specularRoughness" [0.8]
+		"int specularDoubleSided" [1]
+		"float presence" [1]
+-----------------------------------------------------------------------------
+
+#Mermaid Plate
+Pattern "PxrManifold2D" "PxrManifold2D1"
+		"float angle" [0]
+		"float scaleS" [1]
+		"float scaleT" [1]
+		"float offsetS" [0]
+		"float offsetT" [0]
+		"int invertT" [0]
+		"string primvarS" [""]
+		"string primvarT" [""]
+		# "PxrManifold2D1:result"
+
+# txmake -mode periodic ../tiffs/mermaidplate.tif ../textures/mermaidplate.tex
+Pattern "PxrTexture" "PxrTexture1"
+		"string filename" ["mermaidplate.tex"]
+		"int firstChannel" [0]
+		"int atlasStyle" [0]
+		"int invertT" [1]
+		"int filter" [1]
+		"float blur" [0.0]
+		"int lerp" [1]
+		"color missingColor" [1. 0. 1.]
+		"float missingAlpha" [1.0]
+		"int linearize" [1]
+		# Example manifold connection
+		"reference struct manifold" ["PxrManifold2D1:result"]
+		# "PxrTexture1:resultRGB"
+		
+Pattern "PxrManifold2D" "PxrManifold2D2"
+		"float angle" [0]
+		"float scaleS" [1]
+		"float scaleT" [1]
+		"float offsetS" [0]
+		"float offsetT" [0]
+		"int invertS" [0]
+		"int invertT" [1]
+		"string primvarS" [""]
+		"string primvarT" [""]
+		# "PxrManifold2D2:result"
+		
+Pattern "PxrBump" "PxrBump1"
+		"float scale" [0.5]
+		"int disable" [0]
+		"float inputBump" [0.0]
+		"string filename" ["mermaidplatenormal.tex"]
+		"int firstChannel" [0]
+		"int atlasStyle" [0]
+		"int invertT" [1]
+		"float blur" [0.0]
+		"int lerp" [1]
+		"normal inputN" [1. 0. 0.]
+		"int reverse" [0]
+		"float adjustAmount" [0.0]
+		"float surfaceNormalMix" [0.0]
+		# Examples manifold connection
+		"reference struct manifold" ["PxrManifold2D1:result"]
+		# "PxrBump1:resultN"    uses->|normal| 
+
+
+
+Bxdf "PxrSurface" "PxrSurface1"
+		"float diffuseGain" [1.0]
+		"reference color diffuseColor" ["PxrTexture1:resultRGB"]
+		"int diffuseDoubleSided" [1]
+		"color specularFaceColor" [0.2 0.2 0.2]
+		"float specularRoughness" [0.5]
+		"int specularDoubleSided" [0]
+		"float presence" [1]
+
+
+-----------------------------------------------------------------------------------------
+
+#Plate Base
+Bxdf "PxrSurface" "PxrSurface1"
+		"float diffuseGain" [0.7]
+		"color diffuseColor" [0.577 0.552 0.533]
+		"int diffuseDoubleSided" [1]
+		"color specularFaceColor" [0 0 0]
+		"float specularRoughness" [0.8]
+		"int specularDoubleSided" [0]
+		"float presence" [1]
+----------------------------------------------------------------------------------------
+
+#Plate Rim
+Bxdf "PxrSurface" "PxrSurface1"
+		"float diffuseGain" [0.7]
+		"color diffuseColor" [0.378 0.179 0.034]
+		"int diffuseDoubleSided" [1]
+		"color specularFaceColor" [0.895 0.693 0.545]
+		"float specularRoughness" [0.6]
+		"int specularDoubleSided" [1]
+		"float presence" [1]
+--------------------------------------------------------------------------------------
+
+#Cup Base
+Pattern "PxrManifold2D" "PxrManifold2D1"
+		"float angle" [0]
+		"float scaleS" [1]
+		"float scaleT" [1]
+		"float offsetS" [0]
+		"float offsetT" [0]
+		"int invertT" [0]
+		"string primvarS" [""]
+		"string primvarT" [""]
+		# "PxrManifold2D1:result"
+
+# txmake -mode periodic ../tiffs/coral.tif ../textures/coral.tex
+Pattern "PxrTexture" "PxrTexture1"
+		"string filename" ["coral.tex"]
+		"int firstChannel" [0]
+		"int atlasStyle" [0]
+		"int invertT" [1]
+		"int filter" [1]
+		"float blur" [0.0]
+		"int lerp" [1]
+		"color missingColor" [1. 0. 1.]
+		"float missingAlpha" [1.0]
+		"int linearize" [1]
+		# Example manifold connection
+		"reference struct manifold" ["PxrManifold2D1:result"]
+		# "PxrTexture1:resultRGB"
+
+Bxdf "PxrSurface" "PxrSurface1"
+		"float diffuseGain" [1.0]
+		"reference color diffuseColor" ["PxrTexture1:resultRGB"]
+-------------------------------------------------------------------------------------
+
+#Cloth
+Pattern "PxrManifold2D" "PxrManifold2D1"
+		"float angle" [0]
+		"float scaleS" [1]
+		"float scaleT" [1]
+		"float offsetS" [0]
+		"float offsetT" [0]
+		"int invertT" [0]
+		"string primvarS" [""]
+		"string primvarT" [""]
+		# "PxrManifold2D1:result"
+
+# txmake -mode periodic ../tiffs/clothnormal.tif ../textures/clothnormal.tex
+Pattern "PxrTexture" "PxrTexture1"
+		"string filename" ["cloth.tex"]
+		"int firstChannel" [0]
+		"int atlasStyle" [0]
+		"int invertT" [1]
+		"int filter" [1]
+		"float blur" [0.0]
+		"int lerp" [1]
+		"color missingColor" [1. 0. 1.]
+		"float missingAlpha" [1.0]
+		"int linearize" [1]
+		# Example manifold connection
+		"reference struct manifold" ["PxrManifold2D1:result"]
+		# "PxrTexture1:resultRGB"
+		
+Pattern "PxrManifold2D" "PxrManifold2D2"
+		"float angle" [0]
+		"float scaleS" [1]
+		"float scaleT" [1]
+		"float offsetS" [0]
+		"float offsetT" [0]
+		"int invertS" [0]
+		"int invertT" [1]
+		"string primvarS" [""]
+		"string primvarT" [""]
+		# "PxrManifold2D2:result"
+		
+Pattern "PxrBump" "PxrBump1"
+		"float scale" [1.0]
+		"int disable" [0]
+		"float inputBump" [0.0]
+		"string filename" ["clothnormal.tex"]
+		"int firstChannel" [0]
+		"int atlasStyle" [0]
+		"int invertT" [1]
+		"float blur" [0.0]
+		"int lerp" [1]
+		"normal inputN" [1. 0. 0.]
+		"int reverse" [0]
+		"float adjustAmount" [0.0]
+		"float surfaceNormalMix" [0.0]
+		# Examples manifold connection
+		"reference struct manifold" ["PxrManifold2D1:result"]
+		# "PxrBump1:resultN"    uses->|normal| 
+ 
+Bxdf "PxrSurface" "PxrSurface1"
+		"float diffuseGain" [1.0]
+		"reference color diffuseColor" ["PxrTexture1:resultRGB"]
+
+----------------------------------------------------------------------------------
+#Wood 
+Pattern "PxrManifold2D" "PxrManifold2D1"
+		"float angle" [0]
+		"float scaleS" [1]
+		"float scaleT" [1]
+		"float offsetS" [0]
+		"float offsetT" [0]
+		"int invertT" [0]
+		"string primvarS" [""]
+		"string primvarT" [""]
+		# "PxrManifold2D1:result"
+
+# txmake -mode periodic ../tiffs/woodtable.tif ../textures/woodtable.tex
+Pattern "PxrTexture" "PxrTexture1"
+		"string filename" ["woodtable.tex"]
+		"int firstChannel" [0]
+		"int atlasStyle" [0]
+		"int invertT" [1]
+		"int filter" [1]
+		"float blur" [0.0]
+		"int lerp" [1]
+		"color missingColor" [1. 0. 1.]
+		"float missingAlpha" [1.0]
+		"int linearize" [1]
+		# Example manifold connection
+		"reference struct manifold" ["PxrManifold2D1:result"]
+		# "PxrTexture1:resultRGB"
+
+Bxdf "PxrSurface" "PxrSurface1"
+		"float diffuseGain" [1.0]
+		"reference color diffuseColor" ["PxrTexture1:resultRGB"]
