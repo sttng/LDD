@@ -49,13 +49,13 @@ def material_ids_to_ri(material_id_list):
 		color_b = round((float(color_b) / 255),2)
 		
 		if material_type == 'Transparent':
-			bxdf_mat[i] = '''\t\tBxdf "PxrSurface" "Transparent ' + material_id + '" 
+			bxdf_mat[i] = '''\t\tBxdf "PxrSurface" "Transparent ''' + material_id + '''" 
 			"float diffuseGain" [0] 
 			"color diffuseColor" [0.5 0.5 0.5]
 			"int diffuseDoubleSided" [1] 
 			"int diffuseBackUseDiffuseColor" [1] 
 			"color diffuseBackColor" [1 1 1] 
-			"color specularFaceColor" [' + str(color_r) + ' ' + str(color_g) + ' ' + str(color_b) + '] 
+			"color specularFaceColor" [''' + str(color_r) + ' ' + str(color_g) + ' ' + str(color_b) + '''] 
 			"color specularEdgeColor" [0.2 0.2 0.2] "float specularRoughness" [0.1] 
 			"int specularDoubleSided" [1] "color clearcoatFaceColor" [0 0 0] 
 			"color clearcoatEdgeColor" [0 0 0] 
@@ -81,21 +81,21 @@ def material_ids_to_ri(material_id_list):
 			"float presence" [1]\n'''
 		
 		elif material_type == 'Metallic':
-			bxdf_mat[i] = '''\t\tBxdf "PxrSurface" "Metallic ' + material_id + '" 
+			bxdf_mat[i] = '''\t\tBxdf "PxrSurface" "Metallic ''' + material_id + '''" 
 			"float diffuseGain" [0] 
 			"color diffuseColor" [1 1 1] 
 			"int diffuseDoubleSided" [1] 
 			"int diffuseBackUseDiffuseColor" [1] 
 			"color diffuseBackColor" [0.18 0.18 0.18] 
-			"color specularFaceColor" [' + str(color_r) + ' ' + str(color_g) + ' ' + str(color_b) + '] 
+			"color specularFaceColor" [''' + str(color_r) + ' ' + str(color_g) + ' ' + str(color_b) + '''] 
 			"float specularRoughness" [.39] 
 			"float presence" [1] 
 			"float reflectionGain" [.7]\n'''
 		
 		else:
-			bxdf_mat[i] = '''\t\tBxdf "PxrSurface" "Solid Material ' + material_id + '" 
+			bxdf_mat[i] = '''\t\tBxdf "PxrSurface" "Solid Material ''' + material_id + '''" 
 			"float diffuseGain" [1.0] 
-			"color diffuseColor" [' + str(color_r) + ' ' + str(color_g) + ' ' + str(color_b) + '] 
+			"color diffuseColor" [''' + str(color_r) + ' ' + str(color_g) + ' ' + str(color_b) + '''] 
 			"int diffuseDoubleSided" [1] 
 			"color specularFaceColor" [0.1 0.1 0.15] 
 			"float specularRoughness" [0.2] 
@@ -160,8 +160,8 @@ def gen_pxrsurface(color_r, color_g, color_b, material_id, material_type, decora
 		\t\t"float scaleS" [1]\n
 		\t\t"float scaleT" [1]\n
 		\t\t"int invertT" [0]\n
-		\t\tPattern "PxrTexture" "PxrTexture' + decoration_id + '"\n
-		\t\t"string filename" ["' + decoration_id + '.tex"]\n
+		\t\tPattern "PxrTexture" "PxrTexture''' + decoration_id + '''"\n
+		\t\t"string filename" ["''' + decoration_id + '''.tex"]\n
 		\t\t"int invertT" [0]\n
 		\t\t"int linearize" [1]\n
 		\t\t"reference struct manifold" ["PxrManifold2D1:result"]\n'''
@@ -177,8 +177,14 @@ def gen_pxrsurface(color_r, color_g, color_b, material_id, material_type, decora
 		bxdf_mat_str = texture_strg + '\t\tBxdf "PxrSurface" "Metallic ' + material_id + '" "float diffuseGain" [0] "color diffuseColor" [1 1 1] "int diffuseDoubleSided" [1] "int diffuseBackUseDiffuseColor" [1] "color diffuseBackColor" [0.18 0.18 0.18] "color specularFaceColor" [' + rgb_or_dec_str + '] "float specularRoughness" [.39] "float presence" [1] "float reflectionGain" [.7]\n'
 		
 	else:
-		bxdf_mat_str = texture_strg + '\t\tBxdf "PxrSurface" "Solid ' + material_id + '" "float diffuseGain" [1.0] "color diffuseColor" [' + rgb_or_dec_str + '] "int diffuseDoubleSided" [1] "color specularFaceColor" [0.1 0.1 0.15] "float specularRoughness" [0.2] "int specularDoubleSided" [0] "float presence" [1]\n'
-		
+		bxdf_mat_str = texture_strg + '''\t\tBxdf "PxrSurface" "Solid ''' + material_id + '''"
+		"float diffuseGain" [1.0] 
+		"color diffuseColor" [''' + rgb_or_dec_str + '''] 
+		"int diffuseDoubleSided" [1] 
+		"color specularFaceColor" [0.1 0.1 0.15] 
+		"float specularRoughness" [0.2] 
+		"int specularDoubleSided" [0]
+		"float presence" [1]\n'''		
 	return bxdf_mat_str
 
 #materials="24,0,0,0"
