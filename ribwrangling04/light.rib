@@ -1,0 +1,16 @@
+#For the scene I used a dome light and an HDRI image I got from HDRI Haven
+			
+#================================================LightInfo==================================
+AttributeBegin
+	Attribute "visibility" "int indirect" [0] "int transmission" [0]
+	Attribute "visibility" "int camera" [0]
+	Rotate -90 1 0 0
+	# txmake -envlatl ../tiffs/beach.hdr ../textures/beach.tex
+Light "PxrDomeLight" "PxrDomeLight2"
+		"float intensity" [0.3]
+		"float exposure" [0.3]
+		"color lightColor" [1 1 1]
+		"string lightColorMap" ["../textures/beach.tex"]
+AttributeEnd
+#===============================================================================================
+			
