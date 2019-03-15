@@ -1,6 +1,6 @@
 ##RenderMan RIB
 version 3.04
-Option "searchpath" "string archive" ["/Users/hannes/Downloads/"]
+Option "searchpath" "string archive" ["/Users/user_name/Downloads/"]
 Option "searchpath" "string texture" [".:@:/Applications/Pixar/RenderManProServer-22.3/lib/RenderManAssetLibrary/EnvironmentMaps/Outdoor/GriffithObservatory.rma"]
 Display "rgb.exr" "it" "rgba" 
 Format 1920 1080 1
