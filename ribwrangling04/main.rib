@@ -1,0 +1,208 @@
+#Main Teapot Scene Rib Code Breakdown
+
+Option "ribparse" "string varsubst" ["$"]
+IfBegin "!defined(RMSTREE)"
+	Option "user" "string RMSTREE" ["/opt/pixar/RenderManForMaya-21.6-maya2018"]
+IfEnd
+Option "searchpath" "shader"    ["../../maya/projects/RfM_osl:@"]
+Option "searchpath" "rixplugin" ["${RMSTREE}/lib/shaders:../../maya/projects/RfM_ris:@"]
+Option "searchpath" "texture"   ["../textures:@"]
+Option "searchpath" "archive"   ["../archives:Cutter_Help/templates/Rib:custom_templates/Rib"]
+#Option "statistics" "endofframe" [1]
+
+Hider "raytrace" "int incremental" [1] "int minsamples" [49] "int maxsamples" [256] "float darkfalloff" [0.025]
+#Integrator "PxrPathTracer" "PxrPathTracer" "int maxPathLength" [10] "int allowCaustics" [0]
+Integrator "PxrOcclusion" "PxrOcclusion1"
+		"int numSamples" [4]
+		"int distribution" [1]
+		"float cosineSpread" [1.0]
+		"float falloff" [0.0]
+		"float maxDistance" [0.0]
+		"int useAlbedo" [0]
+PixelVariance 0.05
+#============================================Globals==========================
+Format 960 540 1
+#ReadArchive "./DenoiseOptions.rib"
+Display "untitled" "it" "rgba"
+Projection "perspective" "fov" [10]
+
+Translate  0 -0.2 30
+Rotate -35 1 0 0
+Rotate  15 0 1 0
+Scale 1 1 -1
+#DisplayFilter "PxrBackgroundDisplayFilter" "background" "color backgroundColor" [1 1 1]
+#=========================================CameraInfo=====================================
+
+WorldBegin
+	Bxdf "PxrSurface" "default"
+		"color diffuseColor" [0.6 0.6 0.6]
+		"float diffuseGain" [1.0]
+		"int diffuseDoubleSided" [1]
+		
+		ReadArchive "lights/domelight.rib"	
+		
+#Teapot Model
+	AttributeBegin
+		Attribute "identifier" "string name" ["Teapotbase"]
+		Translate 1.4 0 0.8
+		ReadArchive "materials/white_teapot.rib"
+		ReadArchive "geo/teapotbase.rib"
+	AttributeEnd
+	
+	AttributeBegin
+		Attribute "identifier" "string name" ["TeaSpout"]
+		Translate 1.4 0 0.8
+		ReadArchive "materials/seaceramic.rib" 
+		ReadArchive "geo/teaspout.rib"
+	AttributeEnd
+
+	AttributeBegin
+		Attribute "identifier" "string name" ["TeaTop"]
+		Translate 1.4 0 0.8
+		ReadArchive "materials/seaceramic.rib"
+		ReadArchive "geo/top.rib"
+	AttributeEnd
+	
+	AttributeBegin
+		Attribute "identifier" "string name" ["Legs"]
+		Translate 1.4 0 0.8
+		ReadArchive "materials/seaceramic.rib"
+		ReadArchive "geo/legs.rib"
+	AttributeEnd
+	
+	AttributeBegin
+		Attribute "identifier" "string name" ["Handle"]
+		Translate 1.4 0 0.8
+		ReadArchive "materials/seaceramic.rib"
+		ReadArchive "geo/handle.rib"
+	AttributeEnd
+	
+	AttributeBegin
+		Attribute "identifier" "string name" ["CoralTop"]
+		Translate 1.4 0 0.8
+		ReadArchive "materials/coraltop.rib"
+		ReadArchive "geo/coraltop.rib"
+	AttributeEnd
+
+#Ceramic Cup Models
+	AttributeBegin
+		Attribute "identifier" "string name" ["CupOne"]
+		Translate -1.9 0 -1
+		ReadArchive "materials/seaceramic.rib"
+		ReadArchive "geo/CupOne.rib"
+	AttributeEnd
+	
+	AttributeBegin
+		Attribute "identifier" "string name" ["CoralCupOne"]
+		Translate -1.9 0 -1
+		ReadArchive "materials/cupbase.rib"
+		ReadArchive "geo/CupBaseOne.rib"
+	AttributeEnd
+	
+	AttributeBegin
+		Attribute "identifier" "string name" ["CupLegsOne"]
+		Translate -1.9 0 -1
+		ReadArchive "materials/seaceramic.rib"
+		ReadArchive "geo/CupOneLegs.rib"
+	AttributeEnd
+	
+	AttributeBegin
+		Attribute "identifier" "string name" ["CupTwo"]
+		Translate -2 0.1 0.7
+		ReadArchive "materials/seaceramic.rib"
+		ReadArchive "geo/CupTwo.rib"
+	AttributeEnd
+	
+	AttributeBegin
+		Attribute "identifier" "string name" ["CoralCupTwo"]
+		Translate -2 0.1 0.7
+		ReadArchive "materials/cupbase.rib"
+		ReadArchive "geo/CupBaseTwo.rib"
+	AttributeEnd
+	
+	AttributeBegin
+		Attribute "identifier" "string name" ["CupLegsTwo"]
+		Translate -2 0.1 0.7
+		ReadArchive "materials/seaceramic.rib"
+		ReadArchive "geo/CupTwoLegs.rib"
+	AttributeEnd
+
+#Ceramic Plate_Models
+	AttributeBegin
+		Attribute "identifier" "string name" ["PlateBase"]
+		Translate -1.9 0 -1
+		ReadArchive "materials/platebase.rib"
+		ReadArchive "geo/PlateOneBase.rib"
+	AttributeEnd
+	
+	AttributeBegin
+		Attribute "identifier" "string name" ["PlateTop"]
+		Translate -1.9 0 -1
+		ReadArchive "materials/mermaid.rib"
+		ReadArchive "geo/PlateOneTop.rib"
+	AttributeEnd
+	
+	AttributeBegin
+		Attribute "identifier" "string name" ["PlateRimOne"]
+		Translate -1.9 0 -1
+		ReadArchive "materials/platerim.rib"
+		ReadArchive "geo/PlateRimOne.rib"
+	AttributeEnd
+	
+	AttributeBegin
+		Attribute "identifier" "string name" ["PlateBase"]
+		Translate -1.9 0 0.8
+		ReadArchive "materials/platebase.rib"
+		ReadArchive "geo/PlateTwoBase.rib"
+	AttributeEnd
+	
+	AttributeBegin
+		Attribute "identifier" "string name" ["PlateTop"]
+		Translate -1.9 0 0.8
+		ReadArchive "materials/mermaid.rib"
+		ReadArchive "geo/PlateTwoTop.rib"
+	AttributeEnd
+	
+	AttributeBegin
+		Attribute "identifier" "string name" ["PlateRimOne"]
+		Translate -1.9 0 0.8
+		ReadArchive "materials/platerim.rib"
+		ReadArchive "geo/PlateRimTwo.rib"
+	AttributeEnd
+	
+
+
+
+#Table Cloth 
+	AttributeBegin
+		Attribute "identifier" "string name" ["cloth"]
+		Translate 0 0 0
+		ReadArchive "materials/cloth.rib"
+		ReadArchive "geo/cloth.rib"
+	AttributeEnd
+	
+#Sand 
+	AttributeBegin
+		Attribute "identifier" "string name" ["sand"]
+		Translate 0 0 0
+		ReadArchive "materials/sand.rib"
+		ReadArchive "geo/sand.rib"
+	AttributeEnd
+
+#Table Model	
+	AttributeBegin
+		Attribute "identifier" "string name" ["table"]
+		Translate 0 0 0
+		ReadArchive "materials/wood.rib"
+		ReadArchive "geo/table.rib"
+	AttributeEnd
+	
+	AttributeBegin
+		Attribute "identifier" "string name" ["plane1"]
+		Scale 10 1 10
+		Polygon "P" [-0.5 0 -0.5  -0.5 0 0.5  0.5 0 0.5  0.5 0 -0.5]
+				"st" [0 0  0 1  1 1  1 0]
+	AttributeEnd
+WorldEnd
+
+#ReadArchive "./Denoise.rib"
