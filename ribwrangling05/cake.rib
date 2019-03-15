@@ -1,0 +1,122 @@
+AttributeBegin
+    TransformBegin
+        Rotate 2 0 1 0
+        ReadArchive "paraboloid.rib"
+    TransformEnd
+    TransformBegin
+        Rotate 12 0 1 0
+        ReadArchive "paraboloid.rib"
+    TransformEnd
+    TransformBegin
+        Rotate 24 0 1 0
+        ReadArchive "paraboloid.rib"
+    TransformEnd
+    TransformBegin
+        Rotate 36 0 1 0
+        ReadArchive "paraboloid.rib"
+    TransformEnd
+    TransformBegin
+        Rotate 48 0 1 0
+        ReadArchive "paraboloid.rib"
+    TransformEnd
+    TransformBegin
+        Rotate 60 0 1 0
+        ReadArchive "paraboloid.rib"
+    TransformEnd
+    TransformBegin
+        Rotate 72 0 1 0
+        ReadArchive "paraboloid.rib"
+    TransformEnd
+    TransformBegin
+        Rotate 84 0 1 0
+        ReadArchive "paraboloid.rib"
+    TransformEnd
+    TransformBegin
+        Rotate 96 0 1 0
+        ReadArchive "paraboloid.rib"
+    TransformEnd
+    TransformBegin
+        Rotate 108 0 1 0
+        ReadArchive "paraboloid.rib"
+    TransformEnd
+    TransformBegin
+        Rotate 120 0 1 0
+        ReadArchive "paraboloid.rib"
+    TransformEnd
+    TransformBegin
+        Rotate 132 0 1 0
+        ReadArchive "paraboloid.rib"
+    TransformEnd
+    TransformBegin
+        Rotate 144 0 1 0
+        ReadArchive "paraboloid.rib"
+    TransformEnd
+    TransformBegin
+        Rotate 156 0 1 0
+        ReadArchive "paraboloid.rib"
+    TransformEnd
+    TransformBegin
+        Rotate 168 0 1 0
+        ReadArchive "paraboloid.rib"
+    TransformEnd
+    TransformBegin
+        Rotate 180 0 1 0
+        ReadArchive "paraboloid.rib"
+    TransformEnd
+    TransformBegin
+        Rotate 192 0 1 0
+        ReadArchive "paraboloid.rib"
+    TransformEnd
+    TransformBegin
+        Rotate 204 0 1 0
+        ReadArchive "paraboloid.rib"
+    TransformEnd
+    TransformBegin
+        Rotate 216 0 1 0
+        ReadArchive "paraboloid.rib"
+    TransformEnd
+        TransformBegin
+        Rotate 228 0 1 0
+        ReadArchive "paraboloid.rib"
+    TransformEnd
+    TransformBegin
+        Rotate 240 0 1 0
+        ReadArchive "paraboloid.rib"
+    TransformEnd
+    TransformBegin
+        Rotate 252 0 1 0
+        ReadArchive "paraboloid.rib"
+    TransformEnd
+    TransformBegin
+        Rotate 264 0 1 0
+        ReadArchive "paraboloid.rib"
+    TransformEnd
+    TransformBegin
+        Rotate 276 0 1 0
+        ReadArchive "paraboloid.rib"
+    TransformEnd
+        TransformBegin
+        Rotate 288 0 1 0
+        ReadArchive "paraboloid.rib"
+    TransformEnd
+    TransformBegin
+        Rotate 300 0 1 0
+        ReadArchive "paraboloid.rib"
+    TransformEnd
+    TransformBegin
+        Rotate 312 0 1 0
+        ReadArchive "paraboloid.rib"
+    TransformEnd
+    TransformBegin
+        Rotate 324 0 1 0
+        ReadArchive "paraboloid.rib"
+    TransformEnd
+        TransformBegin
+        Rotate 336 0 1 0
+        ReadArchive "paraboloid.rib"
+    TransformEnd
+    TransformBegin
+        Rotate 348 0 1 0
+        ReadArchive "paraboloid.rib"
+    TransformEnd
+AttributeEnd
