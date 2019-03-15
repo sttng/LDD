@@ -22,7 +22,7 @@ oslc Primvar.osl
 
 ## Useful links
 
-* https://rmanwiki.pixar.com/display/REN/PxrSurface.mobile.phone
+* https://rmanwiki.pixar.com/display/REN22/PxrSurface
 * http://cg.earlyworm.co.nz/renderman-commandline/
 * https://renderman.pixar.com/forum/showthread.php?s=&threadid=35595&s=3f67579b2c1d88a74b98ea5f86a3c546
 * https://www.rockraidersunited.com/topic/3764-lego-digital-designer-lif-extractor/?do=findComment&comment=133146
