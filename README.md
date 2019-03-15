@@ -35,7 +35,6 @@ oslc Primvar.osl
 * https://nccastaff.bournemouth.ac.uk/jmacey/Renderman/
 * https://www.janwalter.org/jekyll/blender/cloud/attic/2016/07/13/attic.html
 * https://www.jason-koh.com/rib_teapot
-* http://www.ting731.com/tingyangRenderman/matrix/matrix.html
 
 ## Lego plastic materials
 
