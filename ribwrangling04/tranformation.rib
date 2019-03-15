@@ -1,0 +1,96 @@
+#In my scene I changed the camera and dome light settings a  few times to create the four different 4k images at the top of the page. Below is the breakdown of the four different camera and light settings I used to make the images
+
+				Camera Angle One
+Projection "perspective" "fov" [10]
+
+Translate  0 -0.2 30
+Rotate -35 1 0 0
+Rotate  15 0 1 0
+Scale 1 1 -1
+
+Light One
+
+AttributeBegin
+	Attribute "visibility" "int indirect" [0] "int transmission" [0]
+	Attribute "visibility" "int camera" [0]
+	Rotate -90 1 10 15
+	# txmake -envlatl ../tiffs/beach.hdr ../textures/beach.tex
+Light "PxrDomeLight" "PxrDomeLight2"
+		"float intensity" [0.3]
+		"float exposure" [0.2]
+		"color lightColor" [1 1 1]
+		"string lightColorMap" ["../textures/beach.tex"]
+AttributeEnd
+
+#===========================================================================
+Camera Angle Two
+
+Projection "perspective" "fov" [7.5]
+
+Translate  0.5 -1.3 30
+Rotate -41 1 0 0
+Rotate  155 0 1 0
+Scale 1 1 -1
+
+
+Light Two
+
+AttributeBegin
+	Attribute "visibility" "int indirect" [0] "int transmission" [0]
+	Attribute "visibility" "int camera" [1]
+	Rotate -90 1 5 0
+	# txmake -envlatl ../tiffs/beach.hdr ../textures/beach.tex
+Light "PxrDomeLight" "PxrDomeLight2"
+		"float intensity" [0.3]
+		"float exposure" [0]
+		"color lightColor" [1 1 1]
+		"string lightColorMap" ["../textures/beach.tex"]
+AttributeEnd
+
+#=================================================================================
+
+Camera Angle Three
+
+Translate  0.5 -1.7 30
+Rotate -6 1 0 0
+Rotate  128 0 1 0
+Scale 1 1 -1
+
+Light Three
+
+AttributeBegin
+	Attribute "visibility" "int indirect" [0] "int transmission" [0]
+	Attribute "visibility" "int camera" [1]
+	Rotate -90 1 0 0
+	# txmake -envlatl ../tiffs/beach.hdr ../textures/beach.tex
+Light "PxrDomeLight" "PxrDomeLight2"
+		"float intensity" [0.4]
+		"float exposure" [0]
+		"color lightColor" [1 1 1]
+		"string lightColorMap" ["../textures/beach.tex"]
+AttributeEnd
+
+#====================================================================================
+
+Camera Angle Four
+
+Translate  1 0 30
+Rotate -40 1 0 0
+Rotate  -45 0 1 0
+Scale 1 1 -1
+
+Light Four
+
+AttributeBegin
+	Attribute "visibility" "int indirect" [0] "int transmission" [0]
+	Attribute "visibility" "int camera" [1]
+	Rotate -90 1 10 10
+	# txmake -envlatl ../tiffs/beach.hdr ../textures/beach.tex
+Light "PxrDomeLight" "PxrDomeLight2"
+		"float intensity" [0.3]
+		"float exposure" [0]
+		"color lightColor" [1 1 1]
+		"string lightColorMap" ["../textures/beach.tex"]
+AttributeEnd
+
+			
