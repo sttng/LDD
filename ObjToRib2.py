@@ -29,8 +29,8 @@ def export_obj_to_rib(obj_file, material_id_list, decoration_id_list):
 	if (material_id_list):
 		bxdf_mat = MaterialsTexts.material_ids_to_ri(material_id_list)
 		material_string = '_'.join(material_id_list)
-		#if (decoration_id_list != False):
-		#	bxdf_mat = MaterialsTexts.decoration_ids_to_ri(material_id_list, decoration_id_list)
+		if (decoration_id_list != False):
+			bxdf_mat = MaterialsTexts.decoration_ids_to_ri(material_id_list, decoration_id_list)
 
 	Round = 6
 	# open the file
@@ -159,8 +159,8 @@ def export_obj_to_rib(obj_file, material_id_list, decoration_id_list):
 	# Later this should cover obj. files with no groups also. Currently however the LXF
 	# (LIF) to OBJ exporter writes groups in any case, so we asume we have.
 	for group in obj_group.keys():
-		op.write('AttributeBegin #begin Brick ' + name + '_' + material_string + '.' + group + '\n')
-		op.write('Attribute "identifier" "uniform string name" ["Brick ' + name + '_' + material_string + '.' + group + '"]\n')
+		op.write('AttributeBegin #begin Brick ' + name + '.' + group + '\n')
+		op.write('Attribute "identifier" "uniform string name" ["Brick ' + name + '.' + group + '"]\n')
 		op.write(bxdf_mat[int(group)])
 		uv_num = 1
 		for f in obj_group[group].keys():
@@ -175,7 +175,7 @@ def export_obj_to_rib(obj_file, material_id_list, decoration_id_list):
 			if(str(obj_group[group][f]["N"]) != ''):
 				op.write('\t\t"N" [ ' + str(obj_group[group][f]["N"]) + ' ]\n')
 
-		op.write('AttributeEnd #end Brick ' + name + '_' + material_string + '.' + group + '\n\n')
+		op.write('AttributeEnd #end Brick ' + name + '.' + group + '\n\n')
 
 		
 #export_obj_to_rib(obj_file)
