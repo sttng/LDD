@@ -107,22 +107,24 @@ def decoration_ids_to_ri(material_id_list, decoration_id_list):
 def gen_pxrsurface(r, g, b, material_id, material_type, decoration_id):
 
 	texture_strg = ''
+	ref_strg = ''
 
 	if decoration_id != None and decoration_id != '0':
 	# We have decorations
 		rgb_or_dec_str = '"PxrTexture' + decoration_id + ':resultRGB"'
+		ref_strg = 'reference '
 		texture_strg = '''\t\tPattern "PxrManifold2D" "PxrManifold2D1"
 			"float angle" [0]
 			"float scaleS" [1]
 			"float scaleT" [1]
-			"int invertT" [0]
+			"int invertT" [1]
 			
 		# txmake /Users/username/Downloads/LIF2OBJ/LIF2OBJ\ copy/src/converter/liftmp/db/Decorations/''' + decoration_id + '''.png ''' + decoration_id + '''.tex
 		Pattern "PxrTexture" "PxrTexture''' + decoration_id + '''"
 			"string filename" ["''' + decoration_id + '''.tex"]
 			"int invertT" [0]
 			"int linearize" [1]
-			#"reference struct manifold" ["PxrManifold2D1:result"]\n'''
+			"reference struct manifold" ["PxrManifold2D1:result"]\n'''
 	
 	else:
 	# We don't have decorations
@@ -135,7 +137,7 @@ def gen_pxrsurface(r, g, b, material_id, material_type, decoration_id):
 		"int diffuseDoubleSided" [1] 
 		"int diffuseBackUseDiffuseColor" [1] 
 		"color diffuseBackColor" [1 1 1] 
-		"color specularFaceColor" [''' + rgb_or_dec_str + '''] 
+		"''' + ref_strg + '''color specularFaceColor" [''' + rgb_or_dec_str + '''] 
 		"color specularEdgeColor" [0.2 0.2 0.2] "float specularRoughness" [0.1] 
 		"int specularDoubleSided" [1] "color clearcoatFaceColor" [0 0 0] 
 		"color clearcoatEdgeColor" [0 0 0] 
@@ -167,7 +169,7 @@ def gen_pxrsurface(r, g, b, material_id, material_type, decoration_id):
 		"int diffuseDoubleSided" [1] 
 		"int diffuseBackUseDiffuseColor" [1] 
 		"color diffuseBackColor" [0.18 0.18 0.18] 
-		"color specularFaceColor" [''' + rgb_or_dec_str + '''] 
+		"''' + ref_strg + '''color specularFaceColor" [''' + rgb_or_dec_str + '''] 
 		"float specularRoughness" [.39] 
 		"float presence" [1] 
 		"float reflectionGain" [.7]\n'''
@@ -175,7 +177,7 @@ def gen_pxrsurface(r, g, b, material_id, material_type, decoration_id):
 	else:
 		bxdf_mat_str = texture_strg + '''\tBxdf "PxrSurface" "Solid Material ''' + material_id + '''" 
 		"float diffuseGain" [1.0] 
-		"color diffuseColor" [''' + rgb_or_dec_str + '''] 
+		"''' + ref_strg + '''color diffuseColor" [''' + rgb_or_dec_str + '''] 
 		"int diffuseDoubleSided" [1] 
 		"color specularFaceColor" [0.1 0.1 0.15] 
 		"float specularRoughness" [0.2] 
