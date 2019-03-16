@@ -35,9 +35,8 @@ def material_ids_to_ri(material_id_list):
 		
 		# Under the assumption the 1st mat is never 0
 		if (material_id == '0'):
-			bxdf_mat[i] = bxdf_mat[0]
-			i += 1
-			continue
+			# If mat is 0 we are processing it like the 1st mat.
+			material_id = material_ids[0]
 		
 		color_r, color_g, color_b, material_type = material_id_dict[material_id]
 				
@@ -53,7 +52,6 @@ def material_ids_to_ri(material_id_list):
 		color_b = round((float(color_b) / 255),2)
 		
 		bxdf_mat[i] = gen_pxrsurface(color_r, color_g, color_b, material_id, material_type, None)
-
 		i += 1
 	
 	return bxdf_mat
@@ -103,6 +101,7 @@ def decoration_ids_to_ri(material_id_list, decoration_id_list):
 		
 		bxdf_mat[i] = gen_pxrsurface(color_r, color_g, color_b, material_id, material_type, decoration_ids[i])
 		i += 1
+		
 	return bxdf_mat
 	
 def gen_pxrsurface(r, g, b, material_id, material_type, decoration_id):
