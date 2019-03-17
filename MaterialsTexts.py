@@ -111,20 +111,28 @@ def gen_pxrsurface(r, g, b, material_id, material_type, decoration_id):
 
 	if decoration_id != None and decoration_id != '0':
 	# We have decorations
-		rgb_or_dec_str = '"PxrTexture' + decoration_id + ':resultRGB"'
+		rgb_or_dec_str = '"Blend' + decoration_id + ':resultRGB"'
 		ref_strg = 'reference '
-		texture_strg = '''\t\tPattern "PxrManifold2D" "PxrManifold2D1"
-			"float angle" [0]
-			"float scaleS" [1]
-			"float scaleT" [1]
-			"int invertT" [1]
+		texture_strg = '''\tPattern "PxrManifold2D" "PxrManifold2D1"
+		"float angle" [0]
+		"float scaleS" [1]
+		"float scaleT" [1]
+		"int invertT" [1]
 			
-		# txmake /Users/username/Downloads/LIF2OBJ/LIF2OBJ\ copy/src/converter/liftmp/db/Decorations/''' + decoration_id + '''.png ''' + decoration_id + '''.tex
-		Pattern "PxrTexture" "PxrTexture''' + decoration_id + '''"
-			"string filename" ["''' + decoration_id + '''.tex"]
-			"int invertT" [0]
-			"int linearize" [1]
-			"reference struct manifold" ["PxrManifold2D1:result"]\n'''
+	# txmake /Users/username/Downloads/LIF2OBJ/LIF2OBJ\ copy/src/converter/liftmp/db/Decorations/''' + decoration_id + '''.png ''' + decoration_id + '''.tex
+	Pattern "PxrTexture" "Texture''' + decoration_id + '''"
+		"string filename" ["''' + decoration_id + '''.tex"]
+		"int invertT" [0]
+		"int linearize" [1]
+		"reference struct manifold" ["PxrManifold2D1:result"]
+		
+	Pattern "PxrBlend" "Blend''' + decoration_id + '''"
+		"int operation"  [19]
+		"reference color topRGB" ["Texture''' + decoration_id + ''':resultRGB"] 
+		"reference float topA" ["Texture''' + decoration_id + ''':resultA"] 
+		"color bottomRGB" [''' + str(r) + ''' ''' + str(g) + ''' ''' + str(b) + '''] 
+		"float bottomA" [1]
+		"int clampOutput" [1]\n'''
 	
 	else:
 	# We don't have decorations
