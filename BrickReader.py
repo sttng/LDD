@@ -49,6 +49,8 @@ class BrickReader:
 	
 		files_to_convert = []
 		files_to_convert = glob.glob(os.path.join(path_to_lif_tmp_dir + '/db/Primitives/LOD0', str(partnumber) + '.g*'))
+		# Ensure that g is always the first, then g1, g2, ....
+		files_to_convert.sort()
 		geometry_file_dict_list = []
 		
 		if not files_to_convert:
