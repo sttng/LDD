@@ -175,7 +175,7 @@ def export_to_rib(lxf_filename):
 		file_writer.write('\tAttributeBegin\n')
 		file_writer.write('\t\tAttribute "identifier" "string name" ["plane1"]')
 		file_writer.write('\t\tTranslate ' + minx + ' ' +'0 10\n')
-		file_writer.write('\t\tScale 100 1 100')
+		file_writer.write('\t\tScale 200 1 200')
 		file_writer.write('\t\tPolygon "P" [-0.5 0 -0.5  -0.5 0 0.5  0.5 0 0.5  0.5 0 -0.5]')
 		file_writer.write('\t\t"st" [0 0  0 1  1 1  1 0]')
 		file_writer.write('\tAttributeEnd\n\n')
