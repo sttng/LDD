@@ -4,7 +4,7 @@
 # Version 0.1 - Copyright (c) 2019 by 
 #
 # Info:
-#
+# Creates bxdf string for materials and decorations.
 #
 # Updates:
 #
