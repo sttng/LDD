@@ -56,7 +56,9 @@ def rotationMatrixToEulerAngles(R):
  
 	return np.array([x, y, z])
 
-	
+
+# Scan the lxf file for parts / bricks and put rib versions of these with correct material (color) 
+# and decoration (texture) into 'Bricks_Archive.zip' 
 def generate_bricks(lxf_filename):
 
 	archive = zipfile.ZipFile(lxf_filename, 'r')
@@ -96,6 +98,7 @@ def generate_bricks(lxf_filename):
 				processed_brick[processed] = True
 				
 
+# Scan the lxf file and create a rib scene file, referencing the parts / bricks, and move them to correct position with correct rotation.
 def export_to_rib(lxf_filename):
 
 	archive = zipfile.ZipFile(lxf_filename, 'r')
@@ -188,7 +191,7 @@ def export_to_rib(lxf_filename):
 	file_writer.close()
 	return True
 
-
+# append rib scence based on lxf file to 'template.rib'
 def generate_master_scene(lxf_filename):
 	lxf_extension = os.path.splitext(os.path.basename(lxf_filename))[1]
 	lxf_filename = os.path.splitext(os.path.basename(lxf_filename))[0]
