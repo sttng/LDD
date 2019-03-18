@@ -34,6 +34,7 @@ oslc Primvar.osl
 * https://sdm.scad.edu/faculty/mkesson/vsfx755/wip/best/spring2011/zichuan_zhao/lemon/lemon.html
 * https://nccastaff.bournemouth.ac.uk/jmacey/Renderman/
 * https://www.janwalter.org/jekyll/blender/cloud/attic/2016/07/13/attic.html
+* http://www.fundza.com/cutter/whatsnew/index.html
 
 ## Lego plastic materials
 
