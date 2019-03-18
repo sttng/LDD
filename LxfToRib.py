@@ -74,14 +74,13 @@ def generate_bricks(lxf_filename):
 			material_ids = materials.split(',')
 			material_string = '_'.join(material_ids)
 			decoration_ids = False
+			processed = design_id + '_' + material_string
 			
 			if decorations != None and decorations != '0':
 				# We have decorations
 				decoration_ids = decorations.split(',')
 				decoration_string = '_'.join(decoration_ids)
 				processed = design_id + '_' + material_string + '_' + decoration_string
-			
-			processed = design_id + '_' + material_string
 			
 			if processed in processed_brick:
 				# Don't process bricks twice
@@ -90,12 +89,12 @@ def generate_bricks(lxf_filename):
 				
 				BrickReader.read_brick(design_id)
 				
-				ObjToRib2.export_obj_to_rib(design_id + '.obj', material_ids, decoration_ids)
-				myzip.write(design_id + '_' + material_string + '.rib', compress_type=compression)
-				os.remove(design_id + '_' + material_string + '.rib')
+				written_rib = ObjToRib2.export_obj_to_rib(design_id + '.obj', material_ids, decoration_ids)
+				myzip.write(written_rib + '.rib', compress_type=compression)
+				os.remove(written_rib + '.rib')
 				os.remove(design_id + '.obj')
 				processed_brick[processed] = True
-			
+				
 
 def export_to_rib(lxf_filename):
 
@@ -146,6 +145,9 @@ def export_to_rib(lxf_filename):
 			decorations = item.get('decoration')
 			material_ids = materials.split(',')
 			material_string = '_'.join(material_ids)
+			
+			decoration_string = ''
+			# in case of decoration set string from empty ('') to the values so to use later.
 			if decorations != None and decorations != '0':
 				# We have decorations
 				decoration_ids = decorations.split(',')
@@ -162,7 +164,7 @@ def export_to_rib(lxf_filename):
 				minx = transformation_array[9]
 			
 			file_writer.write('\tAttributeBegin\n')
-			rand = str(0.9) #str(random.uniform(0.999, 1))
+			#rand = str(0.9) #str(random.uniform(0.999, 1))
 			file_writer.write('\t\tConcatTransform [' 
 			+ transformation_array[0] + ' ' + transformation_array[1] + ' ' + str((-1) * float(transformation_array[2])) + ' 0 ' 
 			+ transformation_array[3] + ' ' + transformation_array[4] + ' ' + str((-1) * float(transformation_array[5])) + ' 0 ' 
@@ -170,8 +172,8 @@ def export_to_rib(lxf_filename):
 			+ trans_xyz[0] + ' ' + trans_xyz[1] + ' ' + trans_xyz[2] + ' 1]\n')
 			#file_writer.write('\tScale ' + rand + ' ' + rand + ' ' + rand + '\n') #Random brick size for seams.
 			file_writer.write('\t\tScale 1 1 1\n')
-			file_writer.write('\t\tAttribute "identifier" "name" ["'+ design_id + '_' + material_string +'"]\n')
-			file_writer.write('\t\tReadArchive "Bricks_Archive.zip!'+ design_id + '_' + material_string + '.rib"\n')
+			file_writer.write('\t\tAttribute "identifier" "name" ["'+ design_id + '_' + material_string + '_' + decoration_string + '"]\n')
+			file_writer.write('\t\tReadArchive "Bricks_Archive.zip!'+ design_id + '_' + material_string + '_' + decoration_string + '.rib"\n')
 			file_writer.write('\tAttributeEnd\n\n')
 		
 		file_writer.write('\tAttributeBegin\n')
