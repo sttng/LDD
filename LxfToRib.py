@@ -79,6 +79,8 @@ def generate_bricks(lxf_filename):
 				# We have decorations
 				decoration_ids = decorations.split(',')
 				decoration_string = '_'.join(decoration_ids)
+				processed = design_id + '_' + material_string + '_' + decoration_string
+			
 			processed = design_id + '_' + material_string
 			
 			if processed in processed_brick:
