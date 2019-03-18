@@ -162,8 +162,8 @@ def gen_pxrsurface(r, g, b, material_id, material_type, decoration_id):
 		"color fuzzColor" [1 1 1] 
 		"float fuzzConeAngle" [8] 
 		"float refractionGain" [1] 
-		"float reflectionGain" [0.2] 
-		"color refractionColor" [1 1 1] 
+		"float reflectionGain" [0.2]
+		"''' + ref_strg + '''color refractionColor" [''' + rgb_or_dec_str + ''']
 		"float glassRoughness" [0.1] 
 		"float glassIor" [1.585] # Polycarbonate IOR = 1.584 - 1.586
 		"int thinGlass" [1] 
