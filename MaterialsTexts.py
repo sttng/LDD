@@ -147,6 +147,7 @@ def gen_pxrsurface(r, g, b, material_id, material_type, decoration_id):
 		"color diffuseBackColor" [1 1 1] 
 		"''' + ref_strg + '''color specularFaceColor" [''' + rgb_or_dec_str + '''] 
 		"color specularEdgeColor" [0.2 0.2 0.2] "float specularRoughness" [0.1] 
+		"color specularIor"  [1.585 1.585 1.585] # Polycarbonate IOR = 1.584 - 1.586
 		"int specularDoubleSided" [1] "color clearcoatFaceColor" [0 0 0] 
 		"color clearcoatEdgeColor" [0 0 0] 
 		"color clearcoatIor" [1.5 1.5 1.5] 
@@ -164,7 +165,7 @@ def gen_pxrsurface(r, g, b, material_id, material_type, decoration_id):
 		"float reflectionGain" [0.2] 
 		"color refractionColor" [1 1 1] 
 		"float glassRoughness" [0.1] 
-		"float glassIor" [1.49] 
+		"float glassIor" [1.585] # Polycarbonate IOR = 1.584 - 1.586
 		"int thinGlass" [1] 
 		"float glowGain" [0.0] 
 		"color glowColor" [1 1 1] 
@@ -186,10 +187,11 @@ def gen_pxrsurface(r, g, b, material_id, material_type, decoration_id):
 		bxdf_mat_str = texture_strg + '''\tBxdf "PxrSurface" "Solid Material ''' + material_id + '''" 
 		"float diffuseGain" [1.0] 
 		"''' + ref_strg + '''color diffuseColor" [''' + rgb_or_dec_str + '''] 
-		"int diffuseDoubleSided" [1] 
-		"color specularFaceColor" [0.1 0.1 0.15] 
-		"float specularRoughness" [0.2] 
-		"int specularDoubleSided" [0] 
+		"int diffuseDoubleSided" [1]
+		"color specularFaceColor" [0.1 0.1 0.15]
+		"color specularIor"  [1.54 1.54 1.54] # ABS Refractive Index, Average value: 1.54
+		"float specularRoughness" [0.2]
+		"int specularDoubleSided" [0]
 		"float presence" [1]\n'''
 		
 	return bxdf_mat_str
