@@ -7,7 +7,7 @@
 # This script will read in a.obj file, construct geometry from it
 # and write out a .rib entity file of it. RIB Entity Files are incomplete 
 # as they do not contain enough information to render them. RIB Entity 
-# Files need to be integrated or added to into "legal," or complete, RIB Files.
+# files need to be integrated or added to into "legal," or complete RIB files.
 #
 # Updates:
 #
