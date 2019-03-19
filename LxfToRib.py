@@ -92,10 +92,9 @@ def generate_bricks(lxf_filename):
 				decoration_string = '_' + '_'.join(decoration_id_list)
 				processed = design_id + material_string + decoration_string
 
-			if processed_brick[processed] != True: # Don't process bricks twice
-				
+			if processed_brick[processed] != True:
+				# Don't process bricks twice
 				BrickReader.read_brick(design_id)
-				
 				written_rib = ObjToRib2.export_obj_to_rib(design_id + '.obj', material_id_list, decoration_id_list)
 				myzip.write(written_rib + '.rib', compress_type=compression)
 				os.remove(written_rib + '.rib')
