@@ -85,7 +85,7 @@ def generate_bricks(lxf_filename):
 				decoration_id_list = decorations.split(',')
 				for decoration in decoration_id_list:
 					if decoration != '0' and processed_deco[decoration] != True:
-						#os.system(txmake decoration + '.png' decoration + '.tex') 
+						#os.system(txmake -mode clamp decoration + '.png' decoration + '.tex') 
 						#myzip.write(decoration + '.tex', compress_type=compression)
 						#os.remove(decoration + '.tex')
 						#processed_deco[decoration] = True
