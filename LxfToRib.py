@@ -83,13 +83,13 @@ def generate_bricks(lxf_filename):
 			if decorations != None and decorations != '0':
 				# We have decorations
 				decoration_id_list = decorations.split(',')
-				#for decoration in decoration_id_list:
-				#	if decoration != '0' and processed_deco[decoration] != True:
-				#		print ''
-						#os.system(txmake -mode clamp decoration + '.png' decoration + '.tex') 
+				for decoration in decoration_id_list:
+					if decoration != '0' and decoration not in processed_deco:
+						txmake_cmd = '/Applications/Pixar/RenderManProServer-22.4/bin/txmake -mode clamp ./liftmp/db/Decorations/' + decoration + '.png ' + decoration + '.tex'
+						os.system(txmake_cmd)
 						#myzip.write(decoration + '.tex', compress_type=compression)
 						#os.remove(decoration + '.tex')
-						#processed_deco[decoration] = True
+						processed_deco[decoration] = True
 				
 				decoration_string = '_' + '_'.join(decoration_id_list)
 				processed = design_id + material_string + decoration_string
