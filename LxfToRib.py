@@ -77,7 +77,7 @@ def generate_bricks(lxf_filename):
 			decorations = item.get('decoration')
 			material_id_list = materials.split(',')
 			material_string = '_' + '_'.join(material_id_list)
-			decoration_ids = False
+			decoration_id_list = False
 			processed = design_id + material_string
 			
 			if decorations != None and decorations != '0':
@@ -85,17 +85,14 @@ def generate_bricks(lxf_filename):
 				decoration_id_list = decorations.split(',')
 				for decoration in decoration_id_list:
 					if decoration != '0' and processed_deco[decoration] != True:
-						#txmake
-						#myzip.write(decoration_id + '.tex', compress_type=compression)
-						#os.remove(decoration_id + '.tex')
+						#os.system(txmake decoration + '.png' decoration + '.tex') 
+						#myzip.write(decoration + '.tex', compress_type=compression)
+						#os.remove(decoration + '.tex')
 						#processed_deco[decoration] = True
 				decoration_string = '_' + '_'.join(decoration_id_list)
 				processed = design_id + material_string + decoration_string
-			
-			if processed in processed_brick:
-				# Don't process bricks twice
-				continue
-			else:
+
+			if processed_brick[processed] != True: # Don't process bricks twice
 				
 				BrickReader.read_brick(design_id)
 				
