@@ -10,4 +10,16 @@ Pattern "PxrDirt" "Curvature"
 	"int direction"  [1] 
 	"vector biasDirection"  [0.0 0.0 0.0] 
 	"string biasDirectionCoordsys"  ['object'] 
-	"string traceSet"  [''] 
+	"string traceSet"  ['']
+	
+	
+Pattern "PxrFractal" "Unevenness" 
+	"int surfacePosition"  [0] 
+	"int layers"  [1] 
+	"float frequency"  [0.5] 
+	"float lacunarity"  [2.0] 
+	"float dimension"  [1.0] 
+	"float erosion"  [0.0] 
+	"float variation"  [0.0] 
+	"int turbulent"  [0] 
+	"struct manifold"  ['No Value'] 
