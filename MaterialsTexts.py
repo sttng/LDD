@@ -119,7 +119,7 @@ def gen_pxrsurface(r, g, b, material_id, material_type, decoration_id):
 		"float scaleT" [1]
 		"int invertT" [1]
 			
-	# txmake /Users/username/Downloads/LIF2OBJ/LIF2OBJ\ copy/src/converter/liftmp/db/Decorations/''' + decoration_id + '''.png ''' + decoration_id + '''.tex
+	# txmake ./liftmp/db/Decorations/''' + decoration_id + '''.png ''' + decoration_id + '''.tex
 	Pattern "PxrTexture" "Texture''' + decoration_id + '''"
 		"string filename" ["''' + decoration_id + '''.tex"]
 		"int invertT" [0]
