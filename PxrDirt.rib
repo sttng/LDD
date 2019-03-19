@@ -1,0 +1,13 @@
+# Curvature map / Curvature highpass
+Pattern "PxrDirt" "Curvature" 
+	"color occluded"  [1.0 1.0 1.0] 
+	"color unoccluded"  [0.0 0.0 0.0] 
+	"int numSamples"  [4] 
+	"int distribution"  [1] 
+	"float cosineSpread"  [3.0] 
+	"float falloff"  [4.0] 
+	"float maxDistance"  [2.0] 
+	"int direction"  [1] 
+	"vector biasDirection"  [0.0 0.0 0.0] 
+	"string biasDirectionCoordsys"  ['object'] 
+	"string traceSet"  [''] 
