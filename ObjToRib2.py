@@ -45,9 +45,11 @@ def export_obj_to_rib(obj_file, material_id_list, decoration_id_list):
 		bxdf_mat = MaterialsTexts.material_ids_to_ri(material_id_list)
 		material_string = '_' + '_'.join(material_id_list)
 		name = name + material_string
+		material_rib = 'material' + material_string
 		if (decoration_id_list != False):
 			decoration_string = '_' + '_'.join(decoration_id_list)
 			name = name + decoration_string
+			material_rib = material_rib + decoration_string
 			bxdf_mat = MaterialsTexts.decoration_ids_to_ri(material_id_list, decoration_id_list)
 			
 		
@@ -159,6 +161,7 @@ def export_obj_to_rib(obj_file, material_id_list, decoration_id_list):
 	# Now the dict should have everything
 	
 	op = open(name + '.rib', 'w')
+	#matrib = open(material_rib + '.rib', 'w')
 	
 	op.write('##RenderMan RIB-Structure 1.1 Entity\n')
 	# Later this should cover obj. files with no groups also. Currently however the LXF
