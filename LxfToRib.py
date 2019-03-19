@@ -70,6 +70,7 @@ def generate_bricks(lxf_filename):
 	with zipfile.ZipFile('Bricks_Archive.zip', 'w') as myzip:
 		lst = tree.findall('Bricks/Brick/Part')
 		processed_brick = dict()
+		processed_deco = dict()
 		for item in lst:
 			design_id = item.get('designID')
 			materials = item.get('materials')
@@ -82,6 +83,12 @@ def generate_bricks(lxf_filename):
 			if decorations != None and decorations != '0':
 				# We have decorations
 				decoration_id_list = decorations.split(',')
+				for decoration in decoration_id_list:
+					if decoration != '0' and processed_deco[decoration] != True:
+						#txmake
+						#myzip.write(decoration_id + '.tex', compress_type=compression)
+						#os.remove(decoration_id + '.tex')
+						#processed_deco[decoration] = True
 				decoration_string = '_' + '_'.join(decoration_id_list)
 				processed = design_id + material_string + decoration_string
 			
