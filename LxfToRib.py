@@ -156,7 +156,9 @@ def export_to_rib(lxf_filename):
 				# We have decorations
 				decoration_ids = decorations.split(',')
 				decoration_string = '_' + '_'.join(decoration_ids)
-				
+			
+			name = design_id + material_string + decoration_string
+			
 			for sub in item:
 				transformation = sub.get('transformation')
 					
@@ -176,8 +178,8 @@ def export_to_rib(lxf_filename):
 			+ trans_xyz[0] + ' ' + trans_xyz[1] + ' ' + trans_xyz[2] + ' 1]\n')
 			#file_writer.write('\tScale ' + rand + ' ' + rand + ' ' + rand + '\n') #Random brick size for seams.
 			file_writer.write('\t\tScale 1 1 1\n')
-			file_writer.write('\t\tAttribute "identifier" "name" ["'+ design_id + material_string + decoration_string + '"]\n')
-			file_writer.write('\t\tReadArchive "Bricks_Archive.zip!'+ design_id + material_string + decoration_string + '.rib"\n')
+			file_writer.write('\t\tAttribute "identifier" "name" ["'+ name + '"]\n')
+			file_writer.write('\t\tReadArchive "Bricks_Archive.zip!'+ name + '.rib"\n')
 			file_writer.write('\tAttributeEnd\n\n')
 		
 		file_writer.write('\tAttributeBegin\n')
