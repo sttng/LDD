@@ -172,16 +172,14 @@ def gen_pxrsurface(r, g, b, material_id, material_type, decoration_id):
 		"float presence" [1]\n'''
 		
 	elif material_type == 'Metallic':
-		bxdf_mat_str = texture_strg + '''\tBxdf "PxrSurface" "Metallic ''' + material_id + '''" 
-		"float diffuseGain" [0] 
-		"color diffuseColor" [1 1 1] 
-		"int diffuseDoubleSided" [1] 
-		"int diffuseBackUseDiffuseColor" [1] 
-		"color diffuseBackColor" [0.18 0.18 0.18] 
-		"''' + ref_strg + '''color specularFaceColor" [''' + rgb_or_dec_str + '''] 
-		"float specularRoughness" [.39] 
-		"float presence" [1] 
-		"float reflectionGain" [.7]\n'''
+		bxdf_mat_str = texture_strg + '''\tBxdf "PxrSurface" "Metallic ''' + material_id + '''"
+		"float diffuseGain" [1.0]
+		"''' + ref_strg + '''color diffuseColor" [''' + rgb_or_dec_str + '''] 
+		"int diffuseDoubleSided" [1]
+		"color specularFaceColor" [0.8 0.8 0.8]
+		"float specularRoughness" [0.2]
+		"int specularDoubleSided" [0]
+		"float presence" [1]\n'''
 	
 	else:
 		bxdf_mat_str = texture_strg + '''\tBxdf "PxrSurface" "Solid Material ''' + material_id + '''" 
