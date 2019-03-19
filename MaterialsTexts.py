@@ -12,10 +12,11 @@
 #
 #
 
-
+import os
 import sys
 import argparse
 import csv
+import zipfile
 
 #file = sys.argv[1]
 
@@ -108,9 +109,10 @@ def gen_pxrsurface(r, g, b, material_id, material_type, decoration_id):
 
 	texture_strg = ''
 	ref_strg = ''
-
+	
 	if decoration_id != None and decoration_id != '0':
 	# We have decorations
+		mat_rib_name = 'material_' + material_id + '_' + decoration_id
 		rgb_or_dec_str = '"Blend' + decoration_id + ':resultRGB"'
 		ref_strg = 'reference '
 		texture_strg = '''\tPattern "PxrManifold2D" "PxrManifold2D1"
@@ -128,41 +130,43 @@ def gen_pxrsurface(r, g, b, material_id, material_type, decoration_id):
 		
 	Pattern "PxrBlend" "Blend''' + decoration_id + '''"
 		"int operation"  [19]
-		"reference color topRGB" ["Texture''' + decoration_id + ''':resultRGB"] 
-		"reference float topA" ["Texture''' + decoration_id + ''':resultA"] 
-		"color bottomRGB" [''' + str(r) + ''' ''' + str(g) + ''' ''' + str(b) + '''] 
+		"reference color topRGB" ["Texture''' + decoration_id + ''':resultRGB"]
+		"reference float topA" ["Texture''' + decoration_id + ''':resultA"]
+		"color bottomRGB" [''' + str(r) + ''' ''' + str(g) + ''' ''' + str(b) + ''']
 		"float bottomA" [1]
-		"int clampOutput" [1]\n'''
+		"int clampOutput" [1]\n\n'''
 	
 	else:
 	# We don't have decorations
+		mat_rib_name = 'material_' + material_id
 		rgb_or_dec_str = str(r) + ' ' + str(g) + ' ' + str(b)
 		
 	if material_type == 'Transparent':
-		bxdf_mat_str = texture_strg + '''\tBxdf "PxrSurface" "Transparent ''' + material_id + '''" 
-		"float diffuseGain" [0] 
+		bxdf_mat_str = texture_strg + '''\tBxdf "PxrSurface" "Transparent ''' + material_id + '''"
+		"float diffuseGain" [0]
 		"color diffuseColor" [0.5 0.5 0.5]
-		"int diffuseDoubleSided" [1] 
-		"int diffuseBackUseDiffuseColor" [1] 
-		"color diffuseBackColor" [1 1 1] 
-		"''' + ref_strg + '''color specularFaceColor" [''' + rgb_or_dec_str + '''] 
-		"color specularEdgeColor" [0.2 0.2 0.2] 
+		"int diffuseDoubleSided" [1]
+		"int diffuseBackUseDiffuseColor" [1]
+		"color diffuseBackColor" [1 1 1]
+		"''' + ref_strg + '''color specularFaceColor" [''' + rgb_or_dec_str + ''']
+		"color specularEdgeColor" [0.2 0.2 0.2]
 		"color specularIor"  [1.585 1.585 1.585] # Polycarbonate IOR = 1.584 - 1.586
-		"float specularRoughness" [0.25] 
-		"int specularDoubleSided" [1] "color clearcoatFaceColor" [0 0 0] 
-		"color clearcoatEdgeColor" [0 0 0] 
-		"color clearcoatIor" [1.5 1.5 1.5] 
-		"color clearcoatExtinctionCoeff" [0.0 0.0 0.0] 
-		"float clearcoatRoughness" [0.0] 
-		"float iridescenceFaceGain" [0] 
-		"float iridescenceEdgeGain" [0] 
+		"float specularRoughness" [0.25]
+		"int specularDoubleSided" [1]
+		"color clearcoatFaceColor" [0 0 0]
+		"color clearcoatEdgeColor" [0 0 0]
+		"color clearcoatIor" [1.5 1.5 1.5]
+		"color clearcoatExtinctionCoeff" [0.0 0.0 0.0]
+		"float clearcoatRoughness" [0.0]
+		"float iridescenceFaceGain" [0]
+		"float iridescenceEdgeGain" [0]
 		"color iridescencePrimaryColor" [1 0 0]
-		"color iridescenceSecondaryColor" [0 0 1] 
-		"float iridescenceRoughness" [0.2] 
-		"float fuzzGain" [0.0] 
-		"color fuzzColor" [1 1 1] 
-		"float fuzzConeAngle" [8] 
-		"float refractionGain" [1] 
+		"color iridescenceSecondaryColor" [0 0 1]
+		"float iridescenceRoughness" [0.2]
+		"float fuzzGain" [0.0]
+		"color fuzzColor" [1 1 1]
+		"float fuzzConeAngle" [8]
+		"float refractionGain" [1]
 		"float reflectionGain" [0.2]
 		"''' + ref_strg + '''color refractionColor" [''' + rgb_or_dec_str + ''']
 		"float glassRoughness" [0.25] 
@@ -193,8 +197,17 @@ def gen_pxrsurface(r, g, b, material_id, material_type, decoration_id):
 		"float specularRoughness" [0.25]
 		"int specularDoubleSided" [0]
 		"float presence" [1]\n'''
-		
-	return bxdf_mat_str
+	
+	# Write out Materials to seperate rib files
+	mr = open(mat_rib_name + '.rib', 'w')
+	mr.write(bxdf_mat_str)
+	mr.close()
+	z = zipfile.ZipFile("Material_Archive.zip", "a")
+	z.write(mat_rib_name + '.rib')
+	z.close()
+	os.remove(mat_rib_name + '.rib')
+	#return bxdf_mat_str
+	return 'ReadArchive "Material_Archive.zip!' + mat_rib_name + '.rib"\n'
 
 #materials="24,0,0,0"
 #material_ids = materials.split(',')		
