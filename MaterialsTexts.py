@@ -146,8 +146,9 @@ def gen_pxrsurface(r, g, b, material_id, material_type, decoration_id):
 		"int diffuseBackUseDiffuseColor" [1] 
 		"color diffuseBackColor" [1 1 1] 
 		"''' + ref_strg + '''color specularFaceColor" [''' + rgb_or_dec_str + '''] 
-		"color specularEdgeColor" [0.2 0.2 0.2] "float specularRoughness" [0.1] 
+		"color specularEdgeColor" [0.2 0.2 0.2] 
 		"color specularIor"  [1.585 1.585 1.585] # Polycarbonate IOR = 1.584 - 1.586
+		"float specularRoughness" [0.25] 
 		"int specularDoubleSided" [1] "color clearcoatFaceColor" [0 0 0] 
 		"color clearcoatEdgeColor" [0 0 0] 
 		"color clearcoatIor" [1.5 1.5 1.5] 
@@ -164,7 +165,7 @@ def gen_pxrsurface(r, g, b, material_id, material_type, decoration_id):
 		"float refractionGain" [1] 
 		"float reflectionGain" [0.2]
 		"''' + ref_strg + '''color refractionColor" [''' + rgb_or_dec_str + ''']
-		"float glassRoughness" [0.1] 
+		"float glassRoughness" [0.25] 
 		"float glassIor" [1.585] # Polycarbonate IOR = 1.584 - 1.586
 		"int thinGlass" [1] 
 		"float glowGain" [0.0] 
@@ -177,7 +178,8 @@ def gen_pxrsurface(r, g, b, material_id, material_type, decoration_id):
 		"''' + ref_strg + '''color diffuseColor" [''' + rgb_or_dec_str + '''] 
 		"int diffuseDoubleSided" [1]
 		"color specularFaceColor" [0.8 0.8 0.8]
-		"float specularRoughness" [0.2]
+		"color specularIor"  [1.54 1.54 1.54] # ABS Refractive Index, Average value: 1.54
+		"float specularRoughness" [0.25]
 		"int specularDoubleSided" [0]
 		"float presence" [1]\n'''
 	
@@ -188,7 +190,7 @@ def gen_pxrsurface(r, g, b, material_id, material_type, decoration_id):
 		"int diffuseDoubleSided" [1]
 		"color specularFaceColor" [0.1 0.1 0.15]
 		"color specularIor"  [1.54 1.54 1.54] # ABS Refractive Index, Average value: 1.54
-		"float specularRoughness" [0.2]
+		"float specularRoughness" [0.25]
 		"int specularDoubleSided" [0]
 		"float presence" [1]\n'''
 		
