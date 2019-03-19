@@ -193,7 +193,7 @@ def gen_pxrsurface(r, g, b, material_id, material_type, decoration_id):
 		"''' + ref_strg + '''color diffuseColor" [''' + rgb_or_dec_str + '''] 
 		"int diffuseDoubleSided" [1]
 		"color specularFaceColor" [0.1 0.1 0.15]
-		"color specularIor"  [1.54 1.54 1.54] # ABS Refractive Index, Average value: 1.54
+		"color specularIor" [1.54 1.54 1.54] # ABS Refractive Index, Average value: 1.54
 		"float specularRoughness" [0.25]
 		"int specularDoubleSided" [0]
 		"float presence" [1]\n'''
