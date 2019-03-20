@@ -85,6 +85,7 @@ def generate_bricks(lxf_filename):
 				decoration_id_list = decorations.split(',')
 				for decoration in decoration_id_list:
 					if decoration != '0' and decoration not in processed_deco:
+						# Don't process decorations twice
 						txmake_cmd = '/Applications/Pixar/RenderManProServer-22.4/bin/txmake -mode clamp ./liftmp/db/Decorations/' + decoration + '.png ' + decoration + '.tex'
 						os.system(txmake_cmd)
 						#myzip.write(decoration + '.tex', compress_type=compression)
@@ -94,11 +95,8 @@ def generate_bricks(lxf_filename):
 				decoration_string = '_' + '_'.join(decoration_id_list)
 				processed = design_id + material_string + decoration_string
 
-			if processed in processed_brick:
+			if processed in not processed_brick:
 				# Don't process bricks twice
-				continue
-			
-			else:
 				BrickReader.read_brick(design_id)
 				written_rib = ObjToRib2.export_obj_to_rib(design_id + '.obj', material_id_list, decoration_id_list)
 				myzip.write(written_rib + '.rib', compress_type=compression)
@@ -132,13 +130,14 @@ def export_to_rib(lxf_filename):
 		rotx, roty, rotz = rotationMatrixToEulerAngles(R)
 		rotz = (-1) * rotz #Renderman is lefthanded coordinate system, but LDD is right handed.
 		
-		file_writer.write('WorldBegin\n')
-		file_writer.write('\tTranslate 0 0 40\n')
-		file_writer.write('#\tRotate ' + str(math.degrees(roty)) + ' 1 0 0\n')
-		file_writer.write('\tRotate -25 1 0 0\n')
-		file_writer.write('\tRotate ' + str(math.degrees(rotx)) + ' 0 1 0\n')
-		file_writer.write('#\tRotate 45 0 1 0\n')
-		file_writer.write('#\tRotate ' + str(math.degrees(rotz)) + ' 0 0 1\n')	
+		file_writer.write('WorldBegin\n
+			\tTranslate 0 0 40\n
+			#\tRotate ' + str(math.degrees(roty)) + ' 1 0 0\n
+			\tRotate -25 1 0 0\n
+			\tRotate ' + str(math.degrees(rotx)) + ' 0 1 0\n
+			#\tRotate 45 0 1 0\n
+			#\tRotate ' + str(math.degrees(rotz)) + ' 0 0 1\n')
+		
 		file_writer.write('#ConcatTransform [' 
 			+ transformation_array[0] + ' ' + transformation_array[1] + ' ' + str((-1) * float(transformation_array[2])) + ' 0 ' 
 			+ transformation_array[3] + ' ' + transformation_array[4] + ' ' + str((-1) * float(transformation_array[5])) + ' 0 ' 
@@ -147,8 +146,8 @@ def export_to_rib(lxf_filename):
 		
 		file_writer.write('\tScale 0.7 0.7 0.7\n')
 		file_writer.write('\tAttributeBegin\n\t\tAttribute "visibility" "int indirect" [0] "int transmission" [0]\n\t\tAttribute "visibility" "int camera" [1]\n\t\tRotate 50 0 1 0\n\t\tRotate -90 1 0 0\n\t\tLight "PxrDomeLight" "domeLight" "string lightColorMap" ["GriffithObservatory.tex"]\n\tAttributeEnd\n')
-		tree = ET.fromstring(lxfml_file)
 		
+		tree = ET.fromstring(lxfml_file)
 		lst = tree.findall('Bricks/Brick/Part')
 		
 		for item in lst:
@@ -157,9 +156,8 @@ def export_to_rib(lxf_filename):
 			decorations = item.get('decoration')
 			material_id_list = materials.split(',')
 			material_string = '_' + '_'.join(material_id_list)
+			decoration_string = '' # in case of decoration set string from empty ('') to the values so to use later.
 			
-			decoration_string = ''
-			# in case of decoration set string from empty ('') to the values so to use later.
 			if decorations != None and decorations != '0':
 				# We have decorations
 				decoration_ids = decorations.split(',')
@@ -178,29 +176,32 @@ def export_to_rib(lxf_filename):
 				minx = transformation_array[9]
 			
 			file_writer.write('\tAttributeBegin\n')
-			#rand = str(0.9) #str(random.uniform(0.999, 1))
+			#rand = str(0.9) #str(random.uniform(0.999, 1)) #Random brick size for seams.
+			
 			file_writer.write('\t\tConcatTransform [' 
 			+ transformation_array[0] + ' ' + transformation_array[1] + ' ' + str((-1) * float(transformation_array[2])) + ' 0 ' 
 			+ transformation_array[3] + ' ' + transformation_array[4] + ' ' + str((-1) * float(transformation_array[5])) + ' 0 ' 
 			+ str((-1) * float(transformation_array[6])) + ' ' + str((-1) * float(transformation_array[7])) + ' ' + transformation_array[8] + ' 0 ' 
 			+ trans_xyz[0] + ' ' + trans_xyz[1] + ' ' + trans_xyz[2] + ' 1]\n')
+			
 			#file_writer.write('\tScale ' + rand + ' ' + rand + ' ' + rand + '\n') #Random brick size for seams.
 			file_writer.write('\t\tScale 1 1 1\n')
 			file_writer.write('\t\tAttribute "identifier" "name" ["'+ name + '"]\n')
 			file_writer.write('\t\tReadArchive "Bricks_Archive.zip!'+ name + '.rib"\n')
 			file_writer.write('\tAttributeEnd\n\n')
 		
-		file_writer.write('\tAttributeBegin\n')
-		file_writer.write('\t\tAttribute "identifier" "string name" ["plane1"]')
-		file_writer.write('\t\tTranslate ' + minx + ' ' +'0 10\n')
-		file_writer.write('\t\tScale 200 1 200')
-		file_writer.write('\t\tPolygon "P" [-0.5 0 -0.5  -0.5 0 0.5  0.5 0 0.5  0.5 0 -0.5]')
-		file_writer.write('\t\t"st" [0 0  0 1  1 1  1 0]')
-		file_writer.write('\tAttributeEnd\n\n')
-		file_writer.write('WorldEnd\n')
+		file_writer.write('\tAttributeBegin\n
+			\t\tAttribute "identifier" "string name" ["plane1"]\n
+			\t\tTranslate ' + minx + ' ' +'0 10\n
+			\t\tScale 200 1 200]\n
+			\t\tPolygon "P" [-0.5 0 -0.5  -0.5 0 0.5  0.5 0 0.5  0.5 0 -0.5]\n
+			\t\t"st" [0 0  0 1  1 1  1 0]\n
+			\tAttributeEnd\n\n
+			WorldEnd\n')
 	
 	file_writer.close()
 	return True
+
 
 # append rib scence based on lxf file to 'template.rib'
 def generate_master_scene(lxf_filename):
