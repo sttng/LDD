@@ -219,6 +219,7 @@ def gen_pxrsurface(r, g, b, material_id, material_type, decoration_id):
 	
 	#return bxdf_mat_str
 	return 'ReadArchive "Material_Archive.zip!' + mat_rib_name + '.rib"\n'
+	#return 'ReadArchive "' + mat_rib_name + '.rib"\n'
 
 #materials="24,0,0,0"
 #material_ids = materials.split(',')		
