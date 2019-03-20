@@ -17,6 +17,7 @@ import sys
 import argparse
 import csv
 import zipfile
+compression = zipfile.ZIP_DEFLATED
 
 #file = sys.argv[1]
 
@@ -109,6 +110,7 @@ def gen_pxrsurface(r, g, b, material_id, material_type, decoration_id):
 
 	texture_strg = ''
 	ref_strg = ''
+	processed_mat = dict()
 	
 	if decoration_id != None and decoration_id != '0':
 	# We have decorations
@@ -199,13 +201,17 @@ def gen_pxrsurface(r, g, b, material_id, material_type, decoration_id):
 		"float presence" [1]\n'''
 	
 	# Write out Materials to seperate rib files
-	mr = open(mat_rib_name + '.rib', 'w')
-	mr.write(bxdf_mat_str)
-	mr.close()
-	z = zipfile.ZipFile("Material_Archive.zip", "a")
-	z.write(mat_rib_name + '.rib')
-	z.close()
-	os.remove(mat_rib_name + '.rib')
+	if mat_rib_name in not processed_mat:
+		# Don't write out material twice.
+		mr = open(mat_rib_name + '.rib', 'w')
+		mr.write(bxdf_mat_str)
+		mr.close()
+		z = zipfile.ZipFile("Material_Archive.zip", "a")
+		z.write(mat_rib_name + '.rib', compress_type=compression)
+		z.close()
+		os.remove(mat_rib_name + '.rib')
+		processed_mat[mat_rib_name] = True
+		
 	#return bxdf_mat_str
 	return 'ReadArchive "Material_Archive.zip!' + mat_rib_name + '.rib"\n'
 
