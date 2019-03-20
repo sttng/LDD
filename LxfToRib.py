@@ -95,7 +95,7 @@ def generate_bricks(lxf_filename):
 				decoration_string = '_' + '_'.join(decoration_id_list)
 				processed = design_id + material_string + decoration_string
 
-			if processed in not processed_brick:
+			if processed not in processed_brick:
 				# Don't process bricks twice
 				BrickReader.read_brick(design_id)
 				written_rib = ObjToRib2.export_obj_to_rib(design_id + '.obj', material_id_list, decoration_id_list)
@@ -130,13 +130,10 @@ def export_to_rib(lxf_filename):
 		rotx, roty, rotz = rotationMatrixToEulerAngles(R)
 		rotz = (-1) * rotz #Renderman is lefthanded coordinate system, but LDD is right handed.
 		
-		file_writer.write('WorldBegin\n
-			\tTranslate 0 0 40\n
-			#\tRotate ' + str(math.degrees(roty)) + ' 1 0 0\n
-			\tRotate -25 1 0 0\n
-			\tRotate ' + str(math.degrees(rotx)) + ' 0 1 0\n
-			#\tRotate 45 0 1 0\n
-			#\tRotate ' + str(math.degrees(rotz)) + ' 0 0 1\n')
+		file_writer.write('WorldBegin\n\tTranslate 0 0 40\n#\tRotate ' 
+			+ str(math.degrees(roty)) + ' 1 0 0\n\tRotate -25 1 0 0\n\tRotate ' 
+			+ str(math.degrees(rotx)) + ' 0 1 0\n#\tRotate 45 0 1 0\n#\tRotate ' 
+			+ str(math.degrees(rotz)) + ' 0 0 1\n')
 		
 		file_writer.write('#ConcatTransform [' 
 			+ transformation_array[0] + ' ' + transformation_array[1] + ' ' + str((-1) * float(transformation_array[2])) + ' 0 ' 
@@ -190,14 +187,8 @@ def export_to_rib(lxf_filename):
 			file_writer.write('\t\tReadArchive "Bricks_Archive.zip!'+ name + '.rib"\n')
 			file_writer.write('\tAttributeEnd\n\n')
 		
-		file_writer.write('\tAttributeBegin\n
-			\t\tAttribute "identifier" "string name" ["plane1"]\n
-			\t\tTranslate ' + minx + ' ' +'0 10\n
-			\t\tScale 200 1 200]\n
-			\t\tPolygon "P" [-0.5 0 -0.5  -0.5 0 0.5  0.5 0 0.5  0.5 0 -0.5]\n
-			\t\t"st" [0 0  0 1  1 1  1 0]\n
-			\tAttributeEnd\n\n
-			WorldEnd\n')
+		file_writer.write('\tAttributeBegin\n\t\tAttribute "identifier" "string name" ["plane1"]\n\t\tTranslate ' 
+			+ minx + ' ' +'0 10\n\t\tScale 200 1 200]\n\t\tPolygon "P" [-0.5 0 -0.5  -0.5 0 0.5  0.5 0 0.5  0.5 0 -0.5]\n\t\t"st" [0 0  0 1  1 1  1 0]\n\tAttributeEnd\n\nWorldEnd\n')
 	
 	file_writer.close()
 	return True
