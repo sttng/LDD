@@ -105,7 +105,8 @@ def generate_bricks(lxf_filename):
 				processed_brick[processed] = True
 				
 
-# Scan the lxf file and create a rib scene file, referencing the parts / bricks, and move them to correct position with correct rotation.
+# Scan the lxf file and create a rib scene file, referencing the parts / bricks, 
+# and move them to correct position with correct rotation.
 def export_to_rib(lxf_filename):
 
 	archive = zipfile.ZipFile(lxf_filename, 'r')
