@@ -110,7 +110,6 @@ def gen_pxrsurface(r, g, b, material_id, material_type, decoration_id):
 
 	texture_strg = ''
 	ref_strg = ''
-	processed_mat = dict()
 	
 	if decoration_id != None and decoration_id != '0':
 	# We have decorations
@@ -206,16 +205,12 @@ def gen_pxrsurface(r, g, b, material_id, material_type, decoration_id):
 	mr.close()
 	
 	z = zipfile.ZipFile('Material_Archive.zip', 'a')
-	
+	# Don't write file to zip twice
 	if mat_rib_name + '.rib' not in z.namelist():
-		# Don't write file to zip twice
 		z.write(mat_rib_name + '.rib', compress_type=compression)
 	
 	z.close()
 	os.remove(mat_rib_name + '.rib')
-	processed_mat[mat_rib_name] = True
-	
-	#print processed_mat
 	
 	#return bxdf_mat_str
 	return 'ReadArchive "Material_Archive.zip!' + mat_rib_name + '.rib"\n'
