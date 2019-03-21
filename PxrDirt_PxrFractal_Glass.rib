@@ -2,11 +2,11 @@
 Pattern "PxrDirt" "Curvature" 
 	"color occluded"  [1.0 1.0 1.0]
 	"color unoccluded"  [0.0 0.0 0.0]
-	"int numSamples"  [4]
-	"int distribution"  [1]
+	"int numSamples"  [8]
+	"int distribution"  [0]
 	"float cosineSpread"  [5.0]
 	"float falloff"  [4.0]
-	"float maxDistance"  [2.0]
+	"float maxDistance"  [0.025]
 	"int direction"  [1]
 	"vector biasDirection"  [0.0 0.0 0.0]
 	"string biasDirectionCoordsys"  ['object']
@@ -15,7 +15,7 @@ Pattern "PxrDirt" "Curvature"
 Bxdf "PxrConstant" "ConstantCurvature"
 	"reference color emitColor" ["Curvature:resultRGB"]
 	#"color emitColor"  [1. 1. 1.]
-	"float presence"  [1]
+"float presence" [1]
 
 
 # noise as a bump map to mimic the microsurface imperfections 	
