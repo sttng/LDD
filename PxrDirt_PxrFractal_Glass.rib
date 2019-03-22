@@ -1,21 +1,40 @@
 # Curvature map / Curvature highpass
 Pattern "PxrDirt" "Curvature" 
-	"color occluded"  [1.0 1.0 1.0]
-	"color unoccluded"  [0.0 0.0 0.0]
-	"int numSamples"  [8]
-	"int distribution"  [0]
-	"float cosineSpread"  [5.0]
-	"float falloff"  [4.0]
-	"float maxDistance"  [0.025]
-	"int direction"  [1]
-	"vector biasDirection"  [0.0 0.0 0.0]
-	"string biasDirectionCoordsys"  ['object']
-	"string traceSet"  ['']
+	"color occluded" [1.0 1.0 1.0]
+	"color unoccluded" [0.0 0.0 0.0]
+	"int numSamples" [32]
+	"int distribution" [0]
+	"float cosineSpread" [1.0]
+	"float falloff" [3.5]
+	"float maxDistance" [0.04]
+	"int direction" [1]
+	"vector biasDirection" [0.0 0.0 0.0]
+	"string biasDirectionCoordsys" ['object']
+	"string traceSet" ['']
+
+Pattern "PxrColorCorrect" "PxrColorCorrect1" 
+	"reference color inputRGB" ["Curvature:resultRGB"] 
+	"float inputMask" [1.0] 
+	"int invertMask" [0] 
+	"float mixMask" [1.0] 
+	"vector inputMin" [0. 0. 0.] 
+	"vector inputMax" [1. 1. 1.] 
+	"vector gamma" [0.2 0.2 0.2] 
+	"vector contrast" [0.0 0.0 0.0] 
+	"vector contrastPivot" [0.5 0.5 0.5] 
+	"color rgbGain" [1. 1. 1.] 
+	"vector hsv" [0.0 1.0 1.0] 
+	"float exposure" [5] 
+	"vector outputMin" [0. 0. 0.] 
+	"vector outputMax" [1. 1. 1.] 
+	"int clampOutput" [0] 
+	"vector clampMin" [0. 0. 0.] 
+	"vector clampMax" [1. 1. 1.] 
 	
 Bxdf "PxrConstant" "ConstantCurvature"
-	"reference color emitColor" ["Curvature:resultRGB"]
-	#"color emitColor"  [1. 1. 1.]
-"float presence" [1]
+	"reference color emitColor" ["PxrColorCorrect1:resultRGB"]
+	#"color emitColor" [1. 1. 1.]
+	"float presence" [1]
 
 
 # noise as a bump map to mimic the microsurface imperfections 	
@@ -36,6 +55,17 @@ Pattern "PxrWorley" "NoiseBump"
 Bxdf "PxrConstant" "ConstantNoiseBump"
 	"reference color emitColor" ["NoiseBump:resultRGB"]
 	"float presence"  [1]
+
+# Standard red
+Bxdf "PxrSurface" "Solid Material 21" 
+	"float diffuseGain" [1.0] 
+	"color diffuseColor" [0.94 0.2 0.25] 
+	"int diffuseDoubleSided" [1]
+	"color specularFaceColor" [0.1 0.1 0.15]
+	"color specularIor" [1.54 1.54 1.54] # ABS Refractive Index, Average value: 1.54
+	"float specularRoughness" [0.25]
+	"int specularDoubleSided" [0]
+	"float presence" [1]
 
 
 # Unevenness Bump map, still need to offset the noise pattern for different parts
