@@ -2978,6 +2978,36 @@ ri.Pattern('PxrDirt','id',
 })
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+## Plugin PxrWireframe 
+This pattern is meant to draw geometry wireframes as a pattern assignment. Couldn't get it working.
+#### Outputs  
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~C
+color vector normal point  resultRGB
+float  resultR
+float  resultG
+float  resultB
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+### Rib Format 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~C
+Pattern "PxrWireframe" "id"
+	"color wireframeColor" [0.94 0.2 0.25]
+	"color backgroundColor" [0 0 0]
+	"float wireframeOpacity" [0.5]
+	"float wireframeWidth" [1.0]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+### Python Format
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~python
+
+ri.Pattern('PxrWireframe','id',
+{
+	'color wireframeColor' : [1.0,1.0,1.0], 
+	'color backgroundColor' : [0.0,0.0,0.0], 
+	'float wireframeOpacity' : [1.0], 
+	'float wireframeWidth' : [1.0], 
+})
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 ## Plugin PxrTangentField 
 Defines a tangent field typically used to control anisotropic direction.
         InputRotation takes a single grayscale channel where black = 0 degrees
