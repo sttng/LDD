@@ -105,8 +105,7 @@ def generate_bricks(lxf_filename):
 				processed_brick[processed] = True
 				
 
-# Scan the lxf file and create a rib scene file, referencing the parts / bricks, 
-# and move them to correct position with correct rotation.
+# Scan the lxf file and create a rib scene file, referencing the parts / bricks, and move them to correct position with correct rotation.
 def export_to_rib(lxf_filename):
 
 	archive = zipfile.ZipFile(lxf_filename, 'r')
@@ -126,24 +125,72 @@ def export_to_rib(lxf_filename):
 		
 		transformation_array = cam_trans.split(',')
 		
+		file_writer.write('''\n# Camera Minus One
+TransformBegin
+	ConcatTransform [''' 
+		+ transformation_array[0] + ''' ''' + transformation_array[1] + ''' ''' + transformation_array[2] + ''' 0 \n'''
+		+ transformation_array[3] + ''' ''' + transformation_array[4] + ''' ''' + transformation_array[5] + ''' 0 \n'''
+		+ transformation_array[6] + ''' ''' + transformation_array[7] + ''' ''' + transformation_array[8] + ''' 0 \n'''
+		+ str((0.1) * float(transformation_array[9])) + ''' ''' + str((0.1) * float(transformation_array[10])) + ''' ''' + transformation_array[11] + ''' 1]
+	# Distance: '''+ dist + '''
+	Camera "Cam--1" 
+		"float shutterOpenTime" [0] 
+		"float shutterCloseTime" [1] 
+		"int apertureNSides" [0] 
+		"float apertureAngle" [0] 
+		"float apertureRoundness" [0] 
+		"float apertureDensity" [0] 
+		"float dofaspect" [1] 
+		"float nearClip" [0.100000001] 
+		"float farClip" [10000]
+TransformEnd\n''')
+		
 		R = np.array([[float(transformation_array[0]), float(transformation_array[1]) ,float(transformation_array[2])], [ float(transformation_array[3]), float(transformation_array[4]) ,float(transformation_array[5])], [ float(transformation_array[6]), float(transformation_array[7]) ,float(transformation_array[8])]])
 		
 		rotx, roty, rotz = rotationMatrixToEulerAngles(R)
 		rotz = (-1) * rotz #Renderman is lefthanded coordinate system, but LDD is right handed.
 		
-		file_writer.write('WorldBegin\n\tTranslate 0 0 40\n#\tRotate ' 
-			+ str(math.degrees(roty)) + ' 1 0 0\n\tRotate -25 1 0 0\n\tRotate ' 
-			+ str(math.degrees(rotx)) + ' 0 1 0\n#\tRotate 45 0 1 0\n#\tRotate ' 
-			+ str(math.degrees(rotz)) + ' 0 0 1\n')
+		file_writer.write('''\n# Camera Zero
+TransformBegin
+	# Translate ''' + str((0.1) * float(transformation_array[9])) + ''' ''' + str((0.1) * float(transformation_array[10])) + ''' ''' + transformation_array[11] + '''
+	Translate 0 0 40
+	Rotate ''' + str(math.degrees(roty)) + ''' 1 0 0
+	#Rotate -25 1 0 0
+	Rotate ''' + str(math.degrees(rotx)) + ''' 0 1 0
+	#Rotate 45 0 1 0
+	#Rotate ''' + str(math.degrees(rotz)) + ''' 0 0 1
+	Camera "Cam-0"
+		"float shutterOpenTime" [0] 
+		"float shutterCloseTime" [1] 
+		"int apertureNSides" [0] 
+		"float apertureAngle" [0] 
+		"float apertureRoundness" [0] 
+		"float apertureDensity" [0] 
+		"float dofaspect" [1] 
+		"float nearClip" [0.100000001] 
+		"float farClip" [10000]
+TransformEnd\n''')
 		
-		file_writer.write('#ConcatTransform [' 
-			+ transformation_array[0] + ' ' + transformation_array[1] + ' ' + str((-1) * float(transformation_array[2])) + ' 0 ' 
-			+ transformation_array[3] + ' ' + transformation_array[4] + ' ' + str((-1) * float(transformation_array[5])) + ' 0 ' 
-			+ str((-1) * float(transformation_array[6])) + ' ' + str((-1) * float(transformation_array[7])) + ' ' + transformation_array[8] + ' 0 ' 
-			+ transformation_array[9] + ' ' + transformation_array[10] + ' ' + transformation_array[11] + ' 1]\n')
+		file_writer.write('''
+DisplayChannel "color Ci" "string source" ["Ci"]
+DisplayChannel "float a" "string source" ["a"]
+Display "beauty.0001.exr" "openexr" "Ci,a"
+	"int asrgba" [1]
+	"string storage" ["scanline"]
+	"string exrpixeltype" ["half"]
+	"string compression" ["zips"]
+	"float compressionlevel" [45]
+	"string camera" ["Cam-0"]\n\n''')
 		
-		file_writer.write('\tScale 0.7 0.7 0.7\n')
-		file_writer.write('\tAttributeBegin\n\t\tAttribute "visibility" "int indirect" [0] "int transmission" [0]\n\t\tAttribute "visibility" "int camera" [1]\n\t\tRotate 50 0 1 0\n\t\tRotate -90 1 0 0\n\t\tLight "PxrDomeLight" "domeLight" "string lightColorMap" ["GriffithObservatory.tex"]\n\tAttributeEnd\n')
+		file_writer.write('WorldBegin\n')
+		file_writer.write('\tScale 1 1 1\n')
+		file_writer.write('''\tAttributeBegin
+		Attribute "visibility" "int indirect" [0] "int transmission" [0]
+		Attribute "visibility" "int camera" [1]
+		Rotate 50 0 1 0
+		Rotate -90 1 0 0
+		Light "PxrDomeLight" "domeLight" "string lightColorMap" ["islandsun_small.tex"]
+	AttributeEnd\n''')
 		
 		tree = ET.fromstring(lxfml_file)
 		lst = tree.findall('Bricks/Brick/Part')
@@ -189,7 +236,7 @@ def export_to_rib(lxf_filename):
 			file_writer.write('\tAttributeEnd\n\n')
 		
 		file_writer.write('\tAttributeBegin\n\t\tAttribute "identifier" "string name" ["plane1"]\n\t\tTranslate ' 
-			+ minx + ' ' +'0 10\n\t\tScale 200 1 200]\n\t\tPolygon "P" [-0.5 0 -0.5  -0.5 0 0.5  0.5 0 0.5  0.5 0 -0.5]\n\t\t"st" [0 0  0 1  1 1  1 0]\n\tAttributeEnd\n\nWorldEnd\n')
+			+ minx + ' ' +'0 10\n\t\tScale 200 1 200\n\t\tPolygon "P" [-0.5 0 -0.5  -0.5 0 0.5  0.5 0 0.5  0.5 0 -0.5]\n\t\t"st" [0 0  0 1  1 1  1 0]\n\tAttributeEnd\n\nWorldEnd\n')
 	
 	file_writer.close()
 	return True
