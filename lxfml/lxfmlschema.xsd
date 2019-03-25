@@ -1,0 +1,450 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+<xs:element name="LXFML">
+	<xs:annotation>
+		<xs:documentation xml:lang="en">
+			LEGO Exchange Format used to descibe a scene of LEGO models.
+		</xs:documentation>
+	</xs:annotation>
+	<xs:complexType>
+		<xs:sequence>
+			<xs:element name="Meta" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation xml:lang="en">
+						Every element in the Meta section should only have attributes and text. They should not have other elements in them.
+					</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:any processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>		
+			</xs:element>
+			<xs:element name="Cameras" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation xml:lang="en">
+						List of cameras that can be used in the scene and building instruction.
+					</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Camera" type="CameraType" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Scene" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Model" type="ModelType" maxOccurs="unbounded">
+						
+							<xs:unique name="uniqueGroups">
+								<xs:annotation>
+									<xs:documentation xml:lang="en">
+										Every Group in the model must have a unique refID.
+									</xs:documentation>
+								</xs:annotation>
+								<xs:selector xpath="Scene/Model/Group"/>
+								<xs:field xpath="@refID"/>
+							</xs:unique>
+
+							<xs:key name="pGroupKey">
+								<xs:selector xpath="Group"/>
+								<xs:field xpath="@refID"/>
+							</xs:key>
+		
+							<xs:keyref name="JointGroupKeyref" refer="pGroupKey">
+								<xs:annotation>
+									<xs:documentation xml:lang="en">
+										The groups referenced in a Joint must exist in the model.
+									</xs:documentation>
+								</xs:annotation>
+								<xs:selector xpath="Joint/GroupReference"/>
+								<xs:field xpath="@groupReference"/>
+							</xs:keyref>
+							
+						</xs:element>
+					</xs:sequence>
+					<xs:attribute name="cameraRefID" type="xs:nonNegativeInteger"/>
+				</xs:complexType>
+			</xs:element>					
+			<xs:element name="BuildingInstructions" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="BuildingInstruction" type="BuildingInstructionType" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>					
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" use="optional" default=""/>
+		<xs:attributeGroup ref="VersionType"/>
+	</xs:complexType>
+	
+	<xs:unique name="uniqueCameras">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">
+				Every Camera in the LXFML element must have a unique refID.
+			</xs:documentation>
+		</xs:annotation>
+  	<xs:selector xpath="Cameras/Camera"/>
+    <xs:field xpath="@refID"/>
+  </xs:unique>
+
+
+	<xs:unique name="uniqueParts">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">
+				Every Part must have a unique refID across models and groups.
+			</xs:documentation>
+		</xs:annotation>
+  	<xs:selector xpath="Scene/Model/Group/Part"/>
+    <xs:field xpath="@refID"/>
+  </xs:unique>
+
+
+	<xs:key name="pPartKey">
+		<xs:selector xpath="Scene/Model/Group/Part"/>
+		<xs:field xpath="@refID"/>
+	</xs:key>
+	
+	<xs:keyref name="BIPartKeyRef" refer="pPartKey">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">
+				The Parts referenced in a Building Instruction must exist in a model.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:selector xpath=".//PartRef"/>
+		<xs:field xpath="@partRefID"/>
+	</xs:keyref>
+
+	<xs:key name="pCameraKey">
+		<xs:selector xpath="Cameras/Camera"/>
+		<xs:field xpath="@refID"/>
+	</xs:key>
+	
+	<xs:keyref name="StepCameraKeyRef" refer="pCameraKey">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">
+				The camera referenced in a Step must exist the cameras list.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:selector xpath=".//Step"/>
+		<xs:field xpath="@cameraRefID"/>
+	</xs:keyref>
+
+	<xs:keyref name="BICameraKeyRef" refer="pCameraKey">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">
+				The camera referenced in a Building Instruction must exist the cameras list.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:selector xpath="BuildingInstructions/BuildingInstruction"/>
+		<xs:field xpath="@cameraRefID"/>
+	</xs:keyref>
+
+	<xs:keyref name="SceneCameraKeyRef" refer="pCameraKey">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">
+				The camera referenced in a Scene must exist the list of cameras.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:selector xpath="Scene"/>
+		<xs:field xpath="@cameraRefID"/>
+	</xs:keyref>
+
+</xs:element>
+
+<xs:element name="Application">
+	<xs:annotation>
+		<xs:documentation xml:lang="en">
+			For use in Meta section.
+		</xs:documentation>
+	</xs:annotation>
+	<xs:complexType>
+ 		<xs:attribute  name="name" type="xs:string"/>
+		<xs:attributeGroup ref="VersionType"/>
+    <xs:attribute name="versionRevision" type="xs:nonNegativeInteger" use="optional" default="0"/>
+    <xs:attribute name="versionBuild" type="xs:nonNegativeInteger" use="optional" default="0"/>
+	</xs:complexType>
+</xs:element>
+
+<xs:element name="Author">
+	<xs:annotation>
+		<xs:documentation xml:lang="en">
+			For use in Meta section.
+		</xs:documentation>
+	</xs:annotation>
+	<xs:complexType>
+ 		<xs:attribute name="name" type="xs:string"/>
+		<xs:attribute name="age" type="xs:nonNegativeInteger" use="optional" default="0"/>
+		<xs:attribute name="country" type="xs:string" use="optional" default=""/>		
+	</xs:complexType>
+</xs:element>
+
+<xs:element name="Description">
+	<xs:annotation>
+		<xs:documentation xml:lang="en">
+			For use in Meta section.
+			Is a textual description of the scene.
+		</xs:documentation>
+	</xs:annotation>
+	<xs:complexType>
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+ 				<xs:attribute name="lang" type="xs:language" use="optional" default="en"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+</xs:element>
+
+<xs:element name="Category">
+	<xs:annotation>
+		<xs:documentation xml:lang="en">
+			For use in Meta section.
+		</xs:documentation>
+	</xs:annotation>
+	<xs:complexType>
+ 		<xs:attribute name="category" type="xs:string"/>
+	</xs:complexType>
+</xs:element>
+
+<xs:element name="BrickSet">
+	<xs:annotation>
+		<xs:documentation xml:lang="en">
+			For use in Meta section.
+		</xs:documentation>
+	</xs:annotation>
+	<xs:complexType>
+ 		<xs:attribute name="identifier" type="xs:string"/>
+		<xs:attribute name="quantity" type="xs:positiveInteger">
+			<xs:annotation>
+				<xs:documentation xml:lang="en">
+					Number of times the set is used.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+		<xs:attributeGroup ref="VersionType"/>
+    <xs:attribute name="versionRevision" type="xs:nonNegativeInteger" use="optional" default="0"/>
+	</xs:complexType>
+</xs:element>
+
+<xs:attributeGroup name="VersionType">
+	<xs:attribute name="versionMajor" type="xs:nonNegativeInteger"/>
+	<xs:attribute name="versionMinor" type="xs:nonNegativeInteger"/>
+</xs:attributeGroup>
+
+<xs:attributeGroup name="AxisType">
+	<xs:annotation>
+		<xs:documentation xml:lang="en">
+			Length must be 1.
+			Default is (0, 1, 0).
+		</xs:documentation>
+	</xs:annotation>
+	<xs:attribute name="ax" type="xs:float" use="optional" default="0"/>
+	<xs:attribute name="ay" type="xs:float" use="optional" default="1"/>
+	<xs:attribute name="az" type="xs:float" use="optional" default="0"/>
+</xs:attributeGroup>
+	
+<xs:attributeGroup name="TranslationType">
+  <xs:annotation>
+		<xs:documentation xml:lang="en">
+			Can be any value.
+			Default is (0, 0, 0).
+		</xs:documentation>
+	</xs:annotation>
+	<xs:attribute name="tx" type="xs:float" use="optional" default="0"/>
+	<xs:attribute name="ty" type="xs:float" use="optional" default="0"/>
+	<xs:attribute name="tz" type="xs:float" use="optional" default="0"/>
+</xs:attributeGroup>
+
+<xs:attributeGroup name="ZeroType">
+	<xs:annotation>
+		<xs:documentation xml:lang="en">
+			Length must be 1.
+			Default is (0, 1, 0).
+		</xs:documentation>
+	</xs:annotation>
+	<xs:attribute name="zx" type="xs:float" use="optional" default="0"/>
+	<xs:attribute name="zy" type="xs:float" use="optional" default="1"/>
+	<xs:attribute name="zz" type="xs:float" use="optional" default="0"/>
+</xs:attributeGroup>
+
+<xs:attributeGroup name="PlacementType">
+	<xs:attribute name="angle" type="xs:float" use="optional" default="0">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">
+				Angle is expressed in degrees.
+				Default is 0.
+			</xs:documentation>
+		</xs:annotation>
+	</xs:attribute>
+	<xs:attributeGroup ref="AxisType"/>
+	<xs:attributeGroup ref="TranslationType"/>
+</xs:attributeGroup>
+
+<xs:attributeGroup name="CameraLensType">
+	<xs:annotation>
+		<xs:documentation xml:lang="en">
+			If the attribute orthographic is present and have the value true, then the camera is orthegraphic, and fieldOfView is interpreted as orthographic width.
+			Otherwise the camera is perspective, and fieldOfView is interpreted as lens.
+		</xs:documentation>
+	</xs:annotation>
+	<xs:attribute name="orthographic" type="xs:boolean" use="optional" default="false"/>
+	<xs:attribute name="fieldOfView" type="xs:float" use="optional" default="80"/>
+</xs:attributeGroup>
+
+<xs:complexType name="CameraType">
+	<xs:attribute name="refID" type="xs:nonNegativeInteger"/>
+	<xs:attribute name="name" type="xs:string" use="optional" default=""/>
+	<xs:attributeGroup ref="CameraLensType"/>
+	<xs:attribute name="distance" type="xs:float" use="optional" default="0">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">
+				Distance specifies a target for the camera. If distance is lower than or equal to zero there is no target.
+			</xs:documentation>
+		</xs:annotation>
+	</xs:attribute>
+	<xs:attributeGroup ref="PlacementType"/>
+</xs:complexType>
+
+<xs:complexType name="ModelType">
+	<xs:annotation>
+		<xs:documentation xml:lang="en">
+			A model is described as groups of parts that are jointed together.
+			This could be used in an application to rotate one group relative to another group.
+		</xs:documentation>
+	</xs:annotation>
+	<xs:sequence>
+		<xs:element name="Group" type="GroupType" maxOccurs="unbounded"/>
+		<xs:element name="Joint" type="JointType" minOccurs="0" maxOccurs="unbounded">
+			<xs:unique name="uniqueJointGroups">
+				<xs:selector xpath="GroupReference"/>
+				<xs:field xpath="@groupReference"/>
+			</xs:unique>
+		</xs:element>
+	</xs:sequence>
+	<xs:attribute name="name" type="xs:string" use="optional" default=""/>
+</xs:complexType>
+
+<xs:complexType name="GroupType">
+	<xs:annotation>
+		<xs:documentation xml:lang="en">
+			A Group is a list of parts, and there postion relative to the group.
+		</xs:documentation>
+	</xs:annotation>
+	<xs:sequence>
+		<xs:element name="Part" type="PartType" minOccurs="0" maxOccurs="unbounded"/>
+	</xs:sequence>
+	<xs:attribute name="refID" type="xs:nonNegativeInteger"/>
+	<xs:attribute name="name" type="xs:string" use="optional" default=""/>
+	<xs:attributeGroup ref="PlacementType">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">
+				Places the group in world space.
+			</xs:documentation>
+		</xs:annotation>
+	</xs:attributeGroup>
+</xs:complexType>
+
+<xs:complexType name="JointType">
+	<xs:sequence>
+		<xs:element name="GroupRef" type="JointGroupReferenceType" minOccurs="2" maxOccurs="2"/>
+	</xs:sequence>
+	<xs:attribute name="name" type="xs:string" use="optional" default=""/>
+	<xs:attribute name="type" type="JointTypeEnum"/>
+</xs:complexType>
+	
+<xs:complexType name="JointGroupReferenceType">
+	<xs:annotation>
+		<xs:documentation xml:lang="en">
+			Axis, zero and translation is described locally to the group.
+		</xs:documentation>
+	</xs:annotation>
+	<xs:attribute name="groupRef" type="xs:nonNegativeInteger"/>
+	<xs:attributeGroup ref="AxisType"/>
+	<xs:attributeGroup ref="ZeroType"/>
+	<xs:attributeGroup ref="TranslationType"/>
+</xs:complexType>
+
+	
+<xs:simpleType name="JointTypeEnum">
+	<xs:restriction base="xs:string">
+		<xs:enumeration value="hinge"/>
+		<xs:enumeration value="ball"/>
+	</xs:restriction>
+</xs:simpleType>
+
+<xs:attributeGroup name="AssemblyType">
+	<xs:annotation>
+		<xs:documentation xml:lang="en">
+			If the attribute assemblyID is present and have a value different from 0, then assemblyRefID must be present.
+			If the attribute assemblyID is not present or have the value 0, then assemblyRefID is ignored.
+		</xs:documentation>
+	</xs:annotation>
+	<xs:attribute name="assemblyID" type="xs:nonNegativeInteger" use="optional" default="0"/>
+	<xs:attribute name="assemblyRefID" type="xs:nonNegativeInteger" use="optional" default="0">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">
+				Used to differentiate between different instances of the same assembly type.
+				All assembly instances must have different assemblyRefID.
+			</xs:documentation>
+		</xs:annotation>
+	</xs:attribute>
+</xs:attributeGroup>
+
+
+<xs:complexType name="PartType">
+	<xs:sequence>
+		<xs:element name="Decoration" minOccurs="0" maxOccurs="unbounded">
+			<xs:complexType>
+				<xs:attribute name="surfaceID" type="xs:nonNegativeInteger"/>
+				<xs:attribute name="decorationID" type="xs:nonNegativeInteger"/>
+			</xs:complexType>
+		</xs:element>
+		<xs:element name="SubMaterial" minOccurs="0" maxOccurs="unbounded">
+			<xs:complexType>
+				<xs:attribute name="surfaceID" type="xs:nonNegativeInteger"/>
+				<xs:attribute name="materialID" type="xs:nonNegativeInteger"/>
+			</xs:complexType>
+		</xs:element>
+	</xs:sequence>
+	<xs:attribute name="refID" type="xs:nonNegativeInteger"/>
+	<xs:attribute name="name" type="xs:string" use="optional" default=""/>
+	<xs:attribute name="designID" type="xs:positiveInteger"/>
+	<xs:attribute name="materialID" type="xs:positiveInteger"/>
+	<xs:attribute name="itemNos" type="xs:string"/>
+	<xs:attributeGroup ref="AssemblyType"/>
+	<xs:attributeGroup ref="PlacementType"/>
+</xs:complexType>
+
+<xs:complexType name="BuildingInstructionType">
+	<xs:sequence>
+		<xs:element name="Step" type="StepType" minOccurs="0" maxOccurs="unbounded"/>
+	</xs:sequence>
+	<xs:attribute name="name" type="xs:string" use="optional" default=""/>
+	<xs:attribute name="cameraRefID" type="xs:nonNegativeInteger"/>
+</xs:complexType>
+	
+<xs:complexType name="StepType">
+	<xs:sequence>
+		<xs:element name="Step" type="StepType" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:element name="PartRef" type="PartRefType" minOccurs="0" maxOccurs="unbounded"/>
+	</xs:sequence>
+	<xs:attribute name="name" type="xs:string" use="optional" default=""/>
+	<xs:attribute name="cameraRefID" type="xs:nonNegativeInteger"/>
+</xs:complexType>
+
+
+<xs:complexType name="PartRefType">
+	<xs:annotation>
+		<xs:documentation xml:lang="en">
+			If the attribute exploded is present and have the value true, then the placement will be used.
+		</xs:documentation>
+	</xs:annotation>
+	<xs:attribute name="partRefID" type="xs:nonNegativeInteger"/>
+	<xs:attribute name="exploded" type="xs:boolean" use="optional" default="false"/>
+	<xs:attributeGroup ref="PlacementType"/>
+</xs:complexType>
+
+</xs:schema>
+

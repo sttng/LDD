@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<LXFML versionMajor="2" versionMinor="0">
+	<Meta>
+		<Application name="JEdit" versionMajor="1" versionMinor="4"/>
+		<Author name="Jakob"/>
+		<Description lang="da">En fed model!</Description>
+		<Description lang="en">A cool model!</Description>
+		<Category category="vehicle"/>
+		<Category category="Make and Create"/>
+	</Meta>
+  <Cameras>
+    <Camera name="persp1" orthographic="false" fieldOfView="35" refID="0" angle="46.5166" ax="-0.873096" ay="0.456467" az="0.171295" tx="1.30831" ty="3.02469" tz="3.20591" />
+    <Camera name="top1" orthographic="true" fieldOfView="30" refID="1" angle="90" ax="-1" ay="0" az="0" tx="0" ty="100" tz="0" />
+    <Camera name="front1" orthographic="true" fieldOfView="30" refID="2" angle="0" ax="0" ay="1" az="0" tx="0" ty="0" tz="100" />
+    <Camera name="side1" orthographic="true" fieldOfView="30" refID="3" angle="90" ax="0" ay="1" az="0" tx="100" ty="0" tz="0" />
+    <Camera name="LEGO_camera" fieldOfView="80" refID="4" angle="49.2404" ax="-0.692032" ay="-0.688094" az="-0.218217" tx="-16.3673" ty="22.8578" tz="25.3478" />
+	</Cameras>
+  <Scene cameraRefID="0">
+    <Model>
+      <Group refID="0" name="a74340_0">
+        <Part refID="0" name="m3680_turn_plate_2x2__lower_part_0" designID="3680" materialID="1" assemblyID="74340" assemblyRefID="0" angle="0" ax="0" ay="1" az="0" tx="0" ty="0" tz="0" />
+      </Group>
+      <Group refID="1" name="Disc" angle="0" ax="0" ay="1" az="0" tx="0" ty="0.32" tz="0">
+        <Part refID="1" name="m3679_turn_plate_2x2__upper_part_0" designID="3679" materialID="1" assemblyID="74340" assemblyRefID="0" angle="0" ax="0" ay="1" az="0" tx="0" ty="0" tz="0" />
+      </Group>
+      <Group refID="2" name="a74340_1" angle="0" ax="0" ay="1" az="0" tx="0" ty="0.32" tz="0">
+        <Part refID="2" name="m3680_turn_plate_2x2__lower_part_1" designID="3680" materialID="21" assemblyID="74340" assemblyRefID="1" angle="0" ax="0" ay="1" az="0" tx="0" ty="0" tz="0" />
+      </Group>
+      <Group refID="3" name="Disc1" angle="0" ax="0" ay="1" az="0" tx="0" ty="0.64" tz="0">
+        <Part refID="3" name="m3679_turn_plate_2x2__upper_part_1" designID="3679" materialID="21" assemblyID="74340" assemblyRefID="1" angle="0" ax="0" ay="1" az="0" tx="0" ty="0" tz="0" />
+      </Group>
+      <Joint type="ball">
+				<GroupRef groupRef="0" ax="0" ay="1" az="0" zx="0" zy="0" zz="1" tx="0.4" ty="0.32" tz="-0.4" />
+				<GroupRef groupRef="1" ax="0" ay="1" az="0" zx="0" zy="0" zz="1" tx="0.4" ty="0" tz="-0.4" />
+			</Joint>
+      <Joint type="ball">
+				<GroupRef groupRef="1" ax="0" ay="1" az="0" zx="0" zy="0" zz="1" tx="0" ty="0" tz="0" />
+				<GroupRef groupRef="2" ax="0" ay="1" az="0" zx="0" zy="0" zz="1" tx="0" ty="0" tz="0" />
+			</Joint>
+      <Joint type="ball">
+				<GroupRef groupRef="2" ax="0" ay="1" az="0" zx="0" zy="0" zz="1" tx="0.4" ty="0.32" tz="-0.4" />
+				<GroupRef groupRef="3" ax="0" ay="1" az="0" zx="0" zy="0" zz="1" tx="0.4" ty="0" tz="-0.4" />
+			</Joint>
+    </Model>
+  </Scene>
+  <BuildingInstructions>
+    <BuildingInstruction name="b6206_" cameraRefID="4">
+      <Step name="b6206_s1">
+				<Step name="b6206_s2">
+					<PartRef partRefID="0"/>
+				</Step>
+				<PartRef partRefID="1"/>
+        <PartRef partRefID="2"/>
+      </Step>
+      <Step>
+        <PartRef partRefID="3"/>
+			</Step>
+		</BuildingInstruction>
+	</BuildingInstructions>
+
+</LXFML>
