@@ -66,8 +66,9 @@ def generate_bricks(lxf_filename):
 	lxfml_file = archive.read('IMAGE100.LXFML')
 	
 	tree = ET.fromstring(lxfml_file)
+	lxf_filename = os.path.splitext(os.path.basename(lxf_filename))[0]
 	
-	with zipfile.ZipFile('Bricks_Archive.zip', 'w') as myzip:
+	with zipfile.ZipFile(lxf_filename + '_Bricks_Archive.zip', 'w') as myzip:
 		lst = tree.findall('Bricks/Brick/Part')
 		processed_brick = dict()
 		processed_deco = dict()
@@ -152,7 +153,7 @@ TransformEnd\n''')
 		
 		file_writer.write('''\n# Camera Zero
 TransformBegin
-	# Translate ''' + str((0.1) * float(transformation_array[9])) + ''' ''' + str((0.1) * float(transformation_array[10])) + ''' ''' + transformation_array[11] + '''
+	#Translate ''' + str((0.1) * float(transformation_array[9])) + ''' ''' + str((0.1) * float(transformation_array[10])) + ''' ''' + transformation_array[11] + '''
 	Translate 0 0 40
 	Rotate ''' + str(math.degrees(roty)) + ''' 1 0 0
 	#Rotate -25 1 0 0
@@ -230,9 +231,10 @@ Display "beauty.0001.exr" "openexr" "Ci,a"
 			+ trans_xyz[0] + ' ' + trans_xyz[1] + ' ' + trans_xyz[2] + ' 1]\n')
 			
 			#file_writer.write('\tScale ' + rand + ' ' + rand + ' ' + rand + '\n') #Random brick size for seams.
+			lxf_filename = os.path.splitext(os.path.basename(lxf_filename))[0]
 			file_writer.write('\t\tScale 1 1 1\n')
 			file_writer.write('\t\tAttribute "identifier" "name" ["'+ name + '"]\n')
-			file_writer.write('\t\tReadArchive "Bricks_Archive.zip!'+ name + '.rib"\n')
+			file_writer.write('\t\tReadArchive "' + lxf_filename +'_Bricks_Archive.zip!'+ name + '.rib"\n')
 			file_writer.write('\tAttributeEnd\n\n')
 		
 		file_writer.write('\tAttributeBegin\n\t\tAttribute "identifier" "string name" ["plane1"]\n\t\tTranslate ' 
@@ -246,7 +248,7 @@ Display "beauty.0001.exr" "openexr" "Ci,a"
 def generate_master_scene(lxf_filename):
 	lxf_extension = os.path.splitext(os.path.basename(lxf_filename))[1]
 	lxf_filename = os.path.splitext(os.path.basename(lxf_filename))[0]
-	with open('test_scene.rib','wb') as wfd:
+	with open(lxf_filename + '_Scene.rib','wb') as wfd:
 		for f in ['template.rib',lxf_filename + '.rib']:
 			with open(f,'rb') as fd:
 				shutil.copyfileobj(fd, wfd, 1024*1024*10)
