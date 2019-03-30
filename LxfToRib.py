@@ -64,9 +64,10 @@ def generate_bricks(lxf_filename):
 
 	archive = zipfile.ZipFile(lxf_filename, 'r')
 	lxfml_file = archive.read('IMAGE100.LXFML')
+	# After we read in the full path to the LXF file, we only need the name later, so we split here
+	lxf_filename = os.path.splitext(os.path.basename(lxf_filename))[0]
 	
 	tree = ET.fromstring(lxfml_file)
-	lxf_filename = os.path.splitext(os.path.basename(lxf_filename))[0]
 	
 	with zipfile.ZipFile(lxf_filename + '_Bricks_Archive.zip', 'w') as myzip:
 		lst = tree.findall('Bricks/Brick/Part')
@@ -111,6 +112,7 @@ def export_to_rib(lxf_filename):
 
 	archive = zipfile.ZipFile(lxf_filename, 'r')
 	lxfml_file = archive.read('IMAGE100.LXFML')
+	lxf_filename = os.path.splitext(os.path.basename(lxf_filename))[0]
 	trans_xyz = []
 	minx = 1000
 			
@@ -231,14 +233,21 @@ Display "beauty.0001.exr" "openexr" "Ci,a"
 			+ trans_xyz[0] + ' ' + trans_xyz[1] + ' ' + trans_xyz[2] + ' 1]\n')
 			
 			#file_writer.write('\tScale ' + rand + ' ' + rand + ' ' + rand + '\n') #Random brick size for seams.
-			lxf_filename = os.path.splitext(os.path.basename(lxf_filename))[0]
+			
 			file_writer.write('\t\tScale 1 1 1\n')
 			file_writer.write('\t\tAttribute "identifier" "name" ["'+ name + '"]\n')
 			file_writer.write('\t\tReadArchive "' + lxf_filename +'_Bricks_Archive.zip!'+ name + '.rib"\n')
 			file_writer.write('\tAttributeEnd\n\n')
 		
-		file_writer.write('\tAttributeBegin\n\t\tAttribute "identifier" "string name" ["plane1"]\n\t\tTranslate ' 
-			+ minx + ' ' +'0 10\n\t\tScale 200 1 200\n\t\tPolygon "P" [-0.5 0 -0.5  -0.5 0 0.5  0.5 0 0.5  0.5 0 -0.5]\n\t\t"st" [0 0  0 1  1 1  1 0]\n\tAttributeEnd\n\nWorldEnd\n')
+		file_writer.write('''\tAttributeBegin
+		Attribute "identifier" "string name" ["plane1"]
+		Translate ''' + minx +''' 0 10
+		Scale 200 1 200
+		Polygon "P" [-0.5 0 -0.5  -0.5 0 0.5  0.5 0 0.5  0.5 0 -0.5]
+		"st" [0 0  0 1  1 1  1 0]
+	AttributeEnd
+	
+WorldEnd\n''')
 	
 	file_writer.close()
 	return True
