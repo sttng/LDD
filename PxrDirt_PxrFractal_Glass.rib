@@ -82,7 +82,26 @@ Pattern "PxrFractal" "Unevenness"
 Bxdf "PxrConstant" "ConstantUnevenness"
 	"reference color emitColor" ["Unevenness:resultRGB"]
 	"float presence"  [1]
+
+
+#PxrWireframe
+Pattern "PxrWireframe" "PxrWireframe1"
+	"color wireframeColor" [0 0 0]
+	"color backgroundColor" [1 1 1]
+	"float wireframeOpacity" [1]
+	"float wireframeWidth" [1.5] 
 	
+Pattern "PxrExposure" "PxrExposure1" 
+	"reference color inputRGB"  ["PxrWireframe1:Cout"] 
+	"float stops" [1.4] 
+	
+Bxdf "PxrDiffuse" "PxrDiffuse1" 
+	"reference color diffuseColor" ["PxrExposure1:resultRGB"]
+	"int transmissionBehavior" [2]
+	"color transmissionColor" [0 0 0]
+	"float presence" [1]
+	"normal bumpNormal" [0 0 0]
+
 
 #Glass Shader
 Bxdf "PxrSurface" "PxrSurface2"
