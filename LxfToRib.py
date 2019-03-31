@@ -88,7 +88,7 @@ def generate_bricks(lxf_filename):
 				for decoration in decoration_id_list:
 					if decoration != '0' and decoration not in processed_deco:
 						# Don't process decorations twice
-						txmake_cmd = '/Applications/Pixar/RenderManProServer-22.4/bin/txmake -mode clamp ./liftmp/db/Decorations/' + decoration + '.png ' + decoration + '.tex'
+						txmake_cmd = '/Applications/Pixar/RenderManProServer-22.4/bin/txmake -t:8 -compression zip -mode clamp -resize up ./liftmp/db/Decorations/' + decoration + '.png ' + decoration + '.tex'
 						os.system(txmake_cmd)
 						#myzip.write(decoration + '.tex', compress_type=compression)
 						#os.remove(decoration + '.tex')
