@@ -35,6 +35,7 @@ oslc Primvar.osl
 * https://nccastaff.bournemouth.ac.uk/jmacey/Renderman/
 * https://www.janwalter.org/jekyll/blender/cloud/attic/2016/07/13/attic.html
 * http://www.fundza.com/cutter/whatsnew/index.html
+* https://rmanwiki.pixar.com/display/REN22/Denoising
 
 ## Lego plastic materials
 
