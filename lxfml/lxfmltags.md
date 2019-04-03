@@ -45,6 +45,7 @@ A Group contain a list of Parts; it defines a local coordinate system for these 
 A connection between two Group elements inside the same Model element is described by a Joint element. This jointed structure is not limited to describe a hierarchy but may also form a looping graph.
 Joints are described by a position and two perpendicular axes. Currently two types of joints are defined: the ball joint and the hinge joint, the following is the description of what the axes mean for these joints.
 
+```
 •	Ball joint
 o	The ‘a’ axis is the primary axis, protruding out and away from the foundation of the joint 
 o	The ‘z’ axis is the secondary axis
@@ -53,6 +54,7 @@ o	The axes are only interesting when rotational constraints are used
 •	Hinge joint
 o	The ‘a’ axis describe the rotation axis
 o	The ‘z’ axis describes a zero axis from where rotational constraints can be calculated
+```
 
 It is possible to convert this jointed structure into a hierarchical structure by doing the following described by pseudo code, be aware that loops in the structure are broken:
 
