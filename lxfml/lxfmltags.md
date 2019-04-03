@@ -1,3 +1,5 @@
+Version 2.0 (29/06/05)
+
 # 1 Introduction
 This document gives a conceptual overview of the LEGO eXchange Format Markup Language (LXFML). The details of the format are described in the schema file “lxfmlschema.xsd”.
 
