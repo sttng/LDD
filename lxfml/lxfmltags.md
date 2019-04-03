@@ -6,10 +6,10 @@ This document gives a conceptual overview of the LEGO eXchange Format Markup Lan
 # 2 Concepts
 
 ## 2.1 Models
-The term model refers to a LEGO model build from LEGO bricks. The geometry of the bricks and the complete model they compose are not part of the model description. Models are stored in LXFML.
+The term *model* refers to a LEGO model build from LEGO bricks. The geometry of the bricks and the complete model they compose are not part of the *model* description. *Models* are stored in LXFML.
 
 ## 2.2 Parts
-The term part refers to a LEGO construction-element abstraction. A part could describe any physical or virtual object ever created by the LEGO Company, but for several reasons we restrict the term part to the physical or logical form of those objects, which are part of the current, former, or future selection in, what we today call, the Duplo, Dacta, System, and Technic ranges. The shape of any part has a unique identifier as does the material of the part.
+The term *part* refers to a LEGO construction-element abstraction. A *part* could describe any physical or virtual object ever created by the LEGO Company, but for several reasons we restrict the term *part* to *the physical or logical form* of those objects, which are part of the current, former, or future selection in, what we today call, the Duplo, Dacta, System, and Technic ranges. The shape of any *part* has a unique identifier as does the material of the *part*.
 
 ## 2.3 SubMaterial
 SubMaterials are used when a single Part is comprised of more than one material e.g. a door frame with a transparent window. A SubMaterial defines which surface on the Part needs which material. If no SubMaterial is defined for a given surface, the main material is used.
@@ -47,16 +47,14 @@ A Group contain a list of Parts; it defines a local coordinate system for these 
 A connection between two Group elements inside the same Model element is described by a Joint element. This jointed structure is not limited to describe a hierarchy but may also form a looping graph.
 Joints are described by a position and two perpendicular axes. Currently two types of joints are defined: the ball joint and the hinge joint, the following is the description of what the axes mean for these joints.
 
-```
-•	Ball joint
-o	The ‘a’ axis is the primary axis, protruding out and away from the foundation of the joint 
-o	The ‘z’ axis is the secondary axis
-o	The third axis can be calculated by crossing the ‘a’ and ‘z’ axes
-o	The axes are only interesting when rotational constraints are used
-•	Hinge joint
-o	The ‘a’ axis describe the rotation axis
-o	The ‘z’ axis describes a zero axis from where rotational constraints can be calculated
-```
+- Ball joint
+	- The ‘a’ axis is the primary axis, protruding out and away from the foundation of the joint 
+	- The ‘z’ axis is the secondary axis
+	- The third axis can be calculated by crossing the ‘a’ and ‘z’ axes
+	- The axes are only interesting when rotational constraints are used
+- Hinge joint
+	- The ‘a’ axis describe the rotation axis
+	- The ‘z’ axis describes a zero axis from where rotational constraints can be calculated
 
 It is possible to convert this jointed structure into a hierarchical structure by doing the following described by pseudo code, be aware that loops in the structure are broken:
 
