@@ -1,1 +1,227 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:v="http://schemas.microsoft.com/visio/2003/SVGExtensions/" xmlns:xlink="http://www.w3.org/1999/xlink" fill="none" fill-rule="evenodd" stroke-linecap="square" stroke-miterlimit="3" color-interpolation-filters="sRGB" font-size="12" overflow="visible" viewBox="0 0 595 842"><v:documentProperties v:langID="1033" v:metric="true" v:viewMarkup="false"><v:userDefs><v:ud v:nameU="msvNoAutoConnect" v:val="VT0(1):26"/></v:userDefs></v:documentProperties><style>.st1{fill:#fff;stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:.24}.st3{fill:#000;font-family:Calibri;font-size:1.00001em}.st4{marker-end:url(#mrkr4-21);stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:2}</style><defs id="Markers"><path id="lend4" d="M2 1L0 0l2-1v2"/><marker id="mrkr4-21" fill="#000" stroke="#000" stroke-width="0" orient="auto" overflow="visible" refX="-5" v:arrowSize="2" v:arrowType="4" v:setback="5"><use transform="scale(-2.26)" xlink:href="#lend4"/></marker></defs><g v:groupContext="foregroundPage" v:index="1" v:mID="0"><v:pageProperties v:drawingScale="0" v:drawingUnits="24" v:pageScale="0" v:shadowOffsetX="9" v:shadowOffsetY="-9"/><v:layer v:index="0" v:name="Connector"/><v:layer v:index="1" v:name="Flowchart"/><g id="shape1-1" transform="translate(241 -680)" v:groupContext="shape" v:mID="1"><v:userDefs><v:ud v:nameU="visVersion" v:val="VT0(15):26"/></v:userDefs><v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="43"/><v:textRect width="113" height="85" cx="57" cy="799"/><path d="M0 757h113v85H0z" class="st1"/><text x="38" y="804" fill="#000" font-family="Calibri" font-size="1em" v:langID="1033"><v:paragraph v:horizAlign="1"/> <v:tabList/> LXFML</text></g><g id="shape2-4" transform="translate(18 -539)" v:groupContext="shape" v:mID="2"><v:userDefs><v:ud v:nameU="visVersion" v:val="VT0(15):26"/></v:userDefs><v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="43"/><v:textRect width="113" height="85" cx="57" cy="799"/><path d="M0 757h113v85H0z" class="st1"/><text x="44" y="803" class="st3" v:langID="1033"><v:paragraph v:horizAlign="1"/> <v:tabList/> Meta</text></g><g id="shape3-7" transform="translate(170 -539)" v:groupContext="shape" v:mID="3"><v:userDefs><v:ud v:nameU="visVersion" v:val="VT0(15):26"/></v:userDefs><v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="43"/><v:textRect width="113" height="85" cx="57" cy="799"/><path d="M0 757h113v85H0z" class="st1"/><text x="36" y="803" class="st3" v:langID="1033"><v:paragraph v:horizAlign="1"/> <v:tabList/> Cameras</text></g><g id="shape4-10" transform="translate(322 -539)" v:groupContext="shape" v:mID="4"><v:userDefs><v:ud v:nameU="visVersion" v:val="VT0(15):26"/></v:userDefs><v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="43"/><v:textRect width="113" height="85" cx="57" cy="799"/><path d="M0 757h113v85H0z" class="st1"/><text x="42" y="803" class="st3" v:langID="1033"><v:paragraph v:horizAlign="1"/> <v:tabList/> Scene</text></g><g id="shape5-13" transform="translate(474 -539)" v:groupContext="shape" v:mID="5"><v:userDefs><v:ud v:nameU="visVersion" v:val="VT0(15):26"/></v:userDefs><v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="43"/><v:textRect width="113" height="85" cx="57" cy="799"/><path d="M0 757h113v85H0z" class="st1"/><text x="8" y="803" class="st3" v:langID="1033"><v:paragraph v:horizAlign="1"/> <v:tabList/> BuildingInstructions</text></g><path id="shape6-16" d="M0 842v11h-223v37" class="st4" transform="translate(298 -680)" v:groupContext="shape" v:layerMember="0" v:mID="6"/><path id="shape8-22" d="M0 842v11h-71v37" class="st4" transform="translate(298 -680)" v:groupContext="shape" v:layerMember="0" v:mID="8"/><path id="shape9-27" d="M0 842v11h81v37" class="st4" transform="translate(298 -680)" v:groupContext="shape" v:layerMember="0" v:mID="9"/><path id="shape10-32" d="M0 842v11h233v37" class="st4" transform="translate(298 -680)" v:groupContext="shape" v:layerMember="0" v:mID="10"/><g id="shape12-37" transform="translate(18 -411)" v:groupContext="shape" v:mID="12"><v:userDefs><v:ud v:nameU="visVersion" v:val="VT0(15):26"/></v:userDefs><v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="43"/><v:textRect width="113" height="85" cx="57" cy="799"/><path d="M0 757h113v85H0z" class="st1"/><text x="39" y="803" class="st3" v:langID="1033"><v:paragraph v:horizAlign="1"/> <v:tabList/> ? Any ?</text></g><g id="shape13-40" transform="translate(170 -411)" v:groupContext="shape" v:mID="13"><v:userDefs><v:ud v:nameU="visVersion" v:val="VT0(15):26"/></v:userDefs><v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="43"/><v:textRect width="113" height="85" cx="57" cy="799"/><path d="M0 757h113v85H0z" class="st1"/><text x="38" y="803" class="st3" v:langID="1033"><v:paragraph v:horizAlign="1"/> <v:tabList/> Camera</text></g><g id="shape14-43" transform="translate(322 -411)" v:groupContext="shape" v:mID="14"><v:userDefs><v:ud v:nameU="visVersion" v:val="VT0(15):26"/></v:userDefs><v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="43"/><v:textRect width="113" height="85" cx="57" cy="799"/><path d="M0 757h113v85H0z" class="st1"/><text x="41" y="803" class="st3" v:langID="1033"><v:paragraph v:horizAlign="1"/> <v:tabList/> Model</text></g><g id="shape15-46" transform="translate(474 -411)" v:groupContext="shape" v:mID="15"><v:userDefs><v:ud v:nameU="visVersion" v:val="VT0(15):26"/></v:userDefs><v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="43"/><v:textRect width="113" height="85" cx="57" cy="799"/><path d="M0 757h113v85H0z" class="st1"/><text x="11" y="803" class="st3" v:langID="1033"><v:paragraph v:horizAlign="1"/> <v:tabList/> BuildingInstruction</text></g><path id="shape16-49" d="M7 842v33" class="st4" transform="translate(68 -539)" v:groupContext="shape" v:layerMember="0" v:mID="16"/><path id="shape17-54" d="M7 842v33" class="st4" transform="translate(220 -539)" v:groupContext="shape" v:layerMember="0" v:mID="17"/><path id="shape18-59" d="M7 842v33" class="st4" transform="translate(372 -539)" v:groupContext="shape" v:layerMember="0" v:mID="18"/><path id="shape19-64" d="M7 842v33" class="st4" transform="translate(524 -539)" v:groupContext="shape" v:layerMember="0" v:mID="19"/><g id="shape20-69" transform="translate(250 -283)" v:groupContext="shape" v:mID="20"><v:userDefs><v:ud v:nameU="visVersion" v:val="VT0(15):26"/></v:userDefs><v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="43"/><v:textRect width="113" height="85" cx="57" cy="799"/><path d="M0 757h113v85H0z" class="st1"/><text x="41" y="803" class="st3" v:langID="1033"><v:paragraph v:horizAlign="1"/> <v:tabList/> Group</text></g><g id="shape21-72" transform="translate(402 -283)" v:groupContext="shape" v:mID="21"><v:userDefs><v:ud v:nameU="visVersion" v:val="VT0(15):26"/></v:userDefs><v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="43"/><v:textRect width="113" height="85" cx="57" cy="799"/><path d="M0 757h113v85H0z" class="st1"/><text x="45" y="803" class="st3" v:langID="1033"><v:paragraph v:horizAlign="1"/> <v:tabList/> Joint</text></g><path id="shape22-75" d="M0 842v11h-72v22" class="st4" transform="translate(379 -411)" v:groupContext="shape" v:layerMember="0" v:mID="22"/><path id="shape23-80" d="M0 842v11h80v22" class="st4" transform="translate(379 -411)" v:groupContext="shape" v:layerMember="0" v:mID="23"/><g id="shape24-85" transform="translate(250 -156)" v:groupContext="shape" v:mID="24"><v:userDefs><v:ud v:nameU="visVersion" v:val="VT0(15):26"/></v:userDefs><v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="43"/><v:textRect width="113" height="85" cx="57" cy="799"/><path d="M0 757h113v85H0z" class="st1"/><text x="47" y="803" class="st3" v:langID="1033"><v:paragraph v:horizAlign="1"/> <v:tabList/> Part</text></g><path id="shape25-88" d="M7 842v33" class="st4" transform="translate(300 -283)" v:groupContext="shape" v:layerMember="0" v:mID="25"/><g id="shape26-93" transform="translate(174 -34)" v:groupContext="shape" v:mID="26"><v:userDefs><v:ud v:nameU="visVersion" v:val="VT0(15):26"/></v:userDefs><v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="43"/><v:textRect width="113" height="85" cx="57" cy="799"/><path d="M0 757h113v85H0z" class="st1"/><text x="27" y="803" class="st3" v:langID="1033"><v:paragraph v:horizAlign="1"/> <v:tabList/> SubMaterial</text></g><g id="shape27-96" transform="translate(326 -34)" v:groupContext="shape" v:mID="27"><v:userDefs><v:ud v:nameU="visVersion" v:val="VT0(15):26"/></v:userDefs><v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="43"/><v:textRect width="113" height="85" cx="57" cy="799"/><path d="M0 757h113v85H0z" class="st1"/><text x="30" y="803" class="st3" v:langID="1033"><v:paragraph v:horizAlign="1"/> <v:tabList/> Decoration</text></g><path id="shape28-99" d="M0 842v11h-76v17" class="st4" transform="translate(307 -156)" v:groupContext="shape" v:layerMember="0" v:mID="28"/><path id="shape29-104" d="M0 842v11h76v17" class="st4" transform="translate(307 -156)" v:groupContext="shape" v:layerMember="0" v:mID="29"/><g id="shape30-109" transform="translate(474 -156)" v:groupContext="shape" v:mID="30"><v:userDefs><v:ud v:nameU="visVersion" v:val="VT0(15):26"/></v:userDefs><v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="43"/><v:textRect width="113" height="85" cx="57" cy="799"/><path d="M0 757h113v85H0z" class="st1"/><text x="46" y="803" class="st3" v:langID="1033"><v:paragraph v:horizAlign="1"/> <v:tabList/> Step</text></g><path id="shape31-112" d="M7 842v161" class="st4" transform="translate(524 -411)" v:groupContext="shape" v:layerMember="0" v:mID="31"/><g id="shape32-117" transform="translate(474 -35)" v:groupContext="shape" v:mID="32"><v:userDefs><v:ud v:nameU="visVersion" v:val="VT0(15):26"/></v:userDefs><v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="43"/><v:textRect width="113" height="85" cx="57" cy="799"/><path d="M0 757h113v85H0z" class="st1"/><text x="39" y="803" class="st3" v:langID="1033"><v:paragraph v:horizAlign="1"/> <v:tabList/> PartRef</text></g><path id="shape33-120" d="M7 842v27" class="st4" transform="translate(524 -156)" v:groupContext="shape" v:layerMember="0" v:mID="33"/></g></svg>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg color-interpolation-filters="sRGB" fill="none" fill-rule="evenodd" font-size="12" overflow="visible" stroke-linecap="square" stroke-miterlimit="3" viewBox="0 0 595 842" xmlns="http://www.w3.org/2000/svg" xmlns:v="http://schemas.microsoft.com/visio/2003/SVGExtensions/" xmlns:xlink="http://www.w3.org/1999/xlink">
+<v:documentProperties v:langID="1033" v:metric="true" v:viewMarkup="false">
+<v:userDefs>
+<v:ud v:nameU="msvNoAutoConnect" v:val="VT0(1):26"/>
+</v:userDefs>
+</v:documentProperties>
+<style>.st1{fill:#fff;stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:.24}.st3{fill:#000;font-family:Calibri;font-size:1.00001em}.st4{marker-end:url(#a);stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:2}</style>
+<defs>
+<path id="b" d="m2 1-2-1 2-1v2"/>
+<marker id="a" fill="#000" overflow="visible" stroke="#000" stroke-width="0" orient="auto" refX="-5" v:arrowSize="2" v:arrowType="4" v:setback="5">
+<use transform="scale(-2.26)" xlink:href="#b"/>
+</marker>
+</defs>
+<g v:groupContext="foregroundPage" v:index="1" v:mID="0">
+<v:pageProperties v:drawingScale="0" v:drawingUnits="24" v:pageScale="0" v:shadowOffsetX="9" v:shadowOffsetY="-9"/>
+<v:layer v:index="0" v:name="Connector"/>
+<v:layer v:index="1" v:name="Flowchart"/>
+<g transform="translate(225 -710)" v:groupContext="shape" v:mID="1">
+<v:userDefs>
+<v:ud v:nameU="visVersion" v:val="VT0(15):26"/>
+</v:userDefs>
+<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="43"/>
+<v:textRect width="105" height="55" cx="53" cy="814"/>
+<path class="st1" d="M0 787h105v55H0z"/>
+<text x="34" y="819" fill="#000" font-family="Calibri" font-size="1em" v:langID="1033">
+<v:paragraph v:horizAlign="1"/>
+<v:tabList/>
+LXFML</text>
+</g>
+<g transform="translate(0 -619)" v:groupContext="shape" v:mID="2">
+<v:userDefs>
+<v:ud v:nameU="visVersion" v:val="VT0(15):26"/>
+</v:userDefs>
+<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="43"/>
+<v:textRect width="105" height="55" cx="53" cy="814"/>
+<path class="st1" d="M0 787h105v55H0z"/>
+<text class="st3" x="40" y="818" v:langID="1033">
+<v:paragraph v:horizAlign="1"/>
+<v:tabList/>
+Meta</text>
+</g>
+<g transform="translate(150 -619)" v:groupContext="shape" v:mID="3">
+<v:userDefs>
+<v:ud v:nameU="visVersion" v:val="VT0(15):26"/>
+</v:userDefs>
+<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="43"/>
+<v:textRect width="105" height="55" cx="53" cy="814"/>
+<path class="st1" d="M0 787h105v55H0z"/>
+<text class="st3" x="31" y="818" v:langID="1033">
+<v:paragraph v:horizAlign="1"/>
+<v:tabList/>
+Cameras</text>
+</g>
+<g transform="translate(301 -619)" v:groupContext="shape" v:mID="4">
+<v:userDefs>
+<v:ud v:nameU="visVersion" v:val="VT0(15):26"/>
+</v:userDefs>
+<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="43"/>
+<v:textRect width="105" height="55" cx="53" cy="814"/>
+<path class="st1" d="M0 787h105v55H0z"/>
+<text class="st3" x="38" y="818" v:langID="1033">
+<v:paragraph v:horizAlign="1"/>
+<v:tabList/>
+Scene</text>
+</g>
+<g transform="translate(484 -619)" v:groupContext="shape" v:mID="5">
+<v:userDefs>
+<v:ud v:nameU="visVersion" v:val="VT0(15):26"/>
+</v:userDefs>
+<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="43"/>
+<v:textRect width="105" height="55" cx="53" cy="814"/>
+<path class="st1" d="M0 787h105v55H0z"/>
+<text class="st3" x="4" y="818" v:langID="1033">
+<v:paragraph v:horizAlign="1"/>
+<v:tabList/>
+BuildingInstructions</text>
+</g>
+<path class="st4" transform="translate(278 -710)" d="m0 842v11h-225v17" v:groupContext="shape" v:layerMember="0" v:mID="6"/>
+<path class="st4" transform="translate(278 -710)" d="m0 842v11h-75v17" v:groupContext="shape" v:layerMember="0" v:mID="8"/>
+<path class="st4" transform="translate(278 -710)" d="m0 842v11h75v17" v:groupContext="shape" v:layerMember="0" v:mID="9"/>
+<path class="st4" transform="translate(278 -710)" d="m0 842v11h259v17" v:groupContext="shape" v:layerMember="0" v:mID="10"/>
+<g transform="translate(0 -536)" v:groupContext="shape" v:mID="12">
+<v:userDefs>
+<v:ud v:nameU="visVersion" v:val="VT0(15):26"/>
+</v:userDefs>
+<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="43"/>
+<v:textRect width="105" height="55" cx="53" cy="814"/>
+<path class="st1" d="M0 787h105v55H0z"/>
+<text class="st3" x="35" y="818" v:langID="1033">
+<v:paragraph v:horizAlign="1"/>
+<v:tabList/>
+? Any ?</text>
+</g>
+<g transform="translate(150 -536)" v:groupContext="shape" v:mID="13">
+<v:userDefs>
+<v:ud v:nameU="visVersion" v:val="VT0(15):26"/>
+</v:userDefs>
+<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="43"/>
+<v:textRect width="105" height="55" cx="53" cy="814"/>
+<path class="st1" d="M0 787h105v55H0z"/>
+<text class="st3" x="34" y="818" v:langID="1033">
+<v:paragraph v:horizAlign="1"/>
+<v:tabList/>
+Camera</text>
+</g>
+<g transform="translate(301 -536)" v:groupContext="shape" v:mID="14">
+<v:userDefs>
+<v:ud v:nameU="visVersion" v:val="VT0(15):26"/>
+</v:userDefs>
+<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="43"/>
+<v:textRect width="105" height="55" cx="53" cy="814"/>
+<path class="st1" d="M0 787h105v55H0z"/>
+<text class="st3" x="37" y="818" v:langID="1033">
+<v:paragraph v:horizAlign="1"/>
+<v:tabList/>
+Model</text>
+</g>
+<g transform="translate(484 -536)" v:groupContext="shape" v:mID="15">
+<v:userDefs>
+<v:ud v:nameU="visVersion" v:val="VT0(15):26"/>
+</v:userDefs>
+<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="43"/>
+<v:textRect width="105" height="55" cx="53" cy="814"/>
+<path class="st1" d="M0 787h105v55H0z"/>
+<text class="st3" x="6" y="818" v:langID="1033">
+<v:paragraph v:horizAlign="1"/>
+<v:tabList/>
+BuildingInstruction</text>
+</g>
+<path class="st4" transform="translate(46 -619)" d="m7 842v18" v:groupContext="shape" v:layerMember="0" v:mID="16"/>
+<path class="st4" transform="translate(195 -619)" d="m7 842v18" v:groupContext="shape" v:layerMember="0" v:mID="17"/>
+<path class="st4" transform="translate(346 -619)" d="m7 842v18" v:groupContext="shape" v:layerMember="0" v:mID="18"/>
+<path class="st4" transform="translate(530 -619)" d="m7 842v18" v:groupContext="shape" v:layerMember="0" v:mID="19"/>
+<g transform="translate(241 -453)" v:groupContext="shape" v:mID="20">
+<v:userDefs>
+<v:ud v:nameU="visVersion" v:val="VT0(15):26"/>
+</v:userDefs>
+<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="43"/>
+<v:textRect width="105" height="55" cx="53" cy="814"/>
+<path class="st1" d="M0 787h105v55H0z"/>
+<text class="st3" x="37" y="818" v:langID="1033">
+<v:paragraph v:horizAlign="1"/>
+<v:tabList/>
+Group</text>
+</g>
+<g transform="translate(362 -453)" v:groupContext="shape" v:mID="21">
+<v:userDefs>
+<v:ud v:nameU="visVersion" v:val="VT0(15):26"/>
+</v:userDefs>
+<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="43"/>
+<v:textRect width="105" height="55" cx="53" cy="814"/>
+<path class="st1" d="M0 787h105v55H0z"/>
+<text class="st3" x="41" y="818" v:langID="1033">
+<v:paragraph v:horizAlign="1"/>
+<v:tabList/>
+Joint</text>
+</g>
+<path class="st4" transform="translate(353 -536)" d="m0 842v11h-60v7" v:groupContext="shape" v:layerMember="0" v:mID="22"/>
+<path class="st4" transform="translate(353 -536)" d="m0 842v11h62v7" v:groupContext="shape" v:layerMember="0" v:mID="23"/>
+<g transform="translate(241 -371)" v:groupContext="shape" v:mID="24">
+<v:userDefs>
+<v:ud v:nameU="visVersion" v:val="VT0(15):26"/>
+</v:userDefs>
+<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="43"/>
+<v:textRect width="105" height="55" cx="53" cy="814"/>
+<path class="st1" d="M0 787h105v55H0z"/>
+<text class="st3" x="43" y="818" v:langID="1033">
+<v:paragraph v:horizAlign="1"/>
+<v:tabList/>
+Part</text>
+</g>
+<path class="st4" transform="translate(286 -453)" d="m7 842v18" v:groupContext="shape" v:layerMember="0" v:mID="25"/>
+<g transform="translate(177 -292)" v:groupContext="shape" v:mID="26">
+<v:userDefs>
+<v:ud v:nameU="visVersion" v:val="VT0(15):26"/>
+</v:userDefs>
+<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="43"/>
+<v:textRect width="105" height="55" cx="53" cy="814"/>
+<path class="st1" d="M0 787h105v55H0z"/>
+<text class="st3" x="23" y="818" v:langID="1033">
+<v:paragraph v:horizAlign="1"/>
+<v:tabList/>
+SubMaterial</text>
+</g>
+<g transform="translate(304 -292)" v:groupContext="shape" v:mID="27">
+<v:userDefs>
+<v:ud v:nameU="visVersion" v:val="VT0(15):26"/>
+</v:userDefs>
+<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="43"/>
+<v:textRect width="105" height="55" cx="53" cy="814"/>
+<path class="st1" d="M0 787h105v55H0z"/>
+<text class="st3" x="26" y="818" v:langID="1033">
+<v:paragraph v:horizAlign="1"/>
+<v:tabList/>
+Decoration</text>
+</g>
+<path class="st4" transform="translate(293 -371)" d="m0 842v11h-63v4" v:groupContext="shape" v:layerMember="0" v:mID="28"/>
+<path class="st4" transform="translate(293 -371)" d="m0 842v11h63v4" v:groupContext="shape" v:layerMember="0" v:mID="29"/>
+<g transform="translate(484 -453)" v:groupContext="shape" v:mID="30">
+<v:userDefs>
+<v:ud v:nameU="visVersion" v:val="VT0(15):26"/>
+</v:userDefs>
+<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="43"/>
+<v:textRect width="105" height="55" cx="53" cy="814"/>
+<path class="st1" d="M0 787h105v55H0z"/>
+<text class="st3" x="42" y="818" v:langID="1033">
+<v:paragraph v:horizAlign="1"/>
+<v:tabList/>
+Step</text>
+</g>
+<path class="st4" transform="translate(530 -536)" d="m7 842v18" v:groupContext="shape" v:layerMember="0" v:mID="31"/>
+<g transform="translate(484 -371)" v:groupContext="shape" v:mID="32">
+<v:userDefs>
+<v:ud v:nameU="visVersion" v:val="VT0(15):26"/>
+</v:userDefs>
+<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="43"/>
+<v:textRect width="105" height="55" cx="53" cy="814"/>
+<path class="st1" d="M0 787h105v55H0z"/>
+<text class="st3" x="35" y="818" v:langID="1033">
+<v:paragraph v:horizAlign="1"/>
+<v:tabList/>
+PartRef</text>
+</g>
+<path class="st4" transform="translate(530 -453)" d="m7 842v18" v:groupContext="shape" v:layerMember="0" v:mID="33"/>
+</g>
+</svg>
