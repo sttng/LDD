@@ -105,3 +105,5 @@ In order to allow models to be built some Parts may need to be moved from their 
 
 # 3 LXFML Element Diagram
 Below is a diagram showing the different elements in LXFML and their relationships. The arrows indicate which elements can have which elements as children / parents. The arrow describes a parent to child relationship.
+
+![ElementDiagram](https://raw.githubusercontent.com/sttng/LDD/master/lxfml/ElementDiagram.svg)
