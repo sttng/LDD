@@ -1,19 +1,13 @@
 # 1 Introduction
-This document gives a conceptual overview of the LEGO eXchange Format Markup Language (LXFML). 
-The details of the format are described in the schema file “lxfmlschema.xsd”.
+This document gives a conceptual overview of the LEGO eXchange Format Markup Language (LXFML). The details of the format are described in the schema file “lxfmlschema.xsd”.
 
 # 2 Concepts
 
 ## 2.1 Models
-The term model refers to a LEGO model build from LEGO bricks. 
-The geometry of the bricks and the complete model they compose are not part of the model description. Models are stored in LXFML.
+The term model refers to a LEGO model build from LEGO bricks. The geometry of the bricks and the complete model they compose are not part of the model description. Models are stored in LXFML.
 
 ## 2.2 Parts
-The term part refers to a LEGO construction-element abstraction. 
-A part could describe any physical or virtual object ever created by the LEGO Company, 
-but for several reasons we restrict the term part to the physical or logical form of those objects, 
-which are part of the current, former, or future selection in, what we today call, the Duplo, Dacta, System, and Technic ranges. 
-The shape of any part has a unique identifier as does the material of the part.
+The term part refers to a LEGO construction-element abstraction. A part could describe any physical or virtual object ever created by the LEGO Company, but for several reasons we restrict the term part to the physical or logical form of those objects, which are part of the current, former, or future selection in, what we today call, the Duplo, Dacta, System, and Technic ranges. The shape of any part has a unique identifier as does the material of the part.
 
 ## 2.3 SubMaterial
 SubMaterials are used when a single Part is comprised of more than one material e.g. a door frame with a transparent window. A SubMaterial defines which surface on the Part needs which material. If no SubMaterial is defined for a given surface, the main material is used.
@@ -26,8 +20,9 @@ An Assembly is used when a brick is made up of more than one Part e.g. mini figs
 
 ## 2.6 Meta
 The LXFML format supports a variety of non-model description information. Users may save their own information in a Meta element. A Meta element consists of two distinct types of information, of which none, one, or both types may make up the element:
-1.	A plain text string
-2.	A list of key-value pairs
+
+1. A plain text string
+2. A list of key-value pairs
 
 LEGO has predefined some Meta elements in the schema file, which can be used by users or applications as long as they adhere to the syntax defined in the schema. Users are encouraged to prefix their Meta element names to avoid future clashes with LEGO defined names.
 
@@ -49,6 +44,7 @@ A Group contain a list of Parts; it defines a local coordinate system for these 
 ## 2.12 Joints
 A connection between two Group elements inside the same Model element is described by a Joint element. This jointed structure is not limited to describe a hierarchy but may also form a looping graph.
 Joints are described by a position and two perpendicular axes. Currently two types of joints are defined: the ball joint and the hinge joint, the following is the description of what the axes mean for these joints.
+
 •	Ball joint
 o	The ‘a’ axis is the primary axis, protruding out and away from the foundation of the joint 
 o	The ‘z’ axis is the secondary axis
