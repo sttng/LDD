@@ -2,7 +2,7 @@
 
 #
 # Version 0.1 - Copyright (c) 2019 by 
-# Parses some render related command line arguments
+# Scans lxf file, writes ribs of bricks, places them in scene.rib
 #
 # Updates:
 #
@@ -31,14 +31,14 @@ def ParseCommandLine(_filename) :
 		const = 0.1, default = 0.1, type = float,
 		help = 'modify the pixel variance. Default 0.1')
 	
-	parser.add_argument('-w', '--width', nargs = '?', 
+	parser.add_argument('-wd', '--width', nargs = '?', 
 		const = 1280, default = 1280, type = int,
 		help = 'width of image. Default 1280')
 	
-	parser.add_argument('-h', '--height', nargs = '?', 
+	parser.add_argument('-ht', '--height', nargs = '?', 
 		const = 720, default = 720, type = int,
 		help = 'height of image. Default 720')
-	
+		
 	parser.add_argument('-sa', '--searcharchive', nargs = '?', 
 		type = open,
 		help = 'searchpath archive. Default current working dir')
@@ -49,17 +49,17 @@ def ParseCommandLine(_filename) :
 		
 	parser.add_argument('-d', '--default', action = 'count', help = 'use PxrPathTracer')
 	parser.add_argument('-v', '--vcm', action = 'count', help = 'use PxrVCM')
-	parser.add_argument('-i', '--unified', action = 'count', help = 'use PxrUnified. Must be enabled in rendermn.ini to work')
+	parser.add_argument('-i', '--unified', action = 'count', help = 'use PxrUnified. Also needs to be enabled in rendermn.ini to work')
 	parser.add_argument('-o', '--occlusion', action = 'count', help = 'use Occlusion')
 	
 	parser.add_argument('-t', '--direct', action = 'count', help = 'use PxrDirect')
-	parser.add_argument('-wf', '--wire', action = 'count', help = 'use PxrVisualizer with wireframe shaded')
+	parser.add_argument('-w', '--wire', action = 'count', help = 'use PxrVisualizer with wireframe shaded')
 	parser.add_argument('-n', '--normals', action = 'count', help = 'use PxrVisualizer with wireframe and Normals')
 	parser.add_argument('-u', '--wst', action = 'count', help = 'use PxrVisualizer with wireframe and ST')
 	parser.add_argument('-b', '--bxdf', action = 'count', help = 'use PxrVisualizer with wireframe and bxdf')
 	parser.add_argument('-f', '--flat', action = 'count', help = 'use PxrVisualizer with wireframe flat')
 	
-	parser.add_argument('-np', '--noplane', action = 'count', help = 'remove plane from the ground. Useful for space scenes')
+	parser.add_argument('-np', '--noplane', action = 'count', help = 'remove ground plane. Useful for space scenes')
 	
 	args = parser.parse_args()
 	if args.rib:
