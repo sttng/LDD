@@ -56,7 +56,8 @@ def ParseCommandLine(_filename) :
 	parser.add_argument('-wf', '--wire', action = 'count', help = 'use PxrVisualizer with wireframe shaded')
 	parser.add_argument('-n', '--normals', action = 'count', help = 'use PxrVisualizer with wireframe and Normals')
 	parser.add_argument('-u', '--wst', action = 'count', help = 'use PxrVisualizer with wireframe and ST')
-	parser.add_argument('-b', '--bxdf', action = 'count', help = 'use PxrVisualizer with bxdf')
+	parser.add_argument('-b', '--bxdf', action = 'count', help = 'use PxrVisualizer with wireframe and bxdf')
+	parser.add_argument('-f', '--flat', action = 'count', help = 'use PxrVisualizer with wireframe flat')
 	
 	parser.add_argument('-np', '--noplane', action = 'count', help = 'remove plane from the ground. Useful for space scenes')
 	
@@ -113,6 +114,15 @@ def ParseCommandLine(_filename) :
 	if args.bxdf:
 		integrator = '''Integrator "PxrVisualizer" "PxrVisualizer1"
 			"string style" ["bxdf"]
+			"int wireframe" [1]
+			"int normalCheck" [0]
+			"string matCap" [""]
+			"color wireframeColor" [0.0 0.0 0.0]
+			"float wireframeOpacity" [0.5]
+			"float wireframeWidth" [1.0]'''
+	if args.flat:
+		integrator = '''Integrator "PxrVisualizer" "PxrVisualizer1"
+			"string style" ["flat"]
 			"int wireframe" [1]
 			"int normalCheck" [0]
 			"string matCap" [""]
