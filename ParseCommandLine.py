@@ -38,6 +38,14 @@ def ParseCommandLine(_filename) :
 	parser.add_argument('-h', '--height', nargs = '?', 
 		const = 720, default = 720, type = int,
 		help = 'height of image. Default 720')
+	
+	parser.add_argument('-sa', '--searcharchive', nargs = '?', 
+		const = 720, default = 720, type = char,
+		help = 'searchpath archive. Default current working dir')
+
+	parser.add_argument('-st', '--searchtexture', nargs = '?', 
+		const = 720, default = 720, type = char,
+		help = 'searchpath texture. Default current working dir')
 		
 	parser.add_argument('-d', '--default', action = 'count', help = 'use PxrPathTracer')
 	parser.add_argument('-v', '--vcm', action = 'count', help = 'use PxrVCM')
