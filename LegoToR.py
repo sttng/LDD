@@ -32,6 +32,7 @@ Option "Ri" "int Frame" [1]
 	"float[4] ScreenWindow" [-1 1 -0.5625 0.5625]
 	"float[2] Shutter" [0 0]
 Option "bucket" "string order" ["circle"]
+Option "statistics" "int level" [1] "string xmlfilename" ["''' + cwd + '''/''' + filename + '''.xml"]
 
 ''' + integrator + '''
 Hider "raytrace" "int minsamples" [32] "int maxsamples" [64] "float darkfalloff" [0.025] "int incremental" [1] "string pixelfiltermode" ["importance"]
