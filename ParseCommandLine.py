@@ -10,17 +10,21 @@
 #
 
 import argparse
+import os.path
 
 filename = 'scene.rib'
 integratorParams = {"int numLightSamples" : [1], "int numBxdfSamples" : [1], "int maxPathLength" : [4]}
 integrator = 'Integrator "PxrPathTracer" "PxrPathTracer1"'
 args = []
+cwd = os.getcwd()
 
 def ParseCommandLine(_filename) :
 	global filename
 	global integratorParams
 	global integrator
 	global args
+	global cwd
+	
 	parser = argparse.ArgumentParser(description = 'Modify LegoToR render parameters')
 	
 	parser.add_argument('-s', '--srate', nargs = '?', 
@@ -39,12 +43,12 @@ def ParseCommandLine(_filename) :
 		const = 720, default = 720, type = int,
 		help = 'height of image. Default 720')
 		
-	parser.add_argument('-sa', '--searcharchive', nargs = '?', 
-		type = open,
+	parser.add_argument('-sa', '--searcharchive', nargs = '?',
+		default = cwd,
 		help = 'searchpath archive. Default current working dir')
 
 	parser.add_argument('-st', '--searchtexture', nargs = '?', 
-		type = open,
+		default = cwd,
 		help = 'searchpath texture. Default current working dir')
 		
 	parser.add_argument('-d', '--default', action = 'count', help = 'use PxrPathTracer')
@@ -62,11 +66,6 @@ def ParseCommandLine(_filename) :
 	parser.add_argument('-np', '--noplane', action = 'count', help = 'remove ground plane. Useful for space scenes')
 	
 	args = parser.parse_args()
-	if args.rib:
-		filename = _filename 
-		
-	else:
-		filename = '__render'
 		
 	if args.default:
 		integrator = 'Integrator "PxrPathTracer" "PxrPathTracer1"'
