@@ -41,7 +41,6 @@ Hider "raytrace" "int minsamples" [32] "int maxsamples" [64] "float darkfalloff"
 ShadingRate ''' + str(srate) + '''
 Projection "PxrCamera" "float fov" [8.5] "float fStop" [3.5] "float focalLength" [0.8] "float focalDistance" [5] "point focus1" [0.0 0.0 -1] "point focus2" [1 0.0 -1] "point focus3" [1 1 -1]'''
 
-	
 	print template_rib
 	
 if __name__ == '__main__':
