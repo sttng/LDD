@@ -17,6 +17,7 @@ integratorParams = {"int numLightSamples" : [1], "int numBxdfSamples" : [1], "in
 integrator = 'Integrator "PxrPathTracer" "PxrPathTracer1"'
 args = []
 cwd = os.getcwd()
+useplane = True
 
 def ParseCommandLine(_filename) :
 	global filename
@@ -24,8 +25,13 @@ def ParseCommandLine(_filename) :
 	global integrator
 	global args
 	global cwd
+	global useplane
 	
 	parser = argparse.ArgumentParser(description = 'Modify LegoToR render parameters')
+	
+	# Required positional argument
+	parser.add_argument('infile', type=open,
+		help = 'A required input file positional argument')
 	
 	parser.add_argument('-s', '--srate', nargs = '?', 
 		const = 10.0, default = 10.0, type = float,
@@ -34,6 +40,10 @@ def ParseCommandLine(_filename) :
 	parser.add_argument('-p', '--pixelvar', nargs = '?', 
 		const = 0.1, default = 0.1, type = float,
 		help = 'modify the pixel variance. Default 0.1')
+	
+	parser.add_argument('-f', '--fov' ,nargs='?', 
+		const=8.5, default=8.5, type=float,
+		help='projection fov. Default 8.5')
 	
 	parser.add_argument('-wd', '--width', nargs = '?', 
 		const = 1280, default = 1280, type = int,
@@ -61,9 +71,9 @@ def ParseCommandLine(_filename) :
 	parser.add_argument('-n', '--normals', action = 'count', help = 'use PxrVisualizer with wireframe and Normals')
 	parser.add_argument('-u', '--wst', action = 'count', help = 'use PxrVisualizer with wireframe and ST')
 	parser.add_argument('-b', '--bxdf', action = 'count', help = 'use PxrVisualizer with wireframe and bxdf')
-	parser.add_argument('-f', '--flat', action = 'count', help = 'use PxrVisualizer with wireframe flat')
+	parser.add_argument('-fl', '--flat', action = 'count', help = 'use PxrVisualizer with wireframe flat')
 	
-	parser.add_argument('-np', '--noplane', action = 'count', help = 'remove ground plane. Useful for space scenes')
+	parser.add_argument('-np', '--noplane', action = 'count', help = 'disable ground plane. Useful for space scenes')
 	
 	args = parser.parse_args()
 		
@@ -129,4 +139,4 @@ def ParseCommandLine(_filename) :
 			"float wireframeOpacity" [0.5]
 			"float wireframeWidth" [1.0]'''
 	if args.noplane:
-		use_plane = False
+		useplane = False
