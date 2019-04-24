@@ -31,21 +31,21 @@ def ParseCommandLine(_filename) :
 		const = 0.1, default = 0.1, type = float,
 		help = 'modify the pixel variance. Default 0.1')
 	
-	parser.add_argument('-wd', '--width', nargs = '?', 
+	parser.add_argument('-w', '--width', nargs = '?', 
 		const = 1024, default = 1024, type = int,
 		help = 'width of image. Default 1024')
 	
-	parser.add_argument('-ht', '--height', nargs = '?', 
+	parser.add_argument('-h', '--height', nargs = '?', 
 		const = 720, default = 720, type = int,
 		help = 'height of image. Default 720')
 		
 	parser.add_argument('-d', '--default', action = 'count', help = 'use PxrPathTracer')
 	parser.add_argument('-v', '--vcm', action = 'count', help = 'use PxrVCM')
-	parser.add_argument('-i', '--unified', action = 'count', help = 'use PxrUnified. Also needs to be enabled in rendermn.ini to work')
+	parser.add_argument('-i', '--unified', action = 'count', help = 'use PxrUnified. Must be enabled in rendermn.ini to work')
 	parser.add_argument('-o', '--occlusion', action = 'count', help = 'use Occlusion')
 	
 	parser.add_argument('-t', '--direct', action = 'count', help = 'use PxrDirect')
-	parser.add_argument('-w', '--wire', action = 'count', help = 'use PxrVisualizer with wireframe shaded')
+	parser.add_argument('-wf', '--wire', action = 'count', help = 'use PxrVisualizer with wireframe shaded')
 	parser.add_argument('-n', '--normals', action = 'count', help = 'use PxrVisualizer with wireframe and Normals')
 	parser.add_argument('-u', '--st', action = 'count', help = 'use PxrVisualizer with wireframe and ST')
 	
@@ -61,14 +61,14 @@ def ParseCommandLine(_filename) :
 	if args.vcm:
 		integrator = 'Integrator "PxrVCM" "PxrVCM1"'
 	if args.unified:
-		integrator = 'Integrator "PxrUnified" "PxrUnified1"' # Must be enabled in rendermn.ini also
+		integrator = 'Integrator "PxrUnified" "PxrUnified1"' # Must be enabled in rendermn.ini to work
 	if args.occlusion:
 		integrator = '''Integrator "PxrOcclusion" "PxrOcclusion1"
-			"int numSamples" [4]\n
-			"int distribution" [1]\n
-			"float cosineSpread" [2.0]\n
-			"float falloff" [0.01]\n
-			"float maxDistance" [100.0]\n
+			"int numSamples" [4]
+			"int distribution" [1]
+			"float cosineSpread" [2.0]
+			"float falloff" [0.01]
+			"float maxDistance" [100.0]
 			"int useAlbedo" [0]'''
 	if args.direct:
 		integrator = 'Integrator "PxrDirectLighting" "PxrDirectLighting1"'
