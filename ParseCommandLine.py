@@ -55,7 +55,7 @@ def ParseCommandLine(_filename) :
 	parser.add_argument('-t', '--direct', action = 'count', help = 'use PxrDirect')
 	parser.add_argument('-wf', '--wire', action = 'count', help = 'use PxrVisualizer with wireframe shaded')
 	parser.add_argument('-n', '--normals', action = 'count', help = 'use PxrVisualizer with wireframe and Normals')
-	parser.add_argument('-u', '--st', action = 'count', help = 'use PxrVisualizer with wireframe and ST')
+	parser.add_argument('-u', '--wst', action = 'count', help = 'use PxrVisualizer with wireframe and ST')
 	
 	args = parser.parse_args()
 	if args.rib:
