@@ -26,6 +26,7 @@ import zlib
 import random
 
 compression = zipfile.ZIP_DEFLATED
+use_plane = True #defines if plane for the ground should be there or not.
 
 
 # Checks if a matrix is a valid rotation matrix.
@@ -257,15 +258,16 @@ Display "beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse,diffuse_m
 			file_writer.write('\t\tReadArchive "' + lxf_filename +'_Bricks_Archive.zip!'+ name + '.rib"\n')
 			file_writer.write('\tAttributeEnd\n\n')
 		
-		file_writer.write('''\tAttributeBegin
+		if use_plane: # write the floor plane in case True
+			file_writer.write('''\tAttributeBegin
 		Attribute "identifier" "string name" ["plane1"]
 		Translate ''' + minx +''' 0 10
 		Scale 200 1 200
 		Polygon "P" [-0.5 0 -0.5  -0.5 0 0.5  0.5 0 0.5  0.5 0 -0.5]
 		"st" [0 0  0 1  1 1  1 0]
-	AttributeEnd
+	AttributeEnd\n\n)'''
 	
-WorldEnd\n''')
+file_writer.write('''WorldEnd\n''')
 	
 	file_writer.close()
 	return True
