@@ -57,6 +57,8 @@ def ParseCommandLine(_filename) :
 	parser.add_argument('-n', '--normals', action = 'count', help = 'use PxrVisualizer with wireframe and Normals')
 	parser.add_argument('-u', '--wst', action = 'count', help = 'use PxrVisualizer with wireframe and ST')
 	
+	parser.add_argument('-p', '--noplane', action = 'count', help = 'remove plane from the ground. Useful for space scenes')
+	
 	args = parser.parse_args()
 	if args.rib:
 		filename = _filename 
@@ -107,3 +109,5 @@ def ParseCommandLine(_filename) :
 			"color wireframeColor" [0.0 0.0 0.0]
 			"float wireframeOpacity" [0.5]
 			"float wireframeWidth" [1.0]'''
+	if args.noplane:
+		use_plane = False
