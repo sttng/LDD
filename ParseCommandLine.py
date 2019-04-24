@@ -42,7 +42,7 @@ def ParseCommandLine(_filename) :
 		help = 'modify the pixel variance. Default 0.1')
 	
 	parser.add_argument('-f', '--fov' ,nargs='?', 
-		const=8.5, default=8.5, type=float,
+		const = 8.5, default = 8.5, type = float,
 		help='projection fov. Default 8.5')
 	
 	parser.add_argument('-wd', '--width', nargs = '?', 
