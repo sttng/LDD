@@ -1,3 +1,15 @@
+#!/usr/bin/env python
+
+#
+# Version 0.1 - Copyright (c) 2019 by 
+# LegoToR parses LXF files and command line parameters to create a renderman compliant rib file.
+#
+# Updates:
+#
+# License: MIT License
+#
+
+
 import ParseCommandLine as cl
 import sys,os.path,subprocess
 
@@ -27,6 +39,7 @@ ShadingRate ''' + srate + '''
 Projection "PxrCamera" "float fov" [8.5] "float fStop" [3.5] "float focalLength" [0.8] "float focalDistance" [5] "point focus1" [0.0 0.0 -1] "point focus2" [1 0.0 -1] "point focus3" [1 1 -1]
 '''
 
+	
 if __name__ == '__main__':
 	cl.ParseCommandLine('myscene.rib')
 	main(cl.filename, cl.args.srate, cl.args.pixelvar, cl.args.width, cl.args.height, cl.args.searcharchive, cl.args.searchtexture, cl.integrator, cl.integratorParams)
