@@ -2,7 +2,7 @@
 
 #
 # Version 0.1 - Copyright (c) 2019 by 
-# Scans lxf file, writes ribs of bricks, places them in scene.rib
+# Parses some render related command line arguments
 #
 # Updates:
 #
