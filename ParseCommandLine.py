@@ -32,8 +32,8 @@ def ParseCommandLine(_filename) :
 		help = 'modify the pixel variance. Default 0.1')
 	
 	parser.add_argument('-w', '--width', nargs = '?', 
-		const = 1024, default = 1024, type = int,
-		help = 'width of image. Default 1024')
+		const = 1280, default = 1280, type = int,
+		help = 'width of image. Default 1280')
 	
 	parser.add_argument('-h', '--height', nargs = '?', 
 		const = 720, default = 720, type = int,
