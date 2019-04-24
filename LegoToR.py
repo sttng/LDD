@@ -28,5 +28,5 @@ Projection "PxrCamera" "float fov" [8.5] "float fStop" [3.5] "float focalLength"
 '''
 
 if __name__ == '__main__':
-	cl.ProcessCommandLine('myscene.rib')
+	cl.ParseCommandLine('myscene.rib')
 	main(cl.filename, cl.args.srate, cl.args.pixelvar, cl.args.width, cl.args.height, cl.args.searcharchive, cl.args.searchtexture, cl.integrator, cl.integratorParams)
