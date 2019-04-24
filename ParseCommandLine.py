@@ -40,11 +40,11 @@ def ParseCommandLine(_filename) :
 		help = 'height of image. Default 720')
 	
 	parser.add_argument('-sa', '--searcharchive', nargs = '?', 
-		const = 720, default = 720, type = char,
+		type = open,
 		help = 'searchpath archive. Default current working dir')
 
 	parser.add_argument('-st', '--searchtexture', nargs = '?', 
-		const = 720, default = 720, type = char,
+		type = open,
 		help = 'searchpath texture. Default current working dir')
 		
 	parser.add_argument('-d', '--default', action = 'count', help = 'use PxrPathTracer')
