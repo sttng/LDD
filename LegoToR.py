@@ -17,7 +17,7 @@ cwd = os.getcwd()
 
 
 # Main rendering routine
-def main(filename, srate=10, pixelvar=0.1, width=1280, height=720, searcharchive=cwd, searchtexture=cwd, integrator='PxrPathTracer', integratorParams={}):
+def main(infile, srate=10, pixelvar=0.1, width=1280, height=720, fov=8.5, searcharchive=cwd, searchtexture=cwd, integrator='PxrPathTracer', integratorParams={},useplane=True):
 	#print ('shading rate {} pivel variance {} using {} {}'.format(srate,pixelvar,integrator,integratorParams))
 	
 	template_rib = '''##RenderMan RIB
@@ -34,16 +34,16 @@ Option "Ri" "int Frame" [1]
 	"float[4] ScreenWindow" [-1 1 -0.5625 0.5625]
 	"float[2] Shutter" [0 0]
 Option "bucket" "string order" ["circle"]
-Option "statistics" "int level" [1] "string xmlfilename" ["''' + str(cwd) + '''/''' + filename + '''.xml"]
+Option "statistics" "int level" [1] "string xmlfilename" ["''' + str(cwd) + '''/''' + str(infile) + '''.xml"]
 
 ''' + str(integrator) + '''
 Hider "raytrace" "int minsamples" [32] "int maxsamples" [64] "float darkfalloff" [0.025] "int incremental" [1] "string pixelfiltermode" ["importance"]
 ShadingRate ''' + str(srate) + '''
-Projection "PxrCamera" "float fov" [8.5] "float fStop" [3.5] "float focalLength" [0.8] "float focalDistance" [5] "point focus1" [0.0 0.0 -1] "point focus2" [1 0.0 -1] "point focus3" [1 1 -1]'''
+Projection "PxrCamera" "float fov" [''' + str(fov) + '''] "float fStop" [3.5] "float focalLength" [0.8] "float focalDistance" [5] "point focus1" [0.0 0.0 -1] "point focus2" [1 0.0 -1] "point focus3" [1 1 -1]''' + str(useplane)
 
 	print template_rib
 	
 if __name__ == '__main__':
-	cl.ParseCommandLine('myscene.rib')
-	main(cl.filename, cl.args.srate, cl.args.pixelvar, cl.args.width, cl.args.height, cl.args.searcharchive, cl.args.searchtexture, cl.integrator, cl.integratorParams)
+	cl.ParseCommandLine('')
+	main(cl.args.infile, cl.args.srate, cl.args.pixelvar, cl.args.width, cl.args.height, cl.args.fov, cl.args.searcharchive, cl.args.searchtexture, cl.integrator, cl.integratorParams, cl.useplane)
 	
