@@ -11,15 +11,13 @@
 
 
 import ParseCommandLine as cl
-import sys,os.path,subprocess
-
-cwd = os.getcwd()
+import sys, os.path
 
 
-# Main rendering routine
-def main(infile, srate=10, pixelvar=0.1, width=1280, height=720, fov=8.5, searcharchive=cwd, searchtexture=cwd, integrator='PxrPathTracer', integratorParams={},useplane=True):
+# Template generating routine
+def main(infile, srate, pixelvar, width, height, fov, searcharchive, searchtexture, integrator, integratorParams, useplane):
 	#print ('shading rate {} pivel variance {} using {} {}'.format(srate,pixelvar,integrator,integratorParams))
-	
+	cwd = os.getcwd()
 	infile = os.path.splitext(os.path.basename(infile))[0]
 	
 	template_rib = '''##RenderMan RIB
