@@ -22,8 +22,7 @@ def main(infile, srate, pixelvar, width, height, fov, searcharchive, searchtextu
 	
 	template_rib = '''##RenderMan RIB
 version 3.04
-Option "searchpath" "string archive" ["''' + str(searcharchive) + '''"]
-Option "searchpath" "string texture" [".:@:/Applications/Pixar/RenderManProServer-22.4/lib/RenderManAssetLibrary/EnvironmentMaps/Outdoor/GriffithObservatory.rma:''' + str(searchtexture) + '''/"]
+Option "searchpath" "string archive" ["''' + str(searcharchive) + '''"] "string texture" [".:@:/Applications/Pixar/RenderManProServer-22.4/lib/RenderManAssetLibrary/EnvironmentMaps/Outdoor/GriffithObservatory.rma:''' + str(searchtexture) + '''/"]
 Option "Ri" "int Frame" [1]
 	"float PixelVariance" [''' + str(pixelvar) + ''']
 	"string PixelFilterName" ["gaussian"]
