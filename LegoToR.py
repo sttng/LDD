@@ -20,6 +20,8 @@ cwd = os.getcwd()
 def main(infile, srate=10, pixelvar=0.1, width=1280, height=720, fov=8.5, searcharchive=cwd, searchtexture=cwd, integrator='PxrPathTracer', integratorParams={},useplane=True):
 	#print ('shading rate {} pivel variance {} using {} {}'.format(srate,pixelvar,integrator,integratorParams))
 	
+	infile = os.path.splitext(os.path.basename(infile))[0]
+	
 	template_rib = '''##RenderMan RIB
 version 3.04
 Option "searchpath" "string archive" ["''' + str(searcharchive) + '''"]
