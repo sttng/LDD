@@ -93,7 +93,7 @@ def ParseCommandLine(_filename) :
 			"int allowCaustics" [0] 
 			"int accumOpacity" [0] 
 			"int rouletteDepth" [4] 
-			"float rouletteThreshold" [0.200000003] 
+			"float rouletteThreshold" [0.2] 
 			"int clampDepth" [2] 
 			"float clampLuminance" [10]'''
 	if args.vcm:
