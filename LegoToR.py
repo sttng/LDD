@@ -71,6 +71,7 @@ Projection "PxrCamera" "float fov" [''' + str(fov) + '''] "float fStop" [3.5] "f
 
 def main():
 	cl.ParseCommandLine('')
+	lxf_filename = cl.args.infile
 	generate_rib_template(cl.args.infile, cl.args.srate, cl.args.pixelvar, cl.args.width, cl.args.height, cl.args.fov, cl.args.searcharchive, cl.args.searchtexture, cl.integrator, cl.integratorParams, cl.useplane)
 
 	
