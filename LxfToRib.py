@@ -106,6 +106,8 @@ def generate_bricks(lxf_filename):
 				os.remove(written_rib + '.rib')
 				os.remove(design_id + '.obj')
 				processed_brick[processed] = True
+	
+	return True
 				
 
 # Scan the lxf file and create a rib scene file, referencing the parts / bricks, and move them to correct position with correct rotation.
@@ -246,9 +248,9 @@ Display "''' + ribfile + '''.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_v
 		"st" [0 0  0 1  1 1  1 0]
 	AttributeEnd\n\n)'''
 	
-file_writer.write('''WorldEnd\n''')
-	
+	file_writer.write('''WorldEnd\n''')
 	file_writer.close()
+	
 	return True
 
 
@@ -262,6 +264,8 @@ def generate_master_scene(lxf_filename):
 				shutil.copyfileobj(fd, wfd, 1024*1024*10)
 	os.remove(lxf_filename + '.rib')
 	print 'Success: Created rib scene from ' + lxf_filename + lxf_extension
+	
+	return True
 	
 	
 def main():
