@@ -176,7 +176,7 @@ TransformBegin
 TransformEnd\n''')
 		
 		file_writer.write('''
-Display "beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse,diffuse_mse,specular,specular_mse,zfiltered,zfiltered_var,normal,normal_var,forward,backward" "int asrgba" 1
+Display "''' + ribfile + '''.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse,diffuse_mse,specular,specular_mse,zfiltered,zfiltered_var,normal,normal_var,forward,backward" "int asrgba" 1
 	"string storage" ["scanline"]
 	"string exrpixeltype" ["half"]
 	"string compression" ["zips"]
@@ -267,10 +267,8 @@ def generate_master_scene(lxf_filename):
 def main():
 	lxf_filename = sys.argv[1]
 	
-	generate_bricks(lxf_filename)
-	
+	generate_bricks(lxf_filename)	
 	export_to_rib(lxf_filename)
-	
 	generate_master_scene(lxf_filename)
 	
 if __name__ == "__main__":
