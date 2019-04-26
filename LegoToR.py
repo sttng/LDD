@@ -15,7 +15,7 @@ import sys, os.path
 
 
 # Template generating routine
-def main(infile, srate, pixelvar, width, height, fov, searcharchive, searchtexture, integrator, integratorParams, useplane):
+def generate_rib_template(infile, srate, pixelvar, width, height, fov, searcharchive, searchtexture, integrator, integratorParams, useplane):
 	#print ('shading rate {} pivel variance {} using {} {}'.format(srate,pixelvar,integrator,integratorParams))
 	cwd = os.getcwd()
 	infile = os.path.splitext(os.path.basename(infile))[0]
@@ -66,8 +66,13 @@ Projection "PxrCamera" "float fov" [''' + str(fov) + '''] "float fStop" [3.5] "f
 	with open('rib_template.rib', 'w') as file_writer:
 		file_writer.write(rib_template)
 	file_writer.close()
+	return True
+
+
+def main():
+	cl.ParseCommandLine('')
+	generate_rib_template(cl.args.infile, cl.args.srate, cl.args.pixelvar, cl.args.width, cl.args.height, cl.args.fov, cl.args.searcharchive, cl.args.searchtexture, cl.integrator, cl.integratorParams, cl.useplane)
+
 	
 if __name__ == '__main__':
-	cl.ParseCommandLine('')
-	main(cl.args.infile, cl.args.srate, cl.args.pixelvar, cl.args.width, cl.args.height, cl.args.fov, cl.args.searcharchive, cl.args.searchtexture, cl.integrator, cl.integratorParams, cl.useplane)
-	
+	main()
