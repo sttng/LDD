@@ -62,7 +62,7 @@ DisplayChannel "vector backward" "string source" "vector motionBack"
 
 Projection "PxrCamera" "float fov" [''' + str(fov) + '''] "float fStop" [3.5] "float focalLength" [0.8] "float focalDistance" [5] "point focus1" [0.0 0.0 -1] "point focus2" [1 0.0 -1] "point focus3" [1 1 -1]''' + str(useplane)
 
-	#print template_rib
+	#print rib_template
 	with open('rib_template.rib', 'w') as file_writer:
 		file_writer.write(rib_template)
 	file_writer.close()
