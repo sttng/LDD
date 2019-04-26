@@ -176,27 +176,6 @@ TransformBegin
 TransformEnd\n''')
 		
 		file_writer.write('''
-# Beauty
-DisplayChannel "color Ci"
-DisplayChannel "float a"
-DisplayChannel "color mse" "string source" "color Ci" "string statistics" "mse"
- 
-# Shading
-DisplayChannel "color albedo" "string source" "color lpe:nothruput;noinfinitecheck;noclamp;unoccluded;overwrite;C(U2L)|O"
-DisplayChannel "color albedo_var" "string source" "color lpe:nothruput;noinfinitecheck;noclamp;unoccluded;overwrite;C(U2L)|O" "string statistics" "variance"
-DisplayChannel "color diffuse" "string source" "color lpe:C(D[DS]*[LO])|O"
-DisplayChannel "color diffuse_mse" "string source" "color lpe:C(D[DS]*[LO])|O" "string statistics" "mse"
-DisplayChannel "color specular" "string source" "color lpe:CS[DS]*[LO]"
-DisplayChannel "color specular_mse" "string source" "color lpe:CS[DS]*[LO]" "string statistics" "mse"
- 
-# Geometry
-DisplayChannel "float zfiltered" "string source" "float z" "string filter" "gaussian"
-DisplayChannel "float zfiltered_var" "string source" "float z" "string filter" "gaussian" "string statistics" "variance"
-DisplayChannel "normal normal" "string source" "normal Nn"
-DisplayChannel "normal normal_var" "string source" "normal Nn" "string statistics" "variance"
-DisplayChannel "vector forward" "string source" "vector motionFore"
-DisplayChannel "vector backward" "string source" "vector motionBack"
-
 Display "beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse,diffuse_mse,specular,specular_mse,zfiltered,zfiltered_var,normal,normal_var,forward,backward" "int asrgba" 1
 	"string storage" ["scanline"]
 	"string exrpixeltype" ["half"]
