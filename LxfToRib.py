@@ -239,18 +239,17 @@ Display "''' + ribfile + '''.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_v
 			file_writer.write('\t\tReadArchive "' + lxf_filename +'_Bricks_Archive.zip!'+ name + '.rib"\n')
 			file_writer.write('\tAttributeEnd\n\n')
 		
-		if useplane: # write the floor plane in case True
-			file_writer.write('''\tAttributeBegin
+		#if useplane == True: # write the floor plane in case True
+		file_writer.write('''\tAttributeBegin
 		Attribute "identifier" "string name" ["groundplane"]
 		Translate ''' + minx +''' 0 10
 		Scale 200 1 200
 		Polygon "P" [-0.5 0 -0.5  -0.5 0 0.5  0.5 0 0.5  0.5 0 -0.5]
 		"st" [0 0  0 1  1 1  1 0]
-	AttributeEnd\n\n)'''
+	AttributeEnd\n\n''')
 	
-	file_writer.write('''WorldEnd\n''')
+		file_writer.write('WorldEnd\n')
 	file_writer.close()
-	
 	return True
 
 
@@ -259,7 +258,7 @@ def generate_master_scene(lxf_filename):
 	lxf_extension = os.path.splitext(os.path.basename(lxf_filename))[1]
 	lxf_filename = os.path.splitext(os.path.basename(lxf_filename))[0]
 	with open(lxf_filename + '_Scene.rib','wb') as wfd:
-		for f in ['template.rib',lxf_filename + '.rib']:
+		for f in ['rib_header.rib',lxf_filename + '.rib']:
 			with open(f,'rb') as fd:
 				shutil.copyfileobj(fd, wfd, 1024*1024*10)
 	os.remove(lxf_filename + '.rib')
@@ -271,7 +270,7 @@ def generate_master_scene(lxf_filename):
 def main():
 	lxf_filename = sys.argv[1]
 	
-	generate_bricks(lxf_filename)	
+	generate_bricks(lxf_filename)
 	export_to_rib(lxf_filename)
 	generate_master_scene(lxf_filename)
 	
