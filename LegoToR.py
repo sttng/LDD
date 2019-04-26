@@ -11,9 +11,8 @@
 
 
 import ParseCommandLine as cl
-import sys, os.path
-import datetime
-
+import sys, os.path, datetime
+from _version import __version__
 
 # rib "header" generating routine
 def generate_rib_header(infile, srate, pixelvar, width, height, fov, searcharchive, searchtexture, integrator, integratorParams, useplane):
@@ -22,7 +21,7 @@ def generate_rib_header(infile, srate, pixelvar, width, height, fov, searcharchi
 	infile = os.path.splitext(os.path.basename(infile))[0]
 	
 	rib_header = '''##RenderMan RIB
-# Generated with LegoToR on ''' + datetime.datetime.now() + '''
+# Generated with LegoToR ''' + __version__ + ''' on ''' + datetime.datetime.now() + '''
 version 3.04
 Option "searchpath" "string archive" ["''' + str(searcharchive) + '''"] "string texture" [".:@:/Applications/Pixar/RenderManProServer-22.4/lib/RenderManAssetLibrary/EnvironmentMaps/Outdoor/GriffithObservatory.rma:''' + str(searchtexture) + '''/"]
 Option "Ri" "int Frame" [1]
