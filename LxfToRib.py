@@ -26,7 +26,6 @@ import zlib
 import random
 
 compression = zipfile.ZIP_DEFLATED
-useplane = True #defines if plane for the ground should be there or not.
 
 
 # Checks if a matrix is a valid rotation matrix.
@@ -111,7 +110,9 @@ def generate_bricks(lxf_filename):
 				
 
 # Scan the lxf file and create a rib scene file, referencing the parts / bricks, and move them to correct position with correct rotation.
-def export_to_rib(lxf_filename):
+def export_to_rib(lxf_filename, useplane):
+	#useplane = True #defines if plane for the ground should be there or not.
+	useplane = useplane
 
 	archive = zipfile.ZipFile(lxf_filename, 'r')
 	lxfml_file = archive.read('IMAGE100.LXFML')
@@ -160,10 +161,10 @@ TransformEnd\n''')
 TransformBegin
 	#Translate ''' + str((0.1) * float(transformation_array[9])) + ''' ''' + str((0.1) * float(transformation_array[10])) + ''' ''' + transformation_array[11] + '''
 	Translate 0 0 40
-	Rotate ''' + str(math.degrees(roty)) + ''' 1 0 0
-	#Rotate -25 1 0 0
-	Rotate ''' + str(math.degrees(rotx)) + ''' 0 1 0
-	#Rotate 45 0 1 0
+	#Rotate ''' + str(math.degrees(roty)) + ''' 1 0 0
+	Rotate -25 1 0 0
+	#Rotate ''' + str(math.degrees(rotx)) + ''' 0 1 0
+	Rotate 45 0 1 0
 	#Rotate ''' + str(math.degrees(rotz)) + ''' 0 0 1
 	Camera "Cam-0"
 		"float shutterOpenTime" [0] 
@@ -239,8 +240,8 @@ Display "''' + ribfile + '''.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_v
 			file_writer.write('\t\tReadArchive "' + lxf_filename +'_Bricks_Archive.zip!'+ name + '.rib"\n')
 			file_writer.write('\tAttributeEnd\n\n')
 		
-		#if useplane == True: # write the floor plane in case True
-		file_writer.write('''\tAttributeBegin
+		if useplane == True: # write the floor plane in case True
+			file_writer.write('''\tAttributeBegin
 		Attribute "identifier" "string name" ["groundplane"]
 		Translate ''' + minx +''' 0 10
 		Scale 200 1 200
