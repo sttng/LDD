@@ -135,8 +135,8 @@ def ParseCommandLine(_filename) :
 			"int normalCheck" [0]
 			"string matCap" [""]
 			"color wireframeColor" [0.0 0.0 0.0]
-			"float wireframeOpacity" [0.5]
-			"float wireframeWidth" [1.0]'''
+			"float wireframeOpacity" [0.8]
+			"float wireframeWidth" [1.2]'''
 	if args.normals:
 		integrator = '''Integrator "PxrVisualizer" "PxrVisualizer1"
 			"string style" ["normals"]
