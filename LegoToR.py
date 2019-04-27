@@ -64,7 +64,7 @@ DisplayChannel "normal normal_var" "string source" "normal Nn" "string statistic
 DisplayChannel "vector forward" "string source" "vector motionFore"
 DisplayChannel "vector backward" "string source" "vector motionBack"
 
-Projection "PxrCamera" "float fov" [''' + str(fov) + '''] "float fStop" [3.5] "float focalLength" [0.8] "float focalDistance" [5] "point focus1" [0.0 0.0 -1] "point focus2" [1 0.0 -1] "point focus3" [1 1 -1]''' + str(useplane)
+Projection "PxrCamera" "float fov" [''' + str(fov) + '''] "float fStop" [3.5] "float focalLength" [0.8] "float focalDistance" [5] "point focus1" [0.0 0.0 -1] "point focus2" [1 0.0 -1] "point focus3" [1 1 -1]'''
 
 	#print rib_header
 	with open('rib_header.rib', 'w') as file_writer:
@@ -77,9 +77,8 @@ def main():
 	cl.ParseCommandLine('')
 	lxf_filename = os.path.realpath(cl.args.infile.name)
 	generate_rib_header(cl.args.infile, cl.args.srate, cl.args.pixelvar, cl.args.width, cl.args.height, cl.args.fov, cl.args.searcharchive, cl.args.searchtexture, cl.integrator, cl.integratorParams, cl.useplane)
-	
 	LxfToRib.generate_bricks(lxf_filename)
-	LxfToRib.export_to_rib(lxf_filename)
+	LxfToRib.export_to_rib(lxf_filename, cl.useplane)
 	LxfToRib.generate_master_scene(lxf_filename)
 
 
