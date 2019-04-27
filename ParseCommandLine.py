@@ -13,7 +13,8 @@ import argparse
 import os.path
 
 filename = 'scene.rib'
-integratorParams = {"int maxPathLength" [10], "int maxContinuationLength" [-1], "int maxNonStochasticOpacityEvents" [0], "string sampleMode" ["bxdf"], "int numLightSamples" [1], "int numBxdfSamples" [1], "int numIndirectSamples" [1], "int numDiffuseSamples" [1], "int numSpecularSamples" [1], "int numSubsurfaceSamples" [1], "int numRefractionSamples" [1], "int allowCaustics" [0], "int accumOpacity" [0], "int rouletteDepth" [4], "float rouletteThreshold" [0.200000003], "int clampDepth" [2], "float clampLuminance" [10]}
+#integratorParams = {"int maxPathLength" [10], "int maxContinuationLength" [-1], "int maxNonStochasticOpacityEvents" [0], "string sampleMode" ["bxdf"], "int numLightSamples" [1], "int numBxdfSamples" [1], "int numIndirectSamples" [1], "int numDiffuseSamples" [1], "int numSpecularSamples" [1], "int numSubsurfaceSamples" [1], "int numRefractionSamples" [1], "int allowCaustics" [0], "int accumOpacity" [0], "int rouletteDepth" [4], "float rouletteThreshold" [0.200000003], "int clampDepth" [2], "float clampLuminance" [10]}
+integratorParams = {}
 integrator = '''Integrator "PxrPathTracer" "PxrPathTracer1"
 			"int maxPathLength" [10] 
 			"int maxContinuationLength" [-1] 
@@ -90,7 +91,7 @@ def ParseCommandLine(_filename) :
 	parser.add_argument('-b', '--bxdf', action = 'count', help = 'use PxrVisualizer with wireframe and bxdf')
 	parser.add_argument('-fl', '--flat', action = 'count', help = 'use PxrVisualizer with wireframe flat')
 	
-	parser.add_argument('-np', '--noplane', action = 'count', help = 'disable ground plane. Useful for space scenes')
+	parser.add_argument('-np', '--noplane', action = 'count', help = 'disable ground plane. Useful for space ships!')
 	
 	args = parser.parse_args()
 		
