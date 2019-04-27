@@ -13,17 +13,20 @@
 import ParseCommandLine as cl
 import sys, os.path, datetime
 from _version import __version__
+import LxfToRib
+
 
 # rib "header" generating routine
 def generate_rib_header(infile, srate, pixelvar, width, height, fov, searcharchive, searchtexture, integrator, integratorParams, useplane):
 	#print ('shading rate {} pivel variance {} using {} {}'.format(srate,pixelvar,integrator,integratorParams))
 	cwd = os.getcwd()
+	infile = os.path.realpath(infile.name)
 	infile = os.path.splitext(os.path.basename(infile))[0]
 	
 	rib_header = '''##RenderMan RIB
-# Generated with LegoToR ''' + __version__ + ''' on ''' + datetime.datetime.now() + '''
+# Generated with LegoToR ''' + __version__ + ''' on ''' + str(datetime.datetime.now()) + '''
 version 3.04
-Option "searchpath" "string archive" ["''' + str(searcharchive) + '''"] "string texture" [".:@:/Applications/Pixar/RenderManProServer-22.4/lib/RenderManAssetLibrary/EnvironmentMaps/Outdoor/GriffithObservatory.rma:''' + str(searchtexture) + '''/"]
+Option "searchpath" "string archive" ["''' + str(searcharchive) + '''/"] "string texture" [".:@:/Applications/Pixar/RenderManProServer-22.4/lib/RenderManAssetLibrary/EnvironmentMaps/Outdoor/GriffithObservatory.rma:''' + str(searchtexture) + '''/"]
 Option "Ri" "int Frame" [1]
 	"float PixelVariance" [''' + str(pixelvar) + ''']
 	"string PixelFilterName" ["gaussian"]
@@ -72,9 +75,13 @@ Projection "PxrCamera" "float fov" [''' + str(fov) + '''] "float fStop" [3.5] "f
 
 def main():
 	cl.ParseCommandLine('')
-	lxf_filename = cl.args.infile
+	lxf_filename = os.path.realpath(cl.args.infile.name)
 	generate_rib_header(cl.args.infile, cl.args.srate, cl.args.pixelvar, cl.args.width, cl.args.height, cl.args.fov, cl.args.searcharchive, cl.args.searchtexture, cl.integrator, cl.integratorParams, cl.useplane)
-
 	
+	LxfToRib.generate_bricks(lxf_filename)
+	LxfToRib.export_to_rib(lxf_filename)
+	LxfToRib.generate_master_scene(lxf_filename)
+
+
 if __name__ == '__main__':
 	main()
