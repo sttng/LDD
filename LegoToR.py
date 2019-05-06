@@ -26,7 +26,7 @@ def generate_rib_header(infile, srate, pixelvar, width, height, fov, searcharchi
 	rib_header = '''##RenderMan RIB
 # Generated with LegoToR ''' + __version__ + ''' on ''' + str(datetime.datetime.now()) + '''
 version 3.04
-Option "searchpath" "string archive" ["''' + str(searcharchive) + '''/"] "string texture" [".:@:/Applications/Pixar/RenderManProServer-22.4/lib/RenderManAssetLibrary/EnvironmentMaps/Outdoor/GriffithObservatory.rma:''' + str(searchtexture) + '''/"]
+Option "searchpath" "string archive" ["''' + str(searcharchive) + os.sep + '''"] "string texture" [".:@:/Applications/Pixar/RenderManProServer-22.4/lib/RenderManAssetLibrary/EnvironmentMaps/Outdoor/GriffithObservatory.rma:''' + str(searchtexture) + os.sep + '''"]
 Option "Ri" "int Frame" [1]
 	"float PixelVariance" [''' + str(pixelvar) + ''']
 	"string PixelFilterName" ["gaussian"]
@@ -37,7 +37,7 @@ Option "Ri" "int Frame" [1]
 	"float[4] ScreenWindow" [-1 1 -0.5625 0.5625]
 	"float[2] Shutter" [0 0]
 Option "bucket" "string order" ["circle"]
-Option "statistics" "int level" [1] "string xmlfilename" ["''' + str(cwd) + '''/''' + str(infile) + '''.xml"]
+Option "statistics" "int level" [1] "string xmlfilename" ["''' + str(cwd) + os.sep + str(infile) + '''.xml"]
 
 ''' + str(integrator) + '''
 Hider "raytrace" "int minsamples" [32] "int maxsamples" [64] "float darkfalloff" [0.025] "int incremental" [1] "string pixelfiltermode" ["importance"]
@@ -90,12 +90,12 @@ def main():
 
 	print '''
 Now start Renderman with (for preview):
-./prman -d it -t:-2 ''' + str(cl.args.searcharchive) + '''/''' + lxf_filename + '''_Scene.rib'''
+./prman -d it -t:-2 ''' + str(cl.args.searcharchive) + os.sep + lxf_filename + '''_Scene.rib'''
 	print '''Or start Renderman with (for final mode without preview):
-./prman -t:-2 ''' + str(cl.args.searcharchive) + '''/''' + lxf_filename + '''_Scene.rib'''
+./prman -t:-2 ''' + str(cl.args.searcharchive) + os.sep + lxf_filename + '''_Scene.rib'''
 	print '''
 Finally denoise the final output with:
-./denoise ''' + str(cl.args.searcharchive) + '''/''' + lxf_filename + '''.beauty.001.exr'''
+./denoise ''' + str(cl.args.searcharchive) + os.sep + lxf_filename + '''.beauty.001.exr'''
 
 
 if __name__ == '__main__':
