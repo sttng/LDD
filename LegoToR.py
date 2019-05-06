@@ -77,9 +77,25 @@ def main():
 	cl.ParseCommandLine('')
 	lxf_filename = os.path.realpath(cl.args.infile.name)
 	generate_rib_header(cl.args.infile, cl.args.srate, cl.args.pixelvar, cl.args.width, cl.args.height, cl.args.fov, cl.args.searcharchive, cl.args.searchtexture, cl.integrator, cl.integratorParams, cl.useplane)
+	
+	# Clean up before writing
+	if os.path.exists("Material_Archive.zip"):
+		os.remove("Material_Archive.zip")
+	
 	LxfToRib.generate_bricks(lxf_filename)
 	LxfToRib.export_to_rib(lxf_filename, cl.useplane)
 	LxfToRib.generate_master_scene(lxf_filename)
+	
+	lxf_filename = os.path.splitext(os.path.basename(lxf_filename))[0]
+
+	print '''
+Now start Renderman with (for preview):
+./prman -d it -t:-2 ''' + str(cl.args.searcharchive) + '''/''' + lxf_filename + '''_Scene.rib'''
+	print '''Or start Renderman with (for final mode without preview):
+./prman -t:-2 ''' + str(cl.args.searcharchive) + '''/''' + lxf_filename + '''_Scene.rib'''
+	print '''
+Finally denoise the final output with:
+./denoise ''' + str(cl.args.searcharchive) + '''/''' + lxf_filename + '''.beauty.001.exr'''
 
 
 if __name__ == '__main__':
