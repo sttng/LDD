@@ -179,7 +179,7 @@ TransformBegin
 TransformEnd\n''')
 		
 		file_writer.write('''
-Display "''' + str(os.getcwd()) + '''/''' + ribfile + '''.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse,diffuse_mse,specular,specular_mse,zfiltered,zfiltered_var,normal,normal_var,forward,backward" "int asrgba" 1
+Display "''' + str(os.getcwd()) + os.sep + ribfile + '''.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse,diffuse_mse,specular,specular_mse,zfiltered,zfiltered_var,normal,normal_var,forward,backward" "int asrgba" 1
 	"string storage" ["scanline"]
 	"string exrpixeltype" ["half"]
 	"string compression" ["zips"]
