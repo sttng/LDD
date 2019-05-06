@@ -49,7 +49,7 @@ def ParseCommandLine(_filename) :
 	
 	# Required positional argument
 	parser.add_argument('infile', type = open,
-		help = 'A required input file positional argument')
+		help = 'required input LXF file')
 	
 	parser.add_argument('-s', '--srate', nargs = '?', 
 		const = 10.0, default = 10.0, type = float,
@@ -60,8 +60,8 @@ def ParseCommandLine(_filename) :
 		help = 'modify the pixel variance. Default 0.1')
 	
 	parser.add_argument('-f', '--fov' ,nargs='?', 
-		const = 8.5, default = 8.5, type = float,
-		help='projection fov. Default 8.5')
+		const = 40.0, default = 40.0, type = float,
+		help='projection fov. Default 40.0')
 	
 	parser.add_argument('-wd', '--width', nargs = '?', 
 		const = 1280, default = 1280, type = int,
@@ -81,7 +81,7 @@ def ParseCommandLine(_filename) :
 		
 	parser.add_argument('-d', '--default', action = 'count', help = 'use PxrPathTracer')
 	parser.add_argument('-v', '--vcm', action = 'count', help = 'use PxrVCM')
-	parser.add_argument('-u', '--unified', action = 'count', help = 'use PxrUnified. Needs to be enabled in rendermn.ini to work')
+	parser.add_argument('-u', '--unified', action = 'count', help = 'use PxrUnified. Enable also in rendermn.ini to work!')
 	parser.add_argument('-o', '--occlusion', action = 'count', help = 'use Occlusion')
 	
 	parser.add_argument('-t', '--direct', action = 'count', help = 'use PxrDirect')
