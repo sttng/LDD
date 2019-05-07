@@ -38,8 +38,8 @@ elif platform.system() == 'Windows':
 	path_to_lif = commands.getoutput(find_db_lif_command)
 	
 # define the name of the temp directory to be created
-path_to_lif_tmp_dir = os.getcwd() + '/liftmp'
-path_to_lif_tmp = path_to_lif_tmp_dir + '/db.lif'
+path_to_lif_tmp_dir = os.path.join(os.getcwd(), 'liftmp')
+path_to_lif_tmp = os.path.join(path_to_lif_tmp_dir, 'db.lif')
 
 
 class BrickReader:
@@ -48,7 +48,7 @@ class BrickReader:
 	def read_brick(partnumber):
 	
 		files_to_convert = []
-		files_to_convert = glob.glob(os.path.join(path_to_lif_tmp_dir + '/db/Primitives/LOD0', str(partnumber) + '.g*'))
+		files_to_convert = glob.glob(os.path.join(path_to_lif_tmp_dir, 'db', 'Primitives', 'LOD0', str(partnumber) + '.g*'))
 		# Ensure that g is always the first, then g1, g2, ....
 		files_to_convert.sort()
 		geometry_file_dict_list = []
