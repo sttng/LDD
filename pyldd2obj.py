@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# pyldd2obj Version 0.4 - Copyright (c) 2019 by jonnysp 
+# pyldd2obj Version 0.4.1 - Copyright (c) 2019 by jonnysp 
 #
 # License: MIT License
 #
