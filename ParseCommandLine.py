@@ -65,7 +65,7 @@ def ParseCommandLine(_filename) :
 		
 	parser.add_argument('-fs', '--fstop' ,nargs='?', 
 		const = 9.99999968e+37, default = 9.99999968e+37, type = float,
-		help='fStop. Default 9.99999968e+37 (∞)')
+		help='fStop. Default 9.99999968e+37 (unlimited)')
 	
 	parser.add_argument('-wd', '--width', nargs = '?', 
 		const = 1280, default = 1280, type = int,
