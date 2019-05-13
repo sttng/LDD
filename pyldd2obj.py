@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# pyldd2obj Version 0.4.1 - Copyright (c) 2019 by jonnysp 
+# pyldd2obj Version 0.4.3 - Copyright (c) 2019 by jonnysp 
 #
 # License: MIT License
 #
@@ -13,8 +13,9 @@ import zipfile
 from xml.dom import minidom
 import time
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
+if sys.version_info < (3, 0):
+	reload(sys)
+	sys.setdefaultencoding('utf-8')
 
 PRIMITIVEPATH = '/Primitives/'
 GEOMETRIEPATH = PRIMITIVEPATH + 'LOD0/'
@@ -107,7 +108,6 @@ class Point3D(object):
 	def copy(self):
 		return Point3D(x=self.x,y=self.y,z=self.z)
 
-
 class Point2D(object):
 	def __init__(self, x=0,y=0):
 		self.x = x
@@ -119,13 +119,11 @@ class Point2D(object):
 	def copy(self):
 		return Point2D(x=self.x,y=self.y)
 
-
 class Face(object):
 	def __init__(self,a=0,b=0,c=0):
 		self.a = a
 		self.b = b
 		self.c = c
-
 	def string(self,prefix="f", indexOffset=0 ,textureoffset=0):
 		if textureoffset == 0:
 			return prefix + ' {0}//{0} {1}//{1} {2}//{2}\n'.format(self.a + indexOffset, self.b + indexOffset, self.c + indexOffset)
@@ -146,6 +144,8 @@ class Bone(object):
 
 class Part(object):
 	def __init__(self, node):
+		self.isGrouped = False
+		self.GroupIDX = 0
 		self.Bones = []
 		self.refID = node.getAttribute('refID')
 		self.designID = node.getAttribute('designID')
@@ -165,8 +165,6 @@ class Part(object):
 
 class Brick(object):
 	def __init__(self, node):
-		self.isGrouped = False
-		self.GroupIDX = 0
 		self.refID = node.getAttribute('refID')
 		self.designID = node.getAttribute('designID')
 		self.Parts = []
@@ -224,31 +222,28 @@ class Scene(object):
 								self.Groups.append(Group(node=childnode))
 
 		for i in range(len(self.Groups)):
-			for j in range(len(self.Groups[i].partRefs)):
-				for brick in self.Bricks:
-					if brick.refID == self.Groups[i].partRefs[j]:
-						brick.isGrouped = True
-						brick.GroupIDX = i
-						break
+			for brick in self.Bricks:
+				for part in brick.Parts:
+					if part.refID in self.Groups[i].partRefs:
+						part.isGrouped = True
+						part.GroupIDX = i
 
 		print('Scene "'+ self.Name + '" Brickversion: ' + str(self.Version))
 
-
-
 class GeometrieReader(object):
 	def __init__(self, data):
-		self.offset = 4
+		self.offset = 0
 		self.data = data
 		self.positions = []
 		self.normals = []
-		self.outpositions = []
-		self.outnormals = []
 		self.textures = []
 		self.faces = []
 		self.bonemap = {}
-		self.texCount = 0 
+		self.texCount = 0
+		self.outpositions = []
+		self.outnormals = []
 
-		if str(data[0:4]) == "10GB":
+		if self.readInt() == 1111961649:
 			self.valueCount = self.readInt()
 			self.indexCount = self.readInt()
 			self.faceCount = int(self.indexCount / 3)
@@ -285,10 +280,16 @@ class GeometrieReader(object):
 					self.bonemap[i] = self.read_Int(datastart + boneoffset)
 	
 	def read_Int(self,_offset):
-		return struct.unpack_from('i', self.data, _offset)[0]
+		if sys.version_info < (3, 0):
+			return struct.unpack_from('i', self.data, _offset)[0]
+		else:
+			return int.from_bytes(self.data[_offset:_offset + 4], byteorder='little')
 
 	def readInt(self):
-		ret = struct.unpack_from('i', self.data, self.offset)[0]
+		if sys.version_info < (3, 0):
+			ret = struct.unpack_from('i', self.data, self.offset)[0]
+		else:
+			ret = int.from_bytes(self.data[self.offset:self.offset + 4], byteorder='little')
 		self.offset += 4
 		return ret
 
@@ -374,21 +375,38 @@ class LOCReader(object):
 		self.offset = 0
 		self.values = {}
 		self.data = data
-		if self.data[0] == 50 and self.data[1] == 0:
-			self.offset += 2
-			while self.offset < len(self.data):
-				key = self.NextString().replace('Material', '')
-				value = self.NextString()
-				self.values[key] = value
+		if sys.version_info < (3, 0):
+			if ord(self.data[0]) == 50 and ord(self.data[1]) == 0:
+				self.offset += 2
+				while self.offset < len(self.data):
+					key = self.NextString().replace('Material', '')
+					value = self.NextString()
+					self.values[key] = value
+		else:
+			if int(self.data[0]) == 50 and int(self.data[1]) == 0:
+				self.offset += 2
+				while self.offset < len(self.data):
+					key = self.NextString().replace('Material', '')
+					value = self.NextString()
+					self.values[key] = value
 
 	def NextString(self):
 		out = ''
-		t = self.data[self.offset]
-		self.offset += 1
-		while not t == 0:
-			out = '{0}{1}'.format(out,chr(t))
-			t = self.data[self.offset]
+		if sys.version_info < (3, 0):
+			t = ord(self.data[self.offset])
 			self.offset += 1
+			while not t == 0:
+				out = '{0}{1}'.format(out,chr(t))
+				t = ord(self.data[self.offset])
+				self.offset += 1
+		else:
+			t = int(self.data[self.offset])
+			self.offset += 1
+			while not t == 0:
+				out = '{0}{1}'.format(out,chr(t))
+				t = int(self.data[self.offset])
+				self.offset += 1
+
 		return out
 
 class Materials(object):
@@ -418,7 +436,7 @@ class Material(object):
 	def string(self):
 		out = 'Kd {0} {1} {2}\nKa 1.600000 1.600000 1.600000\nKs 0.400000 0.400000 0.400000\nNs 3.482202\nTf 1 1 1\n'.format( self.r / 255, self.g / 255,self.b / 255) 
 		if self.a < 255:
-			out += 'Ni 1.575\n' + 'd {0}'.format(0.05) + '\n' + 'Tr {0}'.format(0.05)
+			out += 'Ni 1.575\n' + 'd {0}'.format(0.05) + '\n' + 'Tr {0}\n'.format(0.05)
 		return out
 
 class DBinfo(object):
@@ -470,7 +488,6 @@ class LIFReader(object):
 		return filename in self.filelist
 
 	def parse(self, prefix='', offset=0):
-		
 		if prefix == '':
 			offset += 36
 		else:
@@ -485,12 +502,19 @@ class LIFReader(object):
 
 			entryName = '{0}{1}'.format(prefix,'/');
 			self.filehandle.seek(offset + 1, 0)
-			t = ord(self.filehandle.read(1))
+			if sys.version_info < (3, 0):
+				t = ord(self.filehandle.read(1))
+			else:
+				t = int.from_bytes(self.filehandle.read(1), byteorder='big')
 
 			while not t == 0:
 				entryName ='{0}{1}'.format(entryName,chr(t))
 				self.filehandle.seek(1, 1)
-				t = ord(self.filehandle.read(1));
+				if sys.version_info < (3, 0):
+					t = ord(self.filehandle.read(1))
+				else:
+					t = int.from_bytes(self.filehandle.read(1), byteorder='big')
+
 				offset += 2
 
 			offset += 6
@@ -508,13 +532,17 @@ class LIFReader(object):
 
 	def readInt(self, offset=0):
 		self.filehandle.seek(offset, 0)
-		#return int.from_bytes(self.filehandle.read(4),byteorder='big')
-		return struct.unpack('>L', self.filehandle.read(4))[0]
+		if sys.version_info < (3, 0):
+			return struct.unpack('>i', self.filehandle.read(4))[0]
+		else:
+			return int.from_bytes(self.filehandle.read(4), byteorder='big')
 
 	def readShort(self, offset=0):
 		self.filehandle.seek(offset, 0)
-		#return int.from_bytes(self.filehandle.read(2),byteorder='big')
-		return struct.unpack('>H', self.filehandle.read(2))[0]
+		if sys.version_info < (3, 0):
+			return struct.unpack('>h', self.filehandle.read(2))[0]
+		else:
+			return int.from_bytes(self.filehandle.read(2), byteorder='big')
 
 class Converter(object):
 	def LoadDatabase(self,databaselocation):
@@ -541,6 +569,7 @@ class Converter(object):
 		outtext = open(filename + ".mtl", "w+")
 
 		for bri in self.scene.Bricks:
+
 			for pa in bri.Parts:
 
 				if pa.designID not in geometriecache:
@@ -557,6 +586,7 @@ class Converter(object):
 				for part in geo.Parts:
 					geo.Parts[part].outpositions = [elem.copy() for elem in geo.Parts[part].positions]
 					geo.Parts[part].outnormals = [elem.copy() for elem in geo.Parts[part].normals]
+
 
 					for i, b in enumerate(pa.Bones):
 						# positions
@@ -582,7 +612,7 @@ class Converter(object):
 
 					lddmat = self.allMaterials.getMaterialbyId(pa.materials[part])
 					matname = lddmat.name
- 
+
 					deco = '0'
 					if hasattr(pa, 'decoration') and len(geo.Parts[part].textures) > 0:
 						if decoCount <= len(pa.decoration):
@@ -602,7 +632,7 @@ class Converter(object):
 					if not matname in usedmaterials:
 						usedmaterials.append(matname)
 						outtext.write("newmtl " + matname + '\n')
-						outtext.write(lddmat.string() + '\n')
+						outtext.write(lddmat.string())
 						if not deco == '0':
 							outtext.write("map_Kd " + deco + ".png" + '\n')
 
@@ -632,7 +662,7 @@ def main():
 	   lxf_filename = sys.argv[1]
 	   obj_filename = sys.argv[2]
 	except Exception as e:
-	   print("Missing Paramenter: infile.lfx exportname (without extension)")
+	   print("Missing Paramenter:" + sys.argv[0] + " infile.lfx exportname (without extension)")
 	   return
 
 	converter = Converter()
