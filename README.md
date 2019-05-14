@@ -1,6 +1,9 @@
 # Lego Digital Designer related scripts
 The Python scripts have been tested to work on Python on macOS 10.14 Mojave, Renderman 22.3 and 22.4.
 
+# pyldd2obj
+pyldd2obj.py developed by jonnysp (https://github.com/jonnysp) will read in a Lego Digital Designer .lxf scene file and construct Alias|Waveform .obj and .mtl files from it.
+
 ## LifToObj 
 LifToObj.py uses LIFExtractor.py from JrMasterModelBuilder (https://github.com/JrMasterModelBuilder/LIF-Extractor) to extract the Lego Digital Designer LIF library first and then converts the LDD .g geometry files to Alias|Waveform .obj files.
 
