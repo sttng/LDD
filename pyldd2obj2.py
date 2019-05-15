@@ -584,22 +584,24 @@ class Converter(object):
 				out2 = open(geo.designID + ".obj", "w+")
 				out2.write('o brick_' + geo.designID + '\n')
 				
-
 				# transform -------------------------------------------------------
 				for part in geo.Parts:
 					
 					geo.Parts[part].outpositions = [elem.copy() for elem in geo.Parts[part].positions]
 					geo.Parts[part].outnormals = [elem.copy() for elem in geo.Parts[part].normals]
+					
+					# translate / rotate only parts with more then 1 bone. This are flex parts
+					if (len(pa.Bones) > 1):
 
-					for i, b in enumerate(pa.Bones):
-						# positions
-						for j, p in enumerate(geo.Parts[part].outpositions):
-							if (geo.Parts[part].bonemap[j] == i):
-								geo.Parts[part].outpositions[j].transform(b.matrix)
-						# normals
-						for k, n in enumerate(geo.Parts[part].normals):
-							if (geo.Parts[part].bonemap[k] == i):
-								geo.Parts[part].outnormals[k].transformW(b.matrix)
+						for i, b in enumerate(pa.Bones):
+							# positions
+							for j, p in enumerate(geo.Parts[part].outpositions):
+								if (geo.Parts[part].bonemap[j] == i):
+									geo.Parts[part].outpositions[j].transform(b.matrix)
+							# normals
+							for k, n in enumerate(geo.Parts[part].normals):
+								if (geo.Parts[part].bonemap[k] == i):
+									geo.Parts[part].outnormals[k].transformW(b.matrix)
 
 				decoCount = 0
 				for part in geo.Parts:
