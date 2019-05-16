@@ -591,6 +591,10 @@ class Converter(object):
 					geo.Parts[part].outnormals = [elem.copy() for elem in geo.Parts[part].normals]
 					
 					# translate / rotate only parts with more then 1 bone. This are flex parts
+					# n11=a, n21=d, n31=g, n41=x,
+					# n12=b, n22=e, n32=h, n42=y,
+					# n13=c, n23=f, n33=i, n43=z,
+					# n14=0, n24=0, n34=0, n44=1
 					if (len(pa.Bones) > 1):
 
 						for i, b in enumerate(pa.Bones):
