@@ -12,7 +12,9 @@ import struct
 import zipfile
 from xml.dom import minidom
 import time
-import numpy as np 
+import numpy as np
+
+import ObjToRib2
 
 if sys.version_info < (3, 0):
 	reload(sys)
@@ -151,6 +153,7 @@ class Part(object):
 		self.refID = node.getAttribute('refID')
 		self.designID = node.getAttribute('designID')
 		self.materials = list(map(str, node.getAttribute('materials').split(',')))
+		self.decoration = False
 		
 		lastm = '0'
 		for i, m in enumerate(self.materials):
@@ -790,9 +793,12 @@ class Converter(object):
 				# -----------------------------------------------------------------
 				out.write('\n')
 				out2.write('\n')
+				out2.close()
 				
 				indexOffset = 1
 				textOffset = 1
+				
+				written_rib = ObjToRib2.export_obj_to_rib(geo.designID + '.obj', pa.materials, pa.decoration)
 
 		print("--- %s seconds ---" % (time.time() - start_time))
 
@@ -805,11 +811,11 @@ def FindDatabase():
 
 def main():
 	try:
-	   lxf_filename = sys.argv[1]
-	   obj_filename = sys.argv[2]
+		lxf_filename = sys.argv[1]
+		obj_filename = sys.argv[2]
 	except Exception as e:
-	   print("Missing Paramenter:" + sys.argv[0] + " infile.lfx exportname (without extension)")
-	   return
+		print("Missing Paramenter:" + sys.argv[0] + " infile.lfx exportname (without extension)")
+		eturn
 
 	converter = Converter()
 	if os.path.exists(FindDatabase()):
