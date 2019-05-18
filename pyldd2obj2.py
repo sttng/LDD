@@ -632,6 +632,9 @@ class Converter(object):
 									
 									undoTransformMatrix = Matrix3D()
 									
+									#undoTransformMatrix = Matrix3D(n11=x_inv[0][0],n12=x_inv[0][1],n13=x_inv[0][2],n14=x_inv[0][3],n21=d,n22=e,n23=f,n24=0,n31=g,n32=h,n33=i,n34=0,n41=x,n42=y,n43=z,n44=1)
+	
+									
 									#Assign inverted values
 									undoTransformMatrix.n11 = x_inv[0][0]
 									undoTransformMatrix.n12 = x_inv[0][1]
