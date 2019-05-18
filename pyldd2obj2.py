@@ -630,110 +630,36 @@ class Converter(object):
 									x = np.array([[n11,n21,n31,n41],[n12,n22,n32,n42],[n13,n23,n33,n43],[n14,n24,n34,n44]])
 									x_inv = np.linalg.inv(x)
 									
+									undoTransformMatrix = Matrix3D()
+									
 									#Assign inverted values
-									pa.Bones[0].matrix.n11 = x_inv[0][0]
-									pa.Bones[0].matrix.n12 = x_inv[0][1]
-									pa.Bones[0].matrix.n13 = x_inv[0][2]
-									pa.Bones[0].matrix.n14 = x_inv[0][3]
-									pa.Bones[0].matrix.n21 = x_inv[1][0]
-									pa.Bones[0].matrix.n22 = x_inv[1][1]
-									pa.Bones[0].matrix.n23 = x_inv[1][2]
-									pa.Bones[0].matrix.n24 = x_inv[1][3]
-									pa.Bones[0].matrix.n31 = x_inv[2][0]
-									pa.Bones[0].matrix.n32 = x_inv[2][1]
-									pa.Bones[0].matrix.n33 = x_inv[2][2]
-									pa.Bones[0].matrix.n34 = x_inv[2][3]
-									pa.Bones[0].matrix.n41 = x_inv[3][0]
-									pa.Bones[0].matrix.n42 = x_inv[3][1]
-									pa.Bones[0].matrix.n43 = x_inv[3][2]
-									pa.Bones[0].matrix.n44 = x_inv[3][3]
+									undoTransformMatrix.n11 = x_inv[0][0]
+									undoTransformMatrix.n12 = x_inv[0][1]
+									undoTransformMatrix.n13 = x_inv[0][2]
+									undoTransformMatrix.n14 = x_inv[0][3]
+									undoTransformMatrix.n21 = x_inv[1][0]
+									undoTransformMatrix.n22 = x_inv[1][1]
+									undoTransformMatrix.n23 = x_inv[1][2]
+									undoTransformMatrix.n24 = x_inv[1][3]
+									undoTransformMatrix.n31 = x_inv[2][0]
+									undoTransformMatrix.n32 = x_inv[2][1]
+									undoTransformMatrix.n33 = x_inv[2][2]
+									undoTransformMatrix.n34 = x_inv[2][3]
+									undoTransformMatrix.n41 = x_inv[3][0]
+									undoTransformMatrix.n42 = x_inv[3][1]
+									undoTransformMatrix.n43 = x_inv[3][2]
+									undoTransformMatrix.n44 = x_inv[3][3]
 									
 									#transform with inverted values (to undo the transformation)
-									geo.Parts[part].outpositions[j].transform(pa.Bones[0].matrix)
-									
-									# Restore pa.Bones.matrix original values
-									pa.Bones[0].matrix.n11 = n11
-									pa.Bones[0].matrix.n12 = n12
-									pa.Bones[0].matrix.n13 = n13
-									pa.Bones[0].matrix.n14 = n14
-									pa.Bones[0].matrix.n21 = n21
-									pa.Bones[0].matrix.n22 = n22
-									pa.Bones[0].matrix.n23 = n23
-									pa.Bones[0].matrix.n24 = n24
-									pa.Bones[0].matrix.n31 = n31
-									pa.Bones[0].matrix.n32 = n32
-									pa.Bones[0].matrix.n33 = n33
-									pa.Bones[0].matrix.n34 = n34
-									pa.Bones[0].matrix.n41 = n41
-									pa.Bones[0].matrix.n42 = n42
-									pa.Bones[0].matrix.n43 = n43
-									pa.Bones[0].matrix.n44 = n44
+									geo.Parts[part].outpositions[j].transform(undoTransformMatrix)
 									
 							# normals
 							for k, n in enumerate(geo.Parts[part].normals):
 								if (geo.Parts[part].bonemap[k] == i):
 									geo.Parts[part].outnormals[k].transformW(b.matrix)
 									
-									# Read out 1st Bone matrix values
-									n11 = pa.Bones[0].matrix.n11
-									n12 = pa.Bones[0].matrix.n12
-									n13 = pa.Bones[0].matrix.n13
-									n14 = pa.Bones[0].matrix.n14
-									n21 = pa.Bones[0].matrix.n21
-									n22 = pa.Bones[0].matrix.n22
-									n23 = pa.Bones[0].matrix.n23
-									n24 = pa.Bones[0].matrix.n24
-									n31 = pa.Bones[0].matrix.n31
-									n32 = pa.Bones[0].matrix.n32
-									n33 = pa.Bones[0].matrix.n33
-									n34 = pa.Bones[0].matrix.n34
-									n41 = pa.Bones[0].matrix.n41
-									n42 = pa.Bones[0].matrix.n42
-									n43 = pa.Bones[0].matrix.n43
-									n44 = pa.Bones[0].matrix.n44
-									
-									#Create numpy matrix from them and create inverted matrix
-									x = np.array([[n11,n21,n31,n41],[n12,n22,n32,n42],[n13,n23,n33,n43],[n14,n24,n34,n44]])
-									x_inv = np.linalg.inv(x)
-									
-									#Assign inverted values
-									pa.Bones[0].matrix.n11 = x_inv[0][0]
-									pa.Bones[0].matrix.n12 = x_inv[0][1]
-									pa.Bones[0].matrix.n13 = x_inv[0][2]
-									pa.Bones[0].matrix.n14 = x_inv[0][3]
-									pa.Bones[0].matrix.n21 = x_inv[1][0]
-									pa.Bones[0].matrix.n22 = x_inv[1][1]
-									pa.Bones[0].matrix.n23 = x_inv[1][2]
-									pa.Bones[0].matrix.n24 = x_inv[1][3]
-									pa.Bones[0].matrix.n31 = x_inv[2][0]
-									pa.Bones[0].matrix.n32 = x_inv[2][1]
-									pa.Bones[0].matrix.n33 = x_inv[2][2]
-									pa.Bones[0].matrix.n34 = x_inv[2][3]
-									pa.Bones[0].matrix.n41 = x_inv[3][0]
-									pa.Bones[0].matrix.n42 = x_inv[3][1]
-									pa.Bones[0].matrix.n43 = x_inv[3][2]
-									pa.Bones[0].matrix.n44 = x_inv[3][3]
-									
 									#transform with inverted values (to undo the transformation)
-									geo.Parts[part].outnormals[k].transformW(pa.Bones[0].matrix)
-									
-									# Restore pa.Bones.matrix original values
-									pa.Bones[0].matrix.n11 = n11
-									pa.Bones[0].matrix.n12 = n12
-									pa.Bones[0].matrix.n13 = n13
-									pa.Bones[0].matrix.n14 = n14
-									pa.Bones[0].matrix.n21 = n21
-									pa.Bones[0].matrix.n22 = n22
-									pa.Bones[0].matrix.n23 = n23
-									pa.Bones[0].matrix.n24 = n24
-									pa.Bones[0].matrix.n31 = n31
-									pa.Bones[0].matrix.n32 = n32
-									pa.Bones[0].matrix.n33 = n33
-									pa.Bones[0].matrix.n34 = n34
-									pa.Bones[0].matrix.n41 = n41
-									pa.Bones[0].matrix.n42 = n42
-									pa.Bones[0].matrix.n43 = n43
-									pa.Bones[0].matrix.n44 = n44
+									geo.Parts[part].outnormals[k].transformW(undoTransformMatrix)
 
 				decoCount = 0
 				for part in geo.Parts:
