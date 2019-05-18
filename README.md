@@ -23,6 +23,23 @@ prman -d it -t:-2 ribfile.rib
 oslc Primvar.osl
 ```
 
+### Checkpointing
+
+```terminal
+prman -checkpoint 2m,20m foo.rib
+```
+
+This tells prman to save a checkpoint file at every two minutes and stop rendering at 20 minutes. If you want to resume a render:
+
+```terminal
+prman -recover 1 foo.rib
+```
+
+More info in the docs:
+
+https://rmanwiki.pixar.com/display/REN22/Checkpointing+and+Recovery
+
+
 ## Useful links
 
 * https://rmanwiki.pixar.com/display/REN22/PxrSurface
