@@ -809,6 +809,14 @@ def FindDatabase():
 	else:
 		return str(os.path.join(str(os.getenv('USERPROFILE') or os.getenv('HOME')),'AppData','Roaming','LEGO Company','LEGO Digital Designer','db.lif'))
 
+
+def FindRmtree():
+	if os.name =='posix':
+		return str(os.path.join(str(os.getenv('RMANTREE')),'bin'))
+	else:
+		return str(os.path.join(str(os.getenv('RMANTREE')),'bin'))
+
+
 def main():
 	try:
 		lxf_filename = sys.argv[1]
