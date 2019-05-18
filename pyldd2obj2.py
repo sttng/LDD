@@ -771,7 +771,7 @@ class Converter(object):
 								f.write(self.database.filelist[decofilename].read())
 								f.close()
 
-								txmake_cmd = findRmtree() + '/txmake -t:8 -compression zip -mode clamp -resize up ./liftmp/db/Decorations/' + extfile + " " + deco + '.tex'
+								txmake_cmd = FindRmtree() + '/txmake -t:8 -compression zip -mode clamp -resize up ' + extfile + ' ' + deco + '.tex'
 								os.system(txmake_cmd)
 
 					if not matname in usedmaterials:
