@@ -584,7 +584,7 @@ class Converter(object):
 					geo = geometriecache[pa.designID]
 					print("-(" + geo.designID + ") " + geo.Partname)
 				
-					# Only parts with more then 1 bone are flex parts and for these we need to undo the transformation later
+				# Only parts with more then 1 bone are flex parts and for these we need to undo the transformation later
 				if (len(pa.Bones) > 1):
 					# n11=a, n21=d, n31=g, n41=x,
 					# n12=b, n22=e, n32=h, n42=y,
