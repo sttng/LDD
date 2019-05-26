@@ -13,6 +13,11 @@ import zipfile
 from xml.dom import minidom
 import time
 import numpy as np
+import zlib
+import hashlib
+import uuid
+
+compression = zipfile.ZIP_DEFLATED
 
 import ObjToRib2
 
@@ -438,7 +443,9 @@ class Material(object):
 		self.b = float(b)
 		self.a = float(a)
 	def string(self):
-		out = 'Kd {0} {1} {2}\nKa 1.600000 1.600000 1.600000\nKs 0.400000 0.400000 0.400000\nNs 3.482202\nTf 1 1 1\n'.format( self.r / 255, self.g / 255,self.b / 255) 
+		#out = 'Kd {0} {1} {2}\nKa 1.600000 1.600000 1.600000\nKs 0.400000 0.400000 0.400000\nNs 3.482202\nTf 1 1 1\n'.format( self.r / 255, self.g / 255,self.b / 255)
+		out = '''"color diffuseColor" [{0} {1} {2}]\n'''.format( self.r / 255, self.g / 255,self.b / 255)
+		#out += self.mattype
 		if self.a < 255:
 			out += 'Ni 1.575\n' + 'd {0}'.format(0.05) + '\n' + 'Tr {0}\n'.format(0.05)
 		return out
@@ -567,10 +574,47 @@ class Converter(object):
 		textOffset = 1
 		usedmaterials = []
 		geometriecache = {}
+		writtenribs = []
 
-		out = open(filename + ".obj", "w+")
-		out.write("mtllib " + filename + ".mtl" + '\n\n')
+		out = open(filename + ".rib", "w+")
+		#out.write("mtllib " + filename + ".mtl" + '\n\n')
 		outtext = open(filename + ".mtl", "w+")
+		zf = zipfile.ZipFile(filename + "_Bricks_Archive.zip", "w")
+		
+		out.write('''# Camera Zero
+TransformBegin
+	Translate 0 0 80
+	Rotate -25 1 0 0
+	Rotate 45 0 1 0
+	Camera "Cam-0"
+		"float shutterOpenTime" [0] 
+		"float shutterCloseTime" [1] 
+		"int apertureNSides" [0] 
+		"float apertureAngle" [0] 
+		"float apertureRoundness" [0] 
+		"float apertureDensity" [0] 
+		"float dofaspect" [1] 
+		"float nearClip" [0.100000001] 
+		"float farClip" [10000]
+TransformEnd\n''')
+		
+		out.write('''
+Display "''' + str(os.getcwd()) + os.sep + filename + '''.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse,diffuse_mse,specular,specular_mse,zfiltered,zfiltered_var,normal,normal_var,forward,backward" "int asrgba" 1
+	"string storage" ["scanline"]
+	"string exrpixeltype" ["half"]
+	"string compression" ["zips"]
+	"float compressionlevel" [45]
+	"string camera" ["Cam-0"]\n\n''')
+		
+		out.write('WorldBegin\n')
+		out.write('\tScale 1 1 1\n')
+		out.write('''\tAttributeBegin
+		Attribute "visibility" "int indirect" [0] "int transmission" [0]
+		Attribute "visibility" "int camera" [1]
+		Rotate 50 0 1 0
+		Rotate -90 1 0 0
+		Light "PxrDomeLight" "domeLight" "string lightColorMap" ["islandsun_small.tex"]
+	AttributeEnd\n\n''')
 
 		for bri in self.scene.Bricks:
 
@@ -584,39 +628,60 @@ class Converter(object):
 					geo = geometriecache[pa.designID]
 					print("-(" + geo.designID + ") " + geo.Partname)
 				
+				# n11=a, n21=d, n31=g, n41=x,
+				# n12=b, n22=e, n32=h, n42=y,
+				# n13=c, n23=f, n33=i, n43=z,
+				# n14=0, n24=0, n34=0, n44=1
+				
+				# Read out 1st Bone matrix values
+				ind = 0
+				n11 = pa.Bones[ind].matrix.n11
+				n12 = pa.Bones[ind].matrix.n12
+				n13 = pa.Bones[ind].matrix.n13
+				n14 = pa.Bones[ind].matrix.n14
+				n21 = pa.Bones[ind].matrix.n21
+				n22 = pa.Bones[ind].matrix.n22
+				n23 = pa.Bones[ind].matrix.n23
+				n24 = pa.Bones[ind].matrix.n24
+				n31 = pa.Bones[ind].matrix.n31
+				n32 = pa.Bones[ind].matrix.n32
+				n33 = pa.Bones[ind].matrix.n33
+				n34 = pa.Bones[ind].matrix.n34
+				n41 = pa.Bones[ind].matrix.n41
+				n42 = pa.Bones[ind].matrix.n42
+				n43 = pa.Bones[ind].matrix.n43
+				n44 = pa.Bones[ind].matrix.n44
+				
 				# Only parts with more then 1 bone are flex parts and for these we need to undo the transformation later
-				if (len(pa.Bones) > 1):
-					# n11=a, n21=d, n31=g, n41=x,
-					# n12=b, n22=e, n32=h, n42=y,
-					# n13=c, n23=f, n33=i, n43=z,
-					# n14=0, n24=0, n34=0, n44=1
-									
-					# Read out 1st Bone matrix values
-					n11 = pa.Bones[0].matrix.n11
-					n12 = pa.Bones[0].matrix.n12
-					n13 = pa.Bones[0].matrix.n13
-					n14 = pa.Bones[0].matrix.n14
-					n21 = pa.Bones[0].matrix.n21
-					n22 = pa.Bones[0].matrix.n22
-					n23 = pa.Bones[0].matrix.n23
-					n24 = pa.Bones[0].matrix.n24
-					n31 = pa.Bones[0].matrix.n31
-					n32 = pa.Bones[0].matrix.n32
-					n33 = pa.Bones[0].matrix.n33
-					n34 = pa.Bones[0].matrix.n34
-					n41 = pa.Bones[0].matrix.n41
-					n42 = pa.Bones[0].matrix.n42
-					n43 = pa.Bones[0].matrix.n43
-					n44 = pa.Bones[0].matrix.n44
-									
+				flexflag = 1
+				if (len(pa.Bones) > flexflag):
+					
 					# Create numpy matrix from them and create inverted matrix
 					x = np.array([[n11,n21,n31,n41],[n12,n22,n32,n42],[n13,n23,n33,n43],[n14,n24,n34,n44]])
 					x_inv = np.linalg.inv(x)
-									
-					undoTransformMatrix = Matrix3D(n11=x_inv[0][0], n12=x_inv[0][1], n13=x_inv[0][2], n14=x_inv[0][3], n21=x_inv[1][0], n22=x_inv[1][1], n23=x_inv[1][2], n24=x_inv[1][3], n31=x_inv[2][0], n32=x_inv[2][1], n33=x_inv[2][2], n34=x_inv[2][3], n41=x_inv[3][0], n42=x_inv[3][1], n43=x_inv[3][2], n44=x_inv[3][3])
+					
+					undoTransformMatrix = Matrix3D(n11=x_inv[0][0],n12=x_inv[0][1],n13=x_inv[0][2],n14=x_inv[0][3],n21=x_inv[1][0],n22=x_inv[1][1],n23=x_inv[1][2],n24=x_inv[1][3],n31=x_inv[2][0],n32=x_inv[2][1],n33=x_inv[2][2],n34=x_inv[2][3],n41=x_inv[3][0],n42=x_inv[3][1],n43=x_inv[3][2],n44=x_inv[3][3])
 				
-				out.write("g " + "(" + geo.designID + ") " + geo.Partname + '\n')
-				out2 = open(geo.designID + ".obj", "w+")
+				out.write("\tAttributeBegin\n")
+				if not (len(pa.Bones) > flexflag):
+				# Flex parts don't need to be moved
+				# Renderman is lefthanded coordinate system, but LDD is right handed.
+					out.write('\t\tConcatTransform [' 
+					+ str(n11) + ' ' + str(n12) + ' ' + str((-1) * n13) + ' ' + str(n14) + ' ' 
+					+ str(n21) + ' ' + str(n22) + ' ' + str((-1) * n23) + ' ' + str(n24) + ' ' 
+					+ str((-1) * n31) + ' ' + str((-1) * n32) + ' ' + str(n33) + ' ' + str(n34) + ' ' 
+					+ str(n41) + ' ' + str(n42) + ' ' + str((-1) * n43) + ' ' + str(n44) + ']\n')
+				
+				out.write('\t\tScale 1 1 1\n')
+				
+				uniqueId = str(uuid.uuid4())
+				if (len(pa.Bones) > flexflag):
+				# Flex parts are "unique". Ensure they get a unique file
+					out2 = open(geo.designID + "_" + uniqueId + ".obj", "w+")
+				
+				else:
+					out2 = open(geo.designID + ".obj", "w+")
+				
 				out2.write('o brick_' + geo.designID + '\n')
 				
 				# transform -------------------------------------------------------
@@ -626,7 +691,7 @@ class Converter(object):
 					geo.Parts[part].outnormals = [elem.copy() for elem in geo.Parts[part].normals]
 					
 					# translate / rotate only parts with more then 1 bone. This are flex parts
-					if (len(pa.Bones) > 1):
+					if (len(pa.Bones) > flexflag):
 
 						for i, b in enumerate(pa.Bones):
 						
@@ -636,7 +701,7 @@ class Converter(object):
 									geo.Parts[part].outpositions[j].transform(b.matrix)
 									
 									#transform with inverted values (to undo the transformation)
-									geo.Parts[part].outpositions[j].transform(undoTransformMatrix)
+									#geo.Parts[part].outpositions[j].transform(undoTransformMatrix)
 									
 							# normals
 							for k, n in enumerate(geo.Parts[part].normals):
@@ -644,27 +709,33 @@ class Converter(object):
 									geo.Parts[part].outnormals[k].transformW(b.matrix)
 									
 									#transform with inverted values (to undo the transformation)
-									geo.Parts[part].outnormals[k].transformW(undoTransformMatrix)
+									#geo.Parts[part].outnormals[k].transformW(undoTransformMatrix)
 
 				decoCount = 0
 				for part in geo.Parts:
 					
 					out2.write("g " + str(part) + '\n')
-					out2.write("# From file: " + geo.designID + ".g" + str(part) + '\n')
+					
+					if not part == 0:
+						out2.write("# From file: " + geo.designID + ".g" + str(part) + '\n')
+					else:
+						out2.write("# From file: " + geo.designID + ".g\n")
+					
 					for point in geo.Parts[part].outpositions:
-						out.write(point.string("v"))
+						#out.write(point.string("v"))
 						out2.write(point.string("v"))
 
 					for normal in geo.Parts[part].outnormals:
-						out.write(normal.string("vn"))
+						#out.write(normal.string("vn"))
 						out2.write(normal.string("vn"))
 
 					for text in geo.Parts[part].textures:
-						out.write(text.string("vt"))
+						#out.write(text.string("vt"))
 						out2.write(text.string("vt"))
 
 					lddmat = self.allMaterials.getMaterialbyId(pa.materials[part])
-					matname = lddmat.name
+					#matname = lddmat.name
+					matname = pa.materials[part]
 
 					deco = '0'
 					if hasattr(pa, 'decoration') and len(geo.Parts[part].textures) > 0:
@@ -682,8 +753,11 @@ class Converter(object):
 								f.write(self.database.filelist[decofilename].read())
 								f.close()
 
-								txmake_cmd = FindRmtree() + '/txmake -t:8 -compression zip -mode clamp -resize up ' + extfile + ' ' + deco + '.tex'
-								os.system(txmake_cmd)
+								if os.path.exists(FindRmtree()):
+									txmake_cmd = FindRmtree() + '/txmake -t:8 -compression zip -mode clamp -resize up ' + extfile + ' ' + deco + '.tex'
+									os.system(txmake_cmd)
+								else:
+									print("RMANTREE environment variable not set correctly. Set with: export RMANTREE=/Applications/Pixar/RenderManProServer-22.5/")
 
 					if not matname in usedmaterials:
 						usedmaterials.append(matname)
@@ -692,28 +766,50 @@ class Converter(object):
 						if not deco == '0':
 							outtext.write("map_Kd " + deco + ".png" + '\n')
 
-					out.write("usemtl " + matname + '\n')
+					#out.write("usemtl " + matname + '\n')
 					out2.write("usemtl " + matname + '\n')
 					for face in geo.Parts[part].faces:
 						if len(geo.Parts[part].textures) > 0:
-							out.write(face.string("f",indexOffset,textOffset))
+							#out.write(face.string("f",indexOffset,textOffset))
 							out2.write(face.string("f",indexOffset,textOffset))
 						else:
-							out.write(face.string("f",indexOffset))
+							#out.write(face.string("f",indexOffset))
 							out2.write(face.string("f",indexOffset))
 
 					indexOffset += len(geo.Parts[part].outpositions)
 					textOffset += len(geo.Parts[part].textures) 
 				# -----------------------------------------------------------------
-				out.write('\n')
 				out2.write('\n')
 				out2.close()
 				
+				# Reset index for each part
 				indexOffset = 1
 				textOffset = 1
 				
-				written_rib = ObjToRib2.export_obj_to_rib(geo.designID + '.obj', pa.materials, pa.decoration)
-
+				# Again special treatment for flex parts
+				if (len(pa.Bones) > flexflag):
+					written_rib = ObjToRib2.export_obj_to_rib(geo.designID + "_" + uniqueId + '.obj', pa.materials, pa.decoration)
+				
+				else:
+					written_rib = ObjToRib2.export_obj_to_rib(geo.designID + '.obj', pa.materials, pa.decoration)
+				
+				out.write('\t\tAttribute "identifier" "name" ["'+ written_rib + '"]\n')
+				out.write('\t\tReadArchive "' + filename +'_Bricks_Archive.zip!'+ written_rib + '.rib"\n')
+				out.write('\tAttributeEnd\n\n')
+				
+				with open(written_rib + '.rib', "rb") as f:
+					bytes = f.read() # read entire file as bytes
+					readable_hash = hashlib.sha256(bytes).hexdigest()
+				
+				if not readable_hash in writtenribs:
+						writtenribs.append(readable_hash)
+						zf.write(written_rib + '.rib', compress_type=compression)
+				
+				#os.remove(written_rib + '.rib')
+				#os.remove(geo.designID + '.obj')
+		
+		zf.close()
+		out.write('WorldEnd')
 		print("--- %s seconds ---" % (time.time() - start_time))
 
 
