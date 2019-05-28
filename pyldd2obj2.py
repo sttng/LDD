@@ -731,7 +731,11 @@ Display "''' + str(os.getcwd()) + os.sep + filename + '''.beauty.001.exr" "opene
 
 					for text in geo.Parts[part].textures:
 						#out.write(text.string("vt"))
-						out2.write(text.string("vt"))
+						#out2.write(text.string("vt"))
+						x = text.string("")
+						x = x.split(" ")
+						# Left handed vs right handed coord system.
+						out2.write("vt " + str(x[1]) + " " + str((-1) * float(x[2])) + '\n')
 
 					lddmat = self.allMaterials.getMaterialbyId(pa.materials[part])
 					#matname = lddmat.name
@@ -767,7 +771,7 @@ Display "''' + str(os.getcwd()) + os.sep + filename + '''.beauty.001.exr" "opene
 							outtext.write("map_Kd " + deco + ".png" + '\n')
 
 					#out.write("usemtl " + matname + '\n')
-					out2.write("usemtl " + matname + '\n')
+					#out2.write("usemtl " + matname + '\n')
 					for face in geo.Parts[part].faces:
 						if len(geo.Parts[part].textures) > 0:
 							#out.write(face.string("f",indexOffset,textOffset))
