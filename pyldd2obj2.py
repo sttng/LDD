@@ -660,6 +660,7 @@ Display "''' + str(os.getcwd()) + os.sep + filename + '''.beauty.001.exr" "opene
 					x = np.array([[n11,n21,n31,n41],[n12,n22,n32,n42],[n13,n23,n33,n43],[n14,n24,n34,n44]])
 					x_inv = np.linalg.inv(x)
 					
+					# undoTransformMatrix not used currently. Might use later
 					undoTransformMatrix = Matrix3D(n11=x_inv[0][0],n12=x_inv[0][1],n13=x_inv[0][2],n14=x_inv[0][3],n21=x_inv[1][0],n22=x_inv[1][1],n23=x_inv[1][2],n24=x_inv[1][3],n31=x_inv[2][0],n32=x_inv[2][1],n33=x_inv[2][2],n34=x_inv[2][3],n41=x_inv[3][0],n42=x_inv[3][1],n43=x_inv[3][2],n44=x_inv[3][3])
 				
 				out.write("\tAttributeBegin\n")
@@ -675,13 +676,13 @@ Display "''' + str(os.getcwd()) + os.sep + filename + '''.beauty.001.exr" "opene
 				out.write('\t\tScale 1 1 1\n')
 				
 				uniqueId = str(uuid.uuid4())
+				written_obj = geo.designID
+				
 				if (len(pa.Bones) > flexflag):
 				# Flex parts are "unique". Ensure they get a unique file
-					out2 = open(geo.designID + "_" + uniqueId + ".obj", "w+")
+					written_obj = written_obj + "_" + uniqueId
 				
-				else:
-					out2 = open(geo.designID + ".obj", "w+")
-				
+				out2 = open(written_obj + ".obj", "w+")
 				out2.write('o brick_' + geo.designID + '\n')
 				
 				# transform -------------------------------------------------------
@@ -787,12 +788,7 @@ Display "''' + str(os.getcwd()) + os.sep + filename + '''.beauty.001.exr" "opene
 				indexOffset = 1
 				textOffset = 1
 				
-				# Again special treatment for flex parts
-				if (len(pa.Bones) > flexflag):
-					written_rib = ObjToRib2.export_obj_to_rib(geo.designID + "_" + uniqueId + '.obj', pa.materials, pa.decoration)
-				
-				else:
-					written_rib = ObjToRib2.export_obj_to_rib(geo.designID + '.obj', pa.materials, pa.decoration)
+				written_rib = ObjToRib2.export_obj_to_rib(written_obj + '.obj', pa.materials, pa.decoration)
 				
 				out.write('\t\tAttribute "identifier" "name" ["'+ written_rib + '"]\n')
 				out.write('\t\tReadArchive "' + filename +'_Bricks_Archive.zip!'+ written_rib + '.rib"\n')
