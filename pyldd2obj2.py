@@ -731,11 +731,8 @@ Display "''' + str(os.getcwd()) + os.sep + filename + '''.beauty.001.exr" "opene
 
 					for text in geo.Parts[part].textures:
 						#out.write(text.string("vt"))
-						#out2.write(text.string("vt"))
-						x = text.string("")
-						x = x.split(" ")
-						# Left handed vs right handed coord system.
-						out2.write("vt " + str(x[1]) + " " + str((-1) * float(x[2])) + '\n')
+						# Renderman and obj st y coordinates are inverted
+						out2.write('vt {0} {1}\n'.format(text.x, text.y))
 
 					lddmat = self.allMaterials.getMaterialbyId(pa.materials[part])
 					#matname = lddmat.name
