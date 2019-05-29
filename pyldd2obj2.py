@@ -802,8 +802,8 @@ Display "''' + str(os.getcwd()) + os.sep + filename + '''.beauty.001.exr" "opene
 						writtenribs.append(readable_hash)
 						zf.write(written_rib + '.rib', compress_type=compression)
 				
-				#os.remove(written_rib + '.rib')
-				#os.remove(geo.designID + '.obj')
+				os.remove(written_rib + '.rib')
+				os.remove(written_obj + '.obj')
 		
 		zf.close()
 		out.write('WorldEnd')
