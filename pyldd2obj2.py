@@ -442,9 +442,10 @@ class Material(object):
 		self.g = float(g)
 		self.b = float(b)
 		self.a = float(a)
-	def string(self):
+	#def string(self):
+	def string(self, prefix=""):
 		#out = 'Kd {0} {1} {2}\nKa 1.600000 1.600000 1.600000\nKs 0.400000 0.400000 0.400000\nNs 3.482202\nTf 1 1 1\n'.format( self.r / 255, self.g / 255,self.b / 255)
-		out = '''"color diffuseColor" [{0} {1} {2}]\n'''.format( self.r / 255, self.g / 255,self.b / 255)
+		out = '''"{0}color diffuseColor" [{1} {2} {3}]\n'''.format(prefix, self.r / 255, self.g / 255,self.b / 255)
 		#out += self.mattype
 		if self.a < 255:
 			out += 'Ni 1.575\n' + 'd {0}'.format(0.05) + '\n' + 'Tr {0}\n'.format(0.05)
@@ -580,6 +581,7 @@ class Converter(object):
 		#out.write("mtllib " + filename + ".mtl" + '\n\n')
 		outtext = open(filename + ".mtl", "w+")
 		zf = zipfile.ZipFile(filename + "_Bricks_Archive.zip", "w")
+		zfmat = zipfile.ZipFile(filename + "_Materials_Archive.zip", "w")
 		
 		out.write('''# Camera Zero
 TransformBegin
@@ -723,11 +725,9 @@ Display "''' + str(os.getcwd()) + os.sep + filename + '''.beauty.001.exr" "opene
 						out2.write("# From file: " + geo.designID + ".g\n")
 					
 					for point in geo.Parts[part].outpositions:
-						#out.write(point.string("v"))
 						out2.write(point.string("v"))
 
 					for normal in geo.Parts[part].outnormals:
-						#out.write(normal.string("vn"))
 						out2.write(normal.string("vn"))
 
 					for text in geo.Parts[part].textures:
@@ -763,13 +763,31 @@ Display "''' + str(os.getcwd()) + os.sep + filename + '''.beauty.001.exr" "opene
 
 					if not matname in usedmaterials:
 						usedmaterials.append(matname)
-						outtext.write("newmtl " + matname + '\n')
-						outtext.write(lddmat.string())
+						outmat = open("material_" + matname + ".rib", "w+")
+						outtext.write("material_" + matname + '\n')
+						
+						outmat.write('''\tBxdf "PxrSurface" "Solid Material ''' + pa.materials[part] + '''"
+		"float diffuseGain" [1.0]\n''')
+
+						
 						if not deco == '0':
 							outtext.write("map_Kd " + deco + ".png" + '\n')
-
+							outtext.write(lddmat.string("reference "))
+							outmat.write('\t\t' + lddmat.string("reference "))
+						else:
+							outtext.write(lddmat.string())
+							outmat.write('\t\t' + lddmat.string())
+						
+						outmat.write('''\t\t"int diffuseDoubleSided" [1]
+		"color specularFaceColor" [0.1 0.1 0.15]
+		"color specularIor" [1.54 1.54 1.54] # ABS Refractive Index, Average value: 1.54
+		"float specularRoughness" [0.25]
+		"int specularDoubleSided" [0]
+		"float presence" [1]''')
+						outmat.close()
+						zfmat.write("material_" + matname + ".rib", compress_type=compression)
+						
 					#out.write("usemtl " + matname + '\n')
-					#out2.write("usemtl " + matname + '\n')
 					for face in geo.Parts[part].faces:
 						if len(geo.Parts[part].textures) > 0:
 							#out.write(face.string("f",indexOffset,textOffset))
@@ -806,6 +824,7 @@ Display "''' + str(os.getcwd()) + os.sep + filename + '''.beauty.001.exr" "opene
 				os.remove(written_obj + '.obj')
 		
 		zf.close()
+		zfmat.close()
 		out.write('WorldEnd')
 		print("--- %s seconds ---" % (time.time() - start_time))
 
