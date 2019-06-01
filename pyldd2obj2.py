@@ -258,7 +258,7 @@ class GeometrieReader(object):
 			self.faceCount = int(self.indexCount / 3)
 			options = self.readInt()
 
-			for i in range(0, self.valueCount):			
+			for i in range(0, self.valueCount):
 				self.positions.append(Point3D(x=self.readFloat(),y= self.readFloat(),z=self.readFloat()))
 
 			for i in range(0, self.valueCount):
@@ -687,6 +687,9 @@ Display "''' + str(os.getcwd()) + os.sep + filename + '''.beauty.001.exr" "opene
 				out2 = open(written_obj + ".obj", "w+")
 				out2.write('o brick_' + geo.designID + '\n')
 				
+				op = open(written_obj + "_new" + ".rib", "w+")
+				op.write('##RenderMan RIB-Structure 1.1 Entity\n')
+				
 				# transform -------------------------------------------------------
 				for part in geo.Parts:
 					
@@ -723,6 +726,9 @@ Display "''' + str(os.getcwd()) + os.sep + filename + '''.beauty.001.exr" "opene
 						out2.write("# From file: " + geo.designID + ".g" + str(part) + '\n')
 					else:
 						out2.write("# From file: " + geo.designID + ".g\n")
+						
+					op.write('AttributeBegin #begin Brick ' + geo.designID  + '.' + str(part) + '\n')
+					op.write('Attribute "identifier" "uniform string name" ["Brick ' + geo.designID + '.' + str(part) + '"]\n')
 					
 					for point in geo.Parts[part].outpositions:
 						out2.write(point.string("v"))
@@ -788,10 +794,24 @@ Display "''' + str(os.getcwd()) + os.sep + filename + '''.beauty.001.exr" "opene
 						zfmat.write("material_" + matname + ".rib", compress_type=compression)
 						
 					#out.write("usemtl " + matname + '\n')
+					
+					
 					for face in geo.Parts[part].faces:
+						op.write('\tPolygon\n')
+						# NOTE RENDERMAN is left handed coordinate system, obj is right handed -> z-axis inverted
+						op.write('\t\t"P" [ {0} {1} {2} {3} {4} {5} {6} {7} {8} ]\n'.format(geo.Parts[part].outpositions[face.a].x, geo.Parts[part].outpositions[face.a].y, (-1) * geo.Parts[part].outpositions[face.a].z, geo.Parts[part].outpositions[face.b].x, geo.Parts[part].outpositions[face.b].y, (-1) * geo.Parts[part].outpositions[face.b].z, geo.Parts[part].outpositions[face.c].x, geo.Parts[part].outpositions[face.c].y, (-1) * geo.Parts[part].outpositions[face.c].z))
+						
+						op.write('\t\t"N" [ {0} {1} {2} {3} {4} {5} {6} {7} {8} ]\n'.format(geo.Parts[part].outnormals[face.a].x, geo.Parts[part].outnormals[face.a].y, (-1) * geo.Parts[part].outnormals[face.a].z, geo.Parts[part].outnormals[face.b].x, geo.Parts[part].outnormals[face.b].y, (-1) * geo.Parts[part].outnormals[face.b].z, geo.Parts[part].outnormals[face.c].x, geo.Parts[part].outnormals[face.c].y, (-1) * geo.Parts[part].outnormals[face.c].z))
+						
 						if len(geo.Parts[part].textures) > 0:
 							#out.write(face.string("f",indexOffset,textOffset))
 							out2.write(face.string("f",indexOffset,textOffset))
+							
+							# NOTE RENDERMAN Maps Textures in the T from top to bottom so we
+							# calculate 1.0 - t here so the image will map properly
+							
+							op.write('\t\t"st" [ {0} {1} {2} {3} {4} {5} ]\n'.format(geo.Parts[part].textures[face.a].x, 1 - geo.Parts[part].textures[face.a].y, geo.Parts[part].textures[face.b].x, 1 - geo.Parts[part].textures[face.b].y, geo.Parts[part].textures[face.c].x, 1 - geo.Parts[part].textures[face.c].y))
+							
 						else:
 							#out.write(face.string("f",indexOffset))
 							out2.write(face.string("f",indexOffset))
