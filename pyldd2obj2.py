@@ -726,9 +726,6 @@ Display "''' + str(os.getcwd()) + os.sep + filename + '''.beauty.001.exr" "opene
 						out2.write("# From file: " + geo.designID + ".g" + str(part) + '\n')
 					else:
 						out2.write("# From file: " + geo.designID + ".g\n")
-						
-					op.write('AttributeBegin #begin Brick ' + geo.designID  + '.' + str(part) + '\n')
-					op.write('Attribute "identifier" "uniform string name" ["Brick ' + geo.designID + '.' + str(part) + '"]\n')
 					
 					for point in geo.Parts[part].outpositions:
 						out2.write(point.string("v"))
@@ -796,6 +793,10 @@ Display "''' + str(os.getcwd()) + os.sep + filename + '''.beauty.001.exr" "opene
 					#out.write("usemtl " + matname + '\n')
 					
 					
+					op.write('AttributeBegin #begin Brick ' + geo.designID  + '.' + str(part) + '\n')
+					op.write('Attribute "identifier" "uniform string name" ["Brick ' + geo.designID + '.' + str(part) + '"]\n')
+					op.write('ReadArchive "' + filename + '_Material_Archive.zip!material_' + matname + '.rib"\n')
+					
 					for face in geo.Parts[part].faces:
 						op.write('\tPolygon\n')
 						# NOTE RENDERMAN is left handed coordinate system, obj is right handed -> z-axis inverted
@@ -815,6 +816,8 @@ Display "''' + str(os.getcwd()) + os.sep + filename + '''.beauty.001.exr" "opene
 						else:
 							#out.write(face.string("f",indexOffset))
 							out2.write(face.string("f",indexOffset))
+							
+					op.write('AttributeEnd #end Brick ' + geo.designID  + '.' + str(part) + '\n\n')
 
 					indexOffset += len(geo.Parts[part].outpositions)
 					textOffset += len(geo.Parts[part].textures) 
