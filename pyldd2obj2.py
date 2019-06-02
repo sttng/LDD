@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+  #!/usr/bin/env python
 #
 # pyldd2obj Version 0.4.3 - Copyright (c) 2019 by jonnysp 
 #
@@ -14,7 +14,6 @@ from xml.dom import minidom
 import time
 import numpy as np
 import zlib
-import hashlib
 import uuid
 
 compression = zipfile.ZIP_DEFLATED
@@ -583,12 +582,12 @@ class Converter(object):
 		zf = zipfile.ZipFile(filename + "_Bricks_Archive.zip", "w")
 		zfmat = zipfile.ZipFile(filename + "_Materials_Archive.zip", "w")
 		
-		out.write('''# Camera Zero
+		out.write('''# Camera Minus One
 TransformBegin
 	Translate 0 0 80
 	Rotate -25 1 0 0
 	Rotate 45 0 1 0
-	Camera "Cam-0"
+	Camera "Cam--1"
 		"float shutterOpenTime" [0] 
 		"float shutterCloseTime" [1] 
 		"int apertureNSides" [0] 
@@ -598,7 +597,26 @@ TransformBegin
 		"float dofaspect" [1] 
 		"float nearClip" [0.100000001] 
 		"float farClip" [10000]
-TransformEnd\n''')
+TransformEnd\n\n''')
+		
+		for cam in self.scene.Scenecamera:
+			
+			out.write('''# Camera {0}
+TransformBegin
+	ConcatTransform [{1} {2} {3} {4} {5} {6} {7} {8} {9} {10} {11} {12} {13} {14} {15} {16}]
+	Camera "Cam-{0}"
+		"float shutterOpenTime" [0] 
+		"float shutterCloseTime" [1] 
+		"int apertureNSides" [0] 
+		"float apertureAngle" [0] 
+		"float apertureRoundness" [0] 
+		"float apertureDensity" [0] 
+		"float dofaspect" [1] 
+		"float nearClip" [0.100000001] 
+		"float farClip" [10000]
+TransformEnd\n'''.format(cam.refID, cam.matrix.n11, cam.matrix.n12, -1 * cam.matrix.n13, cam.matrix.n14, cam.matrix.n21, cam.matrix.n22, -1 * cam.matrix.n23, cam.matrix.n24, -1 * cam.matrix.n31, -1 * cam.matrix.n32, cam.matrix.n33, cam.matrix.n34, cam.matrix.n41, cam.matrix.n42 ,-1 * cam.matrix.n43, cam.matrix.n44))
+#TransformEnd\n'''.format(cam.refID, cam.matrix.n11, cam.matrix.n12, cam.matrix.n13, cam.matrix.n14, cam.matrix.n21, cam.matrix.n22, cam.matrix.n23, cam.matrix.n24, cam.matrix.n31, cam.matrix.n32, cam.matrix.n33, cam.matrix.n34, cam.matrix.n41, cam.matrix.n42 , cam.matrix.n43, cam.matrix.n44))
+
 		
 		out.write('''
 Display "''' + str(os.getcwd()) + os.sep + filename + '''.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse,diffuse_mse,specular,specular_mse,zfiltered,zfiltered_var,normal,normal_var,forward,backward" "int asrgba" 1
@@ -606,7 +624,7 @@ Display "''' + str(os.getcwd()) + os.sep + filename + '''.beauty.001.exr" "opene
 	"string exrpixeltype" ["half"]
 	"string compression" ["zips"]
 	"float compressionlevel" [45]
-	"string camera" ["Cam-0"]\n\n''')
+	"string camera" ["Cam--1"]\n\n''')
 		
 		out.write('WorldBegin\n')
 		out.write('\tScale 1 1 1\n')
@@ -669,26 +687,25 @@ Display "''' + str(os.getcwd()) + os.sep + filename + '''.beauty.001.exr" "opene
 				if not (len(pa.Bones) > flexflag):
 				# Flex parts don't need to be moved
 				# Renderman is lefthanded coordinate system, but LDD is right handed.
-					out.write('\t\tConcatTransform [' 
-					+ str(n11) + ' ' + str(n12) + ' ' + str((-1) * n13) + ' ' + str(n14) + ' ' 
-					+ str(n21) + ' ' + str(n22) + ' ' + str((-1) * n23) + ' ' + str(n24) + ' ' 
-					+ str((-1) * n31) + ' ' + str((-1) * n32) + ' ' + str(n33) + ' ' + str(n34) + ' ' 
-					+ str(n41) + ' ' + str(n42) + ' ' + str((-1) * n43) + ' ' + str(n44) + ']\n')
-				
-				out.write('\t\tScale 1 1 1\n')
+					out.write("\t\tConcatTransform [{0} {1} {2} {3} {4} {5} {6} {7} {8} {9} {10} {11} {12} {13} {14} {15}]\n\t\tScale 1 1 1\n".format(n11, n12, -1 * n13, n14, n21, n22, -1 * n23, n24, -1 * n31, -1 * n32, n33, n34, n41, n42 ,-1 * n43, n44))
 				
 				uniqueId = str(uuid.uuid4())
-				written_obj = geo.designID
+				material_string = '_' + '_'.join(pa.materials)
+				written_obj = geo.designID + material_string
+				
+				if pa.decoration:
+					decoration_string = '_' + '_'.join(pa.decoration)
+					written_obj = written_obj + decoration_string
 				
 				if (len(pa.Bones) > flexflag):
-				# Flex parts are "unique". Ensure they get a unique file
+				# Flex parts are "unique". Ensure they get a unique filename
 					written_obj = written_obj + "_" + uniqueId
 				
 				out2 = open(written_obj + ".obj", "w+")
-				out2.write('o brick_' + geo.designID + '\n')
+				out2.write("o brick_" + geo.designID + '\n')
 				
-				op = open(written_obj + "_new" + ".rib", "w+")
-				op.write('##RenderMan RIB-Structure 1.1 Entity\n')
+				op = open(written_obj + ".rib", "w+")
+				op.write("##RenderMan RIB-Structure 1.1 Entity\n")
 				
 				# transform -------------------------------------------------------
 				for part in geo.Parts:
@@ -789,13 +806,13 @@ Display "''' + str(os.getcwd()) + os.sep + filename + '''.beauty.001.exr" "opene
 		"float presence" [1]''')
 						outmat.close()
 						zfmat.write("material_" + matname + ".rib", compress_type=compression)
+						os.remove("material_" + matname + ".rib")
 						
 					#out.write("usemtl " + matname + '\n')
 					
-					
-					op.write('AttributeBegin #begin Brick ' + geo.designID  + '.' + str(part) + '\n')
-					op.write('Attribute "identifier" "uniform string name" ["Brick ' + geo.designID + '.' + str(part) + '"]\n')
-					op.write('ReadArchive "' + filename + '_Material_Archive.zip!material_' + matname + '.rib"\n')
+					op.write('AttributeBegin #begin Brick ' + written_obj + '.' + str(part) + '\n')
+					op.write('Attribute "identifier" "uniform string name" ["Brick ' + written_obj + '.' + str(part) + '"]\n')
+					op.write('ReadArchive "' + filename + '_Materials_Archive.zip!material_' + matname + '.rib"\n')
 					
 					for face in geo.Parts[part].faces:
 						op.write('\tPolygon\n')
@@ -817,11 +834,12 @@ Display "''' + str(os.getcwd()) + os.sep + filename + '''.beauty.001.exr" "opene
 							#out.write(face.string("f",indexOffset))
 							out2.write(face.string("f",indexOffset))
 							
-					op.write('AttributeEnd #end Brick ' + geo.designID  + '.' + str(part) + '\n\n')
+					op.write('AttributeEnd #end Brick ' + written_obj + '.' + str(part) + '\n\n')
 
 					indexOffset += len(geo.Parts[part].outpositions)
 					textOffset += len(geo.Parts[part].textures) 
 				# -----------------------------------------------------------------
+				op.close()
 				out2.write('\n')
 				out2.close()
 				
@@ -829,21 +847,15 @@ Display "''' + str(os.getcwd()) + os.sep + filename + '''.beauty.001.exr" "opene
 				indexOffset = 1
 				textOffset = 1
 				
-				written_rib = ObjToRib2.export_obj_to_rib(written_obj + '.obj', pa.materials, pa.decoration)
-				
-				out.write('\t\tAttribute "identifier" "name" ["'+ written_rib + '"]\n')
-				out.write('\t\tReadArchive "' + filename +'_Bricks_Archive.zip!'+ written_rib + '.rib"\n')
+				out.write('\t\tAttribute "identifier" "name" ["'+ written_obj + '"]\n')
+				out.write('\t\tReadArchive "' + filename +'_Bricks_Archive.zip!'+ written_obj + '.rib"\n')
 				out.write('\tAttributeEnd\n\n')
 				
-				with open(written_rib + '.rib', "rb") as f:
-					bytes = f.read() # read entire file as bytes
-					readable_hash = hashlib.sha256(bytes).hexdigest()
+				if not written_obj in writtenribs:
+						writtenribs.append(written_obj)
+						zf.write(written_obj + '.rib', compress_type=compression)
 				
-				if not readable_hash in writtenribs:
-						writtenribs.append(readable_hash)
-						zf.write(written_rib + '.rib', compress_type=compression)
-				
-				os.remove(written_rib + '.rib')
+				os.remove(written_obj + '.rib')
 				os.remove(written_obj + '.obj')
 		
 		zf.close()
