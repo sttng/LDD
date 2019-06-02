@@ -1,4 +1,4 @@
-  #!/usr/bin/env python
+#!/usr/bin/env python
 #
 # pyldd2obj Version 0.4.3 - Copyright (c) 2019 by jonnysp 
 #
@@ -13,12 +13,10 @@ import zipfile
 from xml.dom import minidom
 import time
 import numpy as np
-import zlib
 import uuid
+import csv
 
 compression = zipfile.ZIP_DEFLATED
-
-import ObjToRib2
 
 if sys.version_info < (3, 0):
 	reload(sys)
@@ -420,10 +418,23 @@ class LOCReader(object):
 class Materials(object):
 	def __init__(self, data):
 		self.Materials = {}
+		
+		#Added
+		self.MaterialsRi = {}
+		material_id_dict = {}
+		with open('lego_colors.csv', 'r') as csvfile:
+			reader = csv.reader(csvfile, delimiter=',')
+			next(csvfile) # skip the first row
+			for row in reader:
+				material_id_dict[row[0]] = row[6], row[7], row[8], row[9]
+		#Added end
+		
 		xml = minidom.parseString(data)
 		for node in xml.firstChild.childNodes: 
 			if node.nodeName == 'Material':
 				self.Materials[node.getAttribute('MatID')] = Material(r=int(node.getAttribute('Red')), g=int(node.getAttribute('Green')), b=int(node.getAttribute('Blue')), a=int(node.getAttribute('Alpha')), mtype=str(node.getAttribute('MaterialType')))
+				
+				self.MaterialsRi[node.getAttribute('MatID')] = MaterialRi(materialid=node.getAttribute('MatID'), r=int(material_id_dict[node.getAttribute('MatID')][0]), g=int(material_id_dict[node.getAttribute('MatID')][1]), b=int(material_id_dict[node.getAttribute('MatID')][2]), mattype=str(material_id_dict[node.getAttribute('MatID')][3]))
 
 	def setLOC(self, loc):
 		for key in loc.values:
@@ -432,6 +443,9 @@ class Materials(object):
 
 	def getMaterialbyId(self, mid):
 		return self.Materials[mid]
+		
+	def getMaterialRibyId(self, mid):
+		return self.MaterialsRi[mid]
 
 class Material(object):
 	def __init__(self, r, g, b, a, mtype):
@@ -441,14 +455,115 @@ class Material(object):
 		self.g = float(g)
 		self.b = float(b)
 		self.a = float(a)
-	#def string(self):
+
 	def string(self, prefix=""):
-		#out = 'Kd {0} {1} {2}\nKa 1.600000 1.600000 1.600000\nKs 0.400000 0.400000 0.400000\nNs 3.482202\nTf 1 1 1\n'.format( self.r / 255, self.g / 255,self.b / 255)
 		out = '''"{0}color diffuseColor" [{1} {2} {3}]\n'''.format(prefix, self.r / 255, self.g / 255,self.b / 255)
 		#out += self.mattype
 		if self.a < 255:
 			out += 'Ni 1.575\n' + 'd {0}'.format(0.05) + '\n' + 'Tr {0}\n'.format(0.05)
 		return out
+
+class MaterialRi(object):
+	def __init__(self, materialid, r, g, b, mattype):
+		self.name = ''
+		self.mattype = mattype
+		self.materialid = materialid
+		self.r = round((float(r) / 255),2)
+		self.g = round((float(g) / 255),2)
+		self.b = round((float(b) / 255),2)
+		
+	def string(self, decoration_id):
+		texture_strg = ''
+		ref_strg = ''
+		
+		if decoration_id != None and decoration_id != '0':
+		# We have decorations
+			rgb_or_dec_str = '"Blend' + decoration_id + ':resultRGB"'
+			ref_strg = 'reference '
+			texture_strg = '''\tPattern "PxrManifold2D" "PxrManifold2D1"
+			"float angle" [0]
+			"float scaleS" [1]
+			"float scaleT" [1]
+			"int invertT" [1]
+			
+		# txmake -t:8 -compression zip -mode clamp -resize up ''' + decoration_id + '''.png ''' + decoration_id + '''.tex
+		Pattern "PxrTexture" "Texture''' + decoration_id + '''"
+			"string filename" ["''' + decoration_id + '''.tex"]
+			"int invertT" [0]
+			"int linearize" [1]
+			"reference struct manifold" ["PxrManifold2D1:result"]
+			
+		Pattern "PxrBlend" "Blend''' + decoration_id + '''"
+			"int operation"  [19]
+			"reference color topRGB" ["Texture''' + decoration_id + ''':resultRGB"]
+			"reference float topA" ["Texture''' + decoration_id + ''':resultA"]
+			"color bottomRGB" [''' + str(self.r) + ''' ''' + str(self.g) + ''' ''' + str(self.b) + ''']
+			"float bottomA" [1]
+			"int clampOutput" [1]\n\n'''
+		
+		else:
+		# We don't have decorations
+			rgb_or_dec_str = str(self.r ) + ' ' + str(self.g) + ' ' + str(self.b)
+			
+		if self.mattype == 'Transparent':
+			bxdf_mat_str = texture_strg + '''\tBxdf "PxrSurface" "Transparent ''' + self.materialid + '''"
+			"float diffuseGain" [0]
+			"color diffuseColor" [0.5 0.5 0.5]
+			"int diffuseDoubleSided" [1]
+			"int diffuseBackUseDiffuseColor" [1]
+			"color diffuseBackColor" [1 1 1]
+			"''' + ref_strg + '''color specularFaceColor" [''' + rgb_or_dec_str + ''']
+			"color specularEdgeColor" [0.2 0.2 0.2]
+			"color specularIor"  [1.585 1.585 1.585] # Polycarbonate IOR = 1.584 - 1.586
+			"float specularRoughness" [0.25]
+			"int specularDoubleSided" [1]
+			"color clearcoatFaceColor" [0 0 0]
+			"color clearcoatEdgeColor" [0 0 0]
+			"color clearcoatIor" [1.5 1.5 1.5]
+			"color clearcoatExtinctionCoeff" [0.0 0.0 0.0]
+			"float clearcoatRoughness" [0.0]
+			"float iridescenceFaceGain" [0]
+			"float iridescenceEdgeGain" [0]
+			"color iridescencePrimaryColor" [1 0 0]
+			"color iridescenceSecondaryColor" [0 0 1]
+			"float iridescenceRoughness" [0.2]
+			"float fuzzGain" [0.0]
+			"color fuzzColor" [1 1 1]
+			"float fuzzConeAngle" [8]
+			"float refractionGain" [1]
+			"float reflectionGain" [0.2]
+			"''' + ref_strg + '''color refractionColor" [''' + rgb_or_dec_str + ''']
+			"float glassRoughness" [0.25] 
+			"float glassIor" [1.585] # Polycarbonate IOR = 1.584 - 1.586
+			"int thinGlass" [1] 
+			"float glowGain" [0.0] 
+			"color glowColor" [1 1 1] 
+			"float presence" [1]\n'''
+			
+		elif self.mattype == 'Metallic':
+			bxdf_mat_str = texture_strg + '''\tBxdf "PxrSurface" "Metallic ''' + self.materialid + '''"
+			"float diffuseGain" [1.0]
+			"''' + ref_strg + '''color diffuseColor" [''' + rgb_or_dec_str + '''] 
+			"int diffuseDoubleSided" [1]
+			"color specularFaceColor" [0.8 0.8 0.8]
+			"color specularIor"  [1.54 1.54 1.54] # ABS Refractive Index, Average value: 1.54
+			"float specularRoughness" [0.25]
+			"int specularDoubleSided" [0]
+			"float presence" [1]\n'''
+		
+		else:
+			bxdf_mat_str = texture_strg + '''\tBxdf "PxrSurface" "Solid Material ''' + self.materialid + '''" 
+			"float diffuseGain" [1.0] 
+			"''' + ref_strg + '''color diffuseColor" [''' + rgb_or_dec_str + '''] 
+			"int diffuseDoubleSided" [1]
+			"color specularFaceColor" [0.1 0.1 0.15]
+			"color specularIor" [1.54 1.54 1.54] # ABS Refractive Index, Average value: 1.54
+			"float specularRoughness" [0.25]
+			"int specularDoubleSided" [0]
+			"float presence" [1]\n'''
+		
+		return bxdf_mat_str
+
 
 class DBinfo(object):
 	def __init__(self, data):
@@ -577,8 +692,6 @@ class Converter(object):
 		writtenribs = []
 
 		out = open(filename + ".rib", "w+")
-		#out.write("mtllib " + filename + ".mtl" + '\n\n')
-		outtext = open(filename + ".mtl", "w+")
 		zf = zipfile.ZipFile(filename + "_Bricks_Archive.zip", "w")
 		zfmat = zipfile.ZipFile(filename + "_Materials_Archive.zip", "w")
 		
@@ -615,8 +728,6 @@ TransformBegin
 		"float nearClip" [0.100000001] 
 		"float farClip" [10000]
 TransformEnd\n'''.format(cam.refID, cam.matrix.n11, cam.matrix.n12, -1 * cam.matrix.n13, cam.matrix.n14, cam.matrix.n21, cam.matrix.n22, -1 * cam.matrix.n23, cam.matrix.n24, -1 * cam.matrix.n31, -1 * cam.matrix.n32, cam.matrix.n33, cam.matrix.n34, cam.matrix.n41, cam.matrix.n42 ,-1 * cam.matrix.n43, cam.matrix.n44))
-#TransformEnd\n'''.format(cam.refID, cam.matrix.n11, cam.matrix.n12, cam.matrix.n13, cam.matrix.n14, cam.matrix.n21, cam.matrix.n22, cam.matrix.n23, cam.matrix.n24, cam.matrix.n31, cam.matrix.n32, cam.matrix.n33, cam.matrix.n34, cam.matrix.n41, cam.matrix.n42 , cam.matrix.n43, cam.matrix.n44))
-
 		
 		out.write('''
 Display "''' + str(os.getcwd()) + os.sep + filename + '''.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse,diffuse_mse,specular,specular_mse,zfiltered,zfiltered_var,normal,normal_var,forward,backward" "int asrgba" 1
@@ -626,8 +737,7 @@ Display "''' + str(os.getcwd()) + os.sep + filename + '''.beauty.001.exr" "opene
 	"float compressionlevel" [45]
 	"string camera" ["Cam--1"]\n\n''')
 		
-		out.write('WorldBegin\n')
-		out.write('\tScale 1 1 1\n')
+		out.write('WorldBegin\n\tScale 1 1 1\n')
 		out.write('''\tAttributeBegin
 		Attribute "visibility" "int indirect" [0] "int transmission" [0]
 		Attribute "visibility" "int camera" [1]
@@ -756,6 +866,7 @@ Display "''' + str(os.getcwd()) + os.sep + filename + '''.beauty.001.exr" "opene
 						out2.write('vt {0} {1}\n'.format(text.x, text.y))
 
 					lddmat = self.allMaterials.getMaterialbyId(pa.materials[part])
+					lddmatri = self.allMaterials.getMaterialRibyId(pa.materials[part])
 					#matname = lddmat.name
 					matname = pa.materials[part]
 
@@ -784,26 +895,13 @@ Display "''' + str(os.getcwd()) + os.sep + filename + '''.beauty.001.exr" "opene
 					if not matname in usedmaterials:
 						usedmaterials.append(matname)
 						outmat = open("material_" + matname + ".rib", "w+")
-						outtext.write("material_" + matname + '\n')
-						
-						outmat.write('''\tBxdf "PxrSurface" "Solid Material ''' + pa.materials[part] + '''"
-		"float diffuseGain" [1.0]\n''')
-
 						
 						if not deco == '0':
-							outtext.write("map_Kd " + deco + ".png" + '\n')
-							outtext.write(lddmat.string("reference "))
-							outmat.write('\t\t' + lddmat.string("reference "))
+							outmat.write(lddmatri.string(deco))
+
 						else:
-							outtext.write(lddmat.string())
-							outmat.write('\t\t' + lddmat.string())
+							outmat.write(lddmatri.string(None))
 						
-						outmat.write('''\t\t"int diffuseDoubleSided" [1]
-		"color specularFaceColor" [0.1 0.1 0.15]
-		"color specularIor" [1.54 1.54 1.54] # ABS Refractive Index, Average value: 1.54
-		"float specularRoughness" [0.25]
-		"int specularDoubleSided" [0]
-		"float presence" [1]''')
 						outmat.close()
 						zfmat.write("material_" + matname + ".rib", compress_type=compression)
 						os.remove("material_" + matname + ".rib")
