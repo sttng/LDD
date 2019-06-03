@@ -699,6 +699,8 @@ class Converter(object):
 		out = open(filename + ".rib", "w+")
 		zf = zipfile.ZipFile(filename + "_Bricks_Archive.zip", "w")
 		zfmat = zipfile.ZipFile(filename + "_Materials_Archive.zip", "w")
+		
+		# minx used for floor plane later
 		minx = 1000
 		useplane = cl.useplane
 		
@@ -897,7 +899,7 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 								f.close()
 
 								if os.path.exists(FindRmtree()):
-									txmake_cmd = FindRmtree() + 'bin/txmake -t:8 -compression zip -mode clamp -resize up {0} {1}.tex'.format(extfile, deco)
+									txmake_cmd = FindRmtree() + 'bin' + os.sep + 'txmake -t:8 -compression zip -mode clamp -resize up {0} {1}.tex'.format(extfile, deco)
 									os.system(txmake_cmd)
 								else:
 									print("RMANTREE environment variable not set correctly. Set with: export RMANTREE=/Applications/Pixar/RenderManProServer-22.5/")
@@ -932,8 +934,7 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 							#out.write(face.string("f",indexOffset,textOffset))
 							out2.write(face.string("f",indexOffset,textOffset))
 							
-							# NOTE RENDERMAN Maps Textures in the T from top to bottom so we
-							# calculate 1.0 - t here so the image will map properly
+							# NOTE RENDERMAN Maps Textures in the T from top to bottom so we calculate 1.0 - t so the image will map properly
 							
 							op.write('\t\t"st" [ {0} {1} {2} {3} {4} {5} ]\n'.format(geo.Parts[part].textures[face.a].x, 1 - geo.Parts[part].textures[face.a].y, geo.Parts[part].textures[face.b].x, 1 - geo.Parts[part].textures[face.b].y, geo.Parts[part].textures[face.c].x, 1 - geo.Parts[part].textures[face.c].y))
 							
@@ -1062,7 +1063,7 @@ def main():
 		os.remove(obj_filename + "_Materials_Archive.zip")
 	if os.path.exists(obj_filename + "_Bricks_Archive.zip"):
 		os.remove(obj_filename + "_Bricks_Archive.zip")
-		
+	
 	#except Exception as e:
 	#	print("Missing Paramenter:" + str(cl.args.infile) + " infile.lfx exportname (without extension)")
 	#	return
