@@ -699,6 +699,8 @@ class Converter(object):
 		out = open(filename + ".rib", "w+")
 		zf = zipfile.ZipFile(filename + "_Bricks_Archive.zip", "w")
 		zfmat = zipfile.ZipFile(filename + "_Materials_Archive.zip", "w")
+		minx = 1000
+		useplane = cl.useplane
 		
 		out.write('''# Camera Minus One
 TransformBegin
@@ -803,6 +805,9 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 				# Flex parts don't need to be moved
 				# Renderman is lefthanded coordinate system, but LDD is right handed.
 					out.write("\t\tConcatTransform [{0} {1} {2} {3} {4} {5} {6} {7} {8} {9} {10} {11} {12} {13} {14} {15}]\n\t\tScale 1 1 1\n".format(n11, n12, -1 * n13, n14, n21, n22, -1 * n23, n24, -1 * n31, -1 * n32, n33, n34, n41, n42 ,-1 * n43, n44))
+					
+					if minx > float(n43):
+						minx = n43
 				
 				uniqueId = str(uuid.uuid4())
 				material_string = '_' + '_'.join(pa.materials)
@@ -892,7 +897,7 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 								f.close()
 
 								if os.path.exists(FindRmtree()):
-									txmake_cmd = FindRmtree() + '/txmake -t:8 -compression zip -mode clamp -resize up {0} {1}.tex'.format(extfile, deco)
+									txmake_cmd = FindRmtree() + 'bin/txmake -t:8 -compression zip -mode clamp -resize up {0} {1}.tex'.format(extfile, deco)
 									os.system(txmake_cmd)
 								else:
 									print("RMANTREE environment variable not set correctly. Set with: export RMANTREE=/Applications/Pixar/RenderManProServer-22.5/")
@@ -960,6 +965,15 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 				os.remove(written_obj + '.rib')
 				os.remove(written_obj + '.obj')
 		
+		if useplane == True: # write the floor plane in case True
+			out.write('''\tAttributeBegin
+		Attribute "identifier" "string name" ["groundplane"]
+		Translate {0} 0 10
+		Scale 200 1 200
+		Polygon "P" [-0.5 0 -0.5  -0.5 0 0.5  0.5 0 0.5  0.5 0 -0.5]
+		"st" [0 0  0 1  1 1  1 0]
+	AttributeEnd\n\n'''.format(minx))
+		
 		zf.close()
 		zfmat.close()
 		out.write('WorldEnd')
@@ -975,9 +989,9 @@ def FindDatabase():
 
 def FindRmtree():
 	if os.name =='posix':
-		return str(os.path.join(str(os.getenv('RMANTREE')),'bin'))
+		return str(os.getenv('RMANTREE'))
 	else:
-		return str(os.path.join(str(os.getenv('RMANTREE')),'bin'))
+		return str(os.getenv('RMANTREE'))
 
 
 # rib "header" generating routine
@@ -990,22 +1004,22 @@ def generate_rib_header(infile, srate, pixelvar, width, height, fov, fstop, sear
 	rib_header = '''##RenderMan RIB
 # Generated with LegoToR {0} on {1}
 version 3.04
-Option "searchpath" "string archive" ["{2}"] "string texture" [".:@:/Applications/Pixar/RenderManProServer-22.4/lib/RenderManAssetLibrary/EnvironmentMaps/Outdoor/GriffithObservatory.rma:{3}"]
+Option "searchpath" "string archive" ["{2}"] "string texture" [".:@:{3}lib/RenderManAssetLibrary/EnvironmentMaps/Outdoor/GriffithObservatory.rma:{4}"]
 Option "Ri" "int Frame" [1]
-	"float PixelVariance" [{4}]
+	"float PixelVariance" [{5}]
 	"string PixelFilterName" ["gaussian"]
 	"float[2] PixelFilterWidth" [2 2]
-	"int[2] FormatResolution" [{5} {6}]
+	"int[2] FormatResolution" [{6} {7}]
 	"float FormatPixelAspectRatio" [1]
 	"float[2] Clipping" [0.1 10000]
 	"float[4] ScreenWindow" [-1 1 -0.5625 0.5625]
 	"float[2] Shutter" [0 0]
 Option "bucket" "string order" ["circle"]
-Option "statistics" "int level" [1] "string xmlfilename" ["{7}.xml"]
+Option "statistics" "int level" [1] "string xmlfilename" ["{8}.xml"]
 
-{8}
+{9}
 Hider "raytrace" "int minsamples" [32] "int maxsamples" [64] "float darkfalloff" [0.025] "int incremental" [1] "string pixelfiltermode" ["importance"]
-ShadingRate {9}
+ShadingRate {10}
 
 # Beauty
 DisplayChannel "color Ci"
@@ -1028,7 +1042,7 @@ DisplayChannel "normal normal_var" "string source" "normal Nn" "string statistic
 DisplayChannel "vector forward" "string source" "vector motionFore"
 DisplayChannel "vector backward" "string source" "vector motionBack"
 
-Projection "PxrCamera" "float fov" [{10}] "float fStop" [3.5] "float focalLength" [0.8] "float focalDistance" [5] "point focus1" [0.0 0.0 -1] "point focus2" [1 0.0 -1] "point focus3" [1 1 -1]\n'''.format(__version__, datetime.datetime.now(), str(searcharchive) + os.sep, str(searchtexture) + os.sep, pixelvar, width, height, str(cwd) + os.sep + str(infile), integrator, srate, fov)
+Projection "PxrCamera" "float fov" [{11}] "float fStop" [3.5] "float focalLength" [0.8] "float focalDistance" [5] "point focus1" [0.0 0.0 -1] "point focus2" [1 0.0 -1] "point focus3" [1 1 -1]\n'''.format(__version__, datetime.datetime.now(), str(searcharchive) + os.sep, FindRmtree(), str(searchtexture) + os.sep, pixelvar, width, height, str(cwd) + os.sep + str(infile), integrator, srate, fov)
 
 	with open('rib_header.rib', 'w') as file_writer:
 		file_writer.write(rib_header)
