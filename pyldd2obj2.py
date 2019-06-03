@@ -15,6 +15,10 @@ import time
 import numpy as np
 import uuid
 import csv
+import datetime
+import shutil
+import ParseCommandLine as cl
+from _version import __version__
 
 compression = zipfile.ZIP_DEFLATED
 
@@ -478,7 +482,8 @@ class MaterialRi(object):
 		
 		if decoration_id != None and decoration_id != '0':
 		# We have decorations
-			rgb_or_dec_str = '"Blend' + decoration_id + ':resultRGB"'
+			rgb_or_dec_str = '"Blend{0}:resultRGB"'.format(decoration_id)
+			
 			ref_strg = 'reference '
 			texture_strg = '''\tPattern "PxrManifold2D" "PxrManifold2D1"
 			"float angle" [0]
@@ -486,33 +491,33 @@ class MaterialRi(object):
 			"float scaleT" [1]
 			"int invertT" [1]
 			
-		# txmake -t:8 -compression zip -mode clamp -resize up ''' + decoration_id + '''.png ''' + decoration_id + '''.tex
-		Pattern "PxrTexture" "Texture''' + decoration_id + '''"
-			"string filename" ["''' + decoration_id + '''.tex"]
+		# txmake -t:8 -compression zip -mode clamp -resize up {0}.png {0}.tex
+		Pattern "PxrTexture" "Texture{0}"
+			"string filename" ["{0}.tex"]
 			"int invertT" [0]
 			"int linearize" [1]
 			"reference struct manifold" ["PxrManifold2D1:result"]
 			
-		Pattern "PxrBlend" "Blend''' + decoration_id + '''"
+		Pattern "PxrBlend" "Blend{0}"
 			"int operation"  [19]
-			"reference color topRGB" ["Texture''' + decoration_id + ''':resultRGB"]
-			"reference float topA" ["Texture''' + decoration_id + ''':resultA"]
-			"color bottomRGB" [''' + str(self.r) + ''' ''' + str(self.g) + ''' ''' + str(self.b) + ''']
+			"reference color topRGB" ["Texture{0}:resultRGB"]
+			"reference float topA" ["Texture{0}:resultA"]
+			"color bottomRGB" [{1} {2} {3}]
 			"float bottomA" [1]
-			"int clampOutput" [1]\n\n'''
+			"int clampOutput" [1]\n\n'''.format(decoration_id, self.r, self.g, self.b)
 		
 		else:
 		# We don't have decorations
-			rgb_or_dec_str = str(self.r ) + ' ' + str(self.g) + ' ' + str(self.b)
+			rgb_or_dec_str = '{0} {1} {2}'.format(self.r, self.g, self.b)
 			
 		if self.mattype == 'Transparent':
-			bxdf_mat_str = texture_strg + '''\tBxdf "PxrSurface" "Transparent ''' + self.materialid + '''"
+			bxdf_mat_str = texture_strg + '''\tBxdf "PxrSurface" "Transparent {0}"
 			"float diffuseGain" [0]
 			"color diffuseColor" [0.5 0.5 0.5]
 			"int diffuseDoubleSided" [1]
 			"int diffuseBackUseDiffuseColor" [1]
 			"color diffuseBackColor" [1 1 1]
-			"''' + ref_strg + '''color specularFaceColor" [''' + rgb_or_dec_str + ''']
+			"{1}color specularFaceColor" [{2}]
 			"color specularEdgeColor" [0.2 0.2 0.2]
 			"color specularIor"  [1.585 1.585 1.585] # Polycarbonate IOR = 1.584 - 1.586
 			"float specularRoughness" [0.25]
@@ -532,35 +537,35 @@ class MaterialRi(object):
 			"float fuzzConeAngle" [8]
 			"float refractionGain" [1]
 			"float reflectionGain" [0.2]
-			"''' + ref_strg + '''color refractionColor" [''' + rgb_or_dec_str + ''']
+			"{1}color refractionColor" [{2}]
 			"float glassRoughness" [0.25] 
 			"float glassIor" [1.585] # Polycarbonate IOR = 1.584 - 1.586
 			"int thinGlass" [1] 
 			"float glowGain" [0.0] 
 			"color glowColor" [1 1 1] 
-			"float presence" [1]\n'''
+			"float presence" [1]\n'''.format(self.materialid, ref_strg, rgb_or_dec_str)
 			
 		elif self.mattype == 'Metallic':
-			bxdf_mat_str = texture_strg + '''\tBxdf "PxrSurface" "Metallic ''' + self.materialid + '''"
+			bxdf_mat_str = texture_strg + '''\tBxdf "PxrSurface" "Metallic {0}"
 			"float diffuseGain" [1.0]
-			"''' + ref_strg + '''color diffuseColor" [''' + rgb_or_dec_str + '''] 
+			"{1}color diffuseColor" [{2}] 
 			"int diffuseDoubleSided" [1]
 			"color specularFaceColor" [0.8 0.8 0.8]
 			"color specularIor"  [1.54 1.54 1.54] # ABS Refractive Index, Average value: 1.54
 			"float specularRoughness" [0.25]
 			"int specularDoubleSided" [0]
-			"float presence" [1]\n'''
+			"float presence" [1]\n'''.format(self.materialid, ref_strg, rgb_or_dec_str)
 		
 		else:
-			bxdf_mat_str = texture_strg + '''\tBxdf "PxrSurface" "Solid Material ''' + self.materialid + '''" 
+			bxdf_mat_str = texture_strg + '''\tBxdf "PxrSurface" "Solid Material {0}" 
 			"float diffuseGain" [1.0] 
-			"''' + ref_strg + '''color diffuseColor" [''' + rgb_or_dec_str + '''] 
+			"{1}color diffuseColor" [{2}] 
 			"int diffuseDoubleSided" [1]
 			"color specularFaceColor" [0.1 0.1 0.15]
 			"color specularIor" [1.54 1.54 1.54] # ABS Refractive Index, Average value: 1.54
 			"float specularRoughness" [0.25]
 			"int specularDoubleSided" [0]
-			"float presence" [1]\n'''
+			"float presence" [1]\n'''.format(self.materialid, ref_strg, rgb_or_dec_str)
 		
 		return bxdf_mat_str
 
@@ -697,7 +702,7 @@ class Converter(object):
 		
 		out.write('''# Camera Minus One
 TransformBegin
-	Translate 0 0 80
+	Translate 0 -2 80
 	Rotate -25 1 0 0
 	Rotate 45 0 1 0
 	Camera "Cam--1"
@@ -730,12 +735,12 @@ TransformBegin
 TransformEnd\n'''.format(cam.refID, cam.matrix.n11, cam.matrix.n12, -1 * cam.matrix.n13, cam.matrix.n14, cam.matrix.n21, cam.matrix.n22, -1 * cam.matrix.n23, cam.matrix.n24, -1 * cam.matrix.n31, -1 * cam.matrix.n32, cam.matrix.n33, cam.matrix.n34, cam.matrix.n41, cam.matrix.n42 ,-1 * cam.matrix.n43, cam.matrix.n44))
 		
 		out.write('''
-Display "''' + str(os.getcwd()) + os.sep + filename + '''.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse,diffuse_mse,specular,specular_mse,zfiltered,zfiltered_var,normal,normal_var,forward,backward" "int asrgba" 1
+Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse,diffuse_mse,specular,specular_mse,zfiltered,zfiltered_var,normal,normal_var,forward,backward" "int asrgba" 1
 	"string storage" ["scanline"]
 	"string exrpixeltype" ["half"]
 	"string compression" ["zips"]
 	"float compressionlevel" [45]
-	"string camera" ["Cam--1"]\n\n''')
+	"string camera" ["Cam--1"]\n\n'''.format(os.getcwd(), os.sep, filename))
 		
 		out.write('WorldBegin\n\tScale 1 1 1\n')
 		out.write('''\tAttributeBegin
@@ -887,7 +892,7 @@ Display "''' + str(os.getcwd()) + os.sep + filename + '''.beauty.001.exr" "opene
 								f.close()
 
 								if os.path.exists(FindRmtree()):
-									txmake_cmd = FindRmtree() + '/txmake -t:8 -compression zip -mode clamp -resize up ' + extfile + ' ' + deco + '.tex'
+									txmake_cmd = FindRmtree() + '/txmake -t:8 -compression zip -mode clamp -resize up {0} {1}.tex'.format(extfile, deco)
 									os.system(txmake_cmd)
 								else:
 									print("RMANTREE environment variable not set correctly. Set with: export RMANTREE=/Applications/Pixar/RenderManProServer-22.5/")
@@ -908,8 +913,7 @@ Display "''' + str(os.getcwd()) + os.sep + filename + '''.beauty.001.exr" "opene
 						
 					#out.write("usemtl " + matname + '\n')
 					
-					op.write('AttributeBegin #begin Brick ' + written_obj + '.' + str(part) + '\n')
-					op.write('Attribute "identifier" "uniform string name" ["Brick ' + written_obj + '.' + str(part) + '"]\n')
+					op.write('AttributeBegin #begin Brick {0}.{1}\nAttribute "identifier" "uniform string name" ["Brick {0}.{1}"]\n'.format(written_obj, part))
 					op.write('ReadArchive "' + filename + '_Materials_Archive.zip!material_' + matname + '.rib"\n')
 					
 					for face in geo.Parts[part].faces:
@@ -932,7 +936,7 @@ Display "''' + str(os.getcwd()) + os.sep + filename + '''.beauty.001.exr" "opene
 							#out.write(face.string("f",indexOffset))
 							out2.write(face.string("f",indexOffset))
 							
-					op.write('AttributeEnd #end Brick ' + written_obj + '.' + str(part) + '\n\n')
+					op.write('AttributeEnd #end Brick {0}.{1}\n\n'.format(written_obj, part))
 
 					indexOffset += len(geo.Parts[part].outpositions)
 					textOffset += len(geo.Parts[part].textures) 
@@ -976,19 +980,92 @@ def FindRmtree():
 		return str(os.path.join(str(os.getenv('RMANTREE')),'bin'))
 
 
+# rib "header" generating routine
+def generate_rib_header(infile, srate, pixelvar, width, height, fov, fstop, searcharchive, searchtexture, integrator, integratorParams, useplane):
+	#print ('shading rate {} pivel variance {} using {} {}'.format(srate,pixelvar,integrator,integratorParams))
+	cwd = os.getcwd()
+	infile = os.path.realpath(infile.name)
+	infile = os.path.splitext(os.path.basename(infile))[0]
+	
+	rib_header = '''##RenderMan RIB
+# Generated with LegoToR {0} on {1}
+version 3.04
+Option "searchpath" "string archive" ["{2}"] "string texture" [".:@:/Applications/Pixar/RenderManProServer-22.4/lib/RenderManAssetLibrary/EnvironmentMaps/Outdoor/GriffithObservatory.rma:{3}"]
+Option "Ri" "int Frame" [1]
+	"float PixelVariance" [{4}]
+	"string PixelFilterName" ["gaussian"]
+	"float[2] PixelFilterWidth" [2 2]
+	"int[2] FormatResolution" [{5} {6}]
+	"float FormatPixelAspectRatio" [1]
+	"float[2] Clipping" [0.1 10000]
+	"float[4] ScreenWindow" [-1 1 -0.5625 0.5625]
+	"float[2] Shutter" [0 0]
+Option "bucket" "string order" ["circle"]
+Option "statistics" "int level" [1] "string xmlfilename" ["{7}.xml"]
+
+{8}
+Hider "raytrace" "int minsamples" [32] "int maxsamples" [64] "float darkfalloff" [0.025] "int incremental" [1] "string pixelfiltermode" ["importance"]
+ShadingRate {9}
+
+# Beauty
+DisplayChannel "color Ci"
+DisplayChannel "float a"
+DisplayChannel "color mse" "string source" "color Ci" "string statistics" "mse"
+ 
+# Shading
+DisplayChannel "color albedo" "string source" "color lpe:nothruput;noinfinitecheck;noclamp;unoccluded;overwrite;C(U2L)|O"
+DisplayChannel "color albedo_var" "string source" "color lpe:nothruput;noinfinitecheck;noclamp;unoccluded;overwrite;C(U2L)|O" "string statistics" "variance"
+DisplayChannel "color diffuse" "string source" "color lpe:C(D[DS]*[LO])|O"
+DisplayChannel "color diffuse_mse" "string source" "color lpe:C(D[DS]*[LO])|O" "string statistics" "mse"
+DisplayChannel "color specular" "string source" "color lpe:CS[DS]*[LO]"
+DisplayChannel "color specular_mse" "string source" "color lpe:CS[DS]*[LO]" "string statistics" "mse"
+ 
+# Geometry
+DisplayChannel "float zfiltered" "string source" "float z" "string filter" "gaussian"
+DisplayChannel "float zfiltered_var" "string source" "float z" "string filter" "gaussian" "string statistics" "variance"
+DisplayChannel "normal normal" "string source" "normal Nn"
+DisplayChannel "normal normal_var" "string source" "normal Nn" "string statistics" "variance"
+DisplayChannel "vector forward" "string source" "vector motionFore"
+DisplayChannel "vector backward" "string source" "vector motionBack"
+
+Projection "PxrCamera" "float fov" [{10}] "float fStop" [3.5] "float focalLength" [0.8] "float focalDistance" [5] "point focus1" [0.0 0.0 -1] "point focus2" [1 0.0 -1] "point focus3" [1 1 -1]\n'''.format(__version__, datetime.datetime.now(), str(searcharchive) + os.sep, str(searchtexture) + os.sep, pixelvar, width, height, str(cwd) + os.sep + str(infile), integrator, srate, fov)
+
+	with open('rib_header.rib', 'w') as file_writer:
+		file_writer.write(rib_header)
+	file_writer.close()
+	return True
+
+
 def main():
-	try:
-		lxf_filename = sys.argv[1]
-		obj_filename = sys.argv[2]
-	except Exception as e:
-		print("Missing Paramenter:" + sys.argv[0] + " infile.lfx exportname (without extension)")
-		return
+	
+	cl.ParseCommandLine('')
+	lxf_filename = os.path.realpath(cl.args.infile.name)
+	obj_filename = os.path.splitext(os.path.basename(lxf_filename))[0]
+	generate_rib_header(cl.args.infile, cl.args.srate, cl.args.pixelvar, cl.args.width, cl.args.height, cl.args.fov, cl.args.fstop, cl.args.searcharchive, cl.args.searchtexture, cl.integrator, cl.integratorParams, cl.useplane)
+
+	# Clean up before writing
+	if os.path.exists(obj_filename + "_Materials_Archive.zip"):
+		os.remove(obj_filename + "_Materials_Archive.zip")
+	if os.path.exists(obj_filename + "_Bricks_Archive.zip"):
+		os.remove(obj_filename + "_Bricks_Archive.zip")
+		
+	#except Exception as e:
+	#	print("Missing Paramenter:" + str(cl.args.infile) + " infile.lfx exportname (without extension)")
+	#	return
 
 	converter = Converter()
 	if os.path.exists(FindDatabase()):
 		converter.LoadDatabase(databaselocation = FindDatabase())
 		converter.LoadScene(filename=lxf_filename)
 		converter.Export(filename=obj_filename)
+		
+		with open(obj_filename + '_Scene.rib','wb') as wfd:
+			for f in ['rib_header.rib', obj_filename + '.rib']:
+				with open(f,'rb') as fd:
+					shutil.copyfileobj(fd, wfd, 1024*1024*10)
+		os.remove(obj_filename + '.rib')
+		os.remove('rib_header.rib')
+		
 	else:
 		print("no LDD database found please install LEGO-Digital-Designer")
 
