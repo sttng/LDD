@@ -472,9 +472,9 @@ class MaterialRi(object):
 		self.name = ''
 		self.mattype = mattype
 		self.materialid = materialid
-		self.r = round((float(r) / 255),2)
-		self.g = round((float(g) / 255),2)
-		self.b = round((float(b) / 255),2)
+		self.r = round((float(r) / 255), 2)
+		self.g = round((float(g) / 255), 2)
+		self.b = round((float(b) / 255), 2)
 		
 	def string(self, decoration_id):
 		texture_strg = ''
@@ -569,13 +569,11 @@ class MaterialRi(object):
 		
 		return bxdf_mat_str
 
-
 class DBinfo(object):
 	def __init__(self, data):
 		xml = minidom.parseString(data)
 		self.Version = xml.getElementsByTagName('Bricks')[0].attributes['version'].value
 		print('DB Version: ' + str(self.Version))
-
 
 class LIFFile():
 	def __init__(self, name, offset, size, handle):
@@ -587,7 +585,6 @@ class LIFFile():
 	def read(self):
 		self.handle.seek(self.offset, 0)
 		return self.handle.read(self.size)
-
 
 class LIFReader(object):
 	def __init__(self, file):
@@ -676,7 +673,6 @@ class LIFReader(object):
 			return struct.unpack('>h', self.filehandle.read(2))[0]
 		else:
 			return int.from_bytes(self.filehandle.read(2), byteorder='big')
-
 
 class Converter(object):
 	def LoadDatabase(self,databaselocation):
@@ -828,8 +824,8 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 				# Flex parts are "unique". Ensure they get a unique filename
 					written_obj = written_obj + "_" + uniqueId
 				
-				out2 = open(written_obj + ".obj", "w+")
-				out2.write("o brick_" + geo.designID + '\n')
+				#out2 = open(written_obj + ".obj", "w+")
+				#out2.write("o brick_" + geo.designID + '\n')
 				
 				op = open(written_obj + ".rib", "w+")
 				op.write("##RenderMan RIB-Structure 1.1 Entity\n")
@@ -864,23 +860,23 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 				decoCount = 0
 				for part in geo.Parts:
 					
-					out2.write("g " + str(part) + '\n')
+					#out2.write("g " + str(part) + '\n')
 					
 					if not part == 0:
-						out2.write("# From file: " + geo.designID + ".g" + str(part) + '\n')
+						#out2.write("# From file: " + geo.designID + ".g" + str(part) + '\n')
 					else:
-						out2.write("# From file: " + geo.designID + ".g\n")
+						#out2.write("# From file: " + geo.designID + ".g\n")
 					
 					for point in geo.Parts[part].outpositions:
-						out2.write(point.string("v"))
+						#out2.write(point.string("v"))
 
 					for normal in geo.Parts[part].outnormals:
-						out2.write(normal.string("vn"))
+						#out2.write(normal.string("vn"))
 
 					for text in geo.Parts[part].textures:
 						#out.write(text.string("vt"))
 						# Renderman and obj st y coordinates are inverted
-						out2.write('vt {0} {1}\n'.format(text.x, text.y))
+						#out2.write('vt {0} {1}\n'.format(text.x, text.y))
 
 					lddmat = self.allMaterials.getMaterialbyId(pa.materials[part])
 					lddmatri = self.allMaterials.getMaterialRibyId(pa.materials[part])
@@ -953,8 +949,8 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 					textOffset += len(geo.Parts[part].textures) 
 				# -----------------------------------------------------------------
 				op.close()
-				out2.write('\n')
-				out2.close()
+				#out2.write('\n')
+				#out2.close()
 				
 				# Reset index for each part
 				indexOffset = 1
@@ -969,7 +965,7 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 						zf.write(written_obj + '.rib', compress_type=compression)
 				
 				os.remove(written_obj + '.rib')
-				os.remove(written_obj + '.obj')
+				#os.remove(written_obj + '.obj')
 		
 		if useplane == True: # write the floor plane in case True
 			out.write('''\tAttributeBegin
@@ -1002,7 +998,6 @@ def FindRmtree():
 
 # rib "header" generating routine
 def generate_rib_header(infile, srate, pixelvar, width, height, fov, fstop, searcharchive, searchtexture, integrator, integratorParams, useplane):
-	#print ('shading rate {} pivel variance {} using {} {}'.format(srate,pixelvar,integrator,integratorParams))
 	cwd = os.getcwd()
 	infile = os.path.realpath(infile.name)
 	infile = os.path.splitext(os.path.basename(infile))[0]
@@ -1048,7 +1043,8 @@ DisplayChannel "normal normal_var" "string source" "normal Nn" "string statistic
 DisplayChannel "vector forward" "string source" "vector motionFore"
 DisplayChannel "vector backward" "string source" "vector motionBack"
 
-Projection "PxrCamera" "float fov" [{11}] "float fStop" [3.5] "float focalLength" [0.8] "float focalDistance" [5] "point focus1" [0.0 0.0 -1] "point focus2" [1 0.0 -1] "point focus3" [1 1 -1]\n'''.format(__version__, datetime.datetime.now(), str(searcharchive) + os.sep, FindRmtree(), str(searchtexture) + os.sep, pixelvar, width, height, str(cwd) + os.sep + str(infile), integrator, srate, fov)
+Projection "PxrCamera" "float fov" [{11}] "float fStop" [3.5] "float focalLength" [0.8] "float focalDistance" [5] "point focus1" [0.0 0.0 -1] "point focus2" [1 0.0 -1] "point focus3" [1 1 -1]
+'''.format(__version__, datetime.datetime.now(), str(searcharchive) + os.sep, FindRmtree(), str(searchtexture) + os.sep, pixelvar, width, height, str(cwd) + os.sep + str(infile), integrator, srate, fov)
 
 	with open('rib_header.rib', 'w') as file_writer:
 		file_writer.write(rib_header)
