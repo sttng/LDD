@@ -444,6 +444,9 @@ class Materials(object):
 		for key in loc.values:
 			if key in self.Materials:
 				self.Materials[key].name = loc.values[key]
+		for key in loc.values:
+			if key in self.MaterialsRi:
+				self.MaterialsRi[key].name = loc.values[key]
 
 	def getMaterialbyId(self, mid):
 		return self.Materials[mid]
@@ -462,9 +465,6 @@ class Material(object):
 
 	def string(self, prefix=""):
 		out = '''"{0}color diffuseColor" [{1} {2} {3}]\n'''.format(prefix, self.r / 255, self.g / 255,self.b / 255)
-		#out += self.mattype
-		if self.a < 255:
-			out += 'Ni 1.575\n' + 'd {0}'.format(0.05) + '\n' + 'Tr {0}\n'.format(0.05)
 		return out
 
 class MaterialRi(object):
