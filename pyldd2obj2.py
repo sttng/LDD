@@ -906,14 +906,12 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 					for face in geo.Parts[part].faces:
 						op.write('\tPolygon\n')
 						# NOTE RENDERMAN is left handed coordinate system, obj is right handed -> z-axis inverted
-						op.write('\t\t"P" [ {0} {1} {2} {3} {4} {5} {6} {7} {8} ]\n'.format(geo.Parts[part].outpositions[face.a].x, geo.Parts[part].outpositions[face.a].y, (-1) * geo.Parts[part].outpositions[face.a].z, geo.Parts[part].outpositions[face.b].x, geo.Parts[part].outpositions[face.b].y, (-1) * geo.Parts[part].outpositions[face.b].z, geo.Parts[part].outpositions[face.c].x, geo.Parts[part].outpositions[face.c].y, (-1) * geo.Parts[part].outpositions[face.c].z))
-						
-						op.write('\t\t"N" [ {0} {1} {2} {3} {4} {5} {6} {7} {8} ]\n'.format(geo.Parts[part].outnormals[face.a].x, geo.Parts[part].outnormals[face.a].y, (-1) * geo.Parts[part].outnormals[face.a].z, geo.Parts[part].outnormals[face.b].x, geo.Parts[part].outnormals[face.b].y, (-1) * geo.Parts[part].outnormals[face.b].z, geo.Parts[part].outnormals[face.c].x, geo.Parts[part].outnormals[face.c].y, (-1) * geo.Parts[part].outnormals[face.c].z))
+						op.write('\t\t"P" [ {0} {1} {2}  {3} {4} {5}  {6} {7} {8} ]\n'.format(geo.Parts[part].outpositions[face.a].x, geo.Parts[part].outpositions[face.a].y, (-1) * geo.Parts[part].outpositions[face.a].z, geo.Parts[part].outpositions[face.b].x, geo.Parts[part].outpositions[face.b].y, (-1) * geo.Parts[part].outpositions[face.b].z, geo.Parts[part].outpositions[face.c].x, geo.Parts[part].outpositions[face.c].y, (-1) * geo.Parts[part].outpositions[face.c].z))
+						op.write('\t\t"N" [ {0} {1} {2}  {3} {4} {5}  {6} {7} {8} ]\n'.format(geo.Parts[part].outnormals[face.a].x, geo.Parts[part].outnormals[face.a].y, (-1) * geo.Parts[part].outnormals[face.a].z, geo.Parts[part].outnormals[face.b].x, geo.Parts[part].outnormals[face.b].y, (-1) * geo.Parts[part].outnormals[face.b].z, geo.Parts[part].outnormals[face.c].x, geo.Parts[part].outnormals[face.c].y, (-1) * geo.Parts[part].outnormals[face.c].z))
 						
 						if len(geo.Parts[part].textures) > 0:
-												
 							# NOTE RENDERMAN Maps Textures in the T from top to bottom so we calculate 1.0 - t so the image will map properly
-							op.write('\t\t"st" [ {0} {1} {2} {3} {4} {5} ]\n'.format(geo.Parts[part].textures[face.a].x, 1 - geo.Parts[part].textures[face.a].y, geo.Parts[part].textures[face.b].x, 1 - geo.Parts[part].textures[face.b].y, geo.Parts[part].textures[face.c].x, 1 - geo.Parts[part].textures[face.c].y))
+							op.write('\t\t"st" [ {0} {1}  {2} {3}  {4} {5} ]\n'.format(geo.Parts[part].textures[face.a].x, 1 - geo.Parts[part].textures[face.a].y, geo.Parts[part].textures[face.b].x, 1 - geo.Parts[part].textures[face.b].y, geo.Parts[part].textures[face.c].x, 1 - geo.Parts[part].textures[face.c].y))
 													
 					op.write('AttributeEnd #end Brick {0}.{1}\n\n'.format(written_obj, part))
 
@@ -935,8 +933,7 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 						zf.write(written_obj + '.rib', compress_type=compression)
 				
 				os.remove(written_obj + '.rib')
-				#os.remove(written_obj + '.obj')
-		
+						
 		if useplane == True: # write the floor plane in case True
 			out.write('''\tAttributeBegin
 		Attribute "identifier" "string name" ["groundplane"]
@@ -951,13 +948,11 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 		out.write('WorldEnd')
 		print("--- %s seconds ---" % (time.time() - start_time))
 
-
 def FindDatabase():
 	if os.name =='posix':
 		return str(os.path.join(str(os.getenv('USERPROFILE') or os.getenv('HOME')),'Library','Application Support','LEGO Company','LEGO Digital Designer','db.lif'))
 	else:
 		return str(os.path.join(str(os.getenv('USERPROFILE') or os.getenv('HOME')),'AppData','Roaming','LEGO Company','LEGO Digital Designer','db.lif'))
-
 
 def FindRmtree():
 	if os.name =='posix':
@@ -965,8 +960,6 @@ def FindRmtree():
 	else:
 		return str(os.getenv('RMANTREE'))
 
-
-# rib "header" generating routine
 def generate_rib_header(infile, srate, pixelvar, width, height, fov, fstop, searcharchive, searchtexture, integrator, integratorParams, useplane):
 	cwd = os.getcwd()
 	infile = os.path.realpath(infile.name)
@@ -1021,9 +1014,7 @@ Projection "PxrCamera" "float fov" [{11}] "float fStop" [3.5] "float focalLength
 	file_writer.close()
 	return True
 
-
 def main():
-	
 	cl.ParseCommandLine('')
 	lxf_filename = os.path.realpath(cl.args.infile.name)
 	obj_filename = os.path.splitext(os.path.basename(lxf_filename))[0]
