@@ -824,9 +824,6 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 				# Flex parts are "unique". Ensure they get a unique filename
 					written_obj = written_obj + "_" + uniqueId
 				
-				#out2 = open(written_obj + ".obj", "w+")
-				#out2.write("o brick_" + geo.designID + '\n')
-				
 				op = open(written_obj + ".rib", "w+")
 				op.write("##RenderMan RIB-Structure 1.1 Entity\n")
 				
@@ -860,24 +857,6 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 				decoCount = 0
 				for part in geo.Parts:
 					
-					#out2.write("g " + str(part) + '\n')
-					
-					if not part == 0:
-						#out2.write("# From file: " + geo.designID + ".g" + str(part) + '\n')
-					else:
-						#out2.write("# From file: " + geo.designID + ".g\n")
-					
-					for point in geo.Parts[part].outpositions:
-						#out2.write(point.string("v"))
-
-					for normal in geo.Parts[part].outnormals:
-						#out2.write(normal.string("vn"))
-
-					for text in geo.Parts[part].textures:
-						#out.write(text.string("vt"))
-						# Renderman and obj st y coordinates are inverted
-						#out2.write('vt {0} {1}\n'.format(text.x, text.y))
-
 					lddmat = self.allMaterials.getMaterialbyId(pa.materials[part])
 					lddmatri = self.allMaterials.getMaterialRibyId(pa.materials[part])
 					#matname = lddmat.name
@@ -932,26 +911,17 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 						op.write('\t\t"N" [ {0} {1} {2} {3} {4} {5} {6} {7} {8} ]\n'.format(geo.Parts[part].outnormals[face.a].x, geo.Parts[part].outnormals[face.a].y, (-1) * geo.Parts[part].outnormals[face.a].z, geo.Parts[part].outnormals[face.b].x, geo.Parts[part].outnormals[face.b].y, (-1) * geo.Parts[part].outnormals[face.b].z, geo.Parts[part].outnormals[face.c].x, geo.Parts[part].outnormals[face.c].y, (-1) * geo.Parts[part].outnormals[face.c].z))
 						
 						if len(geo.Parts[part].textures) > 0:
-							#out.write(face.string("f",indexOffset,textOffset))
-							out2.write(face.string("f",indexOffset,textOffset))
-							
+												
 							# NOTE RENDERMAN Maps Textures in the T from top to bottom so we calculate 1.0 - t so the image will map properly
-							
 							op.write('\t\t"st" [ {0} {1} {2} {3} {4} {5} ]\n'.format(geo.Parts[part].textures[face.a].x, 1 - geo.Parts[part].textures[face.a].y, geo.Parts[part].textures[face.b].x, 1 - geo.Parts[part].textures[face.b].y, geo.Parts[part].textures[face.c].x, 1 - geo.Parts[part].textures[face.c].y))
-							
-						else:
-							#out.write(face.string("f",indexOffset))
-							out2.write(face.string("f",indexOffset))
-							
+													
 					op.write('AttributeEnd #end Brick {0}.{1}\n\n'.format(written_obj, part))
 
 					indexOffset += len(geo.Parts[part].outpositions)
 					textOffset += len(geo.Parts[part].textures) 
 				# -----------------------------------------------------------------
 				op.close()
-				#out2.write('\n')
-				#out2.close()
-				
+								
 				# Reset index for each part
 				indexOffset = 1
 				textOffset = 1
