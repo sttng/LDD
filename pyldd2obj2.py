@@ -438,7 +438,7 @@ class Materials(object):
 			if node.nodeName == 'Material':
 				self.Materials[node.getAttribute('MatID')] = Material(r=int(node.getAttribute('Red')), g=int(node.getAttribute('Green')), b=int(node.getAttribute('Blue')), a=int(node.getAttribute('Alpha')), mtype=str(node.getAttribute('MaterialType')))
 				
-				self.MaterialsRi[node.getAttribute('MatID')] = MaterialRi(materialid=node.getAttribute('MatID'), r=int(material_id_dict[node.getAttribute('MatID')][0]), g=int(material_id_dict[node.getAttribute('MatID')][1]), b=int(material_id_dict[node.getAttribute('MatID')][2]), mattype=str(material_id_dict[node.getAttribute('MatID')][3]))
+				self.MaterialsRi[node.getAttribute('MatID')] = MaterialRi(materialId=node.getAttribute('MatID'), r=int(material_id_dict[node.getAttribute('MatID')][0]), g=int(material_id_dict[node.getAttribute('MatID')][1]), b=int(material_id_dict[node.getAttribute('MatID')][2]), materialType=str(material_id_dict[node.getAttribute('MatID')][3]))
 
 	def setLOC(self, loc):
 		for key in loc.values:
@@ -468,21 +468,21 @@ class Material(object):
 		return out
 
 class MaterialRi(object):
-	def __init__(self, materialid, r, g, b, mattype):
+	def __init__(self, materialId, r, g, b, materialType):
 		self.name = ''
-		self.mattype = mattype
-		self.materialid = materialid
+		self.materialType = materialType
+		self.materialId = materialId
 		self.r = round((float(r) / 255), 2)
 		self.g = round((float(g) / 255), 2)
 		self.b = round((float(b) / 255), 2)
 		
-	def string(self, decoration_id):
+	def string(self, decorationId):
 		texture_strg = ''
 		ref_strg = ''
 		
-		if decoration_id != None and decoration_id != '0':
+		if decorationId != None and decorationId != '0':
 		# We have decorations
-			rgb_or_dec_str = '"Blend{0}:resultRGB"'.format(decoration_id)
+			rgb_or_dec_str = '"Blend{0}:resultRGB"'.format(decorationId)
 			ref_strg = 'reference '
 			
 			texture_strg = '''\tPattern "PxrManifold2D" "PxrManifold2D1"
@@ -504,13 +504,13 @@ class MaterialRi(object):
 			"reference float topA" ["Texture{0}:resultA"]
 			"color bottomRGB" [{1} {2} {3}]
 			"float bottomA" [1]
-			"int clampOutput" [1]\n\n'''.format(decoration_id, self.r, self.g, self.b)
+			"int clampOutput" [1]\n\n'''.format(decorationId, self.r, self.g, self.b)
 		
 		else:
 		# We don't have decorations
 			rgb_or_dec_str = '{0} {1} {2}'.format(self.r, self.g, self.b)
 			
-		if self.mattype == 'Transparent':
+		if self.materialType == 'Transparent':
 			bxdf_mat_str = texture_strg + '''\tBxdf "PxrSurface" "Transparent {0}"
 			"float diffuseGain" [0]
 			"color diffuseColor" [0.5 0.5 0.5]
@@ -543,9 +543,9 @@ class MaterialRi(object):
 			"int thinGlass" [1] 
 			"float glowGain" [0.0] 
 			"color glowColor" [1 1 1] 
-			"float presence" [1]\n'''.format(self.materialid, ref_strg, rgb_or_dec_str)
+			"float presence" [1]\n'''.format(self.materialId, ref_strg, rgb_or_dec_str)
 			
-		elif self.mattype == 'Metallic':
+		elif self.materialType == 'Metallic':
 			bxdf_mat_str = texture_strg + '''\tBxdf "PxrSurface" "Metallic {0}"
 			"float diffuseGain" [1.0]
 			"{1}color diffuseColor" [{2}] 
@@ -554,7 +554,7 @@ class MaterialRi(object):
 			"color specularIor"  [1.54 1.54 1.54] # ABS Refractive Index, Average value: 1.54
 			"float specularRoughness" [0.25]
 			"int specularDoubleSided" [0]
-			"float presence" [1]\n'''.format(self.materialid, ref_strg, rgb_or_dec_str)
+			"float presence" [1]\n'''.format(self.materialId, ref_strg, rgb_or_dec_str)
 		
 		else:
 			bxdf_mat_str = texture_strg + '''\tBxdf "PxrSurface" "Solid Material {0}" 
@@ -565,7 +565,7 @@ class MaterialRi(object):
 			"color specularIor" [1.54 1.54 1.54] # ABS Refractive Index, Average value: 1.54
 			"float specularRoughness" [0.25]
 			"int specularDoubleSided" [0]
-			"float presence" [1]\n'''.format(self.materialid, ref_strg, rgb_or_dec_str)
+			"float presence" [1]\n'''.format(self.materialId, ref_strg, rgb_or_dec_str)
 		
 		return bxdf_mat_str
 
