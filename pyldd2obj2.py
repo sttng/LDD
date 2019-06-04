@@ -483,8 +483,8 @@ class MaterialRi(object):
 		if decoration_id != None and decoration_id != '0':
 		# We have decorations
 			rgb_or_dec_str = '"Blend{0}:resultRGB"'.format(decoration_id)
-			
 			ref_strg = 'reference '
+			
 			texture_strg = '''\tPattern "PxrManifold2D" "PxrManifold2D1"
 			"float angle" [0]
 			"float scaleS" [1]
@@ -576,6 +576,7 @@ class DBinfo(object):
 		self.Version = xml.getElementsByTagName('Bricks')[0].attributes['version'].value
 		print('DB Version: ' + str(self.Version))
 
+
 class LIFFile():
 	def __init__(self, name, offset, size, handle):
 		self.handle = handle
@@ -586,6 +587,7 @@ class LIFFile():
 	def read(self):
 		self.handle.seek(self.offset, 0)
 		return self.handle.read(self.size)
+
 
 class LIFReader(object):
 	def __init__(self, file):
@@ -674,6 +676,7 @@ class LIFReader(object):
 			return struct.unpack('>h', self.filehandle.read(2))[0]
 		else:
 			return int.from_bytes(self.filehandle.read(2), byteorder='big')
+
 
 class Converter(object):
 	def LoadDatabase(self,databaselocation):
@@ -803,17 +806,19 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 					undoTransformMatrix = Matrix3D(n11=x_inv[0][0],n12=x_inv[0][1],n13=x_inv[0][2],n14=x_inv[0][3],n21=x_inv[1][0],n22=x_inv[1][1],n23=x_inv[1][2],n24=x_inv[1][3],n31=x_inv[2][0],n32=x_inv[2][1],n33=x_inv[2][2],n34=x_inv[2][3],n41=x_inv[3][0],n42=x_inv[3][1],n43=x_inv[3][2],n44=x_inv[3][3])
 				
 				out.write("\tAttributeBegin\n")
+				
 				if not (len(pa.Bones) > flexflag):
 				# Flex parts don't need to be moved
 				# Renderman is lefthanded coordinate system, but LDD is right handed.
 					out.write("\t\tConcatTransform [{0} {1} {2} {3} {4} {5} {6} {7} {8} {9} {10} {11} {12} {13} {14} {15}]\n\t\tScale 1 1 1\n".format(n11, n12, -1 * n13, n14, n21, n22, -1 * n23, n24, -1 * n31, -1 * n32, n33, n34, n41, n42 ,-1 * n43, n44))
 					
+					# minx used for floor plane later
 					if minx > float(n43):
 						minx = n43
 				
-				uniqueId = str(uuid.uuid4())
 				material_string = '_' + '_'.join(pa.materials)
 				written_obj = geo.designID + material_string
+				uniqueId = str(uuid.uuid4())
 				
 				if pa.decoration:
 					decoration_string = '_' + '_'.join(pa.decoration)
