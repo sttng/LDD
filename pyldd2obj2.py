@@ -438,15 +438,12 @@ class Materials(object):
 			if node.nodeName == 'Material':
 				self.Materials[node.getAttribute('MatID')] = Material(r=int(node.getAttribute('Red')), g=int(node.getAttribute('Green')), b=int(node.getAttribute('Blue')), a=int(node.getAttribute('Alpha')), mtype=str(node.getAttribute('MaterialType')))
 				
-				self.MaterialsRi[node.getAttribute('MatID')] = MaterialRi(materialId=node.getAttribute('MatID'), r=int(material_id_dict[node.getAttribute('MatID')][0]), g=int(material_id_dict[node.getAttribute('MatID')][1]), b=int(material_id_dict[node.getAttribute('MatID')][2]), materialType=str(material_id_dict[node.getAttribute('MatID')][3]))
+				self.MaterialsRi[node.getAttribute('MatID')] = MaterialRi(materialid=node.getAttribute('MatID'), r=int(material_id_dict[node.getAttribute('MatID')][0]), g=int(material_id_dict[node.getAttribute('MatID')][1]), b=int(material_id_dict[node.getAttribute('MatID')][2]), mattype=str(material_id_dict[node.getAttribute('MatID')][3]))
 
 	def setLOC(self, loc):
 		for key in loc.values:
 			if key in self.Materials:
 				self.Materials[key].name = loc.values[key]
-		for key in loc.values:
-			if key in self.MaterialsRi:
-				self.MaterialsRi[key].name = loc.values[key]
 
 	def getMaterialbyId(self, mid):
 		return self.Materials[mid]
@@ -465,26 +462,29 @@ class Material(object):
 
 	def string(self, prefix=""):
 		out = '''"{0}color diffuseColor" [{1} {2} {3}]\n'''.format(prefix, self.r / 255, self.g / 255,self.b / 255)
+		#out += self.mattype
+		if self.a < 255:
+			out += 'Ni 1.575\n' + 'd {0}'.format(0.05) + '\n' + 'Tr {0}\n'.format(0.05)
 		return out
 
 class MaterialRi(object):
-	def __init__(self, materialId, r, g, b, materialType):
+	def __init__(self, materialid, r, g, b, mattype):
 		self.name = ''
-		self.materialType = materialType
-		self.materialId = materialId
-		self.r = round((float(r) / 255), 2)
-		self.g = round((float(g) / 255), 2)
-		self.b = round((float(b) / 255), 2)
+		self.mattype = mattype
+		self.materialid = materialid
+		self.r = round((float(r) / 255),2)
+		self.g = round((float(g) / 255),2)
+		self.b = round((float(b) / 255),2)
 		
-	def string(self, decorationId):
+	def string(self, decoration_id):
 		texture_strg = ''
 		ref_strg = ''
 		
-		if decorationId != None and decorationId != '0':
+		if decoration_id != None and decoration_id != '0':
 		# We have decorations
-			rgb_or_dec_str = '"Blend{0}:resultRGB"'.format(decorationId)
-			ref_strg = 'reference '
+			rgb_or_dec_str = '"Blend{0}:resultRGB"'.format(decoration_id)
 			
+			ref_strg = 'reference '
 			texture_strg = '''\tPattern "PxrManifold2D" "PxrManifold2D1"
 			"float angle" [0]
 			"float scaleS" [1]
@@ -504,13 +504,13 @@ class MaterialRi(object):
 			"reference float topA" ["Texture{0}:resultA"]
 			"color bottomRGB" [{1} {2} {3}]
 			"float bottomA" [1]
-			"int clampOutput" [1]\n\n'''.format(decorationId, self.r, self.g, self.b)
+			"int clampOutput" [1]\n\n'''.format(decoration_id, self.r, self.g, self.b)
 		
 		else:
 		# We don't have decorations
 			rgb_or_dec_str = '{0} {1} {2}'.format(self.r, self.g, self.b)
 			
-		if self.materialType == 'Transparent':
+		if self.mattype == 'Transparent':
 			bxdf_mat_str = texture_strg + '''\tBxdf "PxrSurface" "Transparent {0}"
 			"float diffuseGain" [0]
 			"color diffuseColor" [0.5 0.5 0.5]
@@ -543,9 +543,9 @@ class MaterialRi(object):
 			"int thinGlass" [1] 
 			"float glowGain" [0.0] 
 			"color glowColor" [1 1 1] 
-			"float presence" [1]\n'''.format(self.materialId, ref_strg, rgb_or_dec_str)
+			"float presence" [1]\n'''.format(self.materialid, ref_strg, rgb_or_dec_str)
 			
-		elif self.materialType == 'Metallic':
+		elif self.mattype == 'Metallic':
 			bxdf_mat_str = texture_strg + '''\tBxdf "PxrSurface" "Metallic {0}"
 			"float diffuseGain" [1.0]
 			"{1}color diffuseColor" [{2}] 
@@ -554,7 +554,7 @@ class MaterialRi(object):
 			"color specularIor"  [1.54 1.54 1.54] # ABS Refractive Index, Average value: 1.54
 			"float specularRoughness" [0.25]
 			"int specularDoubleSided" [0]
-			"float presence" [1]\n'''.format(self.materialId, ref_strg, rgb_or_dec_str)
+			"float presence" [1]\n'''.format(self.materialid, ref_strg, rgb_or_dec_str)
 		
 		else:
 			bxdf_mat_str = texture_strg + '''\tBxdf "PxrSurface" "Solid Material {0}" 
@@ -565,9 +565,10 @@ class MaterialRi(object):
 			"color specularIor" [1.54 1.54 1.54] # ABS Refractive Index, Average value: 1.54
 			"float specularRoughness" [0.25]
 			"int specularDoubleSided" [0]
-			"float presence" [1]\n'''.format(self.materialId, ref_strg, rgb_or_dec_str)
+			"float presence" [1]\n'''.format(self.materialid, ref_strg, rgb_or_dec_str)
 		
 		return bxdf_mat_str
+
 
 class DBinfo(object):
 	def __init__(self, data):
@@ -802,19 +803,17 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 					undoTransformMatrix = Matrix3D(n11=x_inv[0][0],n12=x_inv[0][1],n13=x_inv[0][2],n14=x_inv[0][3],n21=x_inv[1][0],n22=x_inv[1][1],n23=x_inv[1][2],n24=x_inv[1][3],n31=x_inv[2][0],n32=x_inv[2][1],n33=x_inv[2][2],n34=x_inv[2][3],n41=x_inv[3][0],n42=x_inv[3][1],n43=x_inv[3][2],n44=x_inv[3][3])
 				
 				out.write("\tAttributeBegin\n")
-				
 				if not (len(pa.Bones) > flexflag):
 				# Flex parts don't need to be moved
 				# Renderman is lefthanded coordinate system, but LDD is right handed.
 					out.write("\t\tConcatTransform [{0} {1} {2} {3} {4} {5} {6} {7} {8} {9} {10} {11} {12} {13} {14} {15}]\n\t\tScale 1 1 1\n".format(n11, n12, -1 * n13, n14, n21, n22, -1 * n23, n24, -1 * n31, -1 * n32, n33, n34, n41, n42 ,-1 * n43, n44))
 					
-					# minx used for floor plane later
 					if minx > float(n43):
 						minx = n43
 				
+				uniqueId = str(uuid.uuid4())
 				material_string = '_' + '_'.join(pa.materials)
 				written_obj = geo.designID + material_string
-				uniqueId = str(uuid.uuid4())
 				
 				if pa.decoration:
 					decoration_string = '_' + '_'.join(pa.decoration)
@@ -823,6 +822,9 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 				if (len(pa.Bones) > flexflag):
 				# Flex parts are "unique". Ensure they get a unique filename
 					written_obj = written_obj + "_" + uniqueId
+				
+				out2 = open(written_obj + ".obj", "w+")
+				out2.write("o brick_" + geo.designID + '\n')
 				
 				op = open(written_obj + ".rib", "w+")
 				op.write("##RenderMan RIB-Structure 1.1 Entity\n")
@@ -857,6 +859,24 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 				decoCount = 0
 				for part in geo.Parts:
 					
+					out2.write("g " + str(part) + '\n')
+					
+					if not part == 0:
+						out2.write("# From file: " + geo.designID + ".g" + str(part) + '\n')
+					else:
+						out2.write("# From file: " + geo.designID + ".g\n")
+					
+					for point in geo.Parts[part].outpositions:
+						out2.write(point.string("v"))
+
+					for normal in geo.Parts[part].outnormals:
+						out2.write(normal.string("vn"))
+
+					for text in geo.Parts[part].textures:
+						#out.write(text.string("vt"))
+						# Renderman and obj st y coordinates are inverted
+						out2.write('vt {0} {1}\n'.format(text.x, text.y))
+
 					lddmat = self.allMaterials.getMaterialbyId(pa.materials[part])
 					lddmatri = self.allMaterials.getMaterialRibyId(pa.materials[part])
 					#matname = lddmat.name
@@ -906,20 +926,31 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 					for face in geo.Parts[part].faces:
 						op.write('\tPolygon\n')
 						# NOTE RENDERMAN is left handed coordinate system, obj is right handed -> z-axis inverted
-						op.write('\t\t"P" [ {0} {1} {2}  {3} {4} {5}  {6} {7} {8} ]\n'.format(geo.Parts[part].outpositions[face.a].x, geo.Parts[part].outpositions[face.a].y, (-1) * geo.Parts[part].outpositions[face.a].z, geo.Parts[part].outpositions[face.b].x, geo.Parts[part].outpositions[face.b].y, (-1) * geo.Parts[part].outpositions[face.b].z, geo.Parts[part].outpositions[face.c].x, geo.Parts[part].outpositions[face.c].y, (-1) * geo.Parts[part].outpositions[face.c].z))
-						op.write('\t\t"N" [ {0} {1} {2}  {3} {4} {5}  {6} {7} {8} ]\n'.format(geo.Parts[part].outnormals[face.a].x, geo.Parts[part].outnormals[face.a].y, (-1) * geo.Parts[part].outnormals[face.a].z, geo.Parts[part].outnormals[face.b].x, geo.Parts[part].outnormals[face.b].y, (-1) * geo.Parts[part].outnormals[face.b].z, geo.Parts[part].outnormals[face.c].x, geo.Parts[part].outnormals[face.c].y, (-1) * geo.Parts[part].outnormals[face.c].z))
+						op.write('\t\t"P" [ {0} {1} {2} {3} {4} {5} {6} {7} {8} ]\n'.format(geo.Parts[part].outpositions[face.a].x, geo.Parts[part].outpositions[face.a].y, (-1) * geo.Parts[part].outpositions[face.a].z, geo.Parts[part].outpositions[face.b].x, geo.Parts[part].outpositions[face.b].y, (-1) * geo.Parts[part].outpositions[face.b].z, geo.Parts[part].outpositions[face.c].x, geo.Parts[part].outpositions[face.c].y, (-1) * geo.Parts[part].outpositions[face.c].z))
+						
+						op.write('\t\t"N" [ {0} {1} {2} {3} {4} {5} {6} {7} {8} ]\n'.format(geo.Parts[part].outnormals[face.a].x, geo.Parts[part].outnormals[face.a].y, (-1) * geo.Parts[part].outnormals[face.a].z, geo.Parts[part].outnormals[face.b].x, geo.Parts[part].outnormals[face.b].y, (-1) * geo.Parts[part].outnormals[face.b].z, geo.Parts[part].outnormals[face.c].x, geo.Parts[part].outnormals[face.c].y, (-1) * geo.Parts[part].outnormals[face.c].z))
 						
 						if len(geo.Parts[part].textures) > 0:
+							#out.write(face.string("f",indexOffset,textOffset))
+							out2.write(face.string("f",indexOffset,textOffset))
+							
 							# NOTE RENDERMAN Maps Textures in the T from top to bottom so we calculate 1.0 - t so the image will map properly
-							op.write('\t\t"st" [ {0} {1}  {2} {3}  {4} {5} ]\n'.format(geo.Parts[part].textures[face.a].x, 1 - geo.Parts[part].textures[face.a].y, geo.Parts[part].textures[face.b].x, 1 - geo.Parts[part].textures[face.b].y, geo.Parts[part].textures[face.c].x, 1 - geo.Parts[part].textures[face.c].y))
-													
+							
+							op.write('\t\t"st" [ {0} {1} {2} {3} {4} {5} ]\n'.format(geo.Parts[part].textures[face.a].x, 1 - geo.Parts[part].textures[face.a].y, geo.Parts[part].textures[face.b].x, 1 - geo.Parts[part].textures[face.b].y, geo.Parts[part].textures[face.c].x, 1 - geo.Parts[part].textures[face.c].y))
+							
+						else:
+							#out.write(face.string("f",indexOffset))
+							out2.write(face.string("f",indexOffset))
+							
 					op.write('AttributeEnd #end Brick {0}.{1}\n\n'.format(written_obj, part))
 
 					indexOffset += len(geo.Parts[part].outpositions)
 					textOffset += len(geo.Parts[part].textures) 
 				# -----------------------------------------------------------------
 				op.close()
-								
+				out2.write('\n')
+				out2.close()
+				
 				# Reset index for each part
 				indexOffset = 1
 				textOffset = 1
@@ -933,7 +964,8 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 						zf.write(written_obj + '.rib', compress_type=compression)
 				
 				os.remove(written_obj + '.rib')
-						
+				os.remove(written_obj + '.obj')
+		
 		if useplane == True: # write the floor plane in case True
 			out.write('''\tAttributeBegin
 		Attribute "identifier" "string name" ["groundplane"]
@@ -948,11 +980,13 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 		out.write('WorldEnd')
 		print("--- %s seconds ---" % (time.time() - start_time))
 
+
 def FindDatabase():
 	if os.name =='posix':
 		return str(os.path.join(str(os.getenv('USERPROFILE') or os.getenv('HOME')),'Library','Application Support','LEGO Company','LEGO Digital Designer','db.lif'))
 	else:
 		return str(os.path.join(str(os.getenv('USERPROFILE') or os.getenv('HOME')),'AppData','Roaming','LEGO Company','LEGO Digital Designer','db.lif'))
+
 
 def FindRmtree():
 	if os.name =='posix':
@@ -960,7 +994,10 @@ def FindRmtree():
 	else:
 		return str(os.getenv('RMANTREE'))
 
+
+# rib "header" generating routine
 def generate_rib_header(infile, srate, pixelvar, width, height, fov, fstop, searcharchive, searchtexture, integrator, integratorParams, useplane):
+	#print ('shading rate {} pivel variance {} using {} {}'.format(srate,pixelvar,integrator,integratorParams))
 	cwd = os.getcwd()
 	infile = os.path.realpath(infile.name)
 	infile = os.path.splitext(os.path.basename(infile))[0]
@@ -1006,15 +1043,16 @@ DisplayChannel "normal normal_var" "string source" "normal Nn" "string statistic
 DisplayChannel "vector forward" "string source" "vector motionFore"
 DisplayChannel "vector backward" "string source" "vector motionBack"
 
-Projection "PxrCamera" "float fov" [{11}] "float fStop" [3.5] "float focalLength" [0.8] "float focalDistance" [5] "point focus1" [0.0 0.0 -1] "point focus2" [1 0.0 -1] "point focus3" [1 1 -1]
-'''.format(__version__, datetime.datetime.now(), str(searcharchive) + os.sep, FindRmtree(), str(searchtexture) + os.sep, pixelvar, width, height, str(cwd) + os.sep + str(infile), integrator, srate, fov)
+Projection "PxrCamera" "float fov" [{11}] "float fStop" [3.5] "float focalLength" [0.8] "float focalDistance" [5] "point focus1" [0.0 0.0 -1] "point focus2" [1 0.0 -1] "point focus3" [1 1 -1]\n'''.format(__version__, datetime.datetime.now(), str(searcharchive) + os.sep, FindRmtree(), str(searchtexture) + os.sep, pixelvar, width, height, str(cwd) + os.sep + str(infile), integrator, srate, fov)
 
 	with open('rib_header.rib', 'w') as file_writer:
 		file_writer.write(rib_header)
 	file_writer.close()
 	return True
 
+
 def main():
+	
 	cl.ParseCommandLine('')
 	lxf_filename = os.path.realpath(cl.args.infile.name)
 	obj_filename = os.path.splitext(os.path.basename(lxf_filename))[0]
