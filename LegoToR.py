@@ -959,6 +959,10 @@ Option "Ri" "int Frame" [1]
 	"float PixelVariance" [{5}]
 	"string PixelFilterName" ["gaussian"]
 	"float[2] PixelFilterWidth" [2 2]
+	#"int[2] FormatResolution" [960 540] # Low res
+	#"int[2] FormatResolution" [1280 720] # 720p
+	#"int[2] FormatResolution" [1920 1080] # 1080p 
+	#"int[2] FormatResolution" [4096 2160] # 4k
 	"int[2] FormatResolution" [{6} {7}]
 	"float FormatPixelAspectRatio" [1]
 	"float[2] Clipping" [0.1 10000]
