@@ -7,9 +7,9 @@
 #
 # Updates:
 # 
-# 0.5 Initial release
+# 0.5 Initial public release
 # 0.4.4 Complete rewrite based on the great work from jonnysp and pyldd2obj
-# 0.3 support for all partsm(except flex parts) and textures
+# 0.3 support for all parts (except flex parts) and textures
 # 0.2 support for basic parts without textures
 # 
 # License: MIT License
