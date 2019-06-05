@@ -1,7 +1,7 @@
 # Lego Digital Designer related scripts
 The Python scripts have been tested to work on Python 2.7.10 on macOS 10.14 Mojave, Renderman 22.3, 22.4, 22.5
 
-# pyldd2obj
+## pyldd2obj
 pyldd2obj.py developed by jonnysp (https://github.com/jonnysp) will read in a Lego Digital Designer .lxf scene file and construct a corresponding Alias|Waveform .obj and .mtl scene from it.
 
 ## LifToObj 
