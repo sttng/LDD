@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# pyldd2obj Version 0.4.3 - Copyright (c) 2019 by jonnysp 
+# pyldd2obj Version 0.4.7 - Copyright (c) 2019 by jonnysp 
 #
 # License: MIT License
 #
@@ -22,7 +22,7 @@ GEOMETRIEPATH = PRIMITIVEPATH + 'LOD0/'
 DECORATIONPATH = '/Decorations/'
 MATERIALNAMESPATH = '/MaterialNames/'
 
-class Matrix3D(object):
+class Matrix3D:
 	def __init__(self, n11=1,n12=0,n13=0,n14=0,n21=0,n22=1,n23=0,n24=0,n31=0,n32=0,n33=1,n34=0,n41=0,n42=0,n43=0,n44=1):
 		self.n11 = n11
 		self.n12 = n12
@@ -77,7 +77,27 @@ class Matrix3D(object):
 		self.n43 = 0
 		self.n44 = 1
 
-class Point3D(object):
+	def __mul__(self, other): 
+		return Matrix3D(
+			self.n11 * other.n11 + self.n21 * other.n12 + self.n31 * other.n13 + self.n41 * other.n14,
+			self.n12 * other.n11 + self.n22 * other.n12 + self.n32 * other.n13 + self.n42 * other.n14,
+			self.n13 * other.n11 + self.n23 * other.n12 + self.n33 * other.n13 + self.n43 * other.n14,
+			self.n14 * other.n11 + self.n24 * other.n12 + self.n34 * other.n13 + self.n44 * other.n14,
+			self.n11 * other.n21 + self.n21 * other.n22 + self.n31 * other.n23 + self.n41 * other.n24,
+			self.n12 * other.n21 + self.n22 * other.n22 + self.n32 * other.n23 + self.n42 * other.n24,
+			self.n13 * other.n21 + self.n23 * other.n22 + self.n33 * other.n23 + self.n43 * other.n24,
+			self.n14 * other.n21 + self.n24 * other.n22 + self.n34 * other.n23 + self.n44 * other.n24,
+			self.n11 * other.n31 + self.n21 * other.n32 + self.n31 * other.n33 + self.n41 * other.n34,
+			self.n12 * other.n31 + self.n22 * other.n32 + self.n32 * other.n33 + self.n42 * other.n34,
+			self.n13 * other.n31 + self.n23 * other.n32 + self.n33 * other.n33 + self.n43 * other.n34,
+			self.n14 * other.n31 + self.n24 * other.n32 + self.n34 * other.n33 + self.n44 * other.n34,
+			self.n11 * other.n41 + self.n21 * other.n42 + self.n31 * other.n43 + self.n41 * other.n44,
+			self.n12 * other.n41 + self.n22 * other.n42 + self.n32 * other.n43 + self.n42 * other.n44,
+			self.n13 * other.n41 + self.n23 * other.n42 + self.n33 * other.n43 + self.n43 * other.n44,
+			self.n14 * other.n41 + self.n24 * other.n42 + self.n34 * other.n43 + self.n44 * other.n44
+ 			)
+
+class Point3D:
 	def __init__(self, x=0,y=0,z=0):
 		self.x = x
 		self.y = y
@@ -108,7 +128,7 @@ class Point3D(object):
 	def copy(self):
 		return Point3D(x=self.x,y=self.y,z=self.z)
 
-class Point2D(object):
+class Point2D:
 	def __init__(self, x=0,y=0):
 		self.x = x
 		self.y = y
@@ -119,7 +139,7 @@ class Point2D(object):
 	def copy(self):
 		return Point2D(x=self.x,y=self.y)
 
-class Face(object):
+class Face:
 	def __init__(self,a=0,b=0,c=0):
 		self.a = a
 		self.b = b
@@ -132,17 +152,17 @@ class Face(object):
 	def __str__(self):
 		return '[{0},{1},{2}]'.format(self.a, self.b, self.c)
 
-class Group(object):
+class Group:
 	def __init__(self, node):
 		self.partRefs = node.getAttribute('partRefs').split(',')
 		
-class Bone(object):
+class Bone:
 	def __init__(self, node):
 		self.refID = node.getAttribute('refID')
 		(a, b, c, d, e, f, g, h, i, x, y, z) = map(float, node.getAttribute('transformation').split(','))
 		self.matrix = Matrix3D(n11=a,n12=b,n13=c,n14=0,n21=d,n22=e,n23=f,n24=0,n31=g,n32=h,n33=i,n34=0,n41=x,n42=y,n43=z,n44=1)
 
-class Part(object):
+class Part:
 	def __init__(self, node):
 		self.isGrouped = False
 		self.GroupIDX = 0
@@ -163,7 +183,7 @@ class Part(object):
 			if childnode.nodeName == 'Bone':
 				self.Bones.append(Bone(node=childnode)) 
 
-class Brick(object):
+class Brick:
 	def __init__(self, node):
 		self.refID = node.getAttribute('refID')
 		self.designID = node.getAttribute('designID')
@@ -172,7 +192,7 @@ class Brick(object):
 			if childnode.nodeName == 'Part':
 				self.Parts.append(Part(node=childnode))
 
-class SceneCamera(object):
+class SceneCamera:
 	def __init__(self, node):
 		self.refID = node.getAttribute('refID')
 		(a, b, c, d, e, f, g, h, i, x, y, z) = map(float, node.getAttribute('transformation').split(','))
@@ -180,15 +200,12 @@ class SceneCamera(object):
 		self.fieldOfView = float(node.getAttribute('fieldOfView'))
 		self.distance = float(node.getAttribute('distance'))
 
-class Scene(object):
+class Scene:
 	def __init__(self, file):
-		self.Name = ''
-		self.Version = ''
 		self.Bricks = []
 		self.Scenecamera = []
 		self.Groups = []
 
-		data = ''
 		if file.endswith('.lxfml'):
 			with open(file, "rb") as file:
 				data = file.read()
@@ -230,7 +247,7 @@ class Scene(object):
 
 		print('Scene "'+ self.Name + '" Brickversion: ' + str(self.Version))
 
-class GeometrieReader(object):
+class GeometryReader:
 	def __init__(self, data):
 		self.offset = 0
 		self.data = data
@@ -281,37 +298,36 @@ class GeometrieReader(object):
 	
 	def read_Int(self,_offset):
 		if sys.version_info < (3, 0):
-			return struct.unpack_from('i', self.data, _offset)[0]
+			return int(struct.unpack_from('i', self.data, _offset)[0])
 		else:
 			return int.from_bytes(self.data[_offset:_offset + 4], byteorder='little')
 
 	def readInt(self):
 		if sys.version_info < (3, 0):
-			ret = struct.unpack_from('i', self.data, self.offset)[0]
+			ret = int(struct.unpack_from('i', self.data, self.offset)[0])
 		else:
 			ret = int.from_bytes(self.data[self.offset:self.offset + 4], byteorder='little')
 		self.offset += 4
 		return ret
 
 	def readFloat(self):
-		ret = struct.unpack_from('f', self.data, self.offset)[0]
+		ret = float(struct.unpack_from('f', self.data, self.offset)[0])
 		self.offset += 4
 		return ret
 
-class Geometrie(object):
+class Geometry:
 	def __init__(self, designID, database):
 		self.designID = designID
 		self.Parts = {}
-		self.Partname = ''
-		GeometrieLocation = '{0}{1}{2}'.format(GEOMETRIEPATH, designID,'.g')
-		GeometrieCount = 0
-		while str(GeometrieLocation) in database.filelist:
-			self.Parts[GeometrieCount] = GeometrieReader(data=database.filelist[GeometrieLocation].read())
-			GeometrieCount += 1
-			GeometrieLocation = '{0}{1}{2}{3}'.format(GEOMETRIEPATH, designID,'.g',GeometrieCount)
+		GeometryLocation = '{0}{1}{2}'.format(GEOMETRIEPATH, designID,'.g')
+		GeometryCount = 0
+		while str(GeometryLocation) in database.filelist:
+			self.Parts[GeometryCount] = GeometryReader(data=database.filelist[GeometryLocation].read())
+			GeometryCount += 1
+			GeometryLocation = '{0}{1}{2}{3}'.format(GEOMETRIEPATH, designID,'.g',GeometryCount)
 
 		primitive = Primitive(data = database.filelist[PRIMITIVEPATH + designID + '.xml'].read())
-		self.Partname = primitive.designname
+		self.Partname = primitive.Designname
 		# preflex
 		for part in self.Parts:
 			# transform
@@ -343,7 +359,7 @@ class Geometrie(object):
 			count += self.Parts[part].texCount
 		return count
 
-class Bone2():
+class Bone2:
 	def __init__(self,boneId=0, angle=0, ax=0, ay=0, az=0, tx=0, ty=0, tz=0):
 		self.boneId = boneId
 		rotationMatrix = Matrix3D()
@@ -355,9 +371,9 @@ class Bone2():
 		rotationMatrix.n43 -= p.z
 		self.matrix = rotationMatrix
 
-class Primitive():
+class Primitive:
 	def __init__(self,data):
-		self.designname = ''
+		self.Designname = ''
 		self.Bones = []
 		xml = minidom.parseString(data)
 		for node in xml.firstChild.childNodes: 
@@ -368,9 +384,9 @@ class Primitive():
 			elif node.nodeName == 'Annotations':
 				for childnode in node.childNodes:
 					if childnode.nodeName == 'Annotation' and childnode.hasAttribute('designname'):
-						self.designname = childnode.getAttribute('designname')
+						self.Designname = childnode.getAttribute('designname')
 
-class LOCReader(object):
+class LOCReader:
 	def __init__(self, data):
 		self.offset = 0
 		self.values = {}
@@ -406,16 +422,15 @@ class LOCReader(object):
 				out = '{0}{1}'.format(out,chr(t))
 				t = int(self.data[self.offset])
 				self.offset += 1
-
 		return out
 
-class Materials(object):
+class Materials:
 	def __init__(self, data):
 		self.Materials = {}
 		xml = minidom.parseString(data)
 		for node in xml.firstChild.childNodes: 
 			if node.nodeName == 'Material':
-				self.Materials[node.getAttribute('MatID')] = Material(r=int(node.getAttribute('Red')), g=int(node.getAttribute('Green')), b=int(node.getAttribute('Blue')), a=int(node.getAttribute('Alpha')), mtype=str(node.getAttribute('MaterialType')))
+				self.Materials[node.getAttribute('MatID')] = Material(node.getAttribute('MatID'),r=int(node.getAttribute('Red')), g=int(node.getAttribute('Green')), b=int(node.getAttribute('Blue')), a=int(node.getAttribute('Alpha')), mtype=str(node.getAttribute('MaterialType')))
 
 	def setLOC(self, loc):
 		for key in loc.values:
@@ -425,8 +440,9 @@ class Materials(object):
 	def getMaterialbyId(self, mid):
 		return self.Materials[mid]
 
-class Material(object):
-	def __init__(self, r, g, b, a, mtype):
+class Material:
+	def __init__(self,id, r, g, b, a, mtype):
+		self.id = id
 		self.name = ''
 		self.mattype = mtype
 		self.r = float(r)
@@ -439,13 +455,13 @@ class Material(object):
 			out += 'Ni 1.575\n' + 'd {0}'.format(0.05) + '\n' + 'Tr {0}\n'.format(0.05)
 		return out
 
-class DBinfo(object):
+class DBinfo:
 	def __init__(self, data):
 		xml = minidom.parseString(data)
 		self.Version = xml.getElementsByTagName('Bricks')[0].attributes['version'].value
 		print('DB Version: ' + str(self.Version))
 
-class LIFFile():
+class LIFFile:
 	def __init__(self, name, offset, size, handle):
 		self.handle = handle
 		self.name = name
@@ -456,7 +472,7 @@ class LIFFile():
 		self.handle.seek(self.offset, 0)
 		return self.handle.read(self.size)
 
-class LIFReader(object):
+class LIFReader:
 	def __init__(self, file):
 		self.packedFilesOffset = 84
 		self.filelist = {}
@@ -533,18 +549,18 @@ class LIFReader(object):
 	def readInt(self, offset=0):
 		self.filehandle.seek(offset, 0)
 		if sys.version_info < (3, 0):
-			return struct.unpack('>i', self.filehandle.read(4))[0]
+			return int(struct.unpack('>i', self.filehandle.read(4))[0])
 		else:
 			return int.from_bytes(self.filehandle.read(4), byteorder='big')
 
 	def readShort(self, offset=0):
 		self.filehandle.seek(offset, 0)
 		if sys.version_info < (3, 0):
-			return struct.unpack('>h', self.filehandle.read(2))[0]
+			return int(struct.unpack('>h', self.filehandle.read(2))[0])
 		else:
 			return int.from_bytes(self.filehandle.read(2), byteorder='big')
 
-class Converter(object):
+class Converter:
 	def LoadDatabase(self,databaselocation):
 		self.database = LIFReader(file=databaselocation)
 
@@ -557,50 +573,53 @@ class Converter(object):
 			self.scene = Scene(file=filename)
 
 	def Export(self,filename):
-		start_time = time.time()
-
+		invert = Matrix3D() 
+		#invert.n33 = -1 #uncomment to invert the Z-Axis
+		
 		indexOffset = 1
 		textOffset = 1
 		usedmaterials = []
 		geometriecache = {}
 
+		start_time = time.time()
+
 		out = open(filename + ".obj", "w+")
 		out.write("mtllib " + filename + ".mtl" + '\n\n')
 		outtext = open(filename + ".mtl", "w+")
+		
+		total = len(self.scene.Bricks)
+		current = 0
 
 		for bri in self.scene.Bricks:
+			current += 1
 
 			for pa in bri.Parts:
 
 				if pa.designID not in geometriecache:
-					geo = Geometrie(designID=pa.designID, database=self.database)
+					geo = Geometry(designID=pa.designID, database=self.database)
+					progress(current ,total , "(" + geo.designID + ") " + geo.Partname, ' ')
 					geometriecache[pa.designID] = geo
-					print(" (" + geo.designID + ") " + geo.Partname)
 				else:
 					geo = geometriecache[pa.designID]
-					print("-(" + geo.designID + ") " + geo.Partname)
 
-				out.write("g " + "(" + geo.designID + ") " + geo.Partname + '\n')
+					progress(current ,total , "(" + geo.designID + ") " + geo.Partname ,'-')
 
-				# transform -------------------------------------------------------
+				out.write("o\n")
+
 				for part in geo.Parts:
 					geo.Parts[part].outpositions = [elem.copy() for elem in geo.Parts[part].positions]
 					geo.Parts[part].outnormals = [elem.copy() for elem in geo.Parts[part].normals]
-
 
 					for i, b in enumerate(pa.Bones):
 						# positions
 						for j, p in enumerate(geo.Parts[part].outpositions):
 							if (geo.Parts[part].bonemap[j] == i):
-								geo.Parts[part].outpositions[j].transform(b.matrix)
+								p.transform( invert * b.matrix)
 						# normals
-						for k, n in enumerate(geo.Parts[part].normals):
+						for k, n in enumerate(geo.Parts[part].outnormals):
 							if (geo.Parts[part].bonemap[k] == i):
-								geo.Parts[part].outnormals[k].transformW(b.matrix)
+								n.transformW( invert * b.matrix)
 
-				decoCount = 0
-				for part in geo.Parts:
-					
 					for point in geo.Parts[part].outpositions:
 						out.write(point.string("v")) 
 
@@ -609,6 +628,10 @@ class Converter(object):
 
 					for text in geo.Parts[part].textures:
 						out.write(text.string("vt")) 
+
+				decoCount = 0
+				out.write("g " + "(" + geo.designID + ") " + geo.Partname + '\n')
+				for part in geo.Parts:
 
 					lddmat = self.allMaterials.getMaterialbyId(pa.materials[part])
 					matname = lddmat.name
@@ -648,6 +671,7 @@ class Converter(object):
 				# -----------------------------------------------------------------
 				out.write('\n')
 
+		sys.stdout.write('%s\r' % ('                                                                                                 '))
 		print("--- %s seconds ---" % (time.time() - start_time))
 
 
@@ -656,8 +680,26 @@ def FindDatabase():
 		return str(os.path.join(str(os.getenv('USERPROFILE') or os.getenv('HOME')),'Library','Application Support','LEGO Company','LEGO Digital Designer','db.lif'))
 	else:
 		return str(os.path.join(str(os.getenv('USERPROFILE') or os.getenv('HOME')),'AppData','Roaming','LEGO Company','LEGO Digital Designer','db.lif'))
+	
+def progress(count, total, status='', suffix = ''):
+	bar_len = 40
+	filled_len = int(round(bar_len * count / float(total)))
+	percents = round(100.0 * count / float(total), 1)
+	bar = '#' * filled_len + '-' * (bar_len - filled_len)
+	sys.stdout.write('Progress: [%s] %s%s %s %s\r' % (bar, percents, '%', suffix, '                                                 '))
+	sys.stdout.write('Progress: [%s] %s%s %s %s\r' % (bar, percents, '%', suffix, status))
+	sys.stdout.flush()
 
 def main():
+	print("- - - pyldd2obj - - -")
+	print("          _ ")
+	print("         [_]")
+	print("       /|   |\\")
+	print("      ()'---' C")
+	print("        | | |")
+	print("        [=|=]")
+	print("")
+	print("- - - - - - - - - - - -")
 	try:
 	   lxf_filename = sys.argv[1]
 	   obj_filename = sys.argv[2]
