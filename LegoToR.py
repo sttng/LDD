@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 #
-# LegoToR Version 0.5 - Copyright (c) 2019 by m2m
+# LegoToR Version 0.4.7 - Copyright (c) 2019 by m2m
 # based on pyldd2obj Version 0.4.7 - Copyright (c) 2019 by jonnysp 
 # LegoToR parses LXF files and command line parameters to create a renderman compliant rib file.
 # 
