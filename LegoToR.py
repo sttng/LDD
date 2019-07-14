@@ -9,9 +9,10 @@
 #
 # Updates:
 # 
+# 0.4.7.1 Changes in transparent materials
 # 0.4.7 Import pyldd2obj by jonnysp - overwrite Materials, Converter class, add other functions
 # 0.4.5 Added changes based on pyldd2obj Version 0.4.7
-# 0.4.4 Complete rewrite based on the great work from jonnysp and pyldd2obj pyldd2obj Version 0.4.3
+# 0.4.4 Complete rewrite based on the great work from jonnysp and pyldd2obj Version 0.4.3
 # 0.3 support for all parts (except flex parts) and textures
 # 0.2 support for basic parts without textures
 # 
@@ -26,7 +27,7 @@ import datetime
 import shutil
 import ParseCommandLine as cl
 
-__version__ = "0.4.7"
+__version__ = "0.4.7.1"
 
 compression = zipfile.ZIP_DEFLATED
 
