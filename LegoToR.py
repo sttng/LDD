@@ -5,8 +5,7 @@
 # based on pyldd2obj Version 0.4.7 - Copyright (c) 2019 by jonnysp 
 # LegoToR parses LXF files and command line parameters to create a renderman compliant rib file.
 # 
-# Usage:
-# ./LegoToR.py /Users/username/Documents/LEGO\ Creations/Models/mylfxfile.lxf -v -np
+# Usage: ./LegoToR.py /Users/username/Documents/LEGO\ Creations/Models/mylfxfile.lxf -v -np
 #
 # Updates:
 # 
@@ -25,8 +24,8 @@ import uuid
 import csv
 import datetime
 import shutil
-
 import ParseCommandLine as cl
+
 __version__ = "0.4.7"
 
 compression = zipfile.ZIP_DEFLATED
@@ -73,87 +72,87 @@ class MaterialRi:
 			rgb_or_dec_str = '"Blend{0}:resultRGB"'.format(decorationId)
 			ref_strg = 'reference '
 			
-			texture_strg = '''\tPattern "PxrManifold2D" "PxrManifold2D1"
-			"float angle" [0]
-			"float scaleS" [1]
-			"float scaleT" [1]
-			"int invertT" [1]
+			texture_strg = '''Pattern "PxrManifold2D" "PxrManifold2D1"
+	"float angle" [0]
+	"float scaleS" [1]
+	"float scaleT" [1]
+	"int invertT" [1]
+	
+# txmake -t:8 -compression zip -mode clamp -resize up {0}.png {0}.tex
+Pattern "PxrTexture" "Texture{0}"
+	"string filename" ["{0}.tex"]
+	"int invertT" [0]
+	"int linearize" [1]
+	"reference struct manifold" ["PxrManifold2D1:result"]
 			
-		# txmake -t:8 -compression zip -mode clamp -resize up {0}.png {0}.tex
-		Pattern "PxrTexture" "Texture{0}"
-			"string filename" ["{0}.tex"]
-			"int invertT" [0]
-			"int linearize" [1]
-			"reference struct manifold" ["PxrManifold2D1:result"]
-			
-		Pattern "PxrBlend" "Blend{0}"
-			"int operation"  [19]
-			"reference color topRGB" ["Texture{0}:resultRGB"]
-			"reference float topA" ["Texture{0}:resultA"]
-			"color bottomRGB" [{1} {2} {3}]
-			"float bottomA" [1]
-			"int clampOutput" [1]\n\n'''.format(decorationId, self.r, self.g, self.b)
+Pattern "PxrBlend" "Blend{0}"
+	"int operation" [19]
+	"reference color topRGB" ["Texture{0}:resultRGB"]
+	"reference float topA" ["Texture{0}:resultA"]
+	"color bottomRGB" [{1} {2} {3}]
+	"float bottomA" [1]
+	"int clampOutput" [1]\n\n'''.format(decorationId, self.r, self.g, self.b)
 		
 		else:
 		# We don't have decorations
 			rgb_or_dec_str = '{0} {1} {2}'.format(self.r, self.g, self.b)
 			
 		if self.materialType == 'Transparent':
-			bxdf_mat_str = texture_strg + '''\tBxdf "PxrSurface" "Transparent {0}"
-			"float diffuseGain" [0]
-			"color diffuseColor" [0.5 0.5 0.5]
-			"int diffuseDoubleSided" [1]
-			"int diffuseBackUseDiffuseColor" [1]
-			"color diffuseBackColor" [1 1 1]
-			"{1}color specularFaceColor" [{2}]
-			"color specularEdgeColor" [0.2 0.2 0.2]
-			"color specularIor"  [1.585 1.585 1.585] # Polycarbonate IOR = 1.584 - 1.586
-			"float specularRoughness" [0.25]
-			"int specularDoubleSided" [1]
-			"color clearcoatFaceColor" [0 0 0]
-			"color clearcoatEdgeColor" [0 0 0]
-			"color clearcoatIor" [1.5 1.5 1.5]
-			"color clearcoatExtinctionCoeff" [0.0 0.0 0.0]
-			"float clearcoatRoughness" [0.0]
-			"float iridescenceFaceGain" [0]
-			"float iridescenceEdgeGain" [0]
-			"color iridescencePrimaryColor" [1 0 0]
-			"color iridescenceSecondaryColor" [0 0 1]
-			"float iridescenceRoughness" [0.2]
-			"float fuzzGain" [0.0]
-			"color fuzzColor" [1 1 1]
-			"float fuzzConeAngle" [8]
-			"float refractionGain" [1]
-			"float reflectionGain" [0.2]
-			"{1}color refractionColor" [{2}]
-			"float glassRoughness" [0.25] 
-			"float glassIor" [1.585] # Polycarbonate IOR = 1.584 - 1.586
-			"int thinGlass" [1] 
-			"float glowGain" [0.0] 
-			"color glowColor" [1 1 1] 
-			"float presence" [1]\n'''.format(self.materialId, ref_strg, rgb_or_dec_str)
+			bxdf_mat_str = texture_strg + '''Bxdf "PxrSurface" "Transparent {0}"
+	"float diffuseGain" [0.5]
+	"{1}color diffuseColor" [{2}]
+	"int diffuseDoubleSided" [1]
+	"int diffuseBackUseDiffuseColor" [1]
+	"color diffuseBackColor" [1 1 1]
+	"color specularFaceColor" [0.2 0.2 0.2]
+	"color specularEdgeColor" [0.2 0.2 0.2]
+	"color specularIor" [1.585 1.585 1.585] # Polycarbonate IOR = 1.584 - 1.586
+	"float specularRoughness" [0.25]
+	"int specularDoubleSided" [1]
+	"color clearcoatFaceColor" [0 0 0]
+	"color clearcoatEdgeColor" [0 0 0]
+	"color clearcoatIor" [1.5 1.5 1.5]
+	"color clearcoatExtinctionCoeff" [0.0 0.0 0.0]
+	"float clearcoatRoughness" [0.0]
+	"float iridescenceFaceGain" [0]
+	"float iridescenceEdgeGain" [0]
+	"color iridescencePrimaryColor" [1 0 0]
+	"color iridescenceSecondaryColor" [0 0 1]
+	"float iridescenceRoughness" [0.2]
+	"float fuzzGain" [0.0]
+	"color fuzzColor" [1 1 1]
+	"float fuzzConeAngle" [8]
+	"float refractionGain" [1]
+	"float reflectionGain" [0.2]
+	"{1}color refractionColor" [{2}]
+	"float glassRoughness" [0.05] 
+	"float glassIor" [1.585] # Polycarbonate IOR = 1.584 - 1.586
+	"int thinGlass" [1]
+	"float glowGain" [0.0]
+	"color glowColor" [1 1 1]
+	"float presence" [1]\n'''.format(self.materialId, ref_strg, rgb_or_dec_str)
 			
 		elif self.materialType == 'Metallic':
-			bxdf_mat_str = texture_strg + '''\tBxdf "PxrSurface" "Metallic {0}"
-			"float diffuseGain" [1.0]
-			"{1}color diffuseColor" [{2}] 
-			"int diffuseDoubleSided" [1]
-			"color specularFaceColor" [0.8 0.8 0.8]
-			"color specularIor"  [1.54 1.54 1.54] # ABS Refractive Index, Average value: 1.54
-			"float specularRoughness" [0.25]
-			"int specularDoubleSided" [0]
-			"float presence" [1]\n'''.format(self.materialId, ref_strg, rgb_or_dec_str)
+			bxdf_mat_str = texture_strg + '''Bxdf "PxrSurface" "Metallic {0}"
+	"float diffuseGain" [0.5]
+	"{1}color diffuseColor" [{2}] 
+	"int diffuseDoubleSided" [1]
+	"color specularFaceColor" [0.8 0.8 0.8]
+	"color specularIor"  [1.54 1.54 1.54] # ABS Refractive Index, Average value: 1.54
+	"float specularRoughness" [0.25]
+	"int specularDoubleSided" [0]
+	"float presence" [1]\n'''.format(self.materialId, ref_strg, rgb_or_dec_str)
 		
 		else:
-			bxdf_mat_str = texture_strg + '''\tBxdf "PxrSurface" "Solid Material {0}" 
-			"float diffuseGain" [1.0] 
-			"{1}color diffuseColor" [{2}] 
-			"int diffuseDoubleSided" [1]
-			"color specularFaceColor" [0.1 0.1 0.15]
-			"color specularIor" [1.54 1.54 1.54] # ABS Refractive Index, Average value: 1.54
-			"float specularRoughness" [0.25]
-			"int specularDoubleSided" [0]
-			"float presence" [1]\n'''.format(self.materialId, ref_strg, rgb_or_dec_str)
+			bxdf_mat_str = texture_strg + '''Bxdf "PxrSurface" "Solid Material {0}" 
+	"float diffuseGain" [0.5] 
+	"{1}color diffuseColor" [{2}] 
+	"int diffuseDoubleSided" [1]
+	"color specularFaceColor" [0.1 0.1 0.15]
+	"color specularIor" [1.54 1.54 1.54] # ABS Refractive Index, Average value: 1.54
+	"float specularRoughness" [0.25]
+	"int specularDoubleSided" [0]
+	"float presence" [1]\n'''.format(self.materialId, ref_strg, rgb_or_dec_str)
 		
 		return bxdf_mat_str
 
