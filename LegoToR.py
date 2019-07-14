@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 #
-# LegoToR Version 0.4.7 - Copyright (c) 2019 by m2m
+# LegoToR Version 0.4.7.1 - Copyright (c) 2019 by m2m
 # based on pyldd2obj Version 0.4.7 - Copyright (c) 2019 by jonnysp 
 # LegoToR parses LXF files and command line parameters to create a renderman compliant rib file.
 # 
@@ -103,8 +103,6 @@ Pattern "PxrBlend" "Blend{0}"
 	"float diffuseGain" [0.5]
 	"{1}color diffuseColor" [{2}]
 	"int diffuseDoubleSided" [1]
-	"int diffuseBackUseDiffuseColor" [1]
-	"color diffuseBackColor" [1 1 1]
 	"color specularFaceColor" [0.2 0.2 0.2]
 	"color specularEdgeColor" [0.2 0.2 0.2]
 	"color specularIor" [1.585 1.585 1.585] # Polycarbonate IOR = 1.584 - 1.586
@@ -529,7 +527,7 @@ def main():
 		os.remove('rib_header.rib')
 		
 		print "\nNow start Renderman with (for preview):\n./prman -d it -t:-2 {0}{1}_Scene.rib".format(cl.args.searcharchive, os.sep + obj_filename)
-		print "Or start Renderman with (for final mode without preview):\n./prman -t:-2 {0}{1}_Scene.rib".format(cl.args.searcharchive, os.sep + obj_filename)
+		print "Or start Renderman with (for final mode without preview):\n./prman -t:-2 -checkpoint 1m {0}{1}_Scene.rib".format(cl.args.searcharchive, os.sep + obj_filename)
 		print "\nFinally denoise the final output with:./denoise {0}{1}.beauty.001.exr\n".format(cl.args.searcharchive, os.sep + obj_filename)
 		
 	else:
