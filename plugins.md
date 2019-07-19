@@ -747,6 +747,8 @@ color vector normal point  resultRGB
 float  resultR
 float  resultG
 float  resultB
+float  resultConvex
+float  resultConcave
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ### Rib Format 
