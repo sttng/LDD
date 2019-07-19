@@ -24,13 +24,13 @@ class ArgsFile:
 
 		xml = minidom.parseString(data)
 		self.Name = xml.firstChild.getAttribute("page")
-				
+		
+		print("Pattern \"{0}\" \"{0}1\"").format(self.Name)
+		
 		for node in xml.firstChild.childNodes: 
 			if node.nodeName == 'param':
 				for childnode in node.childNodes:
-					print childnode.getAttribute("type")
-					print childnode.getAttribute("name")
-					print childnode.getAttribute("default")
+					print("\"{0} {1}\" [{2}]").format(childnode.getAttribute("type"), childnode.getAttribute("name"), childnode.getAttribute("default"))
 			elif node.nodeName == 'output':
 				for childnode in node.childNodes:
 					if childnode.nodeName == 'tag':
