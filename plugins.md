@@ -738,6 +738,34 @@ ri.Pattern('PxrBumpManifold2D','id',
 })
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+## Plugin PxrCurvature 
+This is a simple and useful pattern for creating edge effects and curvature 
+based results like wear on edges and objects in contact with other surfaces.
+#### Outputs  
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~C
+color vector normal point  resultRGB
+float  resultR
+float  resultG
+float  resultB
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+### Rib Format 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~C
+Pattern "PxrCurvature" "id"
+	"int numSamples"  [4]
+	"float maxDistance"  [0.1]
+	"string traceSet"  ['']
+	"int distribution"  [0]
+	"float cosineSpread" [1.0]
+	"float bias" [0.5]
+	"float convexThreshold" [0.0]
+	"float concaveThreshold" [0.0]
+	"float outputGain" [1.0]
+	"int outputType" [2]
+	"int monochrome" [1]
+	"int clampOutput" [1]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 ## Plugin PxrRandomTextureManifold 
 Encapsulates 2D parameterization for
         pattern generators. Allows transformations and selection
