@@ -12,7 +12,7 @@ class Converter:
 	def LoadArgsFile(self,filename):
 		self.scene = ArgsFile(file=filename)
 
-		
+
 class ArgsFile:
 	def __init__(self, file):
 
