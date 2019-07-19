@@ -23,21 +23,23 @@ class ArgsFile:
 			return
 
 		xml = minidom.parseString(data)
-		self.Name = xml.firstChild.getAttribute("page")
+		argsName = file.split(".")
+		self.Name = argsName[0]
 		
-		print("Pattern \"{0}\" \"{0}1\"").format(self.Name)
-		
-		for node in xml.firstChild.childNodes: 
-			if node.nodeName == 'param':
+		for node in xml.firstChild.childNodes:
+			if node.nodeName == 'shaderType':
 				for childnode in node.childNodes:
-					print("\"{0} {1}\" [{2}]").format(childnode.getAttribute("type"), childnode.getAttribute("name"), childnode.getAttribute("default"))
+					if childnode.nodeName == 'tag':
+						print('{0} \"{1}\" \"{1}1\"').format(childnode.getAttribute("value"), self.Name)
+					print childnode.getAttribute("name")
+			elif node.nodeName == 'param':
+				for childnode in node.childNodes:
+					print('\"{0} {1}\" [{2}]').format(childnode.getAttribute("type"), childnode.getAttribute("name"), childnode.getAttribute("default"))
 			elif node.nodeName == 'output':
 				for childnode in node.childNodes:
 					if childnode.nodeName == 'tag':
-						print childnode.getAttribute("color")
+						print childnode.getAttribute("value")
 					print childnode.getAttribute("name")
-
-		print('args "'+ self.Name)
 
 
 def main():
