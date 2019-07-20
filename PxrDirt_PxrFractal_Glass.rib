@@ -1,3 +1,23 @@
+# Curvature map
+Pattern "PxrCurvature" "Curvature"
+	"int numSamples" [1]
+	"float maxDistance" [0.015]
+	"string traceSet" ['']
+	"int distribution" [1]
+	"float cosineSpread" [1.0]
+	"float bias" [1]
+	"float convexThreshold" [0.0]
+	"float concaveThreshold" [0.0]
+	"float outputGain" [1.5]
+	"int outputType" [2]
+	"int monochrome" [1]
+	"int clampOutput" [1]
+	
+Bxdf "PxrConstant" "ConstantCurvature"
+	"reference color emitColor" ["Curvature:resultRGB"]
+	#"color emitColor" [1. 1. 1.]
+"float presence" [1]
+
 # Curvature map / Curvature highpass
 Pattern "PxrDirt" "Curvature" 
 	"color occluded" [1.0 1.0 1.0]
