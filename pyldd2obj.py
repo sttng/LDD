@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# pyldd2obj Version 0.4.7 - Copyright (c) 2019 by jonnysp 
+# pyldd2obj Version 0.4.8 - Copyright (c) 2019 by jonnysp 
 #
 # License: MIT License
 #
@@ -435,7 +435,7 @@ class Materials:
 	def setLOC(self, loc):
 		for key in loc.values:
 			if key in self.Materials:
-				self.Materials[key].name = loc.values[key]
+				self.Materials[key].name = loc.values[key].replace(" ", "_")
 
 	def getMaterialbyId(self, mid):
 		return self.Materials[mid]
