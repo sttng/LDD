@@ -29,18 +29,19 @@ class ArgsFile:
 			if node.nodeName == 'shaderType':
 				for childnode in node.childNodes:
 					if childnode.nodeName == 'tag':
-						print('{0} "{1}" "{1}1"').format(childnode.getAttribute("value"), self.Name)
+						print('{0} "{1}" "{1}1"').format(childnode.getAttribute("value").capitalize(), self.Name)
 			elif node.nodeName == 'page':
 				for childnode in node.childNodes:
 					if childnode.nodeName == 'param':
 						print('\t"{0} {1}" [{2}]').format(childnode.getAttribute("type"), childnode.getAttribute("name"), childnode.getAttribute("default"))
 			elif node.nodeName == 'output':
-				print node.getAttribute("name")
+				outval = ''
 				for childnode in node.childNodes:
 					if childnode.nodeName == 'tags':
 						for subnode in childnode.childNodes:
 							if subnode.nodeName == 'tag':
-								print('\t{0}').format(subnode.getAttribute("value").rstrip())
+								outval = outval + subnode.getAttribute("value") + ' '
+				print outval + ' ' + node.getAttribute("name")
 
 
 def main():
