@@ -23,24 +23,24 @@ class ArgsFile:
 			return
 
 		xml = minidom.parseString(data)
-		argsName = file.split(".")
-		self.Name = argsName[0]
+		self.Name = os.path.splitext(os.path.basename(file.name))[0]
 		
 		for node in xml.firstChild.childNodes:
 			if node.nodeName == 'shaderType':
 				for childnode in node.childNodes:
 					if childnode.nodeName == 'tag':
-						print('{0} "{1}" "{1}1"\n').format(childnode.getAttribute("value"), self.Name)
-					print childnode.getAttribute("name")
-			elif node.nodeName == 'param':
+						print('{0} "{1}" "{1}1"').format(childnode.getAttribute("value"), self.Name)
+			elif node.nodeName == 'page':
 				for childnode in node.childNodes:
-					print('\t"{0} {1}" [{2}]\n').format(childnode.getAttribute("type"), childnode.getAttribute("name"), childnode.getAttribute("default"))
+					if childnode.nodeName == 'param':
+						print('\t"{0} {1}" [{2}]').format(childnode.getAttribute("type"), childnode.getAttribute("name"), childnode.getAttribute("default"))
 			elif node.nodeName == 'output':
-				print '\nOutput\n'
+				print node.getAttribute("name")
 				for childnode in node.childNodes:
-					if childnode.nodeName == 'tag':
-						print childnode.getAttribute("value")
-					print childnode.getAttribute("name") + '\n'
+					if childnode.nodeName == 'tags':
+						for subnode in childnode.childNodes:
+							if subnode.nodeName == 'tag':
+								print('\t{0}').format(subnode.getAttribute("value").rstrip())
 
 
 def main():
