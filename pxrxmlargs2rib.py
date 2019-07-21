@@ -24,7 +24,7 @@ class ArgsFile:
 
 		xml = minidom.parseString(data)
 		self.Name = os.path.splitext(os.path.basename(file.name))[0]
-		
+		i = 0
 		for node in xml.firstChild.childNodes:
 			if node.nodeName == 'shaderType':
 				for childnode in node.childNodes:
@@ -37,6 +37,9 @@ class ArgsFile:
 			elif node.nodeName == 'param':
 				print('\t"{0} {1}" [{2}]').format(node.getAttribute("type"), node.getAttribute("name"), node.getAttribute("default"))
 			elif node.nodeName == 'output':
+				if i == 0:
+					print '\nOutputs:\n'
+				i += 1
 				outval = ''
 				for childnode in node.childNodes:
 					if childnode.nodeName == 'tags':
