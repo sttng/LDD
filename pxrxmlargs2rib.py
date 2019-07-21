@@ -34,6 +34,8 @@ class ArgsFile:
 				for childnode in node.childNodes:
 					if childnode.nodeName == 'param':
 						print('\t"{0} {1}" [{2}]').format(childnode.getAttribute("type"), childnode.getAttribute("name"), childnode.getAttribute("default"))
+			elif node.nodeName == 'param':
+				print('\t"{0} {1}" [{2}]').format(node.getAttribute("type"), node.getAttribute("name"), node.getAttribute("default"))
 			elif node.nodeName == 'output':
 				outval = ''
 				for childnode in node.childNodes:
