@@ -46,7 +46,7 @@ class ArgsFile:
 						for subnode in childnode.childNodes:
 							if subnode.nodeName == 'tag':
 								outval = outval + subnode.getAttribute("value") + ' '
-				print outval + ' ' + node.getAttribute("name")
+				print('\t{0} {1}').format(outval, node.getAttribute("name"))
 
 
 def main():
