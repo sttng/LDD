@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 #
+# Convert renderman xml .args files to basic rib output files
+#
 # License: MIT License
 #
 
@@ -25,6 +27,26 @@ class ArgsFile:
 		xml = minidom.parseString(data)
 		self.Name = os.path.splitext(os.path.basename(file.name))[0]
 		i = 0
+		
+		#shaderType = xml.getElementsByTagName("shaderType")[0]
+		#shaderTypeTag = shaderType.getElementsByTagName("tag")[0]
+		#shaderValue = shaderTypeTag.getAttribute("value").capitalize()
+		#print('{0} "{1}" "{1}1"').format(shaderValue, self.Name)
+		#
+		#params = xml.getElementsByTagName("param")
+		#for param in params:
+		#	paramType = param.getAttribute("type")
+		#	paramName = param.getAttribute("name")
+		#	paramDefault = param.getAttribute("default")
+		#	print('\t"{0} {1}" [{2}]').format(paramType, paramName, paramDefault)
+		#
+		#outputs = xml.getElementsByTagName("output")
+		#print '\nOutputs:\n'
+		#for output in outputs:
+		#	outputName = output.getAttribute("name")
+		#	outputTags= output.getElementsByTagName("tag")
+		#	for outputTag in outputTags:
+		#		outputTagValue = outputTag.getAttribute("value")
 		for node in xml.firstChild.childNodes:
 			if node.nodeName == 'shaderType':
 				for childnode in node.childNodes:
