@@ -37,7 +37,11 @@ class ArgsFile:
 		#for param in params:
 		#	paramType = param.getAttribute("type")
 		#	paramName = param.getAttribute("name")
-		#	paramDefault = param.getAttribute("default")
+		#	paramDefault = "''"
+		#	if param.hasAttribute("default"):
+		#		paramDefault = param.getAttribute("default")
+		#	paramHelp = param.getElementsByTagName("help")[0]
+		#	print('\t#{0}').format(paramHelp)
 		#	print('\t"{0} {1}" [{2}]').format(paramType, paramName, paramDefault)
 		#
 		#outputs = xml.getElementsByTagName("output")
