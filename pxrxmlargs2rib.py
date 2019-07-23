@@ -41,7 +41,7 @@ class ArgsFile:
 			if param.hasAttribute("default"):
 				paramDefault = param.getAttribute("default")
 			#paramHelp = param.getElementsByTagName("help")[0].firstChild.nodeValue
-			print('\t#{0}').format(paramHelp)
+			#print('\t#{0}').format(paramHelp)
 			print('\t"{0} {1}" [{2}]').format(paramType, paramName, paramDefault)
 		
 		outputs = xml.getElementsByTagName("output")
