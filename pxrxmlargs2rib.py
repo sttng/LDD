@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Convert renderman xml .args files to basic rib output files
+# Convert renderman xml .args files to basic rib output
 #
 # License: MIT License
 #
@@ -49,7 +49,7 @@ class ArgsFile:
 			print '\nOutputs:\n'
 		for output in outputs:
 			outputName = output.getAttribute("name")
-			outputTags= output.getElementsByTagName("tag")
+			outputTags = output.getElementsByTagName("tag")
 			outputTagValue = ''
 			for outputTag in outputTags:
 				outputTagValue = outputTagValue + outputTag.getAttribute("value") + ' '
