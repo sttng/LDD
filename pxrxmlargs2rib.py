@@ -26,7 +26,6 @@ class ArgsFile:
 
 		xml = minidom.parseString(data)
 		self.Name = os.path.splitext(os.path.basename(file.name))[0]
-		i = 0
 		
 		shaderType = xml.getElementsByTagName("shaderType")[0]
 		shaderTypeTag = shaderType.getElementsByTagName("tag")[0]
@@ -45,14 +44,15 @@ class ArgsFile:
 			print('\t"{0} {1}" [{2}]').format(paramType, paramName, paramDefault)
 		
 		outputs = xml.getElementsByTagName("output")
-		print '\nOutputs:\n'
+		
+		if outputs:
+			print '\nOutputs:\n'
 		for output in outputs:
 			outputName = output.getAttribute("name")
 			outputTags= output.getElementsByTagName("tag")
 			outputTagValue = ''
 			for outputTag in outputTags:
 				outputTagValue = outputTagValue + outputTag.getAttribute("value") + ' '
-				#outputTagValue = outputTagValue + ' '
 			print('\t{0} {1}').format(outputTagValue, outputName)
 
 def main():
