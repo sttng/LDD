@@ -1,14 +1,15 @@
 #!/usr/bin/env python
 
 #
-# LegoToR Version 0.4.7.1 - Copyright (c) 2019 by m2m
-# based on pyldd2obj Version 0.4.7 - Copyright (c) 2019 by jonnysp 
+# LegoToR Version 0.4.8 - Copyright (c) 2019 by m2m
+# based on pyldd2obj Version 0.4.8 - Copyright (c) 2019 by jonnysp 
 # LegoToR parses LXF files and command line parameters to create a renderman compliant rib file.
 # 
 # Usage: ./LegoToR.py /Users/username/Documents/LEGO\ Creations/Models/mylfxfile.lxf -v -np
 #
 # Updates:
 # 
+# 0.4.8 Upgraded pyldd2obj to Version 0.4.7. 
 # 0.4.7.1 Changes in transparent materials
 # 0.4.7 Import pyldd2obj by jonnysp - overwrite Materials, Converter class, add other functions
 # 0.4.5 Added changes based on pyldd2obj Version 0.4.7
@@ -27,7 +28,7 @@ import datetime
 import shutil
 import ParseCommandLine as cl
 
-__version__ = "0.4.7.1"
+__version__ = "0.4.8"
 
 compression = zipfile.ZIP_DEFLATED
 
@@ -451,7 +452,7 @@ def FindRmtree():
 		else:
 			print('RMANTREE environment variable not set correctly. Set with: setx RMANTREE "C:\Program Files\Pixar\RenderManProServer-22.6\" /M')
 			exit()
-	
+
 
 def generate_rib_header(infile, srate, pixelvar, width, height, fov, fstop, searcharchive, searchtexture, integrator, integratorParams, useplane):
 	cwd = os.getcwd()
