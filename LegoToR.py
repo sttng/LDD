@@ -369,7 +369,7 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 									os.system(txmake_cmd)
 									os.remove(extfile)
 								else:
-									print("RMANTREE environment variable not set correctly. Set with: export RMANTREE=/Applications/Pixar/RenderManProServer-22.5/")
+									print("RMANTREE environment variable not set correctly. Set with: export RMANTREE=/Applications/Pixar/RenderManProServer-22.6/")
 
 					if not matname in usedmaterials:
 						usedmaterials.append(matname)
@@ -438,9 +438,20 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 
 def FindRmtree():
 	if os.name =='posix':
-		return str(os.getenv('RMANTREE'))
+		rmtree = os.getenv('RMANTREE')
+		if rmtree is not None:
+			return str(rmtree)
+		else:
+			print("RMANTREE environment variable not set correctly. Set with: export RMANTREE=/Applications/Pixar/RenderManProServer-22.6/")
+			exit()
 	else:
-		return str(os.getenv('RMANTREE'))
+		rmtree = os.getenv('RMANTREE')
+		if rmtree is not None:
+			return str(rmtree)
+		else:
+			print('RMANTREE environment variable not set correctly. Set with: setx RMANTREE "C:\Program Files\Pixar\RenderManProServer-22.6\" /M')
+			exit()
+	
 
 def generate_rib_header(infile, srate, pixelvar, width, height, fov, fstop, searcharchive, searchtexture, integrator, integratorParams, useplane):
 	cwd = os.getcwd()
