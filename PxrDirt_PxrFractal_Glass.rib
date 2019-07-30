@@ -18,6 +18,45 @@ Bxdf "PxrConstant" "ConstantCurvature"
 	#"color emitColor" [1. 1. 1.]
 "float presence" [1]
 
+# Baking
+# Curvature map
+Pattern "PxrCurvature" "PxrCurvature1"
+	"int numSamples" [1]
+	"float maxDistance" [0.015]
+	"string traceSet" ['']
+	"int distribution" [1]
+	"float cosineSpread" [1.0]
+	"float bias" [1]
+	"float convexThreshold" [0.0]
+	"float concaveThreshold" [0.0]
+	"float outputGain" [1.5]
+	"int outputType" [2]
+	"int monochrome" [1]
+	"int clampOutput" [1]
+	
+Pattern "PxrBakeTexture" "PxrBakeTexture1"
+	"reference color inputRGB" ["PxrCurvature1:resultRGB"]
+	"float inputF" [0]
+	"string filename" ["/Users/user/Downloads/LegoToR/Redbeard_red_Bricks_Archive/output._MAPID_.exr"]
+	"int atlasStyle" [1]
+	"int filter" [1]
+	"int lerp" [1]
+	"int invertT" [1] 
+	"color missingColor" [1 0 1]
+	"int bakeMode" [1]
+	"int renderMode" [0]
+	"string display" ["openexr"]
+	"string displayFormat" ["openexr"]
+	"string displayType" ["half"]
+	"string displayCompression" ["zip"]
+	"int resolutionX" [1024]
+	"int resolutionY" [1024]
+	"string primVar" ["st"]
+	"string primVar2" [""]
+	"string activeUdim" [""]
+
+Bxdf "PxrSurface" "PxrSurface1" "reference color diffuseColor" ["PxrBakeTexture1:resultRGB"] "string __materialid" ["PxrSurface1SG"]
+
 # Curvature map / Curvature highpass
 Pattern "PxrDirt" "Curvature" 
 	"color occluded" [1.0 1.0 1.0]
