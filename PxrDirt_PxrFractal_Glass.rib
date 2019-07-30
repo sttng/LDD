@@ -142,6 +142,48 @@ Bxdf "PxrConstant" "ConstantUnevenness"
 	"reference color emitColor" ["Unevenness:resultRGB"]
 	"float presence"  [1]
 
+# Unevenness Bump map and material, still need to offset the noise pattern for different parts
+Pattern "PxrFractal" "Unevenness" 
+	"int surfacePosition"  [0]
+	"int layers"  [1]
+	"float frequency" [2.5]
+	"float lacunarity" [16.0]
+	"float dimension" [1.0]
+	"float erosion" [0.0]
+	"float variation" [1.0]
+	"int turbulent" [0]
+
+Pattern "PxrNormalMap" "PxrNormalMap1"
+	"float bumpScale" [-0.2]
+	"reference color inputRGB" ["Unevenness:resultRGB"]
+	#"string filename" ["Body_Normal.tex"]
+	"normal bumpOverlay" [0 0 0]
+	"int invertBump" [0]
+	"int orientation" [2]
+	"int flipX" [0]
+	"int flipY" [0]
+	"int firstChannel" [0]
+	"int atlasStyle" [0]
+	"int invertT" [1]
+	"float blur" [0.0]
+	"int lerp" [1]
+	"int filter" [1]
+	"int reverse" [0]
+	"float adjustAmount" [0.0]
+	"float surfaceNormalMix" [0.0]
+	"int disable" [0]
+
+Bxdf "PxrSurface" "Solid Material 21" 
+	"float diffuseGain" [1.0] 
+	"color diffuseColor" [0.94 0.2 0.25] 
+	"int diffuseDoubleSided" [1]
+	"color specularFaceColor" [0.1 0.1 0.15]
+	"color specularIor" [1.54 1.54 1.54] # ABS Refractive Index, Average value: 1.54
+	"float specularRoughness" [0.25]
+	"int specularDoubleSided" [0]
+	"float presence" [1]
+	"reference normal bumpNormal" ["PxrNormalMap1:resultN"]
+
 
 #PxrWireframe
 Pattern "PxrWireframe" "PxrWireframe1"
