@@ -127,7 +127,7 @@ Bxdf "PxrSurface" "Solid Material 21"
 	"float presence" [1]
 
 
-# Unevenness Bump map, still need to offset the noise pattern for different parts
+# Unevenness Bump map. Can use random the float variation parameter to offset the noise pattern for different parts.
 Pattern "PxrFractal" "Unevenness" 
 	"int surfacePosition"  [0]
 	"int layers"  [1]
@@ -142,7 +142,7 @@ Bxdf "PxrConstant" "ConstantUnevenness"
 	"reference color emitColor" ["Unevenness:resultRGB"]
 	"float presence"  [1]
 
-# Unevenness Bump map and material, still need to offset the noise pattern for different parts
+# Unevenness Bump map and material. Can use random the float variation parameter to offset the noise pattern for different parts
 Pattern "PxrFractal" "Unevenness" 
 	"int surfacePosition"  [0]
 	"int layers"  [1]
