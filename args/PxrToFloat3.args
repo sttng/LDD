@@ -1,0 +1,72 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="pattern"/>
+    </shaderType>
+    <help>
+        Produces a triple output from a single float input.
+        The single float **input** is copied to each channel.
+        If float **inputR**, **inputG**, **inputB** are connected,
+        then those will be convert to a color instead
+    </help>
+    <param name="input"
+        label="Input"
+        type="float"
+        default="0."
+        min="0"
+        max="1"
+        widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>The float to convert to a triple.</help>
+    </param>
+    <param name="inputR"
+        label="Input R"
+        type="float"
+        default="0."
+        min="0"
+        max="1"
+        widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>The float to place in the R component of resultRGB</help>
+    </param>
+    <param name="inputG"
+        label="Input G"
+        type="float"
+        default="0."
+        min="0"
+        max="1"
+        widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>The float to place in the G component of resultRGB</help>
+    </param>
+    <param name="inputB"
+        label="Input B"
+        type="float"
+        default="0."
+        min="0"
+        max="1"
+        widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>The float to place in the B component of resultRGB</help>
+    </param>
+
+    <output name="resultRGB">
+        <tags>
+            <tag value ="color"/>
+            <tag value ="vector"/>
+            <tag value ="normal"/>
+            <tag value ="point"/>
+        </tags>
+    </output>
+
+    <rfmdata nodeid="1053436"
+             classification="rendernode/RenderMan/pattern/utility"/>
+    <rfcdata nodeid="1035894" description="Xpxrtofloat3"/>
+</args>

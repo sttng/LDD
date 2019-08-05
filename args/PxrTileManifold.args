@@ -1,0 +1,285 @@
+<args format="1.0" >
+    <shaderType>
+        <tag value="pattern"/>
+    </shaderType>
+    <help>
+        Encapsulates 2D parameterization for
+        pattern generators. Allows transformations and selection
+        of arbitrary variables bound to primitives. Uses a simple
+        struct to represent bundled dataflow of outputs.
+    </help>
+
+    <param name="numTextures"
+         label="Number of Textures"
+         type="int"
+         default="1" min="1" max="10"
+         widget="default"
+         connectable="False">
+      <help>
+          The number of texture you want to use. You should have at least one
+          texture and PxrMultiTexture supports up to 10 textures.
+      </help>
+    </param>
+        <param name="textureOrder"
+         label="Texture Order"
+         type="int"
+         default="1"  widget="mapper"
+         connectable="False">
+        <hintdict name="options">
+          <string name="Ordered" value="0"/>
+          <string name="Random" value="1"/>
+        </hintdict>
+      <help>
+          The number of textures you want to use.
+      </help>
+    </param>
+
+    <page name="Pattern Settings" open="True">
+        <param name="gridOffset"
+               label="Grid Offset"
+               type="float"
+               default="0.5"
+               slider="True" min="0" max="1"
+               widget="default"
+               connectable="False">
+            <tags>
+                <tag value="float"/>
+             </tags>
+        </param>
+        <param name="groutWidth"
+               label="Grout Width"
+               type="float"
+               default="0.0"
+               slider="True" min="0" max="1"
+               widget="default"
+               connectable="False">
+            <tags>
+                <tag value="float"/>
+             </tags>
+        </param>
+        <param name="tileBevelWidth"
+               label="Tile Bevel Width"
+               type="float"
+               default="0.0"
+               slider="True" min="0" max="1"
+               widget="default"
+               connectable="False">
+            <tags>
+                <tag value="float"/>
+             </tags>
+        </param>
+        <param name="swapTileST"
+                 label="Swap Tile ST"
+                 type="int"
+                 default="0"
+                 widget="checkBox"
+                 connectable="False">
+              <tags>
+                  <tag value="int"/>
+               </tags>
+          </param>
+
+        <page name="Randomize" open="True">
+          <param name="randomSource"
+                 label="Random Source"
+                 type="int"
+                 default="0"
+                 widget="mapper"
+                 connectable="False">
+                 <hintdict name="options">
+                  <string name="Object Id"   value="0"/>
+                  <string name="Object Name" value="1"/>
+                </hintdict>
+              <tags>
+                  <tag value="int"/>
+               </tags>
+          </param>
+          <param name="randomExtraSeed"
+                 label="Extra Seed"
+                 type="float"
+                 default="0"
+                 widget="default"
+                 connectable="False">
+              <tags>
+                  <tag value="float"/>
+               </tags>
+          </param>
+          <param name="randomOrientation"
+                 label="Random Orientation"
+                 type="int"
+                 default="0"
+                 widget="checkBox"
+                 connectable="False">
+              <tags>
+                  <tag value="int"/>
+               </tags>
+          </param>
+          <param name="randomFlipS"
+                 label="Random S Flip"
+                 type="int"
+                 default="0"
+                 widget="checkBox"
+                 connectable="False">
+              <tags>
+                  <tag value="int"/>
+               </tags>
+          </param>
+          <param name="randomFlipT"
+                 label="Random T Flip"
+                 type="int"
+                 default="0"
+                 widget="checkBox"
+                 connectable="False">
+              <tags>
+                  <tag value="int"/>
+               </tags>
+          </param>
+          <param name="randomOffsetS"
+                 label="Random S Offset"
+                 type="int"
+                 default="0"
+                 widget="checkBox"
+                 connectable="False">
+              <tags>
+                  <tag value="int"/>
+               </tags>
+          </param>
+          <param name="randomOffsetT"
+                 label="Random T Offset"
+                 type="int"
+                 default="0"
+                 widget="checkBox"
+                 connectable="False">
+              <tags>
+                  <tag value="int"/>
+               </tags>
+          </param>
+        </page>
+    </page>
+
+    <page name="Manifold 2D" open="True">
+        <param  name="angle"
+                label="Angle"
+                type="float"
+                default="0" min="-180" max="180">
+                <tags>
+                    <tag value="float"/>
+                </tags>
+                <help>Rotation angle around origin</help>
+        </param>
+        <param  name="globalScale"
+                label="Global Scale"
+                type="float"
+                default="1" 
+                slider="1" slidermin="-10" slidermax="10"
+                widget="default">
+                <tags>
+                    <tag value="float"/>
+                </tags>
+                <help>Scale while preserving the aspect ratio defined by
+                scaleS and scaleT </help>
+        </param>
+        <param  name="scaleS"
+                label="Scale S"
+                type="float"
+                default="1" 
+                slider="1" slidermin="-10" slidermax="10"
+                widget="default">
+                <tags>
+                    <tag value="float"/>
+                </tags>
+                <help>Frequency of feature in S</help>
+        </param>
+        <param  name="scaleT"
+                label="Scale T"
+                type="float"
+                default="1" 
+                slider="1" slidermin="-10" slidermax="10"
+                widget="default">
+                <tags>
+                    <tag value="float"/>
+                </tags>
+                <help>Frequency of feature in T</help>
+        </param>
+        <param  name="offsetS"
+                label="Offset S"
+                type="float"
+                default="0" 
+                slider="1" slidermin="-10" slidermax="10"
+                widget="default">
+                <tags>
+                    <tag value="float"/>
+                </tags>
+                <help>Offset from origin in S</help>
+        </param>
+        <param  name="offsetT"
+                label="Offset T"
+                type="float"
+                default="0" 
+                slider="1" slidermin="-10" slidermax="10"
+                widget="default">
+                <tags>
+                    <tag value="float"/>
+                </tags>
+                <help>Offset from origin in T</help>
+        </param>
+        <param  name="invertT"
+                label="Invert T"
+                type="int"
+                default="1"
+                widget="checkBox"
+                connectable="False">
+                <help>Flip along T</help>
+        </param>
+        <param  name="primvarS"
+                label="PrimVar S/ST"
+                type="string"
+                default=""
+                widget="string"
+                connectable="False">
+                <help>Name of custom 1D S or 2D ST primvar</help>
+        </param>
+        <param  name="primvarT"
+                label="PrimVar T"
+                type="string"
+                default=""
+                widget="string"
+                connectable="False">
+                <help>Name of custom 1D T primvar</help>
+        </param>
+    </page>
+
+    <output name="result">
+        <tags>
+            <tag value ="struct"/>
+            <tag value ="manifold"/>
+        </tags>
+    </output>
+    <output name="resultS">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultT">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultMulti">
+        <tags>
+            <tag value ="struct"/>
+            <tag value ="pxrmanifoldmulti"/>
+        </tags>
+     </output>
+    <output name="resultMask">
+        <tags>
+            <tag value ="color"/>
+            <tag value ="vector"/>
+            <tag value ="normal"/>
+            <tag value ="point"/>
+        </tags>
+    </output>
+
+    <rfmdata nodeid="1200403" classification="rendernode/RenderMan/pattern/manifold"/>
+    <rfcdata nodeid="1036864" description="Xpxrtilemanifold"/>
+</args>

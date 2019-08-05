@@ -1,0 +1,43 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="pattern"/>
+    </shaderType>
+    <help>
+        Produces a single float output from a triple float input. The index specifies which of the 3 floats to pull from the triple.
+    </help>
+    <param name="input"
+        label="Input"
+        type="color"
+        default="0. 0. 0."
+        widget="color">
+        <tags>
+            <tag value="color"/>
+        </tags>
+        <help>The triple float input to convert.</help>
+    </param>
+    <param name="mode"
+        label="Mode"
+        type="int"
+        default="0"
+        widget="mapper"
+        connectable="False">
+        <hintdict name="options">
+            <string name="Channel 0"  value="0"/>
+            <string name="Channel 1"  value="1"/>
+            <string name="Channel 2"  value="2"/>
+            <string name="Luminance"  value="3"/>
+            <string name="Average"    value="4"/>
+        </hintdict>
+        <help>Which of the 3 floats will be output.</help>
+    </param>
+
+    <output name="resultF">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+
+    <rfmdata nodeid="1053435"
+             classification="rendernode/RenderMan/pattern/utility"/>
+    <rfcdata nodeid="1035893" description="Xpxrtofloat"/>
+</args>

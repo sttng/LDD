@@ -1,0 +1,257 @@
+<args format="1.0">
+    <help>
+        Read a texture file.
+    </help>
+    <shaderType>
+        <tag value="pattern"/>
+    </shaderType>
+    <param name="filename"
+           label="Filename"
+           type="string" default=""
+           widget="assetIdInput" options="texture"
+           connectable="False">
+        <help>
+            The filename for your texture.
+
+            If you have used Mari, Mudbox, or ZBrush to create a tile-based series of textures,
+            put _MAPID_ in the filename in the location where the renderer must dynamically
+            figure out what texture to load based on the UV coordinates.
+
+            For example, if your textures are from Mari and have names of
+            /path/to/my/diffuseTexture.1001.exr and /path/to/my/diffuseTexture.1002.exr,
+            the path you should specify should be /path/to/my/diffuseTexture._MAPID_.exr.
+            Based on your selection for the Atlas Style parameter, RenderMan will replace
+            _MAPID_ with the proper index.
+
+            If you specify a filename and it can't be found, or if you don't specify one at
+            all, the Missing Color and Missing Alpha parameters will be used instead of the
+            texture color.
+        </help>
+    </param>
+
+    <param name="firstChannel"
+           label="First Channel Offset"
+           type="int"
+           default="0"
+           widget="default"
+           connectable="False">
+        <help>
+            Offsets the first channel to be looked up.
+
+            Usually, you want to start with channel 0 (RGB of RGBA texture), but if you
+            are using a multi-channel openexr texture, you may need to point to the
+            correct channel.
+
+            Let's say we have a texture containing 9 channels organised in 3 RGB groups
+            (diff.r, diff,g, diff.b, spec.r, spec.g, spec.b, ior.r, ior.g, ior.b). If you
+            want to read the "spec" RGB channels, you will have to set firstChannel to 3.
+        </help>
+    </param>
+
+    <param name="atlasStyle"
+           label="Atlas Style"
+           type="int"    default="0"  widget="mapper"
+           connectable="False">
+        <hintdict name="options">
+            <string name="None"                    value="0"/>
+            <string name="UDIM (Mari)"             value="1"/>
+            <string name="UV Tile Base-1 (Mudbox)" value="2"/>
+            <string name="UV Tile Base-0 (Zbrush)" value="3"/>
+        </hintdict>
+        <help>
+            If you have created a series of tiled texturs using Mari, Mudbox, or ZBrush,
+            select the type of atlas that should be used to determine the proper filename
+            based on the UVs of your geometry.  See the help text for the Filename
+            parameter for more details on how you must specify your filename in these cases.
+        </help>
+    </param>
+    <param name="invertT"
+           label="Invert T"
+           type="int"    default="1"  widget="checkBox"
+           connectable="False">
+        <help>
+          Unlike RenderMan, Maya's UV have the T value inverted.  For the models created in Maya,
+          Invert T needs to be ON so that the texture orientation will be correct in the render.
+        </help>
+    </param>
+    <param name="filter"
+           label="Filter"
+           type="int"    default="1"  widget="mapper"
+           connectable="False">
+      <hintdict name="options">
+         <string name="Nearest"    value="0"/>
+         <string name="Box"        value="1"/>
+         <string name="Bilinear"   value="2"/>
+         <string name="Bspline"    value="3"/>
+         <string name="Gaussian"   value="6"/>
+         <string name="Lagrangian" value="7"/>
+      </hintdict>
+        <help>
+            Choose the filter to apply to the texture as it is applied to the object.
+        </help>
+    </param>
+    <param name="blur"
+           label="Blur"
+           type="float"  default="0."  widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>
+            Choose the width of the filter kernel as it is applied to the texture during lookup.
+            Selecting 0.0 disables the filtering.  Disabling the filter will speed up lookup and
+            then cause your render to rely on the mip levels and the path tracing algorithm for
+            averaging.
+        </help>
+    </param>
+    <param name="lerp"
+           label="Mip Interpolate"
+           type="int"    default="1"  widget="checkBox"
+           connectable="False">
+        <help>
+            Selects whether to interpolate between adjacent resolutions in the multi-resolution
+            texture, resulting in smoother transitions between levels.
+        </help>
+    </param>
+    <param name="missingColor"
+           label="Missing Color"
+           type="color"  default="1. 0. 1."  widget="color">
+        <tags>
+            <tag value="color"/>
+        </tags>
+        <help>
+            If you have wired resultRGB to another node in your network, and if there is an error
+            in loading the file, the resultRGB value will be populated with the value that you specify
+            here.
+
+            RenderMan can fail to load a file for several reasons, including if the filename is
+            incorrect, or if an atlas texture is specifid, but no _MAPID_ was found in the filename.
+        </help>
+    </param>
+    <param name="missingAlpha"
+           label="Missing Alpha"
+           type="float"  default="1."  widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>
+            If you have wired resultA to another node in your network, and if there is an error
+            in loading the file, the resultA value will be populated with the value that you
+            specify here.
+
+            See the help for missingColor for the different cases for which RenderMan may have
+            issues loading a file.
+        </help>
+    </param>
+    <param name="linearize"
+           label="Linearize"
+           type="int"    default="0"  widget="checkBox"
+           connectable="False">
+        <help>
+            Apply the reverse sRGB transform your texture. If you are painting textures
+            in sRGB space (default for most paint packages) but viewing your data in data
+            linear space, your textures will look washed out. This will apply the sRGB
+            transform to your texture, which should make it appear visually linear again.
+        </help>
+    </param>
+    <param name="manifold"
+           label="Manifold"
+           type="struct" default="" widget="default">
+        <tags>
+            <tag value="struct"/>
+            <tag value="manifold"/>
+        </tags>
+        <help>
+            If you wish to tile your texture, rotate it, apply offsets, or use a different
+            set of primvars to use as the texture coordinate lookup, create + wire in a
+            PxrManifold2D pattern node into this parameter.
+        </help>
+    </param>
+    <page name="Adjust Output" open="True">
+        <param name="colorScale" label="Color Scale" type="color" default="1 1 1">
+            <tags>
+                <tag value="color"/>
+            </tags>
+        </param>
+        <param name="colorOffset" label="Color Offset" type="color" default="0 0 0">
+            <tags>
+                <tag value="color"/>
+            </tags>
+        </param>
+        <param name="saturation" label="Saturation" type="float" default="1"
+               min="0" slidermax="2">
+            <tags>
+                <tag value="float"/>
+            </tags>
+        </param>
+        <param name="alphaScale" label="Alpha Scale" type="float" default="1">
+            <tags>
+                <tag value="float"/>
+            </tags>
+        </param>
+        <param name="alphaOffset" label="Alpha Offset" type="float" default="0">
+            <tags>
+                <tag value="float"/>
+            </tags>
+        </param>
+    </page>
+    <page name="Advanced Texture Settings" open="True">
+        <param name="mipBias" label="MIP bias" type="int" default="0"
+            slider="1" slidermin="-10" slidermax="10">
+            <help>Offset the selected MIP level picked by the renderer.
+            Positive values will bias toward lower resolution MIPs.
+            Negative values will bias toward higher resolution MIPs.</help>
+        </param>
+        <param name="maxResolution" label="Max Resolution" type="float" default="0" widget="mapper">
+            <hintdict name="options">
+                <string name="Unlimited" value="0"/>
+                <string name="32" value="32"/>
+                <string name="64" value="64"/>
+                <string name="128" value="128"/>
+                <string name="256" value="256"/>
+                <string name="512" value="512"/>
+                <string name="1024" value="1024"/>
+                <string name="2048" value="2048"/>
+                <string name="4096" value="4096"/>
+                <string name="8192" value="8192"/>
+            </hintdict>
+            <help>Clamp the resolution to a maximum value.</help>
+        </param>
+        <param name="optimizeIndirect" label="Optimize Indirect" type="int" default="1"
+            widget="checkBox" connectable="False">
+            <help>Make indirect hits use a box filter rather than the selected one.</help>
+        </param>
+    </page>
+
+    <output name="resultRGB">
+        <tags>
+            <tag value ="color"/>
+            <tag value ="vector"/>
+            <tag value ="normal"/>
+            <tag value ="point"/>
+        </tags>
+    </output>
+    <output name="resultR">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultG">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultB">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultA">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+
+    <rfmdata nodeid="1053403"
+             classification="rendernode/RenderMan/pattern/texture"/>
+    <rfcdata nodeid="1035890" description="Xpxrtexture"/>
+</args>

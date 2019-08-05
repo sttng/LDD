@@ -1,0 +1,31 @@
+<args format="1.0">
+  <shaderType>
+    <tag value="samplefilter"/>
+  </shaderType>
+  <help>Sample filter plugin to calculate shadow AOV output from occluded and unoccluded AOV inputs.</help>
+  <param name="occludedAov"
+    label="Occluded AOV"
+    type="string"
+    default=""
+    widget="string"
+    connectable="False">
+    <help>The name of the occluded AOV to look up.</help>
+  </param>
+  <param name="unoccludedAov"
+    label="Unoccluded AOV"
+    type="string"
+    default=""
+    widget="string"
+    connectable="False">
+    <help>The name of the unoccluded AOV to look up.</help>
+  </param>
+  <param name="shadowAov"
+    label="Shadow AOV"
+    type="string"
+    default=""
+    widget="string"
+    connectable="False">
+    <help>The name of the shadow AOV to write to.</help>
+  </param>
+  <rfmdata nodeid="1053306" classification="rendernode/RenderMan/samplefilter"/>
+</args>

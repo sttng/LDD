@@ -1,0 +1,270 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="pattern"/>
+    </shaderType>
+    <help>
+        This node creates controlled random variations.
+        The variation source can be attribute or primvar based.
+    </help>
+    <param name="inputRGB"
+           label="Input Color"
+           type="color"
+           default="0.5 0.5 0.5"
+           widget="color">
+        <tags>
+            <tag value="color"/>
+        </tags>
+        <help>
+            The color that you would like to vary.
+        </help>
+    </param>
+    <param name="varySource"
+           label="Vary Source"
+           type="int"
+           default="0"
+           widget="mapper"
+           connectable="False">
+        <hintdict name="options">
+            <string name="Identifier Id"   value="0"/>
+            <string name="Identifier Name" value="1"/>
+            <string name="Primvar"         value="2"/>
+            <string name="Attribute"       value="3"/>
+        </hintdict>
+            <help>
+                The source of the variation. For user attributes,
+                type user:myattribute.
+            </help>
+    </param>
+    <param name="varName"
+           label="Variable Name"
+           type="string"
+           default=""
+           widget="default"
+           connectable="False">
+        <help>
+            If varySource is 1 or 2, the name of the primvar or user
+            attribute.
+        </help>
+    </param>
+    <param name="varType"
+           label="Variable Type"
+           type="int"
+           default="0"
+           widget="mapper"
+           connectable="False">
+        <hintdict name="options">
+            <string name="Float"   value="0"/>
+            <string name="Integer" value="1"/>
+        </hintdict>
+        <help>
+            The type of the primvar or user attribute used to seed
+            variation. If using a primvar, it should be either uniform or
+            constant : per-vertex/face primvars are not supported.
+        </help>
+    </param>
+    <param name="hue"
+           label="Hue"
+           type="float"
+           default="0"
+           min="0" max="1"
+           widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>
+            Limit random hue shift. Ranges from 0 (no variation)
+            to 1 (full variation).
+        </help>
+    </param>
+    <param name="saturation"
+           label="Saturation"
+           type="float"
+           default="0"
+           min="0" max="1"
+           widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>
+            Limit random saturation scale. Ranges from 0 (no variation)
+            to 1 (full variation).
+        </help>
+    </param>
+    <param name="luminance"
+        label="Luminance"
+        type="float"
+        default="0"
+        min="0" max="1"
+        widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>
+            Limit random luminance scale. Ranges from 0 (no variation)
+            to 1 (full variation).
+        </help>
+    </param>
+    <param name="gamma"
+        label="Gamma"
+        type="float"
+        default="0"
+        min="0" max="1"
+        widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>
+            Limit random gamma variation. Ranges from 0 (no variation)
+            to 1 (full variation).
+        </help>
+    </param>
+
+    <page name="Advanced" open="True">
+        <param name="probability"
+            label="Probability"
+            type="float"
+            default="1"
+            min="0" max="1"
+            widget="default">
+            <tags>
+                <tag value="float"/>
+            </tags>
+            <help>
+                Range from 0 to 1 specifies the possibility of applying the
+                variation.
+            </help>
+        </param>
+        <param name="hueMode"
+            label="Hue Mode"
+            type="int"
+            default="0"
+            widget="mapper"
+            connectable="False">
+            <hintdict name="options">
+                <string name="Centered"    value="0"/>
+                <string name="Additive"    value="1"/>
+                <string name="Subtractive" value="2"/>
+            </hintdict>
+            <help>
+                Centered: The amount of variation will be centered around the current value.<br/>
+                Additive: The variation will be added to the current value.<br/>
+                Subtractive: The variation will be subtracted from the current value.
+            </help>
+        </param>
+        <param name="saturationMode"
+            label="Saturation Mode"
+            type="int"
+            default="0"
+            widget="mapper"
+            connectable="False">
+            <hintdict name="options">
+                <string name="Centered"    value="0"/>
+                <string name="Additive"    value="1"/>
+                <string name="Subtractive" value="2"/>
+            </hintdict>
+            <help>
+                Centered: The amount of variation will be centered around the current value.<br/>
+                Additive: The variation will be added to the current value.<br/>
+                Subtractive: The variation will be subtracted from the current value.</help>
+        </param>
+        <param name="luminanceMode"
+            label="Luminance Mode"
+            type="int"
+            default="0"
+            widget="mapper"
+            connectable="False">
+            <hintdict name="options">
+                <string name="Centered"    value="0"/>
+                <string name="Additive"    value="1"/>
+                <string name="Subtractive" value="2"/>
+            </hintdict>
+            <help>
+                Centered: The amount of variation will be centered around the current value.<br/>
+                Additive: The variation will be added to the current value.<br/>
+                Subtractive: The variation will be subtracted from the current value.
+            </help>
+        </param>
+        <param name="gammaMode"
+            label="Gamma Mode"
+            type="int"
+            default="0"
+            widget="mapper"
+            connectable="False">
+            <hintdict name="options">
+                <string name="Centered"    value="0"/>
+                <string name="Additive"    value="1"/>
+                <string name="Subtractive" value="2"/>
+            </hintdict>
+            <help>
+                Centered: The amount of variation will be centered around the current value.<br/>
+                Additive: The variation will be added to the current value.<br/>
+                Subtractive: The variation will be subtracted from the current value.
+            </help>
+        </param>
+        <param name="seed"
+            label="seed"
+            type="float"
+            default="0"
+            widget="default">
+            <tags>
+                <tag value="float"/>
+            </tags>
+            <help>
+                The seed will be added to the original attr/primvar value.
+            </help>
+        </param>
+        <param name="scaleNormalizedPrimvar"
+            label="Scale normalized primvar"
+            type="int"
+            default="0"
+            widget="checkBox"
+            connectable="False">
+            <help>
+                Re-scale a primvar with a 0->1 range to a suitable range.
+            </help>
+        </param>
+        <param name="verbosity"
+            label="Verbosity"
+            type="int"
+            default="0"
+            widget="mapper"
+            connectable="False">
+            <hintdict name="options">
+                <string name="Silent"   value="0"/>
+                <string name="Warnings" value="1"/>
+                <string name="Info"     value="2"/>
+            </hintdict>
+            <help>
+                Diagnostic output levels for scene debugging.
+            </help>
+        </param>
+    </page>
+
+    <output name="resultRGB">
+        <tags>
+            <tag value ="color"/>
+            <tag value ="vector"/>
+            <tag value ="normal"/>
+            <tag value ="point"/>
+        </tags>
+    </output>
+    <output name="resultR">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultG">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultB">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <rfmdata nodeid="1053438"
+             classification="rendernode/RenderMan/pattern/color"/>
+    <rfcdata nodeid="1035895" description="Xpxrvary"/>
+
+</args>

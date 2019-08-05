@@ -1,0 +1,84 @@
+<args format="1.0">
+  <shaderType>
+    <tag value="pattern"/>
+  </shaderType>
+  <help>
+    This utility pattern takes either an input parameter and passes it
+    through unchanged to its result.  As a side effect, it will send the
+    values out into an AOV when shading a camera-visible primary ray.  Note
+    that either inputF and resultF should be connected, or inputRGB and
+    resultRGB, but not both, and the type of the AOV should also match.
+  </help>
+
+  <param name="inputRGB"
+         label="Input RGB"
+         type="color"
+         default="0.0 0.0 0.0"
+         widget="color">
+    <tags>
+      <tag value ="color"/>
+      <tag value ="vector"/>
+      <tag value ="normal"/>
+      <tag value ="point"/>
+    </tags>
+    <help>
+      The triple float to pass through to resultRGB and write to a color AOV.
+    </help>
+  </param>
+  <param name="inputF"
+         label="Input Float"
+         type="float"
+         default="0.0"
+         widget="default">
+    <tags>
+      <tag value ="float"/>
+    </tags>
+    <help>
+      The float to pass through to resultF and write to a float AOV.
+    </help>
+  </param>
+  <param name="aov"
+         label="AOV Name"
+         type="string"
+         default=""
+         widget="string"
+         connectable="False">
+    <help>
+      The name of the AOV to write to.
+    </help>
+  </param>
+
+  <param name="verbosity"
+      label="Verbosity"
+      type="int"
+      default="0"
+      widget="mapper"
+      connectable="False">
+      <hintdict name="options">
+          <string name="Silent"   value="0"/>
+          <string name="Warnings" value="1"/>
+          <string name="Info"     value="2"/>
+      </hintdict>
+      <help>
+          Diagnostic output levels for scene debugging.
+      </help>
+  </param>
+
+  <output name="resultRGB">
+    <tags>
+      <tag value="color"/>
+      <tag value="vector"/>
+      <tag value="normal"/>
+      <tag value="point"/>
+    </tags>
+  </output>
+  <output name="resultF">
+    <tags>
+      <tag value="float"/>
+    </tags>
+  </output>
+    <rfmdata nodeid="1053359"
+             classification="rendernode/RenderMan/pattern/utility"/>
+    <rfcdata nodeid="1035889" description="Xpxrtee"/>
+
+</args>

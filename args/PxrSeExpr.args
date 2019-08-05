@@ -1,0 +1,87 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="pattern"/>
+    </shaderType>
+    <param name="colorInput1" type="color"  default="0.0 0.0 0.0" widget="color">
+        <tags>
+            <tag value="color"/>
+        </tags>
+    </param>
+    <param name="colorInput2" type="color"  default="0.0 0.0 0.0" widget="color">
+        <tags>
+            <tag value="color"/>
+        </tags>
+    </param>
+    <param name="colorInput3" type="color"  default="0.0 0.0 0.0" widget="color">
+        <tags>
+            <tag value="color"/>
+        </tags>
+    </param>
+    <param name="colorInput4" type="color"  default="0.0 0.0 0.0" widget="color">
+        <tags>
+            <tag value="color"/>
+        </tags>
+    </param>
+    <param name="floatInput1" type="float"  default="0.0" widget="float"
+           slidermin="0" slidermax="1">
+        <tags>
+            <tag value="float"/>
+        </tags>
+    </param>
+    <param name="floatInput2" type="float"  default="0.0" widget="float"
+           slidermin="0" slidermax="1">
+        <tags>
+            <tag value="float"/>
+        </tags>
+    </param>
+    <param name="floatInput3" type="float"  default="0.0" widget="float"
+           slidermin="0" slidermax="1">
+        <tags>
+            <tag value="float"/>
+        </tags>
+    </param>
+    <param name="floatInput4" type="float"  default="0.0" widget="float"
+           slidermin="0" slidermax="1">
+        <tags>
+            <tag value="float"/>
+        </tags>
+    </param>
+    <param name="expression"  type="string" default=""
+           widget="scriptEditor" syntax="seexpr"
+           connectable="False">
+    </param>
+
+
+    <output name="resultRGB">
+        <tags>
+            <tag value ="color"/>
+            <tag value ="vector"/>
+            <tag value ="normal"/>
+            <tag value ="point"/>
+        </tags>
+    </output>
+    <output name="resultR">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultG">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultB">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultF">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+
+    <rfmdata nodeid="1053402"
+             classification="rendernode/RenderMan/pattern/utility"/>
+    <rfcdata nodeid="1035887" description="Xpxrseexpr"/>
+</args>

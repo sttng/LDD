@@ -1,0 +1,113 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="pattern"/>
+    </shaderType>
+    <param name="variable"
+        label="Variable"
+        type="string"
+        default=""
+        widget="mapper"
+        connectable="False">
+        <hintdict name="options">
+            <string name="Use Named PrimVar"              value=""/>
+            <string name="Shading position (P)"           value="P"/>
+            <string name="Undisplaced position (Po)"      value="Po"/>
+            <string name="Shading normal (Nn)"            value="Nn"/>
+            <string name="Geometric normal (Ngn)"         value="Ngn"/>
+            <string name="Undisplaced normal (Non)"       value="Non"/>
+            <string name="Shading tangent (Tn)"           value="Tn"/>
+            <string name="Normalized view vector (Vn)"    value="Vn"/>
+            <string name="Length of view vector (VLen)"   value="VLen"/>
+            <string name="Surface mean curvature (curvature)"  value="curvature"/>
+            <string name="Surface principal curvature in u dir (curvature_u)"  value="curvature_u"/>
+            <string name="Surface principal curvature in v dir (curvature_v)"  value="curvature_v"/>
+            <string name="Ray Spread (incidentRaySpread)" value="incidentRaySpread"/>
+            <string name="Ray Radius (incidentRayRadius)" value="incidentRayRadius"/>
+            <string name="Micropolygon radius (PRadius)"  value="PRadius"/>
+            <string name="Micropolygon size (mpSize)"     value="mpSize"/>
+            <string name="Reflection Bias (biasR)"        value="biasR"/>
+            <string name="Transmission (biasT)"           value="biasT"/>
+            <string name="Surface U (u)"                  value="u"/>
+            <string name="Surface V (v)"                  value="v"/>
+            <string name="Surface W (w)"                  value="w"/>
+            <string name="Surface UV (uv)"                value="uv"/>
+            <string name="Surface UVW (uvw)"              value="uvw"/>
+            <string name="Ray footprint U (du)"           value="du"/>
+            <string name="Ray footprint V (dv)"           value="dv"/>
+            <string name="Ray footprint W (dw)"           value="dw"/>
+            <string name="Ray footprint UV (duv)"         value="duv"/>
+            <string name="Ray footprint UVW (duvw)"       value="uvw"/>
+            <string name="Surface derivative U (dPdu)"    value="dPdu"/>
+            <string name="Surface derivative V (dPdv)"    value="dPdv"/>
+            <string name="Surface derivative W (dPdw)"    value="dPdw"/>
+            <string name="Velocity (dPdtime)"             value="dPdtime"/>
+            <string name="Time (time)"                    value="time"/>
+            <string name="Outside IOR (outsideIOR)"       value="outsideIOR"/>
+            <string name="Opacity (Oi)"                   value="Oi"/>
+            <string name="Forward Motion (motionFore)"    value="motionFore"/>
+            <string name="Backward Motion (motionBack)"   value="motionBack"/>
+        </hintdict>
+    </param>
+    <param name="name"
+           label="PrimVar"
+           type="string"
+           default=""
+           widget="default"
+           connectable="False">
+    </param>
+    <param name="type"
+           label="Type"
+           type="string"
+           default="float"
+           options="float|float[2]|float[3]|color|point|vector|normal"
+           widget="popup"
+           connectable="False">
+    </param>
+    <param name="coordsys"
+           label="Coordinate System"
+           type="string"
+           default="object"
+           widget="default"
+           connectable="False">
+        <help>
+            By default, the shader uses current coordinate system. Possible
+            coordinate systems include 'world', 'object', or an user defined
+            coordinate system.
+        </help>
+    </param>
+    <output name="resultRGB">
+        <tags>
+            <tag value ="color"/>
+            <tag value ="vector"/>
+            <tag value ="normal"/>
+            <tag value ="point"/>
+        </tags>
+    </output>
+    <output name="resultR">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultG">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultB">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultRadius">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultString">
+        <tags>
+            <tag value ="string"/>
+        </tags>
+    </output>
+    <rfmdata nodeid="1053276"
+             classification="rendernode/RenderMan/pattern/utility"/>
+</args>

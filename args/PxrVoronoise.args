@@ -1,0 +1,136 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="pattern"/>
+    </shaderType>
+    <help>
+        A noise function based on Inigo Quilez function. The u and v
+        parameters control the amount of jitter and the amount of noise.
+        jitter=0,smoothness=0 produces a minimum distance non jittered grid of values.
+        jitter=0,smoothness=1 gives a noise function.
+        jitter=1,smoothness=0 produces a jittered, minimum distance Voronoi pattern.
+        jitter=1,smoothness=1 produces a a combination of jittered Voronoi and noise
+        also called "voronoise". Note, this version adds
+        fractal octaves and turbulence.
+    </help>
+
+    <param name="surfacePosition"
+           label="Surface Position"
+           type="int"
+           default="0"
+           widget="mapper"
+           connectable="False">
+        <hintdict name="options">
+            <string name="Current Position"       value="0"/>
+            <string name="Un-Displaced Position"  value="1"/>
+        </hintdict>
+        <help>If you want your displacement pattern to match surface shading,
+        use the undisplaced position. This is only active when there is no
+        connected manifold.</help>
+    </param>
+    <param name="frequency"
+           label="Frequency"
+           type="float" default="1.0f" min="1" slidermin="1" slidermax="10"  widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>Sets the lowest (starting) frequency of the noise layers.</help>
+    </param>
+    <param name="octaves"
+           label="Octaves"
+           type="int" default="3" min="1" max="6"  widget="default">
+        <tags>
+            <tag value="int"/>
+        </tags>
+        <help>The number of noise octaves used. More octaves add successively more noise.</help>
+    </param>
+    <param name="gain"
+           label="Gain"
+           type="float" default="0.5f" min="0.001" max="2"  widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>Also known as persistence. Used to shrink or expand the amplitude of each successive
+              octave of noise. 1/f noise is achieved when gain = 1/lacunarity</help>
+    </param>
+    <param name="lacunarity"
+           label="Lacunarity"
+           type="float" default="2.0f" min="0" max="8"  widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>The scaler used to determine the frequency of each
+              sucessive octave of noise. Smaller numbers will cause the
+              layers to be more closely spaced in frequency. Larger
+              values will space them further apart.</help>
+    </param>
+    <param name="jitter"
+           label="Jitter"
+           type="float" default=".0f" min="0" max="1"
+           widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>Controls the amount of jitter applied. 0 gives regular grid, 1 gives a Voronoi like grid</help>
+    </param>
+    <param name="smoothness"
+           label="Smoothness"
+           type="float" default="1.0f" min="0" max="1"  widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>0 produces a voronoi/cellnoise pattern, 1 results in smooth noise.</help>
+    </param>
+   <param name="turbulent"
+          label="Turbulent"
+          type="int"    default="0" widget="checkBox"
+          connectable="False">
+        <help>Should the noise be turbulent</help>
+    </param>
+    <param name="manifold"
+           label="Manifold"
+           type="struct">
+        <tags>
+            <tag value="struct"/>
+            <tag value="manifold"/>
+        </tags>
+        <help>The manifold over which to apply the noise. (The default is P).</help>
+    </param>
+
+    <page name="Adjust Output" open="True">
+        <param name="colorScale" label="Color Scale" type="color" default="1 1 1">
+            <tags>
+                <tag value="color"/>
+            </tags>
+        </param>
+        <param name="colorOffset" label="Color Offset" type="color" default="0 0 0">
+            <tags>
+                <tag value="color"/>
+            </tags>
+        </param>
+        <param name="floatScale" label="Float Scale" type="float" default="1">
+            <tags>
+                <tag value="float"/>
+            </tags>
+        </param>
+        <param name="floatOffset" label="Float Offset" type="float" default="0">
+            <tags>
+                <tag value="float"/>
+            </tags>
+        </param>
+    </page>
+
+    <output name="resultF">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultRGB">
+        <tags>
+            <tag value ="color"/>
+        </tags>
+    </output>
+
+    <rfmdata nodeid="1053425"
+        classification="rendernode/RenderMan/pattern/texture"/>
+    <rfcdata nodeid="1035896" description="Xpxrvoronoise"/>
+</args>

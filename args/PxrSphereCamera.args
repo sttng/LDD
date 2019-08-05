@@ -1,0 +1,29 @@
+<args format="1.0">
+  <shaderType>
+    <tag value="projection"/>
+  </shaderType>
+  <help>
+    A simple camera model that projects through a section of a sphere from
+    the point at the sphere's center.  With its default settings, this may
+    be useful for rendering a latlong environment map.
+  </help>
+  <param name="hsweep" label="Horizontal Sweep" type="float" widget="default"
+         default="360.0" min="1.0" max="360.0"
+         connectable="False">
+    <help>
+      The horizontal angle of the sphere subtended by the image.  The
+      default, 360, means that the image wraps all the way around and the
+      left and right edges of the image align.
+    </help>
+  </param>
+  <param name="vsweep" label="Vertical Sweep" type="float" widget="default"
+         default="180.0" min="1.0" max="180.0"
+         connectable="False">
+    <help>
+      The vertical angle of the sphere subtended by the image.  The
+      default, 180, means that the top and bottom of the image shows the
+      through the sphere's poles directly above and below the camera.
+    </help>
+  </param>
+  <rfmdata nodeid="1200431" classification="RenderMan/projection"/>
+</args>

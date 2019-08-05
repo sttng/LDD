@@ -1,0 +1,183 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="integrator"/>
+    </shaderType>
+    <param name="connectPaths" type="int" default="1"
+      widget="checkBox"
+      connectable="False">
+      <help>
+        When on, bidirectional path tracing is enabled;
+        otherwise, VCM will operate as a forward path tracer (if
+        merging is also disabled). Recommended for most scenes,
+        especially interior scenes with significant indirect
+        illumination.  On by default.
+      </help>
+    </param>
+    <param name="mergePaths" type="int" default="1"
+      widget="checkBox"
+      connectable="False">
+      <help>
+        Controls vertex merging, which improves the convergence of
+        specular-diffuse-specular (caustic) lighting. Enabling
+        vertex merging is generally recommended but may result in
+        additional time and memory overhead for photons, and in
+        scenes with little specular-diffuse-specular transport,
+        may be unnecessary.  On by default.
+      </help>
+    </param>
+
+    <param name="numLightSamples" type="int" default="1"
+      min='0'
+      connectable="False">
+      <help>
+        The number of light samples taken when computing direct
+        illumination. The default is ``1``.
+      </help>
+    </param>
+    <param name="numBxdfSamples" type="int" default="1"
+      min='0'
+      connectable="False">
+      <help>
+        The number of bxdf samples taken when computing direct
+        illumination. The default is ``1``.
+      </help>
+    </param>
+    <param name="maxPathLength" type="int" default="10"
+      min="1" max="46" slidermax="20"
+      connectable="False">
+      <help>
+        The maximum length of a combined light and eye path
+        (including the connection). A value of ``4`` will permit
+        up to 3 bounces of global illumination.  A value of ``1``
+        for this parameter will allow direct illumination
+        only. The default value of this parameter is 10.
+      </help>
+    </param>
+    <param name="specularCurvatureFilter" type="float" default="1.0"
+         min="0.0" max="1.0" connectable="False">
+        <help>
+        This allows the user to de-activate specular roughness filtering. Specular roughness filtering usually yields renders with less noise, but this may result in inaccurate caustics. Set this value to 0.0f when you want to render ground-truth caustics.  The default value is 1.0.
+        </help>
+    </param>
+
+    <page name="Russian Roulette" open="False">
+      <param name="rouletteDepth" type="int" default="4"
+        min='1'
+        connectable="False">
+        <help>
+          The path length at which the integrator will begin
+          performing Russian roulette (a method of probabilistically
+          terminating a ray path). Decreasing this setting will lead
+          to shorter paths and faster renders, but will result in
+          more noise.
+        </help>
+      </param>
+      <param name="rouletteThreshold" type="float" default="0.2"
+        min='0' max='1'
+        connectable="False">
+        <help>
+          The path throughput threshold below which Russian roulette
+          is applied. It is usually preferable to apply Russian
+          roulette only to paths of low importance in order to avoid
+          noise. Increasing this setting will apply Russian roulette
+          to more paths and thus increase the speed of the render,
+          but will also increase noise.
+        </help>
+      </param>
+    </page>
+
+    <page name="Indirect Clamping" open="False">
+      <param name="clampDepth" type="int" default="2"
+        min='1'
+        connectable="False">
+        <help>
+          If a value for the clampLuminance parameter is specified, then
+          clampDepth controls the ray depth at which to begin clamping
+          based on the per-ray luminance. For example, setting this
+          parameter to 2 and also specifying a value of 4 for
+          clampLuminance will ensure that the luminance of each ray's
+          contribution is no more than 4 for all indirect illumination,
+          without affecting or clamping the direct illumination. The
+          default is 2.
+        </help>
+      </param>
+      <param name="clampLuminance" type="float" default="10.0"
+        min='0'
+        connectable="False">
+        <help>
+          By default the PxrPathTracer integrator clamps the luminance
+          of each per-ray contribution to be at most 10.0. However, it
+          is possible to change this behavior by specifying a different
+          value for the clampLuminance parameter. Specifying a
+          relatively low value for the clampLuminance parameter (for
+          example, between 2 and 20) can speed up convergence. In some
+          cases, indirect illumination lights paths may be noticeably
+          dimmer due to clamping; this may be an acceptable trade-off in
+          certain cases. Setting this parameter to a very large number
+          (such as 1e30) will effectively disable all clamping. The
+          default is 10.0.
+          Note that changing the mergeRadius will/can change the smoothness
+          of the illumination and hence the clamping.
+        </help>
+      </param>
+    </page>
+
+    <page name="Vertex Merging" open="False">
+      <param name="mergeRadius" type="float" default="5.0"
+        min='1'
+        connectable="False">
+        <help>
+          Initial radius used in vertex merging.  It is measured in screen
+          space pixels (not world space).  Increasing this radius will lead to
+          increased blurring of the photons, which is helpful in reducing
+          noisy caustics. However, this will also slow down merging,
+          and will also require more iterations in order to arrive at
+          a bias-free result.
+          (This parameter was previously called "mergeRadiusScale".)
+        </help>
+      </param>
+      <param name="timeRadius" type="float" default="1.0"
+        min='0' max='1'
+        connectable="False">
+        <help>
+          Specifies the maximum interval in time (as a fraction of
+          the shutter) over which photons are merged. The default
+          value of 1.0 may cause smearing for caustics involving
+          moving objects. Decreasing the timeRadius will lead to
+          more accurate results/decreased smearing for motion
+          blurred caustics, at the cost of static objects requiring
+          more photons in order to resolve caustics.
+        </help>
+      </param>
+    </page>
+
+    <page name="Photon Guiding" open="False">
+      <param name="photonGuiding" type="float" default="0.0"
+        min='0.0' max='1.0'
+        connectable="False">
+        <help>
+          Sets the probability of using photon guiding during photon emission.
+          A value of 0.0 turns off photon guiding.  A value between 0.0 and
+          1.0 will cause a combination of photon guiding and standard photon
+          emission. Finally, a value of 1 means that only photon
+          guiding will be used -- in that case photons will be emitted only
+          towards the specified bounding box, which may result in rendering of
+          biased images. The default value is 0.0.
+        </help>
+      </param>
+      <param name="photonGuidingBBoxMin" type="point" default="1e30 1e30 1e30"
+        connectable="False">
+      </param>
+      <param name="photonGuidingBBoxMax" type="point" default="-1e30 -1e30 -1e30"
+        connectable="False">
+        <help>
+          These two parameters can be used to explicitly specify the bounding
+          box (in world space coordinates) towards which more photons should be
+          emitted. If this bounding box is
+          not specified, it will be computed automatically as a (slightly loose)
+          bounding box of the directly visible parts of the scene.
+        </help>
+      </param>
+    </page>
+    <rfmdata nodeid="1053322" classification="RenderMan/integrator"/>
+</args>

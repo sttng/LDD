@@ -1,0 +1,35 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="integrator"/>
+    </shaderType>
+    <help>
+       This integrator serves mainly as a debugging tool to authors of
+       Bxdf plugins. The 3 channels of the output are the luminance
+       results for total hemispherical reflectance, computed in three
+       different ways: the red channel gives the results of using the
+       Bxdf's GenerateSample method to sample the bxdf; the green
+       channel gives the results of running the Bxdf's EvaluateSample
+       (or EvaluateSamplesAtIndex) method using the same generated
+       samples, and only accumulating them if they agree with the
+       values returned by GenerateSample; and the blue channel gives
+       the results of integrating a set of hemispherical samples
+       generated with a cosine weighting using the EvaluateSample
+       method on the bxdf. Ideally, this will converge to the other
+       two results.
+
+       If the Bxdf is given "white" values and is correct, the
+       resulting image should converge to all white pixels. Energy
+       lost (either due to explicit absorption or due to the bxdf
+       model losing energy) or gained shows up as non-white
+       pixels. Bxdf authors should take care to observe what happens
+       at grazing angles, as that can be a good place to lose energy.
+    </help>
+    <param name="numSamples" type="int" default="4" 
+         min='0'
+         connectable="False">
+        <help>
+    Controls the number of Bxdf samples to generate and evaluate per ray. The default is 4.
+        </help>
+    </param>
+    <rfmdata nodeid="1053321" classification="RenderMan/integrator"/>
+</args>

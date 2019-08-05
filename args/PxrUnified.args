@@ -1,0 +1,275 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="integrator"/>
+    </shaderType>
+
+    <param name="traceLightPaths"
+           label="Trace Light Paths"
+           type="int" default="0"
+           min="0" max="3" widget="mapper">
+        <hintdict name="options">
+            <string name="Off"           value="0"/>
+            <string name="On"            value="1"/>
+            <string name="Photons Only"  value="2"/>
+            <string name="UPS/VCM "      value="3"/>
+        </hintdict>
+        <help>
+        PxrUnified has 4 integration modes:
+        - Off: unidirectional path tracing
+        - On: bidirectional path tracing
+        - Photons Only: progressive photon mapping
+        - UPS/VCM: bidirectional path tracing with vertex connection and merging.
+        </help>
+    </param>
+    <param name="maxPathLength"
+           label="Max Path Length"
+           type="int" default="8" min="0">
+        <help>
+            The maximum ray depth in your scene.
+            WARNING: maxdiffusedepth and maxspeculardepth are ignored.
+        </help>
+    </param>
+    <param name="maxRayDistance"
+           label="Max Ray Distance"
+           type="float" default="10000" min="0"
+           help="Objects beyond that distance will NOT be hit."/>
+    <param name="catchAllLights"
+           label="Catch Light on last Hit"
+           type="float" default="0" min="0" max="1"
+           slider="1" slidermin="0.0" slidermax="1.0">
+        <help>
+           On a path's last hit, the lights can be evaluated without shadowing to avoid a black contribution.
+           This parameter scales the last hit's intensity from 0 (no light evaluation) and 1 (light evaluation).
+        </help>
+    </param>
+    <param name="emissionMultiplier"
+           label="Emission Multiplier"
+           type="float" default="1" min="0"
+           help="Internally multiplies all emission values (light/glow) during lighting integration."/>
+    <param name="accumOpacity" type="int"
+           label="Accumulate Opacity"
+           default="1" widget="checkBox"
+           help="When enabled, refractive objects produce partial alpha.\nWhen disabled, refractive objects produce full alpha."/>
+    <param name="specularCurvatureFilter" type="float"
+           label="Specular Curvature Filter"
+           default="1.0" min="0.0" max="8.0"
+           help="Filter roughness based on geometric curvature and ray footprint."/>
+
+<!-- SAMPLING -->
+    <page name="Sampling">
+        <param name="numLightSamples"
+               label="Light Samples"
+               type="int" default="1" min="0"
+               help="Number of light samples for each iteration."/>
+        <param name="numBxdfSamples"
+               label="BxDF Samples"
+               type="int" default="1" min="0"
+               help="Number of BxDF samples for each iteration."/>
+        <param name="numIndirectSamples"
+               label="Indirect Samples"
+               type="int" default="1" min="0"
+               help="Number of indirect samples for each iteration."/>
+        <param name="sssOversampling"
+               label="SubSurface Over-Sampling"
+               type="int" default="8" min="1"
+               help="Number of importance-resampled samples taken for subsurface scattering events."/>
+        <param name='allowMultilobeIndirect' type="int"
+               label="Multi-Lobe Indirect"
+               default='0' min='0' max='2' widget="mapper"
+               help='if enabled, Hair may converge faster but this might break any LPE related operations.'>
+            <hintdict name="options">
+                <string name="Off"          value="0"/>
+                <string name="Hair Only"    value="2"/>
+            </hintdict>
+        </param>
+        <!-- RUSSIAN ROULETTE -->
+        <page name="Russian Roulette" open="False">
+            <param name="rouletteDepth"
+                   label="Start Depth"
+                   type="int" default="1" min="0">
+                <help>
+                    The path length at which the integrator will begin performing Russian roulette (a method of probabilistically terminating a ray path).
+                    Decreasing this setting will lead to shorter paths and faster renders, but will result in more noise.
+                </help>
+            </param>
+            <param name="rouletteLightDepth"
+                   label="Light Start Depth"
+                   type="int" default="1" min="0"
+                   conditionalVisOp="greaterThan"
+                   conditionalVisPath="../traceLightPaths" conditionalVisValue="0">
+                <help>
+                    Path length at which the integrator will start to drop low contribution lights.
+                    Only available during bidirectional integration.
+                </help>
+                </param>
+            <param name="rouletteThreshold"
+                   label="Threshold"
+                   type="float" default="0.2" min="0">
+                <help>
+                    The path throughput threshold below which Russian roulette is applied.
+                    It is usually preferable to apply Russian roulette only to paths of low importance in order to avoid noise.
+                    Increasing this setting will apply Russian roulette to more paths and thus increase the speed of the render, but may also increase noise.
+                </help>
+            </param>
+        </page>
+        <!-- CLAMPING -->
+        <page name="Intensity Clamping" open="False">
+            <param name="directClamp"
+                   label="Max Direct Lighting Value"
+                   type="float" default="1000000" min="0"
+                   help="Maximum value of direct lighting samples."/>
+            <param name="indirectClamp"
+                   label="Max Indirect Value"
+                   type="float"
+                   default="8"
+                   min="0"
+                   help="Maximum value of indirect samples."/>
+            <param name='causticClamp'
+                   label="Max Caustics Value"
+                   type="float" default='1000000' min='0'
+                   help="Maximum value of caustics samples."/>
+        </page>
+    </page>
+
+
+
+
+<!-- MANIFOLD WALK -->
+    <page name="ManifoldWalk" help="">
+        <param name="manifoldWalk"
+               label="Enable Manifold Walk"
+               type="int" default="0" widget="checkBox"/>
+        <param name="maxIterations"
+               label="Max Iterations"
+               type="int" default="10" min="1" max="256" help="">
+            <help>
+                Maximum number of iterations before the walk gives up on a caustic path.
+            </help>
+        </param>
+        <param name="maxInterfaces"
+               label="Max Number of Interfaces"
+               type="int" default="2" min="1" max="10">
+            <help>
+                Maximum number of transmitive interfaces in the caustic sub-path found by the manifold walk.
+            </help>
+        </param>
+        <param name="walkThreshold"
+               label="Threshold"
+               type="float" default="0.005" min="1e-10">
+            <help>
+                Convergence threshold for the manifold walk algorithm.
+            </help>
+        </param>
+
+        <param name="enableVolumeCaustics"
+               label="Enable Volume Caustics"
+               type="int" default="0" widget="checkBox">
+            <help>
+                Enable volume integrator when evaluating throughput along the caustic path.
+                Volume GPrims need to be member of the group "mw_volume_include_subset".
+                If this is turned on, shadow computation will be more expensive.
+                Should only be used when necessary.
+            </help>
+        </param>
+
+    </page>
+
+<!-- PHOTONS -->
+    <page name="Photons" conditionalVisOp="greaterThan"
+        conditionalVisPath="../traceLightPaths" conditionalVisValue="1">
+        <param name="photonEstimationRadius"
+               label="Estimation Radius"
+               type="float" default="0.0" min="0.0"
+               help="in scene units"/>
+        <param name="photonEstimationNumber"
+               label="Estimation Number"
+               type="int" default="64" min="8" max="256"/>
+        <param name="photonVisibilityRod"
+               label="Visibility Rod"
+               type="int" default="0" widget="checkBox"/>
+        <param name="photonVisibilityRodDirectProb"
+               label="Visibility Rod Probability"
+               type="float" default="0.0" max="1.0"/>
+        <param name="photonVisibilityRodMin"
+               label="Visibility Rod Min"
+               type="point" default="0.0 0.0 0.0"/>
+        <param name="photonVisibilityRodMax"
+               label="Visibility Rod Max"
+               type="point" default="0.0 0.0 0.0"/>
+        <param name="photonAdaptive"
+               label="Adaptive Photons"
+               type="int" default="0" widget="checkBox"
+               help="Enables robust progressive photon mapping"/>
+    </page>
+
+<!-- INDIRECT GUIDING -->
+    <page name="IndirectGuiding" conditionalVisOp="equalTo"
+        conditionalVisPath="../../traceLightPaths" conditionalVisValue="0">
+        <param name="indirectTrainingSamples"
+               label="Training Samples"
+               type="int" default="0" min="0">
+            <help>
+                The number of samples used to learn the scene's illumination.
+                This number should never be larger than minsamples and represent 10-20% of maxsamples.
+                64 training samples is a bare minimum and you will get better results with larger numbers.
+            </help>
+        </param>
+
+        <param name="indirectSpatialBlurRadius"
+               label="Spatial Blur Radius"
+               type="float" default="0.25" min="0">
+            <help>
+                Blurs the node contributions of the spatial tree to hide node boundaries.
+                This only affects the sampling distribution.
+            </help>
+        </param>
+
+        <param name="indirectDirectionalBlurRadius"
+               label="Directional Blur Radius"
+               type="float" default="0.0" min="0">
+            <help>
+                Blurs the node contributions of the directional tree.
+                This only affects the sampling distribution.
+            </help>
+        </param>
+
+        <param name="indirectOversampling"
+               label="Oversampling"
+               type="int" default="2" connectable="False" widget="mapper">
+            <hintdict name="options">
+                <string name="1"    value="1"/>
+                <string name="2"    value="2"/>
+                <string name="4"    value="4"/>
+                <string name="8"    value="8"/>
+                <string name="16"   value="16"/>
+            </hintdict>
+            <help>
+                Oversample the tree lookups for better estimates.
+            </help>
+        </param>
+    </page>
+
+
+<!-- DIAGNOSTIC -->
+    <page name="Diagnostic" open="False">
+        <param name="suppressNaNs"
+               label="Suppress NaNs"
+               type="int" default="0" min="0" max="1" widget="mapper"
+               help="Suppresses individual invalid samples (NaN or inf), preventing them from reaching the final image. Be aware that there is a cost to checking for this, and it should not be enabled broadly or blindly.">
+            <hintdict name="options">
+                <string name="Off"      value="0"/>
+                <string name="On"       value="1"/>
+            </hintdict>
+        </param>
+        <param name="enableShadingTimers"
+               label="Enable Shading Timers"
+               type="int" default="0" widget="checkBox"
+               help="enable the timers that will track shading cost grouped by the profileGroup user attribute"/>
+        <param name="enableSampleTimers"
+               label="Enable Sample Timers"
+               type="int" default="0" widget="checkBox"
+               help="enable the timers that track pixel sample iteration cost"/>
+    </page>
+
+    <rfmdata nodeid="1200425" classification="RenderMan/integrator"/>
+</args>

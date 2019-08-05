@@ -1,0 +1,62 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="pattern"/>
+    </shaderType>
+    <help>
+        This node selects one of the connected inputs based on the index value.  Index values are
+        expected to be integers, but the node accepts float values for ease of use.
+
+        The first input is selected for index values between -0.5 and 0.5, the second input for
+        index values between 0.5 and 1.5, and so on...
+
+        If the index value is larger than the actual number of connected inputs, the node will cycle
+        through the connected inputs.
+    </help>
+    <param name="index"
+        label="Index"
+        type="float"  default="0."
+        min="0" widget="default"  tag="float">
+        <tags>
+            <tag value="float"/>
+        </tags>
+    </param>
+    <param name="inputsRGB"
+           label="Inputs RGB"
+           type="color"
+           default="0.0 0.0 0.0"
+           isDynamicArray="1"
+           arraySize="-1">
+        <tags>
+            <tag value="color"/>
+        </tags>
+    </param>
+
+    <output name="resultRGB">
+        <tags>
+            <tag value ="color"/>
+            <tag value ="vector"/>
+            <tag value ="normal"/>
+            <tag value ="point"/>
+        </tags>
+    </output>
+    <output name="resultR">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultG">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultB">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+
+    <rfmdata nodeid="1200434"
+        classification="rendernode/RenderMan/pattern/utility"/>
+    <rfcdata nodeid="0000000" description="Xpxrswitch"/>
+
+</args>

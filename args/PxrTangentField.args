@@ -1,0 +1,98 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="pattern"/>
+    </shaderType>
+    <help>
+        Defines a tangent field typically used to control anisotropic direction.
+        InputRotation takes a single grayscale channel where black = 0 degrees
+        and white = 360 degrees.
+        InputVector takes a 2 channels map where the red channels is x and green
+        is y. The blue channel is ignored.
+        The vector method often gives better results by minimizing texture
+        filtering artifacts. If such artifacts are too visible, use the "nearest"
+        texture filter. The "nearest" filter disables entirely mip-mapping, so you
+        should only us it with a low resolutiion map to avoid slowing down the
+        renderer and consuming too much texture memory.
+    </help>
+    <page name="Parameters" open="True">
+        <param name="inputRotation"
+            label="Input Rotation"
+            type="float"
+            default="0.0"
+            widget="default">
+            <tags>
+                <tag value="float"/>
+            </tags>
+            <help>A single float value to rotate the shading tangent. This input
+            will take precedence over inputVector</help>
+        </param>
+        <param name="inputVector"
+            label="Input Vector"
+            type="color"
+            default="0.0 0.0 0.0"
+            widget="default">
+            <tags>
+                <tag value="color"/>
+            </tags>
+            <help>The red and green channels will be read as x and y coordinates
+            of a 2d vector. If inputRotation is connected, this input will be
+            ignored.</help>
+        </param>
+        <param name="rotationOffset"
+            label="Rotation Offset"
+            type="float"
+            default="0.0"
+            min="-90"
+            max="90"
+            widget="default"
+            connectable="False">
+            <help>A global rotation offset.</help>
+        </param>
+        <param name="rotationRange"
+            label="Rotation Range"
+            type="float"
+            default="1.0"
+            min="0.0"
+            max="2.0"
+            widget="default"
+            connectable="False">
+            <help>Scales the rotation range. 1.0 equates 0 to 360 degrees.</help>
+        </param>
+        <param name="centeredVectors"
+            label="Centered Vectors"
+            type="int"
+            default="1"
+            widget="checkBox"
+            connectable="False">
+            <help>Centers the gradient values of the vector map.</help>
+        </param>
+    </page>
+
+    <output name="resultXYZ">
+        <tags>
+            <tag value ="vector"/>
+            <tag value ="normal"/>
+            <tag value ="point"/>
+        </tags>
+    </output>
+    <output name="resultX">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultY">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultZ">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+
+    <rfmdata nodeid="1053348"
+             classification="rendernode/RenderMan/pattern/geometry"/>
+    <rfcdata nodeid="1035888" description="Xpxrtangentfield"/>
+
+</args>

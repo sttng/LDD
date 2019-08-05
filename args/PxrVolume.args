@@ -1,0 +1,330 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="bxdf"/>
+    </shaderType>
+    <param name="diffuseColor" label="Diffuse Color" type="color" default="1. 1. 1."
+           widget="color">
+        <tags>
+            <tag value="color"/>
+        </tags>
+        <help>
+            The color of the volume. The default value is white.
+        </help>
+    </param>
+    <param name="emitColor" label="Emit Color" type="color" default="0. 0. 0."
+           widget="color">
+        <tags>
+            <tag value="color"/>
+        </tags>
+        <help>
+            The emissive color of the volume. The default value is
+            black (the volume will not emit light).
+        </help>
+    </param>
+    <param name="__islight" label="Light source" type="int" default="0"
+           widget="checkBox"
+           connectable="False">
+        <help>
+	    Turning on this switch signals to the renderer that the
+	    volume should be treated as an emissive light source that
+	    will participate in next event estimation. This is only
+	    useful if the emitColor parameter is not black. In most
+	    cases, this will lead to reduced noise and faster
+	    convergence for parts of the scene illuminated by the
+	    volume (potentially including the volume itself). Note
+	    that simply turning this switch on without changing
+	    anything else about the scene will typically lead to a
+	    brighter result, because it essentially adds an extra
+	    bounce of light: for a self-illuminating volume, points in
+	    the volume will be self-illuminated by other points in the
+	    volume. Therefore, a single scattering volume with
+	    __islight turned on rendered with a maximum path length of
+	    one is actually equivalent to a multi-scattering volume
+	    with __islight turned off, rendered with a maximum path
+	    length of two.
+        </help>
+    </param>
+    <param name="multiScatter" label="Multiple Scattering" type="int" default="0"
+           widget="checkBox"
+           connectable="False">
+        <help>
+            If set to 0, and the integrator respects this hint,
+            PxrVolume will only perform single scattering: points
+            inside the volume will only be lit directly by light
+            sources. If set to 1, points inside the volume will be
+            lit by indirect illumination as well (light will
+            scatter more than once inside the volume). This effect
+            can be expensive and so defaults to 0 (off). Note that
+            some integrators (e.g. PxrVCM) ignore this hint and
+            always perform multiple scattering.
+        </help>
+    </param>
+    <param name="velocity" label="Velocity" type="vector" default="0 0 0">
+        <tags>
+            <tag value="vector"/>
+        </tags>
+        <help>
+            The velocity of the volume. Any non-zero value here (or a
+            connection) will result in a heterogeneous volume.
+        </help>
+    </param>
+    <param name="velocityMultiplier" label="VelocityMultiplier" type="float" default="1." connectable="False">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>
+            Multiplier on the velocity of the volume. This could be useful to convert between
+            velocity defined per frame versus velocity defined per second.
+        </help>
+    </param>
+    <page name="Density" open="True">
+        <param name="extinctionDistance" label="Extinction Distance" type="float" default="0.0">
+            <hintdict name="conditionalVisOps">
+                <string value="../densityFloatPrimVar" name="conditionalVis1Path"/>
+                <string value="equalTo" name="conditionalVis1Op"/>
+                <string value="" name="conditionalVis1Value"/>
+                <string value="../densityColorPrimVar" name="conditionalVis2Path"/>
+                <string value="equalTo" name="conditionalVis2Op"/>
+                <string value="" name="conditionalVis2Value"/>
+                <string value="conditionalVis1" name="conditionalVisLeft"/>
+                <string value="and" name="conditionalVisOp"/>
+                <string value="conditionalVis2" name="conditionalVisRight"/>
+            </hintdict>
+            <tags>
+                <tag value="float"/>
+            </tags>
+            <help>
+                The distance (in scene units) at which the volume reaches full
+                opacity. This control only works for homogeneous volumes and
+                overrides densityFloat or densityColor if greater than 0.
+            </help>
+        </param>
+        <param name="densityFloatPrimVar" label="Density Float PrimVar" type="string" default=""
+               widget="string">
+            <tags>
+                <tag value="string"/>
+            </tags>
+            <help>
+                A primvar from the geometry which controls the density of
+                the volume, unset by default. Setting this overrides the
+                densityFloat input, and is more efficient than simply
+                using a PxrPrimVar pattern connected to the densityFloat
+                input.
+            </help>
+        </param>
+        <param name="densityFloat" label="Density Float" type="float" default="1.">
+            <hintdict name="conditionalVisOps">
+                <string value="equalTo" name="conditionalVisOp"/>
+                <string value="../densityFloatPrimVar" name="conditionalVisPath"/>
+                <string value="" name="conditionalVisValue"/>
+            </hintdict>
+            <tags>
+                <tag value="float"/>
+            </tags>
+            <help>
+                The density of the volume directly controls how light
+                is attenuated by the volume - i.e. it directly affects
+                how the volume casts shadows. Unless you require
+                colored shadows, you should prefer to set this
+                parameter rather than the density color parameter.
+            </help>
+        </param>
+        <param name="densityColorPrimVar" label="Density Color PrimVar" type="string" default=""
+               widget="string">
+            <tags>
+                <tag value="string"/>
+            </tags>
+            <help>
+                A primvar from the geometry which controls the density of
+                the volume, unset by default. Setting this overrides the
+                densityColor input, and is more efficient than simply
+                using a PxrPrimVar pattern connected to the densityColor
+                input.
+            </help>
+        </param>
+        <param name="densityColor" label="Density Color" type="color" default="1. 1. 1."
+               widget="color">
+            <hintdict name="conditionalVisOps">
+                <string value="equalTo" name="conditionalVisOp"/>
+                <string value="../densityColorPrimVar" name="conditionalVisPath"/>
+                <string value="" name="conditionalVisValue"/>
+            </hintdict>
+            <tags>
+                <tag value="color"/>
+            </tags>
+            <help>
+                The density of the volume, which directly controls how
+                light is attenuated by the volume - i.e. it directly
+                affects how the volume casts shadows. If you do not
+                need colored shadows from the volume, then you should
+                set the density float parameter and leave the density
+                color parameter untouched; the volume will render more
+                efficiently.
+            </help>
+        </param>
+        <param name="maxDensity" label="Max Density" type="float" default="-1."
+               connectable="False" min="-1.0">
+            <tags>
+                <tag value="float"/>
+            </tags>
+            <help>
+                The max density parameter is only used by
+                heterogeneous volumes and controls the step size used
+                to sample the volume. For correctly unbiased
+                rendering, the max density must be higher than any
+                density encountered inside the volume. A high value of
+                max density will result in slower renders since more
+                steps will be taken to sample the volume. Setting the
+                max density too small will speed up your render, but
+                will also lead to incorrect rendering as dense regions
+                of the volume will be undersampled. The default value
+                of max density is -1.0, which means RenderMan will ignore
+                this value and generate unbiased renders.
+            </help>
+        </param>
+    </page>
+    <page name="Anisotropy" open="True">
+        <param name="anisotropy" label="Primary Anisotropy" type="float" default="0."
+              min='-1.0' max='1.0'>
+            <tags>
+                <tag value="float"/>
+            </tags>
+            <help>
+                Controls the direction in which volume scatters
+                light in the primary lobe. Anisotropy has a range of
+                ``-1`` to ``1`` and the default is ``0`` (isotropic).
+                A value of ``0`` for ``anisotropy`` means the volume
+                is isotropic: light is scattered in all directions
+                with equal probability. A value greater than ``0``
+                means the volume is forward scattering: incoming light
+                has a higher chance of being scattered in
+                the same direction (i.e. away from
+                the incoming light). A value of anisotropy less than
+                ``0`` means the volume is backwards scattering:
+                incoming light has a higher chance of being scattered
+                in the reverse direction (i.e. back towards the
+                direction of incoming light).
+            </help>
+        </param>
+        <param name="anisotropy2" label="Secondary Anisotropy" type="float" default="0."
+              min='-1.0' max='1.0'>
+            <tags>
+              <tag value="float"/>
+            </tags>
+            <help>
+                Controls the direction in which volume scatters
+                light in the secondary lobe. Anisotropy has a range of
+                ``-1`` to ``1`` and the default is ``0`` (isotropic).
+                A value of ``0`` for ``anisotropy`` means the volume
+                is isotropic: light is scattered in all directions
+                with equal probability. A value greater than ``0``
+                means the volume is forward scattering: incoming light
+                has a higher chance of being scattered in
+                the same direction (i.e. away from
+                the incoming light). A value of anisotropy less than
+                ``0`` means the volume is backwards scattering:
+                incoming light has a higher chance of being scattered
+                in the reverse direction (i.e. back towards the
+                direction of incoming light).
+            </help>
+        </param>
+        <param name="blendFactor" label="Lobe Blend Factor" type="float" default="0."
+              min='0.0' max='1.0'>
+            <tags>
+              <tag value="float"/>
+            </tags>
+            <help>
+                Controls blending weight between the two lobes.
+                Value of ``0`` means only the first lobe is active and
+                value of ``1`` means only the second lobe is active.
+                Values in between means both lobes are active.
+            </help>
+        </param>
+    </page>
+    <page name="Sampling" open="False">
+        <param name="equiangularWeight" label="Equiangular weight" type="float" default="0.5"
+               connectable="False">
+            <help>
+                The probability of equiangular sampling being used instead
+                of density sampling. Equiangular sampling improves the
+                convergence of volumes close to light sources, while
+                density sampling can be a better technique when dealing
+                with volumes with dense or highly varying density. The
+                default value of 0.5 means both techniques will be used
+                equally and combined with multiple importance sampling. If
+                the volumes are dense and far away with light sources then
+                decreasing the equiangular weight may result in better
+                convergence.
+            </help>
+        </param>
+        <param name="minSamples" type="int" default="4"
+             min='1'
+             connectable="False">
+            <help>
+            Controls the minimum number of samples to take inside the volume per ray.
+            Only used when single scattering. The default is 4.
+            </help>
+        </param>
+        <param name="maxSamples" type="int" default="4"
+             min='1'
+             connectable="False">
+            <help>
+            Controls the maximum number of samples to take inside the volume per ray.
+            The default is 4.
+            </help>
+        </param>
+        <param name="stepSize" label="Step Size" type="float" default="0.1"
+               connectable="False">
+            <help>
+                [DEPRECATED] Sets step size for ray marching in heterogeneous volume. Setting
+                this parameter to low value may cause huge computational overhead,
+                on the other hand setting this parameter to large will change the
+                appearance of the volume in the wrong way.
+                [NOTE DEPRECATED]: Only used when rendering with the PxrUPBP integrator.
+            </help>
+        </param>
+    </page>
+    <page name="MultiScatter Optimization" open="False">
+        <param name="multiScatterOpt" label="MultiScatter Optimization" type="int" default="0" widget="checkBox">
+            <tags>
+              <tag value="int"/>
+            </tags>
+            <help>
+              Controls whether MultiScatter Optimization is applied or not.
+            </help>
+        </param>
+        <param name="extinctionMultiplier" label="Extinction Multiplier" type="float" default="1."
+                      min='0.0'>
+            <tags>
+              <tag value="float"/>
+            </tags>
+            <help>
+              Extinction multiplier is used in multiscatter as a way to
+              modify the extinction coefficients for multiple scattering events.
+              Extinction multiplier can be set to any value above 0,
+              and the default is ``1`` which means no modifications.
+              A value below ``1`` decreases extinction coeffients while
+              a value above ``1`` increases extinction coeffients.
+            </help>
+        </param>
+        <param name="contributionMultiplier" label="Contribution Multiplier" type="float" default="1."
+                    min='0.0'>
+            <tags>
+              <tag value="float"/>
+            </tags>
+            <help>
+              Contribution multiplier is used in multiscatter as a way to
+              modify contribution from direct lighting for multiple scattering events.
+              Contribution multiplier can be set to any value above 0,
+              and the default is ``1`` which means no modifications.
+              A value below ``1`` decreases contribution from direct lighting
+              while a value above ``1`` boosts contribution from direct lighting.
+            </help>
+        </param>
+    </page>
+    <rfmdata nodeid="1053410"
+             classification="shader/surface:rendernode/RenderMan/bxdf/main:swatch/rmanSwatch"/>
+    <rfcdata nodeid="1035854" description="Mpxrvolume"/>
+</args>
+
+

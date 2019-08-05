@@ -1,0 +1,59 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="displayfilter"/>
+    </shaderType>
+    <help>
+        This display filter allows you to adjust the output colors so that the given color temperature is considered white.
+    </help>
+
+    <param name="temperature"
+           label="Temperature"
+           type="float"
+           default="6500" min="1000" max="50000"
+           widget="float"
+           connectable="False">
+        <tags>
+            <tag value="default"/>
+        </tags>
+        <help>
+            Allow the user to choose the color temperature of the light.
+            Unlike the basic light color this allows the user to easily
+            pick plausible light colors based on standard temperature
+            measurements.
+        </help>
+    </param>
+    <param name="useManualWhitePoint"
+           label="Manual White Point?"
+           type="int"
+           default="0"
+           widget="checkBox"
+           connectable="False">
+        <help>
+           This switch enables using the White Point below rather than rely on
+           color temperature for white balance.
+        </help>
+    </param>
+    <param name="manualWhitePoint"
+           label="White Point"
+           type="color"
+           default="1 1 1"
+           widget="color"
+           connectable="False">
+        <tags>
+            <tag value="color"/>
+        </tags>
+        <help>
+            Adjust the image so that this color becomes the white value.
+        </help>
+    </param>
+    <param name="aov"
+        label="AOV"
+        type="string"
+        default="Ci"
+        widget="string"
+        connectable="False">
+        <help>Name of AOV to apply filter to.</help>
+    </param>
+      <rfmdata nodeid="1053326"
+        classification="rendernode/RenderMan/displayfilter"/>
+</args>

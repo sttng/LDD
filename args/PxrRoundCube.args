@@ -1,0 +1,298 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="pattern"/>
+    </shaderType>
+    <!-- <page name="Texture" open="True"> -->
+      <param name="numberOfTextures"
+             label="Use"
+             type="int"
+             default="1"  widget="mapper"
+             connectable="False">
+        <hintdict name="options">
+           <string name="1 texture"  value="1"/>
+           <string name="3 textures" value="3"/>
+           <string name="6 textures" value="6"/>
+        </hintdict>
+          <help>
+              Number of textures used by the tri-planar projection.
+          </help>
+      </param>
+
+    <page name="Manifold 3D" open="True">
+      <param name="frequency"
+             label="Frequency"
+             type="float"
+             default="1" min="0.001" 
+             slider="1" slidermin="0.001" slidermax="10"
+             connectable="False">
+      </param>
+      <param name="transitionWidth"
+             label="Transition Width"
+             type="float"
+             default="0.5" min="0.0" max="1.0"
+             connectable="False">
+      </param>
+      <param name="use"
+             label="Use"
+             type="int"
+             default="0"
+             widget="mapper"
+             connectable="False">
+          <hintdict name="options">
+              <string name="Current position: P"  value="0"/>
+              <string name="Undisplaced position: Po"  value="1"/>
+              <string name="Deform : __Pref"  value="2"/>
+              <string name="Deform &amp; transform: __WPref"  value="3"/>
+          </hintdict>
+          <help>Select the type of position you want to use. You can only use
+          __Pref and __WPref if these primitive variables have been attached to
+          your geometry.</help>
+      </param>
+      <param name="pref"
+             label="Pref"
+             type="string"
+             default=""
+             widget="string"
+             connectable="False">
+          <help>
+              Name of geometry Pref (Maya uses __Pref).
+          </help>
+      </param>
+      <param name="nref"
+             label="Nref"
+             type="string"
+             default=""
+             widget="string"
+             connectable="False">
+          <help>
+              Name of geometry Nref (Maya uses __Nref).
+          </help>
+      </param>
+      <param name="coordsys"
+             label="Coordinate System"
+             type="string"
+             default="object"
+             widget="string"
+             connectable="False">
+          <help>
+              Name of coordinate system transform (e.g. place3dtexture node in Maya).
+              Standard coordinate systems : "object", "world", "screen", "NDC".
+          </help>
+      </param>
+      <page name="Randomize" open="True">
+        <param name="randomSource"
+               label="Random Source"
+               type="int"
+               default="0"
+               widget="mapper"
+               connectable="False">
+               <hintdict name="options">
+                <string name="Object Id"   value="0"/>
+                <string name="Object Name" value="1"/>
+              </hintdict>
+            <tags>
+                <tag value="int"/>
+             </tags>
+        </param>
+        <param name="randomExtraSeed"
+               label="Extra Seed"
+               type="float"
+               default="0"
+               widget="default"
+               connectable="False">
+            <tags>
+                <tag value="float"/>
+             </tags>
+        </param>
+        <param name="randomOrientation"
+               label="Random Orientation"
+               type="int"
+               default="0"
+               widget="checkBox"
+               connectable="False">
+            <tags>
+                <tag value="int"/>
+             </tags>
+        </param>
+        <param name="randomFlip"
+               label="Random Flip"
+               type="int"
+               default="0"
+               widget="checkBox"
+               connectable="False">
+            <tags>
+                <tag value="int"/>
+             </tags>
+        </param>
+        <param name="randomOffset"
+               label="Random Offset"
+               type="int"
+               default="0"
+               widget="checkBox"
+               connectable="False">
+            <tags>
+                <tag value="int"/>
+             </tags>
+        </param>
+      </page>
+
+      <page name="X Axis" open="True">
+        <param name="enableX"
+               label="Enable X"
+               type="int"
+               default="1"
+               widget="checkBox"
+               connectable="False">
+            <tags>
+                <tag value="int"/>
+             </tags>
+        </param>
+        <param name="scaleSX" label="Scale S" type="float"
+               min="0.001" 
+               slider="1" slidermin="0.001" slidermax="5"
+               default="1.0" connectable="False">
+        </param>
+        <param name="scaleTX" label="Scale T" type="float"
+               min="0.001" 
+               slider="1" slidermin="0.001" slidermax="5"
+               default="1.0" connectable="False">
+        </param>
+        <param name="offsetSX" label="Offset S" type="float"
+               default="0.0" connectable="True">
+        </param>
+        <param name="offsetTX" label="Offset T" type="float"
+               default="0.0" connectable="True">
+        </param>
+        <param name="invertSX" label="Invert S" type="int" widget="checkBox"
+               default="0" connectable="False">
+        </param>
+        <param name="invertTX" label="Invert T" type="int" widget="checkBox"
+               default="0" connectable="False">
+        </param>
+        <param name="swapSTX" label="Swap ST" type="int" widget="checkBox"
+               default="0" connectable="False">
+        </param>
+        <param name="pivotSX" label="Pivot S" type="float"
+               min="0.0" max="1.0"
+               default="0.5" connectable="False">
+        </param>
+        <param name="pivotTX" label="Pivot T" type="float"
+               min="0.0" max="1.0"
+               default="0.5" connectable="False">
+        </param>
+      </page>
+
+      <page name="Y Axis" open="True">
+        <param name="enableY"
+               label="Enable Y"
+               type="int"
+               default="1"
+               widget="checkBox"
+               connectable="False">
+            <tags>
+                <tag value="int"/>
+             </tags>
+        </param>
+        <param name="scaleSY" label="Scale S" type="float"
+               min="0.001" 
+               slider="1" slidermin="0.001" slidermax="5"
+               default="1.0" connectable="False">
+        </param>
+        <param name="scaleTY" label="Scale T" type="float"
+               min="0.001" 
+               slider="1" slidermin="0.001" slidermax="5"
+               default="1.0" connectable="False">
+        </param>
+        <param name="offsetSY" label="Offset S" type="float"
+               default="0.0" connectable="True">
+        </param>
+        <param name="offsetTY" label="Offset T" type="float"
+               default="0.0" connectable="True">
+        </param>
+        <param name="invertSY" label="Invert S" type="int" widget="checkBox"
+               default="0" connectable="False">
+        </param>
+        <param name="invertTY" label="Invert T" type="int" widget="checkBox"
+               default="0" connectable="False">
+        </param>
+        <param name="swapSTY" label="Swap ST" type="int" widget="checkBox"
+               default="0" connectable="False">
+        </param>
+        <param name="pivotSY" label="Pivot S" type="float"
+               min="0.0" max="1.0"
+               default="0.5" connectable="False">
+        </param>
+        <param name="pivotTY" label="Pivot T" type="float"
+               min="0.0" max="1.0"
+               default="0.5" connectable="False">
+        </param>
+      </page>
+
+      <page name="Z Axis" open="True">
+        <param name="enableZ"
+               label="Enable Z"
+               type="int"
+               default="1"
+               widget="checkBox"
+               connectable="False">
+            <tags>
+                <tag value="int"/>
+             </tags>
+        </param>
+        <param name="scaleSZ" label="Scale S" type="float"
+               min="0.001" 
+               slider="1" slidermin="0.001" slidermax="5"
+               default="1.0" connectable="False">
+        </param>
+        <param name="scaleTZ" label="Scale T" type="float"
+               min="0.001" 
+               slider="1" slidermin="0.001" slidermax="5"
+               default="1.0" connectable="False">
+        </param>
+        <param name="offsetSZ" label="Offset S" type="float"
+               default="0.0" connectable="True">
+        </param>
+        <param name="offsetTZ" label="Offset T" type="float"
+               default="0.0" connectable="True">
+        </param>
+        <param name="invertSZ" label="Invert S" type="int" widget="checkBox"
+               default="0" connectable="False">
+        </param>
+        <param name="invertTZ" label="Invert T" type="int" widget="checkBox"
+               default="0" connectable="False">
+        </param>
+        <param name="swapSTZ" label="Swap ST" type="int" widget="checkBox"
+               default="0" connectable="False">
+        </param>
+        <param name="pivotSZ" label="Pivot S" type="float"
+               min="0.0" max="1.0"
+               default="0.5" connectable="False">
+        </param>
+        <param name="pivotTZ" label="Pivot T" type="float"
+               min="0.0" max="1.0"
+               default="0.5" connectable="False">
+        </param>
+      </page>
+
+    </page>
+
+    <output name="resultMask">
+        <tags>
+            <tag value="color"/>
+            <tag value="vector"/>
+            <tag value="normal"/>
+            <tag value="point"/>
+        </tags>
+    </output>
+    <output name="resultMulti">
+        <tags>
+            <tag value="struct"/>
+            <tag value="pxrmanifoldmulti"/>
+        </tags>
+     </output>
+
+
+    <rfmdata nodeid="1053259" classification="rendernode/RenderMan/pattern/manifold"/>
+    <rfcdata nodeid="1035886" description="Xpxrroundcube"/>
+
+</args>

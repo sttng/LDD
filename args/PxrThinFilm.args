@@ -1,0 +1,104 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="pattern"/>
+    </shaderType>
+    <help>
+        Computes a thin-film interference effect on six spectral bands.
+    </help>
+    <param name="inputRGB"
+        label="Input Color"
+        type="color"
+        default="1. 1. 1."
+        widget="color">
+        <tags>
+            <tag value="color"/>
+        </tags>
+        <help>
+            The color that will perturbed by interference effect.
+        </help>
+    </param>
+    <param name="eta"
+        label="Eta"
+        type="float"
+        default="1.5"
+        min="1.0" max="4.0">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>
+            The index of refraction of the thin film. We assume the other
+            the exterior medium is air.
+        </help>
+    </param>
+    <param name="spread"
+        label="Spread"
+        type="float"
+        default="0.01"
+        connectable="False">
+        <help>
+            The index of refraction's amount of variation across the
+            color spectrum.
+        </help>
+    </param>
+    <param name="thickness"
+        label="Thickness"
+        type="float"
+        default="1896.0"
+        connectable="False">
+        <help>
+            The thickness of the thin film in nanometers.
+        </help>
+    </param>
+    <param name="thicknessScale"
+        label="Thickness Scale"
+        type="float"
+        default="1.0">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>
+            Connect a pattern here to modulate the thickness.
+            This will multiply the *thickness* value.
+        </help>
+    </param>
+    <param name="frontOnly"
+        label="Front Only"
+        type="int"
+        default="0"
+        widget="checkBox"
+        connectable="False">
+        <help>
+            Compute only interference on front-facing points.
+            By default, both sides are computed.
+        </help>
+    </param>
+
+    <output name="resultRGB">
+        <tags>
+            <tag value ="color"/>
+            <tag value ="vector"/>
+            <tag value ="normal"/>
+            <tag value ="point"/>
+        </tags>
+    </output>
+    <output name="resultR">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultG">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultB">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+
+    <rfmdata nodeid="1053393"
+             classification="rendernode/RenderMan/pattern/color"/>
+    <rfcdata nodeid="1035891" description="Xpxrthinfilm"/>
+
+</args>

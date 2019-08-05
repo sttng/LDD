@@ -1,0 +1,96 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="integrator"/>
+    </shaderType>
+    <help>
+        A utility integrator to navigate and inspect large scenes interactively.
+        Can also be used for modeling or animation turntables and in general to 
+        detect geometric problems in your scenes.
+    </help>
+    <param name="style" 
+        type="string" 
+        widget="popup" 
+        default="shaded" 
+        options="bxdf|shaded|flat|normals|st|matcap"
+        connectable="False">
+        <help>
+        bxdf: renders the scene as if the scene was lit with a single light at
+        the camera's position.
+        shaded: Simple N dot V shading. Normals are flipped if inverted.
+        flat: Uses a random flat color based on the object's id.
+        normals: displays normals in object space.
+        st: normalized st coordinates. Handy to visualize UDIM tiles.
+        matcap: material capture. Uses the surface normal to look up color in
+        an environment map.
+        </help>
+    </param>
+    <param name="wireframe" 
+         type="int" 
+         default="1" 
+         widget="checkBox"
+         connectable="False">
+        <help>
+        Overlays wireframe. The default is on.
+        </help>
+    </param> 
+    <param name="normalCheck" 
+         type="int" 
+         default="0" 
+         widget="checkBox"
+         connectable="False">
+        <help>
+        Colors geometry with inverted normals bright orange.
+        </help>
+    </param> 
+    <param name="shadedPrimVar" 
+         label="Shaded PrimVar"
+         type="string" 
+         default="displayColor" 
+         widget="default"
+         connectable="False">
+        <help>
+        Tint color for "shaded" style.
+        </help>
+    </param> 
+    <param name="matCap"      
+        label="MatCap Texture"
+        type="string" default="" 
+        widget="assetIdInput" options="texture"
+        connectable="False">
+        <help>
+        Material capture environment map used when style is "matcap".  
+        The surface normal is used to look up a color in this texture.
+        </help>
+    </param>
+    <page name="Wireframe Settings" open="True">
+        <param label="Wireframe Color" 
+               name="wireframeColor"  
+               type="color"
+               default="0.0 0.0 0.0" 
+               widget="color">
+            <tags>
+                <tag value="color"/>
+            </tags>
+        </param>
+        <param label="Wireframe Opacity" 
+               name="wireframeOpacity" 
+               type="float"
+               default="0.5" min="0" max="1"
+               widget="default">
+            <tags>
+                <tag value="float"/>
+            </tags>
+        </param>
+        <param label="Wireframe Width" 
+               name="wireframeWidth" 
+               type="float"
+               default="1.0" min="0.0" max="4.0"
+               widget="default">
+            <tags>
+                <tag value="float"/>
+            </tags>
+        </param>
+    </page>
+    <rfmdata nodeid="1053323" classification="RenderMan/integrator"/>
+
+</args>

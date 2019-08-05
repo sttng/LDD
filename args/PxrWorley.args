@@ -1,0 +1,172 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="pattern"/>
+    </shaderType>
+    <help>
+        An implementation of a noise function by Steven Worley.
+    </help>
+
+    <param name="surfacePosition"
+           label="Surface Position"
+           type="int"
+           default="0"
+           widget="mapper"
+           connectable="False">
+        <hintdict name="options">
+            <string name="Current Position"       value="0"/>
+            <string name="Un-Displaced Position"  value="1"/>
+        </hintdict>
+        <help>If you want your displacement pattern to match surface shading,
+        use the undisplaced position. This is only active when there is no
+        connected manifold.</help>
+    </param>
+
+    <param name="frequency"
+           label="Frequency" type="float" default="4.0f" min="0" widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>Controls the size of the cells. Higher
+              frequencies make smaller cells.</help>
+    </param>
+    <param name="distancemetric"
+           label="Distance Metric"
+           type="int"
+           default="0"
+           widget="mapper"
+           connectable="False">
+        <hintdict name="options">
+            <string name="Euclidian"            value="0"/>
+            <string name="Euclidian Squared"    value="1"/>
+            <string name="Manhattan"            value="2"/>
+            <string name="Chebyshev"            value="3"/>
+            <string name="Minkowski"            value="4"/>
+        </hintdict>
+        <help>The means to measure distances to
+                neighboring cells.  Manhattan distance gives
+                more rectangular shapes and Euclidian distance
+                gives more spherical shapes.</help>
+    </param>
+    <param name="jitter"
+           label="Jitter"
+           type="float" default="0.75f" min="0" max="1"  widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>Controls the distortion of the cells.</help>
+    </param>
+    <param name="c1"
+           label="C1"
+           type="float" default="0.8f" min="-1" max="1"  widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>Multiplier for the distances to the first feature.</help>
+    </param>
+    <param name="c2"
+           label="C2"
+           type="float" default="-0.2f" min="-1" max="1"  widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>Multiplier for the distance to the second feature.</help>
+    </param>
+    <param name="minkowskiExponent"
+           label="Minkowski Exponent"
+           type="float" default="4.0" min="0.5" max="20"  widget="default"
+           connectable="False">
+        <help>Makes the distance transition smoothly from Euclidean to Manhattan.</help>
+    </param>
+    <param name="shape"
+           label="Shape"
+           type="int"
+           default="0"
+           widget="mapper"
+           connectable="False">
+        <hintdict name="options">
+            <string name="Linear" value="0"/>
+            <string name="Thin"   value="1"/>
+            <string name="Fat"    value="2"/>
+        </hintdict>
+        <help>Modifies the computed distances to create different shapes
+        (Linear or Cosine).</help>
+    </param>
+    <param name="clamp"
+           label="Clamp"
+           type="int"
+           default="1"
+           widget="checkBox"
+           connectable="False">
+        <help>Causes resulting distances to be clamped to the range 0 to 1.</help>
+    </param>
+    <param name="invert"
+           label="Invert"
+           type="int"
+           default="0"
+           widget="checkBox"
+           connectable="False">
+        <help>Inverts the final pattern.</help>
+    </param>
+    <param name="randomScale"
+           label="Random Scale"
+           type="float" default="0.f" min="-1" max="1"  widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>Randomize the amplitude of the cells.</help>
+    </param>
+    <param name="randomScaleCenter"
+           label="Random Scale Center"
+           type="float" default="0.f" min="0" max="1"  widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>Randomize the amplitude of the cells.</help>
+    </param>
+    <param name="manifold"
+           label="Manifold"
+           type="struct" >
+        <tags>
+            <tag value="struct"/>
+            <tag value="manifold"/>
+        </tags>
+        <help>The manifold over which to apply the noise. (The default is P).</help>
+    </param>
+    <page name="Adjust Output" open="True">
+        <param name="colorScale" label="Color Scale" type="color" default="1 1 1">
+            <tags>
+                <tag value="color"/>
+            </tags>
+        </param>
+        <param name="colorOffset" label="Color Offset" type="color" default="0 0 0">
+            <tags>
+                <tag value="color"/>
+            </tags>
+        </param>
+        <param name="floatScale" label="Float Scale" type="float" default="1">
+            <tags>
+                <tag value="float"/>
+            </tags>
+        </param>
+        <param name="floatOffset" label="Float Offset" type="float" default="0">
+            <tags>
+                <tag value="float"/>
+            </tags>
+        </param>
+    </page>
+
+     <output name="resultF">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+     <output name="resultRGB">
+        <tags>
+            <tag value ="color"/>
+        </tags>
+    </output>
+
+    <rfmdata nodeid="1053424"
+        classification="rendernode/RenderMan/pattern/texture"/>
+    <rfcdata nodeid="1035897" description="Xpxrworley"/>
+</args>

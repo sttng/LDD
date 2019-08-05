@@ -1,0 +1,113 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="pattern"/>
+    </shaderType>
+    <help>
+        Thresholds an input color pattern to create a black and white mask.
+        The falloff will define a gradual transition from black to
+        white. The output is always between 0 and 1.
+    </help>
+    <param name="inputRGB"
+           label="Input Color"
+           type="color"
+           default="0. 0. 0."
+           widget="color">
+        <tags>
+            <tag value="color"/>
+        </tags>
+        <help>
+            The color pattern you would like to threshold.
+        </help>
+    </param>
+    <param name="channel"
+           label="Channel"
+           type="int"
+           default="3"
+           widget="mapper"
+           connectable="False">
+        <hintdict name="options">
+            <string name="Red"       value="0"/>
+            <string name="Green"     value="1"/>
+            <string name="Blue"      value="2"/>
+            <string name="Luminance" value="3"/>
+            <string name="Average"   value="4"/>
+        </hintdict>
+        <help>
+            The input channel this node will operate on.
+        </help>
+    </param>
+    <param name="threshold"
+           label="Threshold"
+           type="float"
+           default="0.5"
+           min="0" max="1"
+           widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>
+            The value at which the transition from black to white
+            will take place.
+        </help>
+    </param>
+    <param name="transitionWidth"
+           label="Transition Width"
+           type="float"
+           default="0.05"
+           min="0" max="0.25"
+           widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>
+            This control allows you to create a sharp or progressive
+            transitions. The transition width is centered on the threshold
+            value.
+            </help>
+    </param>
+    <param name="transitionProfile"
+        label="Transition Profile"
+        type="int"
+        default="1"
+        widget="mapper"
+        connectable="False">
+        <hintdict name="options">
+            <string name="Linear"   value="0"/>
+            <string name="Smooth"   value="1"/>
+            <string name="Gaussian" value="2"/>
+        </hintdict>
+        <help>
+            The interpolation from black to white can be computed with
+            three different curves: Linear, Smooth or Gaussian.
+        </help>
+    </param>
+
+    <output name="resultRGB">
+        <tags>
+            <tag value ="color"/>
+            <tag value ="vector"/>
+            <tag value ="normal"/>
+            <tag value ="point"/>
+        </tags>
+    </output>
+     <output name="resultR">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultG">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultB">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+
+    <rfmdata nodeid="1053439"
+             classification="rendernode/RenderMan/pattern/color"/>
+    <rfcdata nodeid="1035892" description="Xpxrthreshold"/>
+
+</args>
