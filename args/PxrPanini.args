@@ -1,0 +1,36 @@
+<args format="1.0">
+  <shaderType>
+    <tag value="projection"/>
+  </shaderType>
+  <help>
+    The Panini projection is designed for producing ultra-wide angle images
+    with large fields of view.  It can be particularly effective for
+    architectural scenes.  Like the traditional rectilinear perspective
+    projection, vertical lines remain vertical when the view direction is
+    horizontal, and radial lines that converge towards the vanishing point
+    also remain straight.  However, it can do this while accommodating wide
+    angles up to 180 degrees and beyond.
+  </help>
+  <param name="fov" label="Field of View" type="float" widget="default"
+         default="90.0" min="1.0" max="359.0"
+         connectable="False">
+    <help>
+      Field of view (FOV) in degrees.  For rectangular images this is
+      normally the FOV along the wider image dimension.  Note that the
+      actual FOV may be limited to somewhere between 180 and 360 depending
+      on the Compression setting.
+    </help>
+  </param>
+  <param name="compression" label="Compression" type="float" widget="default"
+         default="1.0" min="0.0" max="1.0"
+         connectable="False">
+    <help>
+      Determines the type of projection and the amount of compression at
+      the peripheriphy.  At 0.0, this produces the equivalent of the
+      traditional perspective projection and the FOV is limited to less
+      than 180 degrees.  At 1.0, this produces the full Panini projection
+      and allows the FOV to go up to almost 360 degrees.
+    </help>
+  </param>
+  <rfmdata nodeid="1200433" classification="RenderMan/projection"/>
+</args>

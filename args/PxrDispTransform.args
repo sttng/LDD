@@ -1,0 +1,212 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="pattern"/>
+    </shaderType>
+    <help>
+        Transforms the displacement values.
+    </help>
+    <param name="dispType"
+           label="Displacement Type"
+           type="int"
+           default="1"
+           widget="mapper"
+           connectable="False">
+        <hintdict name="options">
+            <string name="Scalar" value="1"/>
+            <string name="Generic Vector" value="2"/>
+            <string name="Mudbox Vector" value="3"/>
+            <string name="ZBrush Vector" value="4"/>
+        </hintdict>
+        <help>
+            Specify the displacement value type.  If it is a float procedural, pick Scalar.
+            If it is vector procedural, pick Generic Vector.  If the vector displacement
+            map is extracted using Mudbox or Zbrush, pick Mudbox Vector or Zbrush Vector
+            respectively.
+        </help>
+    </param>
+    <param name="dispScalar"
+           label="Scalar Displacement"
+           type="float"
+           widget="default"
+           default="0.0">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>
+            Connect a scalar displacement texture or value.
+        </help>
+    </param>
+    <param name="dispVector"
+           label="Vector Displacement"
+           type="vector"
+           widget="default"
+           default="0.0 0.0 0.0">
+        <tags>
+            <tag value="color or vector"/>
+        </tags>
+        <help>
+            Connect a vector displacement texture or value.
+        </help>
+    </param>
+    <param name="vectorSpace"
+           label="Vector Space"
+           type="int"
+           default="3"
+           widget="mapper"
+           connectable="False">
+        <hintdict name="conditionalVisOps">
+            <string value="notEqualTo" name="conditionalVisOp"/>
+            <string value="../dispType" name="conditionalVisPath"/>
+            <string value="1" name="conditionalVisValue"/>
+        </hintdict>
+        <hintdict name="options">
+            <string name="World" value="1"/>
+            <string name="Object" value="2"/>
+            <string name="Tangent" value="3"/>
+            <string name="Current" value="4"/>
+        </hintdict>
+        <help>
+           Specify which space the vector was created in.  For Mudbox
+           and Zbrush vector type, this would be the space that the
+           vector displacement was exported from.  For Mudbox,
+           vector displacement needs to be exported in Absolute
+           Tangent, not Relative Tangent.
+        </help>
+    </param>
+    <param name="dispHeight"
+           label="Displacement Height"
+           type="float"
+           widget="default"
+           default="1.0">
+       <tags>
+           <tag value="float"/>
+       </tags>
+        <help>
+            Displacement height applies to the displacement value that is displacing out.
+        </help>
+    </param>
+    <param name="dispDepth"
+           label="Displacement Depth"
+           type="float"
+           widget="default"
+           default="1.0">
+       <tags>
+           <tag value="float"/>
+       </tags>
+        <help>
+            Displacement depth applies to the displacement value that is displacing in.
+        </help>
+    </param>
+    <param name="dispRemapMode"
+           label="Remapping Mode"
+           type="int"
+           default="1"
+           widget="mapper"
+           connectable="False">
+        <hintdict name="options">
+            <string name="None" value="1"/>
+            <string name="Centered" value="2"/>
+            <string name="Interpolate Depth And Height" value="3"/>
+        </hintdict>
+        <help>
+            Specify how to remap the displacement values.
+
+            "None" - Reads the displacement value as is without any remapping.  Use Displacement Height to
+               scale the displacement.
+
+            "Centered" - The displacement value is centered at the Displacement Center specified.
+               If the value is equal to the center, there is no displacement.
+               Any values below that center will be displacing in whereas any values above the
+               center will be displacing out.
+
+            "Interpolate Depth and Height" - Fits the displacement depth and height specified
+               through a catmull-rom spline (spline("catmullrom", -depth, -depth, 0, height, height).
+        </help>
+    </param>
+    <param name="dispCenter"
+           label="Displacement Center"
+           type="float"
+           widget="default"
+           connectable="False"
+           default="0.5">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <hintdict name="conditionalVisOps">
+                <string value="equalTo" name="conditionalVisOp"/>
+                <string value="../dispRemapMode" name="conditionalVisPath"/>
+                <string value="2" name="conditionalVisValue"/>
+        </hintdict>
+        <help>
+            Displacement center for the "Centered" Remapping Mode.
+        </help>
+    </param>
+    <page name="Advanced" open="False">
+        <param name="dispScaleSpace"
+               label="Displacement Scale Space"
+               type="string"
+               widget="default"
+               connectable="False"
+               default="object">
+            <help>
+               Space in which displacement units are measured.  E.g. "world", "object", or user-defined
+               coordinate system.
+            </help>
+        </param>
+        <param name="useDispDirection"
+               label="Use Displacement Direction"
+               type="int"
+               widget="checkBox"
+               connectable="False"
+               default="0">
+            <help>
+                Displace along the displacement direction provided below instead of along the surface normal.
+            </help>
+        </param>
+        <param name="dispDirection"
+               label="Displacement Direction"
+               type="vector"
+               widget="default"
+               default="0.0 0.0 0.0">
+           <hintdict name="conditionalVisOps">
+                <string value="equalTo" name="conditionalVisOp"/>
+                <string value="../useDispDirection" name="conditionalVisPath"/>
+                <string value="1" name="conditionalVisValue"/>
+           </hintdict>
+           <help>
+               Displacement will be in the direction this points to rather than along
+               the surface normal.  Note that the displacement director vector will
+               be normalized before its use.
+           </help>
+        </param>
+         <param name="dispDirectionSpace"
+               label="Displacement Direction Space"
+               type="string"
+               widget="default"
+               connectable="False"
+               default="object">
+           <hintdict name="conditionalVisOps">
+                <string value="equalTo" name="conditionalVisOp"/>
+                <string value="../useDispDirection" name="conditionalVisPath"/>
+                <string value="1" name="conditionalVisValue"/>
+           </hintdict>
+            <help>
+               Space in which displacement direction vectors are in.  E.g. "world", "object", or user-defined
+               coordinate system.
+            </help>
+        </param>
+    </page>
+    <output name="resultXYZ">
+        <tags>
+            <tag value ="vector"/>
+        </tags>
+    </output>
+    <output name="resultF">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <rfmdata nodeid="1053340"
+        classification="rendernode/RenderMan/pattern/displace"/>
+    <rfcdata nodeid="1037181" description="Xpxrdisptransform"/>
+</args>

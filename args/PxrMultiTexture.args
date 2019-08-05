@@ -1,0 +1,372 @@
+<args format="1.0">
+    <help>
+        Read a texture file.
+    </help>
+    <shaderType>
+        <tag value="pattern"/>
+    </shaderType>
+    <param name="manifoldMulti"
+           label="Multi Manifold"
+           type="struct" default="" widget="default">
+        <tags>
+            <tag value="struct and pxrmanifoldmulti"/>
+        </tags>
+    </param>
+    <page name="Textures" open="True">
+      <param name="filename0"
+             label="Filename 0"
+             type="string" default=""
+             widget="assetIdInput" options="texture"
+             connectable="False">
+      </param>
+      <param name="filename1"
+             label="Filename 1"
+             type="string" default=""
+             widget="assetIdInput" options="texture"
+             connectable="False">
+      </param>
+      <param name="filename2"
+             label="Filename 2"
+             type="string" default=""
+             widget="assetIdInput" options="texture"
+             connectable="False">
+      </param>
+      <param name="filename3"
+             label="Filename 3"
+             type="string" default=""
+             widget="assetIdInput" options="texture"
+             connectable="False">
+      </param>
+      <param name="filename4"
+             label="Filename 4"
+             type="string" default=""
+             widget="assetIdInput" options="texture"
+             connectable="False">
+      </param>
+      <param name="filename5"
+             label="Filename 5"
+             type="string" default=""
+             widget="assetIdInput" options="texture"
+             connectable="False">
+      </param>
+      <param name="filename6"
+             label="Filename 6"
+             type="string" default=""
+             widget="assetIdInput" options="texture"
+             connectable="False">
+      </param>
+      <param name="filename7"
+             label="Filename 7"
+             type="string" default=""
+             widget="assetIdInput" options="texture"
+             connectable="False">
+      </param>
+      <param name="filename8"
+             label="Filename 8"
+             type="string" default=""
+             widget="assetIdInput" options="texture"
+             connectable="False">
+      </param>
+      <param name="filename9"
+             label="Filename 9"
+             type="string" default=""
+             widget="assetIdInput" options="texture"
+             connectable="False">
+      </param>
+    </page>
+    <page name="Texture params" open="false">
+      <param name="firstChannel"
+             label="First Channel Offset"
+             type="int"
+             default="0"
+             widget="default"
+             connectable="False">
+          <help>
+              First channel offset to be looked up for Filename.
+          </help>
+      </param>
+
+      <param name="invertT"
+             label="Invert T"
+             type="int"    default="1"  widget="checkBox"
+             connectable="False">
+          <help>
+            Unlike RenderMan, Maya's UV have the T value inverted.  For the models
+            created in Maya, Invert T needs to be ON so that the texture
+            orientation will be correct in the render.
+          </help>
+      </param>
+      <param name="filter"
+             label="Filter"
+             type="int"    default="1"  widget="mapper"
+             connectable="False">
+        <hintdict name="options">
+           <string name="Nearest"    value="0"/>
+           <string name="Box"        value="1"/>
+           <string name="Bilinear"   value="2"/>
+           <string name="Bspline"    value="3"/>
+           <string name="Gaussian"   value="6"/>
+           <string name="Lagrangian" value="7"/>
+        </hintdict>
+      </param>
+      <param name="blur"
+             label="Blur"
+             type="float"  default="0."  widget="default">
+          <tags>
+              <tag value="float"/>
+          </tags>
+      </param>
+      <param name="lerp"
+             label="Mip Interpolate"
+             type="int"    default="1"  widget="checkBox"
+             connectable="False">
+      </param>
+      <param name="missingColor"
+             label="Missing Color"
+             type="color"  default="1. 0. 1."  widget="color">
+          <tags>
+              <tag value="color"/>
+          </tags>
+      </param>
+      <param name="missingAlpha"
+             label="Missing Alpha"
+             type="float"  default="1."  widget="default">
+          <tags>
+              <tag value="float"/>
+          </tags>
+      </param>
+      <param name="linearize"
+             label="Linearize"
+             type="int"    default="0"  widget="checkBox"
+             connectable="False">
+      </param>
+      <page name="Advanced Texture Settings" open="True">
+          <param name="mipBias" label="MIP bias" type="int" default="0" slidermin="-10" slidermax="10">
+              <help>Offset the selected MIP level picked by the renderer.
+              Positive values will bias toward lower resolution MIPs.
+              Negative values will bias toward higher resolution MIPs.</help>
+          </param>
+          <param name="maxResolution" label="Max Resolution" type="float" default="0" widget="mapper">
+              <hintdict name="options">
+                  <string name="Unlimited" value="0"/>
+                  <string name="32" value="32"/>
+                  <string name="64" value="64"/>
+                  <string name="128" value="128"/>
+                  <string name="256" value="256"/>
+                  <string name="512" value="512"/>
+                  <string name="1024" value="1024"/>
+                  <string name="2048" value="2048"/>
+                  <string name="4096" value="4096"/>
+                  <string name="8192" value="8192"/>
+              </hintdict>
+              <help>Clamp the resolution to a maximum value.</help>
+          </param>
+          <param name="optimizeIndirect" label="Optimize Indirect" type="int" default="1"
+              widget="checkBox" connectable="False">
+              <help>Make indirect hits use a box filter rather than the selected one.</help>
+          </param>
+      </page>
+    </page>
+    <page name="Randomize" open="True">
+      <param name="randomSource"
+             label="Random Source"
+             type="int"
+             default="0"
+             widget="mapper"
+             connectable="False">
+             <hintdict name="options">
+              <string name="Object Id"   value="0"/>
+              <string name="Object Name" value="1"/>
+            </hintdict>
+          <tags>
+              <tag value="int"/>
+           </tags>
+      </param>
+      <param name="randomSeed"
+             label="Seed"
+             type="float"
+             default="0"
+             widget="default"
+             connectable="False">
+          <tags>
+              <tag value="float"/>
+           </tags>
+      </param>
+      <param name="randomHue"
+             label="Hue"
+             type="float"
+             default="0" min="0.0" max="1.0"
+             widget="default"
+             connectable="False">
+          <tags>
+              <tag value="float"/>
+           </tags>
+      </param>
+      <param name="randomSaturation"
+             label="Saturation"
+             type="float"
+             default="0" min="0.0" max="1.0"
+             widget="default"
+             connectable="False">
+          <tags>
+              <tag value="float"/>
+           </tags>
+      </param>
+      <param name="randomLuminance"
+             label="Luminance"
+             type="float"
+             default="0" min="0.0" max="1.0"
+             widget="default"
+             connectable="False">
+          <tags>
+              <tag value="float"/>
+           </tags>
+      </param>
+      <param name="randomGamma"
+             label="Gamma"
+             type="float"
+             default="0" min="0.0" max="1.0"
+             widget="default"
+             connectable="False">
+          <tags>
+              <tag value="float"/>
+           </tags>
+      </param>
+      <param name="hueMode"
+          label="Hue Mode"
+          type="int"
+          default="0"
+          widget="mapper"
+          connectable="False">
+          <hintdict name="options">
+              <string name="Centered"    value="0"/>
+              <string name="Additive"    value="1"/>
+              <string name="Subtractive" value="2"/>
+          </hintdict>
+          <help>
+              Centered: The amount of variation will be centered around the current value.<br/>
+              Additive: The variation will be added to the current value.<br/>
+              Subtractive: The variation will be subtracted from the current value.
+          </help>
+      </param>
+      <param name="saturationMode"
+          label="Saturation Mode"
+          type="int"
+          default="0"
+          widget="mapper"
+          connectable="False">
+          <hintdict name="options">
+              <string name="Centered"    value="0"/>
+              <string name="Additive"    value="1"/>
+              <string name="Subtractive" value="2"/>
+          </hintdict>
+          <help>
+              Centered: The amount of variation will be centered around the current value.<br/>
+              Additive: The variation will be added to the current value.<br/>
+              Subtractive: The variation will be subtracted from the current value.</help>
+      </param>
+      <param name="luminanceMode"
+          label="Luminance Mode"
+          type="int"
+          default="0"
+          widget="mapper"
+          connectable="False">
+          <hintdict name="options">
+              <string name="Centered"    value="0"/>
+              <string name="Additive"    value="1"/>
+              <string name="Subtractive" value="2"/>
+          </hintdict>
+          <help>
+              Centered: The amount of variation will be centered around the current value.<br/>
+              Additive: The variation will be added to the current value.<br/>
+              Subtractive: The variation will be subtracted from the current value.
+          </help>
+      </param>
+      <param name="gammaMode"
+          label="Gamma Mode"
+          type="int"
+          default="0"
+          widget="mapper"
+          connectable="False">
+          <hintdict name="options">
+              <string name="Centered"    value="0"/>
+              <string name="Additive"    value="1"/>
+              <string name="Subtractive" value="2"/>
+          </hintdict>
+          <help>
+              Centered: The amount of variation will be centered around the current value.<br/>
+              Additive: The variation will be added to the current value.<br/>
+              Subtractive: The variation will be subtracted from the current value.
+          </help>
+      </param>
+    </page>
+    <page name="Adjust Output" open="True">
+        <param name="colorScale" label="Color Scale" type="color" default="1 1 1">
+            <tags>
+                <tag value="color"/>
+            </tags>
+        </param>
+        <param name="colorOffset" label="Color Offset" type="color" default="0 0 0">
+            <tags>
+                <tag value="color"/>
+            </tags>
+        </param>
+        <param name="saturation" label="Saturation" type="float" default="1"
+               min="0" slidermax="2">
+            <tags>
+                <tag value="float"/>
+            </tags>
+        </param>
+        <param name="alphaScale" label="Alpha Scale" type="float" default="1">
+            <tags>
+                <tag value="float"/>
+            </tags>
+        </param>
+        <param name="alphaOffset" label="Alpha Offset" type="float" default="0">
+            <tags>
+                <tag value="float"/>
+            </tags>
+        </param>
+    </page>
+
+    <output name="resultRGB">
+        <tags>
+            <tag value="color"/>
+            <tag value="vector"/>
+            <tag value="normal"/>
+            <tag value="point"/>
+        </tags>
+    </output>
+    <output name="resultR">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultG">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultB">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultA">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultMask">
+        <tags>
+            <tag value ="color"/>
+            <tag value ="vector"/>
+            <tag value ="normal"/>
+            <tag value ="point"/>
+        </tags>
+    </output>
+
+    <rfmdata nodeid="1200402"
+             classification="rendernode/RenderMan/pattern/texture"/>
+    <rfcdata nodeid="1036865" description="Xpxrmultitexture"/>
+</args>

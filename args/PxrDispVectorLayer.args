@@ -1,0 +1,328 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="pattern"/>
+    </shaderType>
+    <help>
+        Layer vector displacement textures/values.
+    </help>
+    <param name="overallAmount"
+           label="Overall Gain"
+           type="float"
+           default="1.0"
+           widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>
+            Controls the gain amount of the final layered result.  This is handy when we
+            want to layer several layered displacement textures by adjusting the amount that
+            controls each group of layered displacements.
+        </help>
+    </param>
+    <page name="Base Layer" open="True">
+        <param name="baseLayerEnabled"
+               label="Enabled"
+               type="int"
+               default="1"
+               widget="checkBox"
+               connectable="False">
+            <help>
+               Enable the base layer.  By default, this is on.  But for some case such as
+               debugging, we can disable the base layer.  It if is off, it won't be
+               contributing to the layered displacement result.
+            </help>
+        </param>
+        <param name="baseLayerAmount"
+               label="Base Layer Gain"
+               type="float"
+               default="1.0"
+               widget="default">
+            <tags>
+                <tag value="float"/>
+            </tags>
+            <help>Gain amount for the base displacement layer.</help>
+        </param>
+        <param name="baseLayerDispVector"
+               label="Base Layer Vector"
+               type="vector"
+               default="0.0 0.0 0.0"
+               widget="default">
+            <tags>
+                <tag value="vector"/>
+            </tags>
+            <help>Connection to the vector displacement. </help>
+        </param>
+     </page>
+
+     <page name="Layer 1" open="True">
+        <param name="layer1Enabled"
+               label="Enabled"
+               type="int"
+               default="1"
+               widget="checkBox"
+               connectable="False">
+            <help>
+                Enable this layer.
+            </help>
+        </param>
+        <param name="layer1Amount"
+               label="Layer 1 Gain"
+               type="float"
+               default="1.0"
+               widget="default">
+            <tags>
+                <tag value="float"/>
+            </tags>
+            <help>Gain amount for each displacement layer.</help>
+        </param>
+        <param name="layer1DispVector"
+               label="Layer 1 Vector"
+               type="vector"
+               default="0.0 0.0 0.0"
+               widget="default">
+            <tags>
+                <tag value="vector"/>
+            </tags>
+            <help>Connection to the vector displacement. </help>
+        </param>
+        <param name="layer1Mask"
+               label="Layer 1 Mask"
+               type="float"
+               default="1.0"
+               widget="default">
+            <tags>
+                <tag value="float"/>
+            </tags>
+            <help>Mask for this layer.</help>
+        </param>
+        <param name="layer1Comp"
+               label="Layer 1 Operation"
+               widget="mapper"
+               type="int"
+               default="1"
+           connectable="False">
+            <hintdict name="options">
+                <string name="Add" value="1"/>
+                <string name="Over" value="2"/>
+                <string name="Subtract" value="3"/>
+                <string name="Multiply" value="4"/>
+                <string name="Average" value="5"/>
+                <string name="Min" value="6"/>
+                <string name="Max" value="7"/>
+            </hintdict>
+            <help>
+                Choose how this layer's displacement combines with the base layer.
+            </help>
+        </param>
+     </page>
+     <page name="Layer 2" open="False">
+        <param name="layer2Enabled"
+               label="Enabled"
+               type="int"
+               default="0"
+               widget="checkBox"
+               connectable="False">
+            <help>
+                Enable this layer.
+            </help>
+        </param>
+        <param name="layer2Amount"
+               label="Layer 2 Gain"
+               type="float"
+               default="1.0"
+               widget="default">
+            <tags>
+                <tag value="float"/>
+            </tags>
+            <help>Gain amount for each displacement layer.</help>
+        </param>
+        <param name="layer2DispVector"
+               label="Layer 2 Vector"
+               type="vector"
+               default="0.0 0.0 0.0"
+               widget="default">
+            <tags>
+                <tag value="vector"/>
+            </tags>
+            <help>Connection to the vector displacement. </help>
+        </param>
+        <param name="layer2Mask"
+               label="Layer 2 Mask"
+               type="float"
+               default="1.0"
+               widget="default">
+            <tags>
+                <tag value="float"/>
+            </tags>
+            <help>Mask for this layer.</help>
+        </param>
+        <param name="layer2Comp"
+               label="Layer 2 Operation"
+               widget="mapper"
+               type="int"
+               default="1"
+           connectable="False">
+            <hintdict name="options">
+                <string name="Add" value="1"/>
+                <string name="Over" value="2"/>
+                <string name="Subtract" value="3"/>
+                <string name="Multiply" value="4"/>
+                <string name="Average" value="5"/>
+                <string name="Min" value="6"/>
+                <string name="Max" value="7"/>
+            </hintdict>
+            <help>
+                Choose how this layer's displacement combines with the layer 1.
+                If layer 1 is disabled, it will combine with the previous layer.
+            </help>
+        </param>
+     </page>
+     <page name="Layer 3" open="False">
+        <param name="layer3Enabled"
+               label="Enabled"
+               type="int"
+               default="0"
+               widget="checkBox"
+               connectable="False">
+            <help>
+                Enable this layer.
+            </help>
+        </param>
+        <param name="layer3Amount"
+               label="Layer 3 Gain"
+               type="float"
+               default="1.0"
+               widget="default">
+            <tags>
+                <tag value="float"/>
+            </tags>
+            <help>Gain amount for each displacement layer.</help>
+        </param>
+        <param name="layer3DispVector"
+               label="Layer 3 Vector"
+               type="vector"
+               default="0.0 0.0 0.0"
+               widget="default">
+            <tags>
+                <tag value="vector"/>
+            </tags>
+            <help>Connection to the vector displacement. </help>
+        </param>
+        <param name="layer3Mask"
+               label="Layer 3 Mask"
+               type="float"
+               default="1.0"
+               widget="default">
+            <tags>
+                <tag value="float"/>
+            </tags>
+            <help>Mask for this layer.</help>
+        </param>
+        <param name="layer3Comp"
+               label="Layer 3 Operation"
+               widget="mapper"
+               type="int"
+               default="1"
+           connectable="False">
+            <hintdict name="options">
+                <string name="Add" value="1"/>
+                <string name="Over" value="2"/>
+                <string name="Subtract" value="3"/>
+                <string name="Multiply" value="4"/>
+                <string name="Average" value="5"/>
+                <string name="Min" value="6"/>
+                <string name="Max" value="7"/>
+            </hintdict>
+            <help>
+                Choose how this layer's displacement combines with the layer 2.
+                If layer 2 is disabled, it will combine with the previous layer.
+            </help>
+        </param>
+     </page>
+     <page name="Layer 4" open="False">
+        <param name="layer4Enabled"
+               label="Enabled"
+               type="int"
+               default="0"
+               widget="checkBox"
+               connectable="False">
+            <help>
+                Enable this layer.
+            </help>
+        </param>
+        <param name="layer4Amount"
+               label="Layer 4 Gain"
+               type="float"
+               default="1.0"
+               widget="default">
+            <tags>
+                <tag value="float"/>
+            </tags>
+            <help>Gain amount for each displacement layer.</help>
+        </param>
+        <param name="layer4DispVector"
+               label="Layer 4 Vector"
+               type="vector"
+               default="0.0 0.0 0.0"
+               widget="default">
+            <tags>
+                <tag value="vector"/>
+            </tags>
+            <help>Connection to the vector displacement. </help>
+        </param>
+        <param name="layer4Mask"
+               label="Layer 4 Mask"
+               type="float"
+               default="1.0"
+               widget="default">
+            <tags>
+                <tag value="float"/>
+            </tags>
+            <help>Mask for this layer.</help>
+        </param>
+        <param name="layer4Comp"
+               label="Layer 4 Operation"
+               widget="mapper"
+               type="int"
+               default="1"
+              connectable="False">
+            <hintdict name="options">
+                <string name="Add" value="1"/>
+                <string name="Over" value="2"/>
+                <string name="Multiply" value="3"/>
+                <string name="Average" value="4"/>
+                <string name="Min" value="5"/>
+                <string name="Max" value="6"/>
+            </hintdict>
+            <help>
+                Choose how this layer's displacement combines with the layer 3.
+                If layer 3 is disabled, it will combine with the previous layer.
+            </help>
+        </param>
+     </page>
+
+    <output name="resultXYZ">
+        <tags>
+            <tag value ="vector"/>
+        </tags>
+    </output>
+    <output name="resultX">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultY">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultZ">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+
+     <rfmdata nodeid="1053342"
+        classification="rendernode/RenderMan/pattern/displace"/>
+    <rfcdata nodeid="1037182" description="Xpxrdispvectorlayer"/>
+</args>

@@ -1,0 +1,57 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="displaydriver"/>
+    </shaderType>
+    <help>
+        Saves the image to a Tagged Image File Format (TIFF).
+        It can be used to store "r", "rgb", "rgba", "rgbz", and "rgbaz" images
+        in 8, 16, or floating point 32-bit-per-component resolutions.
+    </help>
+    <param
+        name="format"
+        type="string"
+        default="float32"
+        widget="popup"
+        options="uint8|uint16|float32"
+        label="Format">
+    </param>
+    <param
+        name="quantize"
+        type="int"
+        default="1"
+        widget="checkBox"
+        label="Quantize">
+    </param>
+    <param
+        name="compression"
+        type="string"
+        default="lzw"
+        widget="popup"
+        options="none|lzw|packbits|deflate|pixarlog"
+        label="Compression">
+    </param>
+    <page name="Advanced" open="True">
+        <param
+            name="resolutionunit"
+            type="string"
+            default="none"
+            widget="popup"
+            options="none|centimeters|inches">
+        </param>
+        <param
+            name="resolution"
+            type="float2"
+            default="1.0 1.0"
+            label="Resolution">
+        </param>
+    </page>
+    <output name="display">
+        <tags>
+            <tag value ="message"/>
+        </tags>
+    </output>
+    <rfmdata nodeid="1200417"
+             classification="RenderMan/displaydriver"
+             fileextension="tif"
+             maxchannels="5"/>
+</args>

@@ -1,0 +1,39 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="pattern"/>
+    </shaderType>
+    <help>
+        Computes the dot product of two vectors.
+    </help>
+    <param name="vector1"
+        label="Vector 1"
+        type="vector"
+        default="0. 0. 0."
+        widget="default">
+        <tags>
+            <tag value ="vector"/>
+        </tags>
+        <help>The first vector in the dot product calculation.</help>
+    </param>
+    <param name="vector2"
+        label="Vector 2"
+        type="vector"
+        default="0. 0. 0."
+        widget="default">
+        <tags>
+            <tag value ="vector"/>
+        </tags>
+        <help>The second vector in the dot product calculation.</help>
+    </param>
+
+    <output name="result">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+
+    <rfmdata nodeid="1053387"
+             classification="rendernode/RenderMan/pattern/geometry"/>
+    <rfcdata nodeid="1035862" description="Xpxrdot"/>
+
+</args>

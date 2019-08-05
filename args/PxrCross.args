@@ -1,0 +1,65 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="pattern"/>
+    </shaderType>
+    <help>
+        Computes the cross product of two vectors and optionally
+        normalizes the resulting vector.
+    </help>
+    <param name="vector1"
+        label="Vector 1"
+        type="vector"
+        default="0. 0. 0."
+        widget="default">
+        <tags>
+            <tag value="vector"/>
+        </tags>
+        <help>The first vector in the cross product calculation.</help>
+    </param>
+    <param name="vector2"
+        label="Vector 2"
+        type="vector"
+        default="0. 0. 0."
+        widget="default">
+        <tags>
+            <tag value="vector"/>
+        </tags>
+        <help>The second vector in the cross product calculation.</help>
+    </param>
+    <param name="normalizeResult"
+        label="Normalize Result"
+        type="int"
+        default="1"
+        widget="checkBox"
+        connectable="False">
+        <help>When enabled (set to 1) the cross product result will be a normalized vector.</help>
+    </param>
+
+    <output name="resultXYZ">
+        <tags>
+            <tag value ="vector"/>
+            <tag value ="normal"/>
+            <tag value ="point"/>
+        </tags>
+    </output>
+    <output name="resultX">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultY">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultZ">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+
+    <rfmdata nodeid="1053391"
+             classification="rendernode/RenderMan/pattern/geometry"/>
+    <rfcdata nodeid="1035861" description="Xpxrcross"/>
+
+</args>

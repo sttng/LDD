@@ -1,0 +1,97 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="pattern"/>
+    </shaderType>
+    <help>
+        Inverts one or more components of the incoming color. The input color
+        can be in the in the RGB, HSL, or HSV color models. Note: The output is
+        a RGB color clamped to the [0 0 0] to [1 1 1] range.
+    </help>
+    <param name="inputRGB"
+        label="Input Color"
+        type="color"
+        default="0. 0. 0."
+        widget="color">
+        <tags>
+            <tag value ="color"/>
+        </tags>
+        <help>The color that you would like to invert.</help>
+    </param>
+    <param name="colorModel"
+        label="Color Model"
+        type="int"
+        default="0"
+        widget="mapper"
+        connectable="False">
+        <hintdict name="options">
+            <string name="RGB"  value="0"/>
+            <string name="HSL"  value="1"/>
+            <string name="HSV"  value="2"/>
+        </hintdict>
+        <help>The inputColor uses this color model.</help>
+    </param>
+    <param name="invertChannel0"
+        label="Invert Channel 0"
+        type="int"
+        default="1"
+        widget="checkBox"
+        connectable="False">
+        <help>
+        When enabled (set to 1) the first color channel is inverted. For
+        example, if the color model is set to RGB, then the R channel will be
+        inverted.
+        </help>
+    </param>
+    <param name="invertChannel1"
+        label="Invert Channel 1"
+        type="int"
+        default="1"
+        widget="checkBox"
+        connectable="False">
+        <help>
+        When enabled (set to 1) the second color channel is inverted. For
+        example, if the color model is set to RGB, then the G channel will be
+        inverted.
+        </help>
+    </param>
+    <param name="invertChannel2"
+        label="Invert Channel 2"
+        type="int"
+        default="1"
+        widget="checkBox"
+        connectable="False">
+        <help>
+        When enabled (set to 1) the third color channel is inverted. For
+        example, if the color model is set to RGB, then the B channel will be
+        inverted.
+        </help>
+    </param>
+
+    <output name="resultRGB">
+        <tags>
+            <tag value ="color"/>
+            <tag value ="vector"/>
+            <tag value ="normal"/>
+            <tag value ="point"/>
+        </tags>
+    </output>
+    <output name="resultR">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultG">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultB">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+
+    <rfmdata nodeid="1053433"
+             classification="rendernode/RenderMan/pattern/color"/>
+    <rfcdata nodeid="1035871" description="Xpxrinvert"/>
+</args>

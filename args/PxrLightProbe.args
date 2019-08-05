@@ -1,0 +1,12 @@
+<args format="1.0">
+  <shaderType>
+    <tag value="projection"/>
+  </shaderType>
+  <help>
+    A simple camera model that renders an image as though photographing a
+    perfectly specular mirrored ball.  Note that the view direction is
+    flipped and the image mirrored compared to a real ball so that the
+    orientation appears similar to other projections.
+  </help>
+  <rfmdata nodeid="1200430" classification="RenderMan/projection"/>
+</args>

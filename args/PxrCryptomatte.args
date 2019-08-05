@@ -1,0 +1,78 @@
+<args format="1.0">
+  <shaderType>
+    <tag value="samplefilter"/>
+  </shaderType>
+  <help>
+    Sample filter to generate Cryptomatte files for easy creation of
+    keyable ID mattes.  See https://github.com/Psyop/Cryptomatte for tools
+    and details.
+  </help>
+  <param name="filename" label="Filename" type="string"
+         default="cryptomatte.exr"
+         widget="assetIdOutput" connectable="False">
+    <help>
+      Name of the EXR file to write the Cryptomatte to.
+    </help>
+  </param>
+  <param name="manifest" label="Manifest" type="string"
+         default="header"
+         widget="mapper" connectable="False">
+    <hintdict name="options">
+      <string name="None" value="none"/>
+      <string name="Header" value="header"/>
+      <string name="Sidecar" value="sidecar"/>
+    </hintdict>
+    <help>
+      Where to store the object manifest.  Select 'None' if you do not wish
+      to store a manifest at all.
+    </help>
+  </param>
+  <param name="layer" label="Layer" type="string"
+         default="identifier:name"
+         widget="mapper" connectable="False">
+    <hintdict name="options">
+      <string name="Name" value="identifier:object"/>
+      <string name="Path" value="identifier:name"/>
+      <string name="Material" value="user:__materialid"/>
+      <string name="Attribute" value=""/>
+    </hintdict>
+    <help>
+      What property to use to group objects and identify them in the
+      manifest.  This will also be used to name the layer in the
+      Cryptomatte file.
+    </help>
+  </param>
+  <param name="attribute" label="Attribute" type="string"
+         default=""
+         widget="string" connectable="False">
+    <help>
+      Name of the string attribute used to group objects and identify them
+      in the manifest.  This will also be used to name the layer in the
+      Cryptomatte file.  Only has an effect when "Layer" is set to
+      "Attribute".
+    </help>
+    <hintdict name="conditionalVisOps">
+        <!-- Only visible if layer="Attribute" -->
+        <string name="conditionalVisPath" value="../layer"/>
+        <string name="conditionalVisOp" value="equalTo"/>
+        <string name="conditionalVisValue" value=""/>   
+    </hintdict>
+  </param>
+  <param name="levels" label="Levels" type="int"
+         default="6" min="1" max="20"
+         widget="default">
+    <help>
+      The number of id/coverage pairs to store in the Cryptomatte file.
+    </help>
+  </param>
+  <param name="accuracy" label="Accuracy" type="int"
+         default="4" min="1" max="20"
+         widget="default">
+    <help>
+      The number of extra id/coverage pairs computed but not stored.  Up to
+      a point, increasing this produces a better estimate for pixels where
+      there are many objects, but it does so at the expense of memory.
+    </help>
+  </param>
+  <rfmdata nodeid="1200424" classification="rendernode/RenderMan/samplefilter"/>
+</args>

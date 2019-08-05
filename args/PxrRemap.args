@@ -1,0 +1,108 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="pattern"/>
+    </shaderType>
+    <param name="inputRGB" label="Input Color" type="color"
+        default="0. 0. 0." widget="color">
+        <tags>
+            <tag value="color"/>
+        </tags>
+        <help>The input color to remap.</help>
+    </param>
+    <page name="Input Range" open="True">
+        <param name="inputMin" label="Input Min" type="float"
+            default="0.0" min="-1" max="1"
+            widget="default">
+            <tags>
+                <tag value="float"/>
+            </tags>
+        </param>
+        <param name="inputMax" label="Input Max" type="float"
+            default="1.0" min="0" max="2"
+            widget="default">
+            <tags>
+                <tag value="float"/>
+            </tags>
+        </param>
+        <param name="clampInput" label="Clamp Input" type="int"
+            default="1" widget="checkBox"
+            connectable="False">
+        </param>
+    </page>
+    <page name="Remap" open="True">
+        <param name="bias" label="Bias" type="color" default=".5 .5 .5"
+            widget="color">
+            <tags>
+                <tag value="color"/>
+            </tags>
+            <help>A normalized gamma correction factor.
+                Values greater than .5 lighten the result,
+                values less than .5 make it darker.</help>
+        </param>
+        <param name="gain" label="Gain" type="color" default=".5 .5 .5"
+            widget="color">
+            <tags>
+                <tag value="color"/>
+            </tags>
+            <help>Used to favor dark areas when the value is
+                    less than .5 and light areas when the value
+                    is greater than .5.</help>
+            </param>
+    </page>
+    <page name="Output Range" open="True">
+        <param name="outputMin" label="Output Min" type="float"
+            default="0.0" 
+            slider="1" slidermin="-1" slidermax="1"
+            widget="default">
+            <tags>
+                <tag value="float"/>
+            </tags>
+        </param>
+        <param name="outputMax" label="Output Max" type="float"
+            default="1.0" 
+            slider="1" slidermin="0" slidermax="2"
+            widget="default">
+            <tags>
+                <tag value="float"/>
+            </tags>
+        </param>
+        <param name="clampOutput" label="Clamp Output" type="int"
+            default="1" widget="checkBox"
+            connectable="False">
+        </param>
+    </page>
+
+    <output name="resultRGB">
+        <tags>
+            <tag value ="color"/>
+            <tag value ="vector"/>
+            <tag value ="normal"/>
+            <tag value ="point"/>
+        </tags>
+    </output>
+    <output name="resultR">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultG">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultB">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultA">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+
+    <rfmdata nodeid="1053394"
+             classification="rendernode/RenderMan/pattern/color"/>
+    <rfcdata nodeid="1035885" description="Xpxrremap"/>
+
+</args>

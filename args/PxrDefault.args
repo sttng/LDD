@@ -1,0 +1,16 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="integrator"/>
+    </shaderType>
+    <help>
+        Even simpler than PxrDirectLighting, the default integrator
+        places a virtual light at the camera (the "headlamp
+        integrator"). No shadows or indirect lighting are evaluated. A
+        good option when all is black - this integrator can help
+        narrow down where a problem is occurring (for example, when
+        the fault is in the lighting, particularly). Like
+        PxrDirectLighting, it is not designed to produce
+        "final-quality" images.
+    </help>
+    <rfmdata nodeid="1053317" classification="RenderMan/integrator"/>
+</args>

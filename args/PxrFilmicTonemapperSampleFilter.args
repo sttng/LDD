@@ -1,0 +1,124 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="samplefilter"/>
+    </shaderType>
+    <help>
+        Sample filter plugin based on Naughty Dog's Filmic Tonemapper from GDC Uncharted 2 HDR Lighting presentation. 
+    </help>
+
+    <param name="A"
+           label="Shoulder"
+           type="float"
+           default="0.22"
+           widget="float"
+           connectable="False">
+        <tags>
+            <tag value="default"/>
+        </tags>
+        <help>
+            Shoulder strength.
+        </help>
+    </param>
+    <param name="B"
+           label="Linear"
+           type="float"
+           default="0.30"
+           widget="float"
+           connectable="False">
+        <tags>
+            <tag value="default"/>
+        </tags>
+        <help>
+            Linear strength.
+        </help>
+    </param>
+    <param name="C"
+           label="Linear Angle"
+           type="float"
+           default="0.10"
+           widget="float"
+           connectable="False">
+        <tags>
+            <tag value="default"/>
+        </tags>
+        <help>
+            Linear angle.
+        </help>
+    </param>
+    <param name="D"
+           label="Toe"
+           type="float"
+           default="0.20"
+           widget="float"
+           connectable="False">
+        <tags>
+            <tag value="default"/>
+        </tags>
+        <help>
+            Toe strength.
+        </help>
+    </param>
+    <param name="E"
+           label="Toe Numerator"
+           type="float"
+           default="0.01"
+           widget="float"
+           connectable="False">
+        <tags>
+            <tag value="default"/>
+        </tags>
+        <help>
+            Toe numerator.
+        </help>
+    </param>
+    <param name="F"
+           label="Toe Denominator"
+           type="float"
+           default="0.3"
+           widget="float"
+           connectable="False">
+        <tags>
+            <tag value="default"/>
+        </tags>
+        <help>
+            Toe denominator.
+        </help>
+    </param>
+    <param name="linearWhitePoint"
+           label="White Point"
+           type="float"
+           default="11.2"
+           widget="float"
+           connectable="False">
+        <tags>
+            <tag value="default"/>
+        </tags>
+        <help>
+            Linear white point value.
+        </help>
+    </param>
+    <param name="exposureAdjust"
+           label="Exposure Adjustment"
+           type="float"
+           default="1.0"
+           widget="float"
+           connectable="False">
+        <tags>
+            <tag value="default"/>
+        </tags>
+        <help>
+            Exposure adjustment. This parameter is multiplied by the incoming
+            pixel.
+        </help>
+    </param>
+    <param name="aov"
+        label="AOV"
+        type="string"
+        default="Ci"
+        widget="string"
+        connectable="False">
+        <help>Name of AOV to apply filter to.</help>
+    </param>
+      <rfmdata nodeid="1053286"
+        classification="rendernode/RenderMan/samplefilter"/>
+</args>

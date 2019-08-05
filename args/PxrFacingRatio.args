@@ -1,0 +1,145 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="pattern"/>
+    </shaderType>
+    <help>
+        Computes the facing ratio of the geometry : a simple dot product between
+        the camera vector and the surface normal.
+    </help>
+    <page name="Parameters" open="True">
+        <param name="use"
+            label="Use"
+            type="int"
+            default="0"
+            widget="mapper"
+            connectable="False">
+            <hintdict name="options">
+                <string value="0"     name="Camera"/>
+                <string value="1"     name="Direction"/>
+            </hintdict>
+            <help>
+                Traditionnaly, the facing ratio is computed using the surface
+                normal and the camera vector : This is the Camera mode.
+                It can also be useful to the surface normal with an arbitrary
+                direction, for example to create a dust mask on up-facing parts
+                of a model : This is the Direction mode.
+            </help>
+        </param>
+        <param name="direction"
+            label="Direction"
+            type="vector"
+            default="0.0 1.0 0.0"
+            widget="default"
+            connectable="False">
+            <help>
+                Only active in Direction mode. Defines an direction of your
+                choice
+            </help>
+        </param>
+        <param name="coordSys"
+               label="Coordinate System"
+               type="string"
+               default=""
+               widget="string"
+               connectable="False">
+            <help>
+                By default, the direction is in current space. Possible coordinate
+                systems include world, object, or an user defined coordinate system.
+            </help>
+        </param>
+
+        <param name="faceForward"
+            label="Face Forward"
+            type="int"
+            default="1"
+            widget="checkBox"
+            connectable="False">
+            <help>The facing ratio can be negative if the normal is pointing
+            away from the camera. This will flip the normal to always give a
+            positive result.</help>
+        </param>
+        <param name="clamp"
+            label="clamp"
+            type="int"
+            default="0"
+            widget="checkBox"
+            connectable="False">
+            <help>Clamps the result between 0 and 1.</help>
+        </param>
+        <param name="invert"
+            label="Invert"
+            type="int"
+            default="0"
+            widget="checkBox"
+            connectable="False">
+            <help>Inverts the facing ratio : black becomes white and
+            vice-versa.</help>
+        </param>
+        <param name="mode"
+               label="Mode"
+               type="int" default="0"
+               connectable="False"
+               widget="mapper">
+            <hintdict name="options">
+                <string name="Gamma"    value="0"/>
+                <string name="Refraction Index"    value="1"/>
+            </hintdict>
+            <help>
+                Artistic mode uses Face and Edge Color and Fresnel Exponent.
+                Physical mode uses Refractive Index and Extinction Coefficient as in
+                  PxrLM Bxdf.
+            </help>
+        </param>
+        <param name="gamma"
+            label="Gamma"
+            type="float"
+            default="1.0"
+            min="0.01" max="4.0"
+            widget="default"
+            conditionalVisOp='equalTo'
+            conditionalVisPath='mode' conditionalVisValue='0'>
+            <tags>
+                <tag value="float"/>
+            </tags>
+            <help>A simple gamma function to shape the facing ratio. A value of 1.0 is
+            neutral</help>
+        </param>
+
+        <param name="ior"
+               label="Refraction Index"
+               type="float" default="1.5"
+               conditionalVisOp='equalTo'
+               conditionalVisPath='mode' conditionalVisValue='1'>
+            <tags>
+                <tag value="float"/>
+            </tags>
+            <help>
+                Refractive Index is the dielectric index of refraction for
+                the material. Values for this parameter typically lie in the range 1 - 3.
+            </help>
+        </param>
+
+        <param name="bumpNormal"
+            label="Bump Normal"
+            type="normal"
+            default="0 0 0"
+            widget="default">
+            <tags>
+                <tag value="normal"/>
+            </tags>
+            <help>If the surface is bump-mapped, input the bump normal here. If
+            not connected, the node will use ths shading normal.</help>
+        </param>
+    </page>
+
+    <output name="resultF">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+
+    <rfmdata nodeid="1053349"
+             classification="rendernode/RenderMan/pattern/geometry"/>
+    <rfcdata nodeid="1035864" description="Xpxrfacingratio"/>
+
+</args>

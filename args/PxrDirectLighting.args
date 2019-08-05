@@ -1,0 +1,31 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="integrator"/>
+    </shaderType>
+    <help>
+        This is a debugging or "draft-quality" integrator that
+        implements only the direct lighting portion of the light
+        transport. It is not designed to produce "final-quality"
+        images. Since it doesn't implement indirect lighting paths it
+        cannot produce reflections, refractions, or other global
+        illumination effects, nor can it handle any effects that
+        require a volume integrator.
+    </help>
+    <param name="numLightSamples" type="int" default="4" 
+         min='0'
+         connectable="False">
+        <help>
+    Controls the number of light samples for direct illumination per
+    camera hit point. The default is 4.
+        </help>
+    </param> 
+    <param name="numBxdfSamples" type="int" default="4" 
+         min='0'
+         connectable="False">
+        <help>
+    Controls the number of Bxdf samples for direct illumination per
+    camera hit point. The default is 4.
+        </help>
+    </param>
+    <rfmdata nodeid="1053318" classification="RenderMan/integrator"/>
+</args>

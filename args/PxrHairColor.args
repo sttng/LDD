@@ -1,0 +1,378 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="pattern"/>
+    </shaderType>
+    <help>
+        This node creates beautiful natural human hair color, by modeling
+        melanin concentration in hair fibers.
+    </help>
+    <param name="mode"
+        label="Mode"
+        type="int"
+        default="0"
+        widget="mapper"
+        connectable="False">
+        <hintdict name="options">
+            <string name="Physical" value="0"/>
+            <string name="Artistic" value="1"/>
+        </hintdict>
+        <help>
+            The melanin concentration in the hair fibers. Higher values create
+            darker colors.
+        </help>
+    </param>
+    <param name="colorSpace" label="Color Space" type="int" default="0"
+           widget="mapper" connectable="False">
+        <hintdict name="conditionalVisOps">
+            <string value="equalTo" name="conditionalVisOp"/>
+            <string value="../mode" name="conditionalVisPath"/>
+            <string value="0" name="conditionalVisValue"/>
+        </hintdict>
+        <hintdict name="options">
+            <string name="Rec709/sRGB" value="0"/>
+            <string name="ACEScg" value="1"/>
+        </hintdict>
+        <help>
+            Color space for output.
+        </help>
+    </param>
+    <page name="Hair Color" open="True">
+        <param name="melanin"
+            label="Melanin"
+            type="float"
+            default="0.2"
+            widget="default"
+            min="0.0"
+            max="1.0"
+            slider="1">
+            <hintdict name="conditionalVisOps">
+                <string value="equalTo" name="conditionalVisOp"/>
+                <string value="../../mode" name="conditionalVisPath"/>
+                <string value="0" name="conditionalVisValue"/>
+            </hintdict>
+            <tags>
+                <tag value="float"/>
+            </tags>
+            <help>
+                The melanin concentration in the hair fibers. Higher values create
+                darker colors.
+            </help>
+        </param>
+        <param name="color"
+            label="Color"
+            type="color"
+            default="0.0 0.3 0.1"
+            widget="color">
+            <hintdict name="conditionalVisOps">
+                <string value="equalTo" name="conditionalVisOp"/>
+                <string value="../../mode" name="conditionalVisPath"/>
+                <string value="1" name="conditionalVisValue"/>
+            </hintdict>
+            <tags>
+                <tag value="color"/>
+            </tags>
+            <help>
+                The hair colors.
+            </help>
+        </param>
+        <param name="randomMelanin"
+            label="Melanin Randomize"
+            type="float"
+            default="0.05"
+            widget="default"
+            min="0.0"
+            max="1.0"
+            slider="1">
+            <hintdict name="conditionalVisOps">
+                <string value="equalTo" name="conditionalVisOp"/>
+                <string value="../../mode" name="conditionalVisPath"/>
+                <string value="0" name="conditionalVisValue"/>
+            </hintdict>
+            <tags>
+                <tag value="float"/>
+            </tags>
+                <help>
+                    Randomize the melanin concentration, if hairIndexPrimvar is defined.
+                </help>
+        </param>
+        <param name="randomColor"
+            label="Color Randomize"
+            type="color"
+            default="0.05 0.05 0.05"
+            widget="color">
+            <hintdict name="conditionalVisOps">
+                <string value="equalTo" name="conditionalVisOp"/>
+                <string value="../../mode" name="conditionalVisPath"/>
+                <string value="1" name="conditionalVisValue"/>
+            </hintdict>
+            <tags>
+                <tag value="color"/>
+            </tags>
+                <help>
+                    Randomize the hair color, if hairIndexPrimvar is defined.
+                </help>
+        </param>
+        <param name="darkenRoots"
+            label="Darken Roots"
+            type="float"
+            default="0.0"
+            widget="default"
+            min="0.0"
+            max="1.0"
+            slider="1">
+            <tags>
+                <tag value="float"/>
+            </tags>
+            <help>
+                Progressively darken the fiber's root, from 0 to 1.
+            </help>
+        </param>
+        <param name="darkenSlope"
+            label="Darken Slope"
+            type="float"
+            default="1.0"
+            widget="default"
+            min="0.01"
+            max="4.0"
+            slider="1">
+            <tags>
+                <tag value="float"/>
+            </tags>
+            <help>
+                Tweak the slope of the darkening.
+            </help>
+        </param>
+        <param name="darkenEndPosition"
+            label="Darken End Position"
+            type="float"
+            default="0.5"
+            widget="default"
+            min="0.01"
+            max="1.0"
+            slider="1">
+            <tags>
+                <tag value="float"/>
+            </tags>
+            <help>
+                The position along the hair where the darkening gradient stops.
+                0.0 is the root and 1.0 is the tip of the hair.
+            </help>
+        </param>
+    </page>
+    <page name="Stray Hair Color" open="True">
+        <param name="strayDensity"
+            label="Stray Density"
+            type="float"
+            default="0.1"
+            min="0" max="1" slider="1"
+            widget="default">
+            <tags>
+                <tag value="float"/>
+            </tags>
+            <help>
+            The frequency at which stray hair appear, if hairIndexPrimvar is defined.
+            White stray hairs typically appear when people start to get older.
+            </help>
+        </param>
+        <param name="strayMelanin"
+            label="Stray Melanin"
+            type="float"
+            default="0.05"
+            min="0" max="1" slider="1"
+            widget="default">
+            <hintdict name="conditionalVisOps">
+                <string value="equalTo" name="conditionalVisOp"/>
+                <string value="../../mode" name="conditionalVisPath"/>
+                <string value="0" name="conditionalVisValue"/>
+            </hintdict>
+            <tags>
+                <tag value="float"/>
+            </tags>
+            <help>
+            The melanin concentration for stray hairs.
+            </help>
+        </param>
+        <param name="strayColor"
+            label="Stray Color"
+            type="color"
+            default="0.05 0.05 0.05"
+            widget="color">
+            <hintdict name="conditionalVisOps">
+                <string value="equalTo" name="conditionalVisOp"/>
+                <string value="../../mode" name="conditionalVisPath"/>
+                <string value="1" name="conditionalVisValue"/>
+            </hintdict>
+            <tags>
+                <tag value="color"/>
+            </tags>
+            <help>
+            The color of stray hairs.
+            </help>
+        </param>
+        <param name="strayRandomMelanin"
+            label="Stray Random Melanin"
+            type="float"
+            default="0.0"
+            min="0" max="1" slider="1"
+            widget="default">
+            <hintdict name="conditionalVisOps">
+                <string value="equalTo" name="conditionalVisOp"/>
+                <string value="../../mode" name="conditionalVisPath"/>
+                <string value="0" name="conditionalVisValue"/>
+            </hintdict>
+            <tags>
+                <tag value="float"/>
+            </tags>
+            <help>
+            Randomize the melanin level of stray hairs, if hairIndexPrimvar is defined.
+            </help>
+        </param>
+        <param name="strayRandomColor"
+            label="Stray Random Color"
+            type="color"
+            default="0.0 0.0 0.0"
+            widget="color">
+            <hintdict name="conditionalVisOps">
+                <string value="equalTo" name="conditionalVisOp"/>
+                <string value="../../mode" name="conditionalVisPath"/>
+                <string value="1" name="conditionalVisValue"/>
+            </hintdict>
+            <tags>
+                <tag value="color"/>
+            </tags>
+            <help>
+            Randomize the melanin level of stray hairs, if hairIndexPrimvar is defined.
+            </help>
+        </param>
+    </page>
+    <page name="Dye Color" open="True">
+        <param name="dye"
+            label="Dye"
+            type="color"
+            default="1.0 1.0 1.0"
+            widget="color">
+            <tags>
+                <tag value="color"/>
+            </tags>
+            <help>
+            Hair can be dyed with a color. This color will be combined with hair
+            color in a plausible way.
+            </help>
+        </param>
+        <param name="randomDyeHue"
+            label="Dye Random Hue"
+            type="float"
+            default="0.0"
+            min="0" max="1" slider="1"
+            widget="default">
+            <tags>
+                <tag value="float"/>
+            </tags>
+            <help>
+            Randomize the dye hue, if hairIndexPrimvar is defined.
+            </help>
+        </param>
+        <param name="randomDyeSaturation"
+            label="Dye Random Saturation"
+            type="float"
+            default="0.0"
+            min="0" max="1" slider="1"
+            widget="default">
+            <tags>
+                <tag value="float"/>
+            </tags>
+            <help>
+            Randomize the dye saturation, if hairIndexPrimvar is defined.
+            </help>
+        </param>
+    </page>
+    <page name="Random Setup" open="True">
+        <param name="hairIndexPrimvar"
+            label="Hair ID Primvar"
+            type="string"
+            default=""
+            widget="default"
+            connectable="False">
+            <tags>
+                <tag value="string"/>
+            </tags>
+            <help>
+            WARNING: If empty, none of the randomizing options will work. <br/>
+            Here is a list of known primvars: <br/>
+            - Maya Hair/Fur: &quot;index&quot; <br/>
+            - XGen: &quot;id_XP&quot; <br/>
+            - Yeti: &quot;fur_id&quot; <br/>
+            </help>
+        </param>
+        <param name="randPivot"
+            label="Random Pivot"
+            type="float"
+            default="0.5"
+            min="0" max="1" slider="1"
+            widget="default"
+            connectable="False">
+            <tags>
+                <tag value="float"/>
+            </tags>
+            <help>
+            Offset the random values to allow you to create centered (0.5),
+            additive (0.0) or substractive (1.0) random variations.
+            </help>
+        </param>
+        <param name="randSeed"
+            label="Random Seed"
+            type="float"
+            default="0.0"
+            widget="default"
+            connectable="False">
+            <tags>
+                <tag value="float"/>
+            </tags>
+            <help>
+            A global random seed to make sure you get different random results.
+            </help>
+        </param>
+        <param name="viewIndexRandom"
+            label="View Index Random"
+            type="int"
+            default="0"
+            widget="checkBox"
+            connectable="False">
+            <tags>
+                <tag value="int"/>
+            </tags>
+            <help>
+            Output the per-curve random values, if hairIndexPrimvar is defined.
+            </help>
+        </param>
+    </page>
+
+    <output name="resultDiff">
+        <tags>
+            <tag value ="color"/>
+            <tag value ="vector"/>
+            <tag value ="normal"/>
+            <tag value ="point"/>
+        </tags>
+    </output>
+    <output name="resultTT">
+        <tags>
+            <tag value ="color"/>
+            <tag value ="vector"/>
+            <tag value ="normal"/>
+            <tag value ="point"/>
+        </tags>
+    </output>
+    <output name="resultTRT">
+        <tags>
+            <tag value ="color"/>
+            <tag value ="vector"/>
+            <tag value ="normal"/>
+            <tag value ="point"/>
+        </tags>
+    </output>
+
+    <rfmdata nodeid="1200408"
+             classification="rendernode/RenderMan/pattern/color"/>
+    <rfcdata nodeid="1035895" description="Xpxrhaircolor"/>
+</args>

@@ -1,0 +1,18 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="integrator"/>
+    </shaderType>
+    <help>
+        This integrator is used to visualize data in the shading
+        context, such as normals and texture coordinates. It is not
+        designed to produce "final-quality" images.
+    </help>
+    <param name="viewchannel" type="string" widget="popup" default="Nn" 
+           options="Nn|Vn|VLen|Tn|InsideOutside|st|dsdu_dtdv|dsdv_dtdu|uv|dudv|LightLeaks|P|dPdu|dPdv|dPdtime|id|Ngn"
+           connectable="False">
+        <help>
+	   The data to visualize from the shading context.
+        </help>
+    </param>
+    <rfmdata nodeid="1053316" classification="RenderMan/integrator"/>
+</args>

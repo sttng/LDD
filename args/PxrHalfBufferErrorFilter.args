@@ -1,0 +1,48 @@
+<args format="1.0">
+  <shaderType>
+    <tag value="displayfilter"/>
+  </shaderType>
+  <help>
+    Estimate the error of an image by comparing two half buffers.  If two
+    statistically-independent images are each produced from half the camera
+    samples, then we can estimate the mean-squared-error between the ground
+    truth and their average and as one-quarter of the squared difference of
+    the two.  The AOVs may be either all scalar or all color.
+  </help>
+
+  <param name="aov1"
+         label="AOV 1"
+         type="string"
+         default="even"
+         widget="string"
+         connectable="False">
+    <help>
+      Name of the first half-buffer AOV to read from.
+    </help>
+  </param>
+
+  <param name="aov2"
+         label="AOV 2"
+         type="string"
+         default="odd"
+         widget="string"
+         connectable="False">
+    <help>
+      Name of the second half-buffer AOV to read from.
+    </help>
+  </param>
+
+  <param name="result"
+         label="Result"
+         type="string"
+         default="mse"
+         widget="string"
+         connectable="False">
+    <help>
+      Name of the AOV to write the estimated error to.
+    </help>
+  </param>
+
+  <rfmdata nodeid="1053344"
+           classification="rendernode/RenderMan/displayfilter"/>
+</args>

@@ -1,0 +1,82 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="displaydriver"/>
+    </shaderType>
+    <help>
+        Saves the image to a texture file.
+        - Images rendered using this display driver must have power of two
+          dimensions - no attempt will be made to resize the image when using
+          this driver.
+    </help>
+     <param
+        name="format"
+        type="string"
+        default="pixar"
+        widget="popup"
+        options="pixar|openexr|tiff"
+        label="Texture Format">
+    </param>
+   <param
+        name="type"
+        type="string"
+        default="byte"
+        widget="popup"
+        options="byte|short|float"
+        label="Bit Depth">
+    </param>
+   <param
+        name="exrpixeltype"
+        type="string"
+        default="half"
+        widget="popup"
+        options="half|float"
+        label="EXR Bit Depth">
+    </param>
+    <param
+        name="smode"
+        type="string"
+        default="black"
+        widget="popup"
+        options="black|clamp|periodic"
+        label="S Wrap Mode">
+    </param>
+    <param
+        name="tmode"
+        type="string"
+        default="black"
+        widget="popup"
+        options="black|clamp|periodic"
+        label="T Wrap Mode">
+    </param>
+    <param
+        name="compression"
+        type="string"
+        default="lossless"
+        widget="popup"
+        options="none|lossless|lossy"
+        label="Compression">
+    </param>
+    <param
+        name="exrcompression"
+        type="string"
+        default="DWAa"
+        widget="popup"
+        options="none|rle|zip|zips|piz|pixar|B44|B44A|DWAa|DWAb"
+        label="EXR Compression">
+    </param>
+    <param
+        name="exrcompressionlevel"
+        type="float"
+        default="45.0"
+        label="EXR Compression Level">
+    </param>
+    <output name="display">
+        <tags>
+            <tag value ="message"/>
+        </tags>
+    </output>
+    <rfmdata nodeid="1200416"
+             classification="RenderMan/displaydriver"
+             fileextension="tex"
+             maxchannels="0"/>
+</args>

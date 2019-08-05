@@ -1,0 +1,261 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="bxdf"/>
+    </shaderType>
+    <page name="Diffuse" open="True">
+        <param name="diffuseModelType" label="Diffuse Model" type="int"
+               default="0"
+               widget="mapper"
+               connectable="False">
+           <hintdict name="options">
+               <string name="Zinke"    value="0"/>
+               <string name="Kajiya"   value="1"/>
+           </hintdict>
+        </param>
+        <param name="diffuseGain" label="Diffuse Gain" type="float" default="0.0"
+               slider="1" slidermin="0.0" slidermax="1.0"
+               min="0.0" max="1.0" sensitivity="0.01">
+           <tags>
+               <tag value="float"/>
+           </tags>
+           <help>
+               Diffuse gain.
+           </help>
+       </param>
+        <param name="diffuseColor" label="Diffuse Color" type="color"
+               default="0.18 0.18 0.18"
+               widget="color">
+            <tags>
+                <tag value="color"/>
+            </tags>
+            <help>
+               Diffuse color.
+            </help>
+        </param>
+    </page>
+
+    <page name="Specular" open="True">
+        <param name="specularGainR" label="Primary Specular Gain" type="float" default="1.0" min="0">
+            <tags>
+                <tag value="float"/>
+            </tags>
+            <help>
+                Gain for R lobe of Marschner specular.  This is like a clearcoat where the specular
+                is fairly sharp and glossy and normally not colored.
+            </help>
+        </param>
+        <param name="specularGainTRT" label="Secondary Specular Gain" type="float" default="1.0" min="0">
+            <tags>
+                <tag value="float"/>
+            </tags>
+            <help>
+                Gain for TRT lobe of Marschner specular.  This is a rougher and colored specular.
+            </help>
+        </param>
+        <param name="specularGainTT" label="Transmit Specular Gain" type="float" default="1.0" min="0">
+            <tags>
+                <tag value="float"/>
+            </tags>
+            <help>
+                Gain for TT lobe of Marschner specular.  This is a transmission-type (refraction)
+                specular with some volume attenuation.
+            </help>
+        </param>
+        <param name="specularGainGLINTS" label="Glint Gain" type="float" default="1.0" min="0">
+            <tags>
+                <tag value="float"/>
+            </tags>
+            <help>
+                Gain for glints.
+            </help>
+        </param>
+        <param name="specularColorR" label="Primary Specular Color"
+               type="color" default="1.0 1.0 1.0">
+            <tags>
+                <tag value="color"/>
+            </tags>
+            <help>
+                Specular color for R lobe. Should be close to pure white.
+            </help>
+        </param>
+        <param name="specularColorTRT" label="Secondary Specular Color"
+               type="color" default="0.4 0.4 0.4">
+            <tags>
+                <tag value="color"/>
+            </tags>
+            <help>
+                Specular color for TRT (and glints) lobe.
+                Because it represents two paths inside the fiber, it should be darker and more saturated
+                than specularColorTT (technically, it should be the square of this TT color).
+            </help>
+        </param>
+        <param name="specularColorTT" label="Transmit Specular Color"
+               type="color" default="0.4 0.4 0.4">
+            <tags>
+                <tag value="color"/>
+            </tags>
+            <help>
+                Specular color for TT lobe. Main albedo of the full Marschner component.
+                The default at 0.4 corresponds loosely to middle grey, considering visibility and bounces in the hair volume.
+            </help>
+        </param>
+        <param name="specularConeAngleR"
+               label="Primary Cone Angle" type="float"
+               min="0" 
+               slider="1" slidermin="0" slidermax="16" default="8.0">
+            <tags>
+                <tag value="float"/>
+            </tags>
+            <help>
+                Cone angle in degrees for R lobe.
+            </help>
+        </param>
+        <param name="specularConeAngleTRT"
+               label="Secondary Cone Angle" type="float"
+               min="0" 
+               slider="1" slidermin="0" slidermax="16" default="8.0">
+            <tags>
+                <tag value="float"/>
+            </tags>
+            <help>
+                Cone angle in degrees for TRT lobe.
+            </help>
+        </param>
+        <param name="specularConeAngleTT"
+               label="Transmit Cone Angle" type="float"
+               min="0" 
+               slider="1" slidermin="0" slidermax="16" default="8.0">
+            <tags>
+                <tag value="float"/>
+            </tags>
+            <help>
+                Cone angle in degrees for TT lobe.
+            </help>
+        </param>
+        <param name="specularOffset"
+               label="Specular Offset" type="float" default="-3"
+               slider="1" slidermin="-6" slidermax="6"
+               connectable="False">
+            <help>
+                Cone offset in degrees.
+            </help>
+        </param>
+        <param name="specularIor"
+               label="Refractive Index" type="float" default="1.55"
+               min="1.0"
+               connectable="False">
+            <help>
+                Index of refraction.
+            </help>
+        </param>
+        <param name="specularMixFresnel" label="Fresnel Mix"
+               type="float" default="1.0" min="0" max="1"
+               connectable="False">
+            <help>
+                How much do we account for fresnel attenuation.
+            </help>
+        </param>
+        <param name="specularGlintWidth" label="Glint Width"
+               type="float" default="10.0" 
+               slider="1" slidermin="10" slidermax="25"
+               connectable="False">
+            <help>
+                Smooths TRT distribution, should be between 10 and 25.
+            </help>
+        </param>
+        <param name="specularEccentricity" label="Eccentricity"
+               type="float" default="1.0" min="0.85" max="1.0"
+               connectable="False">
+            <help>
+                Elliptical cross section aspect ratio. Between 1 and 0.85.  Note that
+                eccentricity depends on Nn.
+            </help>
+        </param>
+    </page>
+
+    <page name="Glow">
+        <param name="glowGain"
+               label="Gain"
+               type="float" default="0.0"
+               slider="1" slidermin="0.0" slidermax="1.0"
+               min="0.0" max="1.0" sensitivity="0.01">
+            <tags>
+                <tag value="float"/>
+            </tags>
+            <help>
+                Glow gain.  This is a multiplier for the glow.
+            </help>
+         </param>
+        <param name="glowColor"
+               label="Color"
+               type="color" default="1 1 1">
+            <tags>
+                <tag value="color"/>
+            </tags>
+            <help>
+                Controls the glow (incandescence) of the material.
+            </help>
+        </param>
+    </page>
+
+    <page name="Globals">
+        <param name="specularEnergyCompensation"
+               label="Specular Energy Compen"
+               connectable="False"
+               type="float" default="0.0" min="0.0"
+               slider="1" slidermin="0.0" slidermax="1.0" sensitivity="0.01">
+            <tags>
+                <tag value="float"/>
+            </tags>
+            <help>
+                Applies fresnel energy compensation to diffuse.
+                A value of 1.0 attempts to fully balance the diffuse illum by darkening it against all the specular illumination responses.
+                This makes it as if diffuse is the residual energy after specularR, specularTT and specularTRT.
+            </help>
+        </param>
+
+        <param name="eccentricityDirection"
+               label="Eccentricity Direction"
+               type="normal" default="0 0 0"
+               widget="default">
+            <tags>
+                <tag value="normal"/>
+            </tags>
+            <help>
+                Normal to use for eccentricity illumination effect. Overwrites geometric normal.
+            </help>
+        </param>
+
+        <param name="shadowColor" label="Shadow Color" type="color" default="0.0 0.0 0.0"
+               connectable="False">
+            <help>
+                Shadow color.
+            </help>
+        </param>
+
+        <param name="presence" label="Presence" type="float" default="1.0">
+            <tags>
+                <tag value="float"/>
+            </tags>
+        </param>
+
+        <param name="utilityPattern"
+             label="Utility Pattern"
+             type="int" default="0"
+             isDynamicArray="1" arraySize="-1" widget="dynamicArray">
+          <tags>
+              <tag value="int"/>
+          </tags>
+          <help>
+              Utility patterns are evaluated but their results are not used by the bxdf.
+              This is where input AOV is connected.
+          </help>
+        </param>
+    </page>
+
+
+    <rfmdata nodeid="1053358"
+        classification="shader/surface:rendernode/RenderMan/bxdf/main:swatch/rmanSwatch"/>
+    <rfcdata nodeid="1035852" description="Mpxrmarschnerhair"/>
+
+</args>

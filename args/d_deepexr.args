@@ -1,0 +1,48 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="displaydriver"/>
+    </shaderType>
+    <help>
+        Saves the image to a deep OpenEXR file.
+    </help>
+    <param
+        name="asrgba"
+        type="int"
+        default="1"
+        widget="checkBox"
+        label="As RGBA">
+    </param>
+    <param
+        name="storage"
+        type="string"
+        default="scanline"
+        label="Storage"
+        widget="popup"
+        options="tiled|scanline">
+    </param>
+    <param
+        name="type"
+        type="string"
+        default="half"
+        widget="popup"
+        options="half|float"
+        label="Type">
+    </param>
+    <param
+        name="compression"
+        type="string"
+        default="zips"
+        widget="popup"
+        options="none|rle|zips"
+        label="Compression">
+    </param>
+    <output name="display">
+        <tags>
+            <tag value ="message"/>
+        </tags>
+    </output>
+    <rfmdata nodeid="1200412"
+             classification="RenderMan/displaydriver"
+             fileextension="exr"
+             maxchannels="0"/>
+</args>

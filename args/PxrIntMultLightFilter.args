@@ -1,0 +1,103 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="lightfilter"/>
+    </shaderType>
+
+    <page name="Notes" open="False">
+        <param name="notes" type="string" default="" widget="scriptEditor" omitFromRender="True">
+            <help>General comment field for this light filter.</help>
+        </param>
+    </page>
+
+    <page name="Multiplier" open="True">
+       <!-- replace with pxIntensityNumber when this widget is ported over -->
+        <param name="intensity" 
+               label="Intensity"
+               type="float" min="0.0" default="1.0"
+               widget="default" exposureParamName="../exposure" connectable="False">
+            <help>intensity: Multiplier for the light intensity.</help>
+        </param>
+        <param name="exposure" 
+               label="Exposure"
+               type="float" default="0.0" connectable="False">
+            <help>exposure: Exposure control for the multiplier.</help>
+        </param>
+        <param name="invert" 
+               label="Invert"
+               connectable="False"
+               type="int" widget="checkBox" default="0">
+            <help>
+                invert: When this is on, invert the multiplier.  For instance, if we 
+                set the light filter's intensity to 2, the final light's intensity 
+                will be divided by (instead of multiplied by) the light filter's 
+                intensity.
+            </help>
+        </param>
+        <param name="diffuse" 
+               label="Diffuse"
+               type="float" default="1.0"
+               min="0.0" sensitivity="0.01"
+               connectable="False">
+            <help>diffuse: How much this light filter affects diffuse lighting.</help>
+        </param>
+        <param name="specular" 
+               label="Specular"
+               type="float" default="1.0"
+               min="0.0" sensitivity="0.01"
+               connectable="False">
+            <help>specular: How much this light filter affects specular lighting.</help>
+        </param>
+        <param name="saturation"
+               label="Saturation"
+               type="float" default="1.0"
+               min="0.0" sensitivity="0.01"
+               connectable="False">
+            <help>Saturation of the light before hitting the surface
+                  (0=greyscale,1=normal,>1=boosted colors).
+            </help>
+        </param>
+    </page>
+
+    <param name="combineMode"
+           label="Combine Mode"
+           type="string" default="mult"
+           connectable="False"
+           widget="popup" options="mult|max|min|screen">
+        <help>
+        <p>
+        combineMode: Light filters on a light are grouped by their combine mode. Light filters
+        in the same group are executed together and combined by the corresponding
+        operation:
+        </p>
+
+        <ol>
+          <li>max: the maximum result from all filters is used.
+              This works best for grey scale light filters.</li>
+          <li>min: the minimum result from all filters is used.
+              This works best for grey scale light filters.</li>
+          <li>screen: similar to the max operation, but it combines gradients
+              in a smoother way. This works best for grey scale light filters.</li>
+          <li>mult (default): the results of all the filters are multiplied together
+              (technically: they are applied one after the other)</li>
+        </ol>
+
+        <p>
+        The groups are executed in the above order and are multiplied together,
+        which means a filter that turns things black in the mult group will zero out
+        all other filters.
+        </p>
+
+        </help>
+    </param>
+
+    <param name="linkingGroups" 
+           connectable="False"
+           type="string" default="" widget="null"/>
+
+    <rfmdata nodeid="1200394"
+             classification="light:rendernode/RenderMan/lightfilter:swatch/rmanSwatch"/>
+
+</args>
+
+
+

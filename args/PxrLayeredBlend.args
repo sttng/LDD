@@ -1,0 +1,467 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="pattern"/>
+    </shaderType>
+
+
+    <page name="Layer 0" open="True">
+        <param name="enable_0" label="Enable 0"
+               type="int" default="0" widget="checkBox"
+               connectable="False">
+        </param>
+        <param name="operation_0"  label="Operation 0" type="int" default="19"  widget="mapper"
+               connectable="False">
+            <hintdict name="options">
+                <string name="Color"         value="0"/>
+                <string name="Color Burn"    value="1"/>
+                <string name="Color Dodge"   value="2"/>
+                <string name="Darken"        value="3"/>
+                <string name="Darker Color"  value="4"/>
+                <string name="Difference"    value="5"/>
+                <string name="Dissolve"      value="6"/>
+                <string name="Divide"        value="7"/>
+                <string name="Exclusion"     value="8"/>
+                <string name="Hard Light"    value="9"/>
+                <string name="Hard Mix"      value="10"/>
+                <string name="Hue"           value="11"/>
+                <string name="Lighten"       value="12"/>
+                <string name="Lighter Color" value="13"/>
+                <string name="Linear Burn"   value="14"/>
+                <string name="Linear Dodge"  value="15"/>
+                <string name="Linear Light"  value="16"/>
+                <string name="Luminosity"    value="17"/>
+                <string name="Multiply"      value="18"/>
+                <string name="Normal"        value="19"/>
+                <string name="Overlay"       value="20"/>
+                <string name="Pin Light"     value="21"/>
+                <string name="Saturation"    value="22"/>
+                <string name="Screen"        value="23"/>
+                <string name="Soft Light"    value="24"/>
+                <string name="Subtract"      value="25"/>
+                <string name="Vivid Light"   value="26"/>
+            </hintdict>
+        </param>
+        <param name="RGB_0" label="Color 0" type="color"
+               default="0. 0. 0." widget="color">
+            <tags>
+                <tag value="color"/>
+            </tags>
+        </param>
+        <param name="A_0" label="Alpha 0" type="float"
+                   default="1" min="0" max="1" widget="default">
+            <tags>
+                <tag value="float"/>
+            </tags>
+        </param>
+    </page>
+
+    <page name="Layer 1" open="True">
+        <param name="enable_1" label="Enable 1"
+               type="int" default="0" widget="checkBox"
+               connectable="False">
+        </param>
+        <param name="operation_1"  label="Operation 1" type="int" default="19"  widget="mapper"
+               connectable="False">
+            <hintdict name="options">
+                <string name="Color"         value="0"/>
+                <string name="Color Burn"    value="1"/>
+                <string name="Color Dodge"   value="2"/>
+                <string name="Darken"        value="3"/>
+                <string name="Darker Color"  value="4"/>
+                <string name="Difference"    value="5"/>
+                <string name="Dissolve"      value="6"/>
+                <string name="Divide"        value="7"/>
+                <string name="Exclusion"     value="8"/>
+                <string name="Hard Light"    value="9"/>
+                <string name="Hard Mix"      value="10"/>
+                <string name="Hue"           value="11"/>
+                <string name="Lighten"       value="12"/>
+                <string name="Lighter Color" value="13"/>
+                <string name="Linear Burn"   value="14"/>
+                <string name="Linear Dodge"  value="15"/>
+                <string name="Linear Light"  value="16"/>
+                <string name="Luminosity"    value="17"/>
+                <string name="Multiply"      value="18"/>
+                <string name="Normal"        value="19"/>
+                <string name="Overlay"       value="20"/>
+                <string name="Pin Light"     value="21"/>
+                <string name="Saturation"    value="22"/>
+                <string name="Screen"        value="23"/>
+                <string name="Soft Light"    value="24"/>
+                <string name="Subtract"      value="25"/>
+                <string name="Vivid Light"   value="26"/>
+            </hintdict>
+        </param>
+        <param name="RGB_1" label="Color 1" type="color"
+               default="0. 0. 0." widget="color">
+            <tags>
+                <tag value="color"/>
+            </tags>
+        </param>
+        <param name="A_1" label="Alpha 1" type="float"
+                   default="1" min="0" max="1" widget="default">
+            <tags>
+                <tag value="float"/>
+            </tags>
+        </param>
+    </page>
+
+    <page name="Layer 2" open="True">
+        <param name="enable_2" label="Enable 2"
+               type="int" default="0" widget="checkBox"
+               connectable="False">
+        </param>
+        <param name="operation_2"  label="Operation 2" type="int" default="19"  widget="mapper"
+               connectable="False">
+            <hintdict name="options">
+                <string name="Color"         value="0"/>
+                <string name="Color Burn"    value="1"/>
+                <string name="Color Dodge"   value="2"/>
+                <string name="Darken"        value="3"/>
+                <string name="Darker Color"  value="4"/>
+                <string name="Difference"    value="5"/>
+                <string name="Dissolve"      value="6"/>
+                <string name="Divide"        value="7"/>
+                <string name="Exclusion"     value="8"/>
+                <string name="Hard Light"    value="9"/>
+                <string name="Hard Mix"      value="10"/>
+                <string name="Hue"           value="11"/>
+                <string name="Lighten"       value="12"/>
+                <string name="Lighter Color" value="13"/>
+                <string name="Linear Burn"   value="14"/>
+                <string name="Linear Dodge"  value="15"/>
+                <string name="Linear Light"  value="16"/>
+                <string name="Luminosity"    value="17"/>
+                <string name="Multiply"      value="18"/>
+                <string name="Normal"        value="19"/>
+                <string name="Overlay"       value="20"/>
+                <string name="Pin Light"     value="21"/>
+                <string name="Saturation"    value="22"/>
+                <string name="Screen"        value="23"/>
+                <string name="Soft Light"    value="24"/>
+                <string name="Subtract"      value="25"/>
+                <string name="Vivid Light"   value="26"/>
+            </hintdict>
+        </param>
+        <param name="RGB_2" label="Color 2" type="color"
+               default="0. 0. 0." widget="color">
+            <tags>
+                <tag value="color"/>
+            </tags>
+        </param>
+        <param name="A_2" label="Alpha 2" type="float"
+                   default="1" min="0" max="1" widget="default">
+            <tags>
+                <tag value="float"/>
+            </tags>
+        </param>
+    </page>
+
+    <page name="Layer 3" open="True">
+        <param name="enable_3" label="Enable 3"
+               type="int" default="0" widget="checkBox"
+               connectable="False">
+        </param>
+        <param name="operation_3"  label="Operation 3" type="int" default="19"  widget="mapper"
+               connectable="False">
+            <hintdict name="options">
+                <string name="Color"         value="0"/>
+                <string name="Color Burn"    value="1"/>
+                <string name="Color Dodge"   value="2"/>
+                <string name="Darken"        value="3"/>
+                <string name="Darker Color"  value="4"/>
+                <string name="Difference"    value="5"/>
+                <string name="Dissolve"      value="6"/>
+                <string name="Divide"        value="7"/>
+                <string name="Exclusion"     value="8"/>
+                <string name="Hard Light"    value="9"/>
+                <string name="Hard Mix"      value="10"/>
+                <string name="Hue"           value="11"/>
+                <string name="Lighten"       value="12"/>
+                <string name="Lighter Color" value="13"/>
+                <string name="Linear Burn"   value="14"/>
+                <string name="Linear Dodge"  value="15"/>
+                <string name="Linear Light"  value="16"/>
+                <string name="Luminosity"    value="17"/>
+                <string name="Multiply"      value="18"/>
+                <string name="Normal"        value="19"/>
+                <string name="Overlay"       value="20"/>
+                <string name="Pin Light"     value="21"/>
+                <string name="Saturation"    value="22"/>
+                <string name="Screen"        value="23"/>
+                <string name="Soft Light"    value="24"/>
+                <string name="Subtract"      value="25"/>
+                <string name="Vivid Light"   value="26"/>
+            </hintdict>
+        </param>
+        <param name="RGB_3" label="Color 3" type="color"
+               default="0. 0. 0." widget="color">
+            <tags>
+                <tag value="color"/>
+            </tags>
+        </param>
+        <param name="A_3" label="Alpha 3" type="float"
+                   default="1" min="0" max="1" widget="default">
+            <tags>
+                <tag value="float"/>
+            </tags>
+        </param>
+    </page>
+
+    <page name="Layer 4" open="True">
+        <param name="enable_4" label="Enable 4"
+               type="int" default="0" widget="checkBox"
+               connectable="False">
+        </param>
+        <param name="operation_4"  label="Operation 4" type="int" default="19"  widget="mapper"
+               connectable="False">
+            <hintdict name="options">
+                <string name="Color"         value="0"/>
+                <string name="Color Burn"    value="1"/>
+                <string name="Color Dodge"   value="2"/>
+                <string name="Darken"        value="3"/>
+                <string name="Darker Color"  value="4"/>
+                <string name="Difference"    value="5"/>
+                <string name="Dissolve"      value="6"/>
+                <string name="Divide"        value="7"/>
+                <string name="Exclusion"     value="8"/>
+                <string name="Hard Light"    value="9"/>
+                <string name="Hard Mix"      value="10"/>
+                <string name="Hue"           value="11"/>
+                <string name="Lighten"       value="12"/>
+                <string name="Lighter Color" value="13"/>
+                <string name="Linear Burn"   value="14"/>
+                <string name="Linear Dodge"  value="15"/>
+                <string name="Linear Light"  value="16"/>
+                <string name="Luminosity"    value="17"/>
+                <string name="Multiply"      value="18"/>
+                <string name="Normal"        value="19"/>
+                <string name="Overlay"       value="20"/>
+                <string name="Pin Light"     value="21"/>
+                <string name="Saturation"    value="22"/>
+                <string name="Screen"        value="23"/>
+                <string name="Soft Light"    value="24"/>
+                <string name="Subtract"      value="25"/>
+                <string name="Vivid Light"   value="26"/>
+            </hintdict>
+        </param>
+        <param name="RGB_4" label="Color 4" type="color"
+               default="0. 0. 0." widget="color">
+            <tags>
+                <tag value="color"/>
+            </tags>
+        </param>
+        <param name="A_4" label="Alpha 4" type="float"
+                   default="1" min="0" max="1" widget="default">
+            <tags>
+                <tag value="float"/>
+            </tags>
+        </param>
+    </page>
+
+    <page name="Layer 5" open="True">
+        <param name="enable_5" label="Enable 5"
+               type="int" default="0" widget="checkBox"
+               connectable="False">
+        </param>
+        <param name="operation_5"  label="Operation 5" type="int" default="19"  widget="mapper"
+               connectable="False">
+            <hintdict name="options">
+                <string name="Color"         value="0"/>
+                <string name="Color Burn"    value="1"/>
+                <string name="Color Dodge"   value="2"/>
+                <string name="Darken"        value="3"/>
+                <string name="Darker Color"  value="4"/>
+                <string name="Difference"    value="5"/>
+                <string name="Dissolve"      value="6"/>
+                <string name="Divide"        value="7"/>
+                <string name="Exclusion"     value="8"/>
+                <string name="Hard Light"    value="9"/>
+                <string name="Hard Mix"      value="10"/>
+                <string name="Hue"           value="11"/>
+                <string name="Lighten"       value="12"/>
+                <string name="Lighter Color" value="13"/>
+                <string name="Linear Burn"   value="14"/>
+                <string name="Linear Dodge"  value="15"/>
+                <string name="Linear Light"  value="16"/>
+                <string name="Luminosity"    value="17"/>
+                <string name="Multiply"      value="18"/>
+                <string name="Normal"        value="19"/>
+                <string name="Overlay"       value="20"/>
+                <string name="Pin Light"     value="21"/>
+                <string name="Saturation"    value="22"/>
+                <string name="Screen"        value="23"/>
+                <string name="Soft Light"    value="24"/>
+                <string name="Subtract"      value="25"/>
+                <string name="Vivid Light"   value="26"/>
+            </hintdict>
+        </param>
+        <param name="RGB_5" label="Color 5" type="color"
+               default="0. 0. 0." widget="color">
+            <tags>
+                <tag value="color"/>
+            </tags>
+        </param>
+        <param name="A_5" label="Alpha 5" type="float"
+                   default="1" min="0" max="1" widget="default">
+            <tags>
+                <tag value="float"/>
+            </tags>
+        </param>
+    </page>
+
+    <page name="Layer 6" open="True">
+        <param name="enable_6" label="Enable 6"
+               type="int" default="0" widget="checkBox"
+               connectable="False">
+        </param>
+        <param name="operation_6"  label="Operation 6" type="int" default="19"  widget="mapper"
+               connectable="False">
+            <hintdict name="options">
+                <string name="Color"         value="0"/>
+                <string name="Color Burn"    value="1"/>
+                <string name="Color Dodge"   value="2"/>
+                <string name="Darken"        value="3"/>
+                <string name="Darker Color"  value="4"/>
+                <string name="Difference"    value="5"/>
+                <string name="Dissolve"      value="6"/>
+                <string name="Divide"        value="7"/>
+                <string name="Exclusion"     value="8"/>
+                <string name="Hard Light"    value="9"/>
+                <string name="Hard Mix"      value="10"/>
+                <string name="Hue"           value="11"/>
+                <string name="Lighten"       value="12"/>
+                <string name="Lighter Color" value="13"/>
+                <string name="Linear Burn"   value="14"/>
+                <string name="Linear Dodge"  value="15"/>
+                <string name="Linear Light"  value="16"/>
+                <string name="Luminosity"    value="17"/>
+                <string name="Multiply"      value="18"/>
+                <string name="Normal"        value="19"/>
+                <string name="Overlay"       value="20"/>
+                <string name="Pin Light"     value="21"/>
+                <string name="Saturation"    value="22"/>
+                <string name="Screen"        value="23"/>
+                <string name="Soft Light"    value="24"/>
+                <string name="Subtract"      value="25"/>
+                <string name="Vivid Light"   value="26"/>
+            </hintdict>
+        </param>
+        <param name="RGB_6" label="Color 6" type="color"
+               default="0. 0. 0." widget="color">
+            <tags>
+                <tag value="color"/>
+            </tags>
+        </param>
+        <param name="A_6" label="Alpha 6" type="float"
+                   default="1" min="0" max="1" widget="default">
+            <tags>
+                <tag value="float"/>
+            </tags>
+        </param>
+    </page>
+
+    <page name="Layer 7" open="True">
+        <param name="enable_7" label="Enable 7"
+               type="int" default="0" widget="checkBox"
+               connectable="False">
+        </param>
+        <param name="operation_7"  label="Operation 7" type="int" default="19"  widget="mapper"
+               connectable="False">
+            <hintdict name="options">
+                <string name="Color"         value="0"/>
+                <string name="Color Burn"    value="1"/>
+                <string name="Color Dodge"   value="2"/>
+                <string name="Darken"        value="3"/>
+                <string name="Darker Color"  value="4"/>
+                <string name="Difference"    value="5"/>
+                <string name="Dissolve"      value="6"/>
+                <string name="Divide"        value="7"/>
+                <string name="Exclusion"     value="8"/>
+                <string name="Hard Light"    value="9"/>
+                <string name="Hard Mix"      value="10"/>
+                <string name="Hue"           value="11"/>
+                <string name="Lighten"       value="12"/>
+                <string name="Lighter Color" value="13"/>
+                <string name="Linear Burn"   value="14"/>
+                <string name="Linear Dodge"  value="15"/>
+                <string name="Linear Light"  value="16"/>
+                <string name="Luminosity"    value="17"/>
+                <string name="Multiply"      value="18"/>
+                <string name="Normal"        value="19"/>
+                <string name="Overlay"       value="20"/>
+                <string name="Pin Light"     value="21"/>
+                <string name="Saturation"    value="22"/>
+                <string name="Screen"        value="23"/>
+                <string name="Soft Light"    value="24"/>
+                <string name="Subtract"      value="25"/>
+                <string name="Vivid Light"   value="26"/>
+            </hintdict>
+        </param>
+        <param name="RGB_7" label="Color 7" type="color"
+               default="0. 0. 0." widget="color">
+            <tags>
+                <tag value="color"/>
+            </tags>
+        </param>
+        <param name="A_7" label="Alpha 7" type="float"
+                   default="1" min="0" max="1" widget="default">
+            <tags>
+                <tag value="float"/>
+            </tags>
+        </param>
+    </page>
+
+    <param name="backgroundRGB" label="Background Color" type="color"
+           default="0. 0. 0." widget="color">
+        <tags>
+            <tag value="color"/>
+        </tags>
+    </param>
+    <param name="backgroundA" label="Background Alpha" type="float"
+           default="1" min="0" max="1" widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+    </param>
+
+    <param name="clampOutput" label="Clamp Output" type="int"
+            default="1" widget="checkBox"
+            connectable="False">
+        <help>Clamp the output to 0-1</help>
+    </param>
+
+    <output name="resultRGB">
+        <tags>
+            <tag value ="color"/>
+            <tag value ="vector"/>
+            <tag value ="normal"/>
+            <tag value ="point"/>
+        </tags>
+    </output>
+    <output name="resultR">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultG">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultB">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultA">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+
+
+    <rfmdata nodeid="1053346"
+             classification="rendernode/RenderMan/pattern/color"/>
+    <rfcdata nodeid="1035872" description="Xpxrlayeredblend"/>
+</args>

@@ -1,0 +1,113 @@
+<args format="1.0">
+    <info plugin="PxrMatteID">
+        PxrMatteID: This node outputs AOVs for compositing : it should be plugged
+        into the aovInput param of a LM Shader and will act as a passthrough node.
+        It outputs at most 8 RGB mattes (24 mattes) named MatteID0, MatteID1, etc.
+        MatteID AOVs are used as per-objects / per-object groups/ per-material
+        compositing mattes.
+    </info>
+    <page name="Parameters" open="True">
+        <param name="inputAOV"
+            label="Input AOV"
+            type="int">
+            <tags>
+                <tag value="int"/>
+            </tags>
+            <help>This input can only be used to daisy-chain other nodes that
+            don't produce any output</help>
+        </param>
+        <param name="enable"
+            label="Enable"
+            type="int"
+            default="1"
+            widget="checkBox"
+            connectable="false">
+            <help>Controls MatteID AOV output</help>
+        </param>
+        <param name="matteTexture0"
+            label="Matte Texture 0"
+            type="color"
+            default="0 0 0">
+            <tags>
+                <tag value="color"/>
+            </tags>
+            <help>Assign a texture to a specific MatteID AOV</help>
+        </param>
+        <param name="matteTexture1"
+            label="Matte Texture 1"
+            type="color"
+            default="0 0 0">
+            <tags>
+                <tag value="color"/>
+            </tags>
+            <help>Assign a texture to a specific MatteID AOV</help>
+        </param>
+        <param name="matteTexture2"
+            label="Matte Texture 2"
+            type="color"
+            default="0 0 0">
+            <tags>
+                <tag value="color"/>
+            </tags>
+            <help>Assign a texture to a specific MatteID AOV</help>
+        </param>
+        <param name="matteTexture3"
+            label="Matte Texture 3"
+            type="color"
+            default="0 0 0">
+            <tags>
+                <tag value="color"/>
+            </tags>
+            <help>Assign a texture to a specific MatteID AOV</help>
+        </param>
+        <param name="matteTexture4"
+            label="Matte Texture 4"
+            type="color"
+            default="0 0 0">
+            <tags>
+                <tag value="color"/>
+            </tags>
+            <help>Assign a texture to a specific MatteID AOV</help>
+        </param>
+        <param name="matteTexture5"
+            label="Matte Texture 5"
+            type="color"
+            default="0 0 0">
+            <tags>
+                <tag value="color"/>
+            </tags>
+            <help>Assign a texture to a specific MatteID AOV</help>
+        </param>
+        <param name="matteTexture6"
+            label="Matte Texture 6"
+            type="color"
+            default="0 0 0">
+            <tags>
+                <tag value="color"/>
+            </tags>
+            <help>Assign a texture to a specific MatteID AOV</help>
+        </param>
+        <param name="matteTexture7"
+            label="Matte Texture 7"
+            type="color"
+            default="0 0 0">
+            <tags>
+                <tag value="color"/>
+            </tags>
+            <help>Assign a texture to a specific MatteID AOV</help>
+        </param>
+    </page>
+
+    <output name="resultAOV">
+        <tags>
+            <tag value="int"/>
+        </tags>
+    </output>
+
+    <shaderType>
+        <tag value="pattern"/>
+    </shaderType>
+    <rfmdata nodeid="1053257"
+             classification="rendernode/RenderMan/pattern/utility"/>
+    <rfcdata nodeid="1035876" description="Xpxrmatteid"/>
+</args>

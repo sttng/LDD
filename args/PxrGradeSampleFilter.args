@@ -1,0 +1,143 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="samplefilter"/>
+    </shaderType>
+    <help>
+        Nuke-like grade sample filter. Allows simple grading of the beauty pass. 
+    </help>
+
+    <param name="blackPoint"
+           label="Black Point"
+           type="color"
+           default="0 0 0"
+           widget="color"
+           connectable="False">
+        <tags>
+            <tag value="color"/>
+        </tags>
+        <help>
+            Ci is remapped so that this color becomes 0.
+        </help>
+    </param>
+    <param name="whitePoint"
+           label="White Point"
+           type="color"
+           default="1 1 1"
+           widget="color"
+           connectable="False">
+        <tags>
+            <tag value="color"/>
+        </tags>
+        <help>
+            Ci is remapped so that this color becomes 1.
+        </help>
+    </param>
+    <param name="lift"
+           label="Lift"
+           type="color"
+           default="0 0 0"
+           widget="color"
+           connectable="False">
+        <tags>
+            <tag value="color"/>
+        </tags>
+        <help>
+            Add this value to Ci.
+        </help>
+    </param>
+    <param name="gain"
+           label="Gain"
+           type="color"
+           default="1 1 1"
+           widget="color"
+           connectable="False">
+        <tags>
+            <tag value="color"/>
+        </tags>
+        <help>
+            Multiply Ci by this color. 
+        </help>
+    </param>
+    <param name="multiply"
+           label="Multiply"
+           type="color"
+           default="1 1 1"
+           widget="color"
+           connectable="False">
+        <tags>
+            <tag value="color"/>
+        </tags>
+        <help>
+            Multiply Ci by this color. 
+        </help>
+    </param>
+    <param name="gamma"
+           label="Gamma"
+           type="color"
+           default="1 1 1"
+           widget="color"
+           connectable="False">
+        <tags>
+            <tag value="color"/>
+        </tags>
+        <help>
+            Gamma Ci by this color. 
+        </help>
+    </param>
+    <param name="offset"
+           label="Offset"
+           type="color"
+           default="0 0 0"
+           widget="color"
+           connectable="False">
+        <tags>
+            <tag value="color"/>
+        </tags>
+        <help>
+            Offset Ci (Ci + offset) by this color. 
+        </help>
+    </param>
+    <param name="clampWhite"
+           label="Clamp White"
+           type="int"
+           default="0"
+           widget="checkBox"
+           connectable="False">
+        <help>
+            Clamp Ci so that no value exceeds 1. 
+        </help>
+    </param>
+    <param name="clampBlack"
+           label="Clamp Black"
+           type="int"
+           default="1"
+           widget="checkBox"
+           connectable="False">
+        <help>
+            Clamp Ci so that no value is less than 0. This is useful for compositing so that adding channels will not result in unexpected results. 
+        </help>
+    </param>
+    <param name="mask"
+           label="Mask"
+           type="color"
+           default="1 1 1"
+           widget="color"
+           connectable="False">
+        <tags>
+            <tag value="color"/>
+        </tags>
+        <help>
+            Mask the color correction result with this color. 
+        </help>
+    </param>
+    <param name="aov"
+        label="AOV"
+        type="string"
+        default="Ci"
+        widget="string"
+        connectable="False">
+        <help>Name of AOV to apply filter to.</help>
+    </param>
+    <rfmdata nodeid="1053325"
+        classification="rendernode/RenderMan/samplefilter"/>
+</args>

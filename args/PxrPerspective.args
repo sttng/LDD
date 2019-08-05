@@ -1,0 +1,54 @@
+<args format="1.0">
+  <shaderType>
+    <tag value="projection"/>
+  </shaderType>
+  <help>
+    A simple pinhole camera.
+  </help>
+  <param name="fov" label="Field of View" type="float" widget="default"
+         default="90.0" min="1.0" max="135.0"
+         connectable="False">
+    <help>
+      Field of view (FOV) in degrees.  For rectangular images this is
+      normally the FOV along the narrower image dimension.
+    </help>
+  </param>
+  <param name="fovEnd" label="Field of View (End)" type="float" widget="default"
+         default="0.0" min="0.0" max="135.0"
+         connectable="False">
+    <help>
+      Field of view (FOV) in degrees at the end of the frame.  Used to
+      motion blur very fast zooms.  The default, zero, means to assume it
+      is the same as at the beginning of the frame.
+    </help>
+  </param>
+  <param name="fStop" label="F-stop" type="float" widget="default"
+         default="16" min="0.0" max="256"
+         connectable="False">
+    <help>
+      F-stop or aperture number.  Used to determine depth of field and
+      defocus.  This determines the lens diameter.  If the f-stop is a
+      huge number, then effectively a pin-hole camera is used and depth
+      of field is turned off.
+    </help>
+  </param>
+  <param name="focalLength" label="Focal Length" type="float" widget="default"
+         default="0.0" min="0.0" max="1.0e38"
+         connectable="False">
+    <help>
+       Focal length of the camera lens.  Used to determine depth of
+       field and defocus.  This should be in units of distance along the
+       view direction in camera coordinates.  Effectively ignored if
+       F-stop is huge.
+    </help>
+  </param>
+  <param name="focalDistance" label="Focal Distance" type="float" widget="default"
+         default="1.0" min="0.0" max="1.0e38"
+         connectable="False">
+    <help>
+       Distance at which objects will be in focus.  This should be in
+       units of distance along the view direction in camera coordinates.
+       Effectively ignored if F-stop is huge.
+    </help>
+  </param>
+</args>

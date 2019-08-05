@@ -1,0 +1,434 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="lightfilter"/>
+    </shaderType>
+    <page name="Notes" open="False">
+        <param name="notes" type="string" default="" widget="scriptEditor" omitFromRender="True">
+            <help>General comment field for this light filter.</help>
+        </param>
+    </page>
+
+    <param name="cookieMode"
+           label="Cookie Mode"
+           connectable="False"
+           type="int" widget="mapper" default="0">
+        <hintdict name="options">
+            <string value="0" name="physical"/>
+            <string value="1" name="analytic"/>
+        </hintdict>
+        <help>
+            cookieMode:
+
+            In 'physical' mode the cookie behaves like a stained glass window
+            through which light falls. The falloff and blur are determined by the
+            size of the light, the distance to the light and distance from the
+            cookie.
+
+            In 'analytic' mode, the cookie has a fixed projection and manual
+            blur and falloff controls.
+        </help>
+    </param>
+
+    <page name="Map" open="True">
+        <param name="map"
+               label="Map"
+               type="string" widget="assetIdInput" options="texture"
+               connectable="False"
+               default="ratGrid.tex">
+            <help>map: Filename of the projected texture.</help>
+        </param>
+        <param name="refreshMap" type="int" default="0" widget="scriptButton"
+               connectable="False"
+               buttonText="Refresh Texture"
+               scriptText="currentValue = parameter.getChild('value').getValue(0.0)
+parameter.getChild('value').setValue(currentValue + 1, 0.0)
+parameter.getChild('enable').setValue(1, 0.0)">
+            <help>
+                Press this button to force a refresh of the texture during
+                Live Rendering.
+            </help>
+        </param>
+        <param name="fillColor"
+               label="Fill Color"
+               type="color" widget="color" default="1.0 1.0 1.0"
+               open="False" connectable="False">
+            <help>
+                fillColor: If the texture is not repeating, this specifies the
+                color for the region outside of and behind the projected rectangle.
+            </help>
+        </param>
+        <param name="useAlpha"
+               label="Use Alpha"
+               connectable="False"
+               widget="null"
+               type="int" default="1">
+            <help>
+                useAlpha: This should always be on otherwise it will create hard edges
+                from the cookie.  This parameter is hidden in case we need to
+                expose it later.
+
+                When on, if there is no alpha channel in the projected texture, it will
+                use the installed $RMANTREEE/lib/textures/white.tex for blending
+                with the fill color. Otherwise, it will use the alpha channel.
+            </help>
+        </param>
+        <param name="premultipliedAlpha"
+               label="Premultiplied Alpha"
+               connectable="False"
+               widget="checkBox"
+               type="int" default="1">
+            <help>
+                premultipliedAlpha: Textures are usually premultiplied by their alpha. If this not
+                the case, uncheck this.
+            </help>
+        </param>
+        <param name="width"
+               label="Width"
+               type="float" default="1.0" min="0.0" connectable="False">
+            <help>width: Width of the rect the light is shining through.</help>
+        </param>
+        <param name="height"
+               label="Height"
+               type="float" default="1.0" min="0.0" connectable="False">
+            <help>height: Height of the rect the light is shining through.</help>
+        </param>
+    </page>
+
+    <page name="Multiplier" open="True">
+        <param name="density"
+               label="Density"
+               type="float" default="1"
+               min="0.0" max="1.0" sensitivity="0.01" connectable="False">
+            <help>density: Controls the strength of the projected effect.</help>
+        </param>
+        <param name="invert"
+               label="Invert"
+               connectable="False"
+               type="int" widget="checkBox" default="0">
+            <help>invert: When this is on, the texture will be inverted before it is applied.
+            </help>
+        </param>
+        <param name="intensity"
+               label="Intensity"
+               type="float" min="0.0" default="1.0"
+               sensitivity="0.01" connectable="False">
+            <help>intensity: Multiplier for both the diffuse and specular result.
+            </help>
+        </param>
+        <param name="diffuse"
+               label="Diffuse"
+               type="float" default="1.0"
+               min="0.0" sensitivity="0.01"
+               connectable="False">
+            <help>diffuse: How much this light filter affects diffuse lighting.</help>
+        </param>
+        <param name="specular"
+               label="Specular"
+               type="float" default="1.0"
+               min="0.0" sensitivity="0.01"
+               connectable="False">
+            <help>specular: How much this light filter affects specular lighting.</help>
+        </param>
+    </page>
+
+    <page name="Projection" open="True"
+          conditionalVisOp="equalTo"
+          conditionalVisPath="../cookieMode"
+          conditionalVisValue="1">
+        <param name="directional"
+               label="Directional"
+               connectable="False"
+               type="int" widget="checkBox" default="0">
+            <help>directional:  When this is on, the texture projects along a
+                  direction using the orthographic projection. When it is off,
+                  the texture projects using a focal point specified by the Apex.
+            </help>
+        </param>
+        <param name="shearX"
+               label="Shear X"
+               type="float" default="0" sensitivity="0.01" connectable="False">
+            <help>shearX: Shear the projection along the x-axis.</help>
+        </param>
+        <param name="shearY"
+               label="Shear Y"
+               type="float" default="0" sensitivity="0.01" connectable="False">
+            <help>shearY: Shear the projection along the y-axis.</help>
+        </param>
+        <param name="apex"
+               label="Apex"
+               type="float" default="25" min="0.0" connectable="False"
+               conditionalVisOp="equalTo"
+               conditionalVisPath="../directional"
+               conditionalVisValue="0">
+            <help>apex: Distance between the center of cookie and the center of projection.
+            </help>
+        </param>
+        <param name="useLightDirection"
+               label="Use Light Direction"
+               connectable="False"
+               type="int" widget="checkBox" default="0">
+            <help>
+                useLightDirection: When this is on, the projection direction is determined by the
+                position of the center of the light source. Otherwise, it only
+                follows the orientation of the cookie.
+
+                WARNING: This does not work with lights that have no direction such as
+                PxrDomeLight and PxrMeshLight.
+            </help>
+        </param>
+    </page>
+
+    <page name="Texture Mapping" open="False">
+        <param name="tileMode"
+               label="Tile Mode"
+               connectable="False"
+               type="int" widget="mapper" default="0">
+            <hintdict name="options">
+                <string value="0" name="No Repeat"/>
+                <string value="1" name="Edge Extend"/>
+                <string value="2" name="Tile"/>
+            </hintdict>
+            <help>tileMode:
+                "No Repeat"   - texture does not repeat.
+                "Edge Extent" - extends the color of the edge to infinity.
+                "Tile"        - texture repeats (tileable texture).
+            </help>
+        </param>
+        <param name="invertU"
+               label="Invert U"
+               type="int" default="0" widget="checkBox"
+               connectable="False">
+            <help>invertU: flip the texture from left to right.</help>
+        </param>
+        <param name="invertV"
+               label="Invert V"
+               type="int" default="0" widget="checkBox"
+               connectable="False">
+            <help>invertV: flip the texture from bottom to top.</help>
+        </param>
+        <param name="scaleU"
+               label="Scale U"
+               type="float" default="1.0" sensitivity="0.01" connectable="False">
+            <help>scaleU: Scale of the texture in the U direction</help>
+        </param>
+        <param name="scaleV"
+               label="Scale V"
+               type="float" default="1.0" sensitivity="0.01" connectable="False">
+            <help>scaleV: Scale of the texture in the V direction</help>
+        </param>
+        <param name="offsetU"
+               label="Offset U"
+               type="float" default="0.0" sensitivity="0.01" connectable="False">
+            <help>offsetU: Offset of the texture in the U direction</help>
+        </param>
+        <param name="offsetV"
+               label="Offset V"
+               type="float" default="0.0" sensitivity="0.01" connectable="False">
+            <help>offsetV: Offset of the texture in the V direction</help>
+        </param>
+    </page>
+
+    <page name="Blur" open="False"
+          conditionalVisOp="equalTo"
+          conditionalVisPath="../cookieMode"
+          conditionalVisValue="1">
+        <param name="blur"
+               label="Blur"
+               type="float" default="0.0"
+               min="0.0" max="1.0" sensitivity="0.01" connectable="False">
+            <help>
+                blur: Blurriness of texture (0-1, multiplied by blurNear/blurFar interp).
+            </help>
+        </param>
+        <param name="sBlurMult"
+               label="S Blur Mult"
+               type="float" default="1.0"
+               min="0.0" sensitivity="0.01" connectable="False">
+            <help>sBlurMult: Blur multiplier in S direction.</help>
+        </param>
+        <param name="tBlurMult"
+               label="T Blur Mult"
+               type="float" default="1.0"
+            min="0.0" sensitivity="0.01" connectable="False">
+            <help>tBlurMult: Blur multiplier in T direction.</help>
+        </param>
+        <param name="blurNearDist"
+               label="Blur Near Dist"
+               type="float" default="0.0" min="0.0" connectable="False">
+            <help>blurNearDist: Distance from the cookie where the blur interpolation starts.</help>
+        </param>
+        <param name="blurMidpoint"
+               label="Blur Midpoint"
+               type="float" default="0.5" min="0.0" max="1.0"
+               sensitivity="0.01" connectable="False">
+            <help>blurMidpoint: Distance between near and far, where the midValue is located.</help>
+        </param>
+        <param name="blurFarDist"
+               label="Blur Far Dist"
+               type="float" default="10.0" min="0.0" connectable="False">
+            <help>blurFarDist: Distance from the cookie where the blur interpolation ends.</help>
+        </param>
+        <param name="blurNearVal"
+               label="Blur Near Value"
+               type="float" default="1.0"
+            min="0.0" max="1.0" sensitivity="0.01" connectable="False">
+            <help>blurNearVal: Blur multiplier where the blur interpolation starts.</help>
+        </param>
+        <param name="blurMidVal"
+               label="Blur Mid Value"
+               type="float" default="1.0"
+               min="0.0" max="1.0" sensitivity="0.01" connectable="False">
+            <help>blurMidVal: Blur multiplier in the middle of the blur interpolation.</help>
+        </param>
+        <param name="blurFarVal"
+               label="Blur Far Value"
+               type="float" default="1.0"
+               min="0.0" max="1.0" sensitivity="0.01" connectable="False">
+            <help>blurFarVal: Blur multiplier where the blur interpolation ends.</help>
+        </param>
+        <param name="blurPow"
+               label="Blur Exponent"
+               type="float" default="1.0" min="0.0"
+               sensitivity="0.01" connectable="False">
+            <help>blurPow: Exponent of the blur interpolation.</help>
+        </param>
+    </page>
+
+    <page name="Density Falloff" open="False"
+          conditionalVisOp="equalTo"
+          conditionalVisPath="../cookieMode"
+          conditionalVisValue="1">
+        <param name="densityNearDist"
+               label="Density Near Dist"
+               type="float" default="0.0" min="0.0" connectable="False">
+            <help>densityNearDist: Distance from the cookie where the density interpolation starts.</help>
+        </param>
+        <param name="densityMidpoint"
+               label="Density Midpoint"
+               type="float" default="0.5" min="0.0" max="1.0"
+            sensitivity="0.01" connectable="False">
+            <help>densityMidpoint: Distance between near and far, where the midValue is located.</help>
+        </param>
+        <param name="densityFarDist"
+               label="Density Far Dist"
+               type="float" default="10.0" min="0.0" connectable="False">
+            <help>densityFarDist: Distance from the cookie where the density interpolation ends.</help>
+        </param>
+        <param name="densityNearVal"
+               label="Density Near Value"
+               type="float" default="1.0"
+               min="0.0" max="1.0" sensitivity="0.01" connectable="False">
+            <help>densityNearVal: Density multiplier where the blur interpolation starts.</help>
+        </param>
+        <param name="densityMidVal"
+               label="Density Mid Value"
+               type="float" default="1.0"
+               min="0.0" max="1.0" sensitivity="0.01" connectable="False">
+            <help>densityMidVal: Density multiplier in the middle of the density interpolation.</help>
+        </param>
+        <param name="densityFarVal"
+               label="Density Far Value"
+               type="float" default="1.0"
+               min="0.0" max="1.0" sensitivity="0.01" connectable="False">
+            <help>densityFarVal: Density multiplier where the blur interpolation ends.</help>
+        </param>
+        <param name="densityPow"
+               label="Density Exponent"
+               type="float" default="1.0" min="0.0"
+               sensitivity="0.01" connectable="False">
+            <help>densityPow: Exponent of the density interpolation.</help>
+        </param>
+    </page>
+
+    <page name="Saturation/Contrast/Tint" open="False">
+        <param name="saturation"
+               label="Saturation"
+               type="float" default="1.0"
+               min="0.0" sensitivity="0.01" connectable="False">
+            <help>
+                saturation: Saturation of the result (0=greyscale,1=normal,>1=boosted colors).
+            </help>
+        </param>
+        <param name="midpoint"
+               label="Midpoint"
+               type="float" default="0.18"
+               min="0.0" max="1.0" sensitivity="0.01" connectable="False">
+            <help>midpoint: Midpoint for the contrast control.</help>
+        </param>
+        <param name="contrast"
+               label="Contrast"
+               type="float" default="1.0"
+               min="0.0" sensitivity="0.01" connectable="False">
+            <help>
+                contrast: Contrast control (less than 1 = contrast reduction,
+                larger than 1 = contrast increase).
+            </help>
+        </param>
+        <param name="whitepoint"
+               label="White Point"
+               type="float" default="1.0" connectable="False">
+            <help>whitepoint: White point for the contrast control if (contrast > 1.0).</help>
+        </param>
+        <param name="tint"
+               label="Tint"
+               type="color" widget="color" default="1.0 1.0 1.0" connectable="False">
+            <help>tint: Tint of the resulting color after saturation, contrast and clamp.</help>
+        </param>
+    </page>
+
+    <param name="combineMode"
+           label="Combine Mode"
+           type="string" default="mult"
+           connectable="False"
+           widget="popup" options="mult|max|min|screen">
+        <help>
+        <p>
+        combineMode: Light filters on a light are grouped by their combine mode. Light filters
+        in the same group are executed together and combined by the corresponding
+        operation:
+        </p>
+
+        <ol>
+          <li>max: the maximum result from all filters is used.
+              This works best for grey scale light filters.</li>
+          <li>min: the minimum result from all filters is used.
+              This works best for grey scale light filters.</li>
+          <li>screen: similar to the max operation, but it combines gradients
+              in a smoother way. This works best for grey scale light filters.</li>
+          <li>mult (default): the results of all the filters are multiplied together
+              (technically: they are applied one after the other)</li>
+        </ol>
+
+        <p>
+        The groups are executed in the above order and are multiplied together,
+        which means a filter that turns things black in the mult group will zero out
+        all other filters.
+        </p>
+
+        </help>
+    </param>
+
+    <!-- invisible paramers that need to be here, so they are assigned the right
+         values -->
+    <param name="coordsys"
+           connectable="False"
+           type="string" default="" widget="null"/>
+
+    <!-- We declare specially named hidden paramters that RfK 2.0 will fill
+         with the name of the light shader that the filter is attached to and
+         some of the lights parameters -->
+    <param name="__lightFilterParentShader"
+           connectable="False"
+           type="string" default="" widget="null"/>
+
+    <param name="linkingGroups"
+           connectable="False"
+           type="string" default="" widget="null"/>
+
+    <rfmdata nodeid="1200390"
+             classification="light:rendernode/RenderMan/lightfilter:swatch/rmanSwatch"/>
+
+</args>
+
+
+

@@ -1,0 +1,28 @@
+<args format="1.0">
+  <shaderType>
+    <tag value="samplefilter"/>
+  </shaderType>
+  <help>
+    Sample filter plugin to look up a named AOV and copy it
+    to Ci.
+  </help>
+  <param name="readAov"
+    label="Read AOV"
+    type="string"
+    default=""
+    widget="string"
+    connectable="False">
+    <help>Name of AOV to read from.</help>
+  </param>
+  <param name="writeAov"
+    label="Write AOV"
+    type="string"
+    default="Ci"
+    widget="string"
+    connectable="False">
+    <help>Name of AOV to write to.</help>
+  </param>
+    <rfmdata nodeid="1053329"
+             classification="rendernode/RenderMan/samplefilter"/>
+
+</args>

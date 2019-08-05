@@ -1,0 +1,82 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="pattern"/>
+    </shaderType>
+    <help>
+        Produces a color that represents the radiation emitted by
+        an ideal black body heated at the given temperature in the visible
+        spectrum. This allows you to easily create plausible light colors based
+        on standard temperature measurement. See the Color temperature article
+        for more infomration.
+    </help>
+    <param name="temperature"
+        label="Temperature"
+        type="float"
+        default="6500.0"
+        min="1000"
+        max="50000"
+        widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>The temperature (in kelvin) of the black body.
+        Color temperatures over 6,500K are called cool colors (bluish white),
+        while lower color temperatures (2,700 to 3,000 K) are called warm
+        colors (yellowish white through red).</help>
+    </param>
+    <param name="physicalIntensity"
+        label="Physical Intensity"
+        type="float"
+        default="0.0"
+        min="0"
+        max="1"
+        widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>When set to 1, the color will emit the correct amount of energy.
+        WARNING: Your color will become super intense.</help>
+    </param>
+    <param name="exposure"
+        label="Exposure"
+        type="float"
+        default="0.0"
+        slidermin="-25"
+        slidermax="25"
+        widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>Use exposure to adjust the amount of emited energy.
+        Very useful if physical intensity is above zero.</help>
+    </param>
+
+    <output name="resultRGB">
+        <tags>
+            <tag value ="color"/>
+            <tag value ="vector"/>
+            <tag value ="normal"/>
+            <tag value ="point"/>
+        </tags>
+    </output>
+    <output name="resultR">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultG">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultB">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+
+    <rfmdata nodeid="1053437"
+             classification="rendernode/RenderMan/pattern/color"/>
+    <rfcdata nodeid="1035857" description="Xpxrblackbody"/>
+
+</args>

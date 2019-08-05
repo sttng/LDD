@@ -1,0 +1,133 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="pattern"/>
+    </shaderType>
+    <help>
+        Pattern plugin to generate a flake-like normal perturbation.
+        Returns a normal.
+        Connecting this to the Bump Normal parameter of PxrLMMetal can
+        create metallic fleck paint.
+    </help>
+    <param name="inputNormal"
+           label="Input Normal"
+           type="normal"
+           default="0 0 0"
+           widget="default">
+        <tags>
+            <tag value="normal"/>
+        </tags>
+        <help>
+            Connect your bump pattern here if you wish to add flakes on top of it.
+        </help>
+    </param>
+    <param name="flakeAmount"
+           label="Flake Randomness"
+           type="float"
+           default=".5" min="0" max="1"
+           widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>
+            Changes the metal flake amount. This increases the
+            distribution of flake normals, or their deviation from the base
+            normal.
+        </help>
+    </param>
+    <param name="flakeFreq"
+           label="Flake Frequency"
+           type="float"
+           default="57.30" min="0" max="100"
+           widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>
+           Changes the size of the metal flake features.
+        </help>
+    </param>
+    <param name="density"
+           label="Flake Density"
+           type="float"
+           default="1.0" min="0" max="1"
+           widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>
+           Changes the number of metal flakes for a given area.
+        </help>
+    </param>
+    <param name="size"
+           label="Flake size"
+           type="float"
+           default="1.0" min="0" max="2"
+           widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>
+           Changes the size of metal flakes.
+        </help>
+    </param>
+    <param name="octaves"
+           label="Octaves"
+           type="int"
+           default="1" min="1" max="15"
+           widget="default">
+        <tags>
+            <tag value="int"/>
+        </tags>
+        <help>
+            Number of octaves of noise to calculate flakes.
+        </help>
+    </param>
+    <param name="jitter"
+           label="Jitter"
+           type="float"
+           default="0.75" min="0" max="1"
+           widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>
+            Jitters the flake's position.
+        </help>
+    </param>
+    <param name="validateNormals"
+           label="Validate Normals"
+           type="int"
+           default="0"
+           widget="checkBox">
+        <tags>
+            <tag value="int"/>
+        </tags>
+        <help>
+            Make sure flakes normals are always in the
+            same hemisphere as the original normal.
+        </help>
+    </param>
+    <param name="manifold"
+           label="Manifold"
+           type="struct" >
+        <tags>
+            <tag value="struct"/>
+            <tag value="manifold"/>
+        </tags>
+        <help>The manifold over which to apply the flakes. (The default is P).</help>
+    </param>
+    <output name="resultN">
+      <tags>
+        <tag value="normal" />
+      </tags>
+    </output>
+    <output name="resultA">
+      <tags>
+        <tag value="float"/>
+      </tags>
+    </output>
+    <rfmdata nodeid="1053347"
+            classification="rendernode/RenderMan/pattern/bump"/>
+    <rfcdata nodeid="1035865" description="Xpxrflakes"/>
+
+</args>

@@ -1,0 +1,25 @@
+<args format="1.0">
+  <shaderType>
+    <tag value="displayfilter"/>
+  </shaderType>
+  <help>
+    A small example display filter that demonstrates image processing.
+    This filter replaces the image in the beauty pass (or any other AOV)
+    with its gradient magnitude computed from a Sobel edge-detection
+    filter.
+  </help>
+
+  <param name="aov"
+         label="AOV"
+         type="string"
+         default="Ci"
+         widget="string"
+         connectable="False">
+    <help>
+      Name of a color AOV to do edge detection on.
+    </help>
+  </param>
+
+  <rfmdata nodeid="1200423"
+           classification="rendernode/RenderMan/displayfilter"/>
+</args>

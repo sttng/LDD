@@ -1,0 +1,322 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="pattern"/>
+    </shaderType>
+    <help>
+        Calculate a bumped normal based on a normal map file or color input.
+    </help>
+        <param name="bumpScale"
+               label="Bump Scale"
+               type="float"
+               default="1.0"
+               min="0.0"
+               max="2.0"
+               widget="default">
+            <tags>
+              <tag value="float"/>
+            </tags>
+            <help>Scale the bump effect</help>
+        </param>
+        <param name="inputRGB"
+               label="Input Normal"
+               type="color"
+               default="0 0 0"
+               widget="color">
+            <tags>
+                <tag value="color"/>
+            </tags>
+            <help>
+                Specifies normal map color (this parameter is ignored if filename
+                is provided).
+            </help>
+        </param>
+        <param name="filename"
+               label="Filename"
+               type="string"
+               default=""
+               widget="assetIdInput"
+               options="texture"
+               connectable="False">
+            <help>
+                Normal map filename.  The shader reads only one channel of the
+                file from Channel specified below.
+                Note that this will be read in as the Mudbox normal map format
+                in tangent space.
+            </help>
+        </param>
+        <param name="bumpOverlay"
+               label="Bump Overlay"
+               type="normal"
+               default="0 0 0"
+               widget="default">
+            <tags>
+                <tag value="normal"/>
+            </tags>
+        <help>
+            Connect a PxrBump or PxrNormalMap node here if you need to combine
+            multiple patterns.
+        </help>
+    </param>
+
+    <page name="Bump Orientation" open="True">
+        <param name="invertBump"
+               label="Invert Bump"
+               type="int"
+               default="0"
+               widget="checkBox"
+               connectable="False">
+            <help>
+                Invert the bump orientation.
+                Concave becomes convex and vice versa.
+            </help>
+        </param>
+        <param name="orientation"
+               label="Orientation"
+               type="int"
+               default="2"
+               widget="mapper"
+               connectable="False">
+            <hintdict name="options">
+                <string name="OpenGL"   value="0"/>
+                <string name="DirectX"  value="1"/>
+                <string name="Custom"   value="2"/>
+            </hintdict>
+            <help>
+                Some texturing applications offer different orientations,
+                like OpenGL or DirectX. You can also go manual to try to
+                fix your normal map's appearance.
+            </help>
+        </param>
+        <param name="flipX"
+               label="Flip X"
+               type="int"
+               default="0"
+               widget="checkBox"
+               connectable="False">
+            <hintdict name="conditionalVisOps">
+                <string value="equalTo" name="conditionalVisOp"/>
+                <string value="../orientation" name="conditionalVisPath"/>
+                <string value="2" name="conditionalVisValue"/>
+            </hintdict>
+            <help>
+                Invert the bump orientation.
+                Concave becomes convex and vice versa.
+            </help>
+        </param>
+        <param name="flipY"
+               label="Flip Y"
+               type="int"
+               default="0"
+               widget="checkBox"
+               connectable="False">
+            <hintdict name="conditionalVisOps">
+                <string value="equalTo" name="conditionalVisOp"/>
+                <string value="../orientation" name="conditionalVisPath"/>
+                <string value="2" name="conditionalVisValue"/>
+            </hintdict>
+            <help>
+                Invert the bump orientation.
+                Concave becomes convex and vice versa.
+            </help>
+        </param>
+    </page>
+    <page name="Mapping Controls" open="True">
+        <param name="firstChannel"
+               label="First Channel Offset"
+               type="int"
+               default="0"
+               widget="default"
+               connectable="False">
+            <hintdict name="conditionalVisOps">
+                <string value="notEqualTo" name="conditionalVisOp"/>
+                <string value="../../filename" name="conditionalVisPath"/>
+                <string value="" name="conditionalVisValue"/>
+            </hintdict>
+            <help>
+                First channel offset to be looked up for Filename.
+            </help>
+        </param>
+        <param name="atlasStyle"
+               label="Atlas Style"
+               type="int"
+               default="0"
+               widget="mapper"
+               connectable="False">
+            <hintdict name="options">
+                <string name="None"                    value="0"/>
+                <string name="UDIM (Mari)"             value="1"/>
+                <string name="UV Tile Base-1 (Mudbox)" value="2"/>
+                <string name="UV Tile Base-0 (Zbrush)" value="3"/>
+            </hintdict>
+            <hintdict name="conditionalVisOps">
+                <string value="notEqualTo" name="conditionalVisOp"/>
+                <string value="../filename" name="conditionalVisPath"/>
+                <string value="" name="conditionalVisValue"/>
+            </hintdict>
+            <help>
+                Specify which atlas style.
+            </help>
+        </param>
+        <param name="invertT"
+               label="Invert T"
+               type="int"
+               default="1"
+               widget="checkBox"
+               connectable="False">
+            <hintdict name="conditionalVisOps">
+                <string value="notEqualTo" name="conditionalVisOp"/>
+                <string value="../filename" name="conditionalVisPath"/>
+                <string value="" name="conditionalVisValue"/>
+            </hintdict>
+            <help>
+                Inverts the t texture coordinate for texture lookup.
+            </help>
+        </param>
+        <param name="blur"
+               label="Blur"
+               type="float"
+               default="0."
+               widget="default">
+            <hintdict name="conditionalVisOps">
+                <string value="notEqualTo" name="conditionalVisOp"/>
+                <string value="../filename" name="conditionalVisPath"/>
+                <string value="" name="conditionalVisValue"/>
+            </hintdict>
+            <tags>
+                <tag value="float"/>
+            </tags>
+            <help>
+                Specifies how much to blur the result from the texture.
+            </help>
+        </param>
+        <param name="lerp"
+               label="Mip Interpolate"
+               type="int"
+               default="1"
+               widget="checkBox"
+               connectable="False">
+            <hintdict name="conditionalVisOps">
+                <string value="notEqualTo" name="conditionalVisOp"/>
+                <string value="../filename" name="conditionalVisPath"/>
+                <string value="" name="conditionalVisValue"/>
+            </hintdict>
+            <help>
+                Selects whether to interpolate between adjacent resolutions in the multi-resolution texture,
+                resulting in smoother transitions between levels.
+            </help>
+        </param>
+        <param name="filter"
+               label="Filter"
+               type="int"
+               default="1"
+               widget="mapper"
+               connectable="False">
+            <hintdict name="options">
+                <string name="Box"        value="1"/>
+                <string name="Bilinear"   value="2"/>
+                <string name="Bspline"    value="3"/>
+                <string name="Gaussian"   value="6"/>
+                <string name="Lagrangian" value="7"/>
+            </hintdict>
+            <hintdict name="conditionalVisOps">
+                <string value="notEqualTo" name="conditionalVisOp"/>
+                <string value="../filename" name="conditionalVisPath"/>
+                <string value="" name="conditionalVisValue"/>
+            </hintdict>
+        </param>
+        <param name="manifold"
+               label="Manifold"
+               type="struct"
+               default=""
+               widget="default">
+            <tags>
+                <tag value="struct"/>
+                <tag value="manifold"/>
+            </tags>
+        </param>
+        <page name="Advanced Texture Settings" open="True">
+            <param name="mipBias" label="MIP bias" type="int" default="0" slidermin="-10" slidermax="10">
+                <help>Offset the selected MIP level picked by the renderer.
+                Positive values will bias toward lower resolution MIPs.
+                Negative values will bias toward higher resolution MIPs.</help>
+            </param>
+            <param name="maxResolution" label="Max Resolution" type="float" default="0" widget="mapper">
+                <hintdict name="options">
+                    <string name="Unlimited" value="0"/>
+                    <string name="32" value="32"/>
+                    <string name="64" value="64"/>
+                    <string name="128" value="128"/>
+                    <string name="256" value="256"/>
+                    <string name="512" value="512"/>
+                    <string name="1024" value="1024"/>
+                    <string name="2048" value="2048"/>
+                    <string name="4096" value="4096"/>
+                    <string name="8192" value="8192"/>
+                </hintdict>
+                <help>Clamp the resolution to a maximum value.</help>
+            </param>
+            <param name="optimizeIndirect" label="Optimize Indirect" type="int" default="1"
+                widget="checkBox" connectable="False">
+                <help>Make indirect hits use a box filter rather than the selected one.</help>
+            </param>
+        </page>
+    </page>
+    <page name="Advanced" open="True">
+        <param name="reverse"
+               label="Reverse Normal"
+               type="int"
+               default="0"
+               widget="checkBox"
+               connectable="False">
+            <help>
+                Reverse the resulting normal.
+            </help>
+        </param>
+        <param name="adjustAmount"
+               label="Adjust Amount"
+               type="float"
+               default="0.0" min="0" max="1"
+               widget="default">
+            <tags>
+                <tag value="float"/>
+            </tags>
+            <help>
+                Amount to adjust the normals when they are facing away from the camera.
+            </help>
+        </param>
+        <param name="surfaceNormalMix"
+               label="Surface Normal Mix"
+               type="float"
+               default="0.0" min="0" max="1"
+               slider="1" slidermin="0.0" slidermax="1.0"
+               widget="default">
+            <tags>
+                <tag value="float"/>
+            </tags>
+            <help>
+                The amount to mix the resulting normals with the surface normals.
+            </help>
+        </param>
+        <param name="disable"
+            label="Disabled"
+            type="int"
+            default="0"
+            widget="checkBox"
+            connectable="False">
+            <help>
+                Use the geometric normal (ignore the modified normal).
+            </help>
+        </param>
+    </page>
+
+    <output name="resultN">
+        <tags>
+            <tag value ="normal"/>
+        </tags>
+    </output>
+
+    <rfmdata nodeid="1053417"
+        classification="rendernode/RenderMan/pattern/bump"/>
+    <rfcdata nodeid="1035878" description="Xpxrnormalmap"/>
+
+</args>

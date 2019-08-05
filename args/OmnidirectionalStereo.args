@@ -1,0 +1,23 @@
+<args format="1.0">
+  <shaderType>
+    <tag value="projection"/>
+  </shaderType>
+  <help>
+        This camera projection renders the scene as a stereo pair of 360 degree
+        projections. It is intended to be rendered in a square format with 
+        the top half as the left eye and the bottom half as the right eye.
+
+        Author: Mach Kobayashi
+  </help>
+    <param name="interpupilaryDistance" 
+           label="Interpupilary Distance" 
+           type="float" widget="default"
+           default="0.0635" min="0.0" 
+           connectable="False">
+      <help>
+        The distance between the two eyes. The default, 0.0635, should work if
+        your scene is measured in meters.
+      </help>
+    </param>
+    <rfmdata nodeid="1053315" classification="RenderMan/projection"/>
+  </args>

@@ -1,0 +1,156 @@
+<args format="1.0">
+    <help>
+        Read a ptex file.
+    </help>
+    <shaderType>
+        <tag value="pattern"/>
+    </shaderType>
+    <param name="filename"
+           label="Filename"
+           type="string" default=""
+           widget="assetIdInput" options="texture"
+           connectable="False">
+    </param>
+    <param name="firstChannel"
+           label="First Channel Offset"
+           type="int"
+           default="0"
+           widget="default"
+           connectable="False">
+        <help>
+            First channel offset to be looked up for Filename.
+        </help>
+    </param>
+
+    <param name="faceIndexOffset"
+           label="Face Index Offset"
+           type="int"    default="0"  widget="default"
+           connectable="False">
+    </param>
+    <param name="invertWindingOrder"
+           label="Invert Winding Order"
+           type="int" default="0" widget="checkBox"
+           connectable="False">
+        <help>Sometime an application will reverse the polygon's winding order
+        and create rendering artefacts. In that case, the face textures typically
+        look flipped.
+        </help>
+    </param>
+    <param name="filter"
+           label="Filter"
+           type="int"    default="1"  widget="mapper"
+           connectable="False">
+        <hintdict name="options">
+            <string name="Nearest"    value="0"/>
+            <string name="Box"        value="1"/>
+            <string name="Bilinear"   value="2"/>
+            <string name="Bspline"    value="3"/>
+            <string name="Mitchell"   value="4"/>
+            <string name="Catmullrom" value="5"/>
+            <string name="Gaussian"   value="6"/>
+        </hintdict>
+    </param>
+    <param name="blur"
+           label="Blur"
+           type="float"  default="0." widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+    </param>
+    <param name="lerp"
+           label="Mip Interpolate"
+           type="int"    default="1"  widget="checkBox"
+           connectable="False">
+    </param>
+    <param name="missingColor"
+           label="Missing Color"
+           type="color"
+           default="1. 0. 1."
+           widget="color">
+        <tags>
+            <tag value="color"/>
+        </tags>
+    </param>
+    <param name="missingAlpha"
+           label="Missing Alpha"
+           type="float"  default="1."  widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+    </param>
+    <param name="linearize"
+           label="Linearize"
+           type="int"    default="0"  widget="checkBox"
+           connectable="False">
+    </param>
+    <param name="manifold"
+           label="Manifold"
+           type="struct" default="" widget="Null">
+        <tags>
+            <tag value="struct"/>
+            <tag value="manifold"/>
+        </tags>
+    </param>
+    <page name="Adjust Output" open="True">
+        <param name="colorScale" label="Color Scale" type="color" default="1 1 1">
+            <tags>
+                <tag value="color"/>
+            </tags>
+        </param>
+        <param name="colorOffset" label="Color Offset" type="color" default="0 0 0">
+            <tags>
+                <tag value="color"/>
+            </tags>
+        </param>
+        <param name="saturation" label="Saturation" type="float" default="1"
+               min="0" slidermax="2">
+            <tags>
+                <tag value="float"/>
+            </tags>
+        </param>
+        <param name="alphaScale" label="Alpha Scale" type="float" default="1">
+            <tags>
+                <tag value="float"/>
+            </tags>
+        </param>
+        <param name="alphaOffset" label="Alpha Offset" type="float" default="0">
+            <tags>
+                <tag value="float"/>
+            </tags>
+        </param>
+    </page>
+
+    <output name="resultRGB">
+        <tags>
+            <tag value ="color"/>
+            <tag value ="vector"/>
+            <tag value ="normal"/>
+            <tag value ="point"/>
+        </tags>
+    </output>
+    <output name="resultR">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultG">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultB">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultA">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+
+
+    <rfmdata nodeid="1053401"
+        classification="rendernode/RenderMan/pattern/texture"/>
+    <rfcdata nodeid="1035883" description="Xpxrptexture"/>
+</args>

@@ -1,0 +1,111 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="light"/>
+    </shaderType>
+
+    <page name="Notes" open="False">
+        <param name="notes" type="string" widget="scriptEditor" omitFromRender="True">
+            <help>General comment field for this light.</help>
+        </param>
+    </page>
+
+    <param name="aovName"
+           label="AOV Name"
+           type="string"
+           default=""
+           connectable="False">
+        <help>
+            The name of the AOV to write to.
+        </help>
+    </param>
+
+    <page name="Refine" open="True">
+        <param name="useColor"
+               label="Use Color"
+               type="int"
+               default="0"
+               widget="checkBox"
+               connectable="False">
+            <help>
+                If this is on, it outputs a RGB color image instead of a float image
+                for the AOV.
+            </help>
+        </param>
+        <param name="invert"
+               label="Invert"
+               type="int"
+               default="0"
+               connectable="False"
+               widget="checkBox">
+            <help>
+                If this is on, it inverts the signal for the AOV.
+            </help>
+        </param>
+        <param name="inPrimaryHit"
+               label="In Primvary Hit"
+               type="int"
+               default="1"
+               connectable="False"
+               widget="checkBox">
+            <help>
+                If this is on, the usual mask of the illuminated objects is
+                generated. If this is off, you can get a mask of only in
+                the refraction or reflection.
+            </help>
+        </param>
+        <param name="inRefraction"
+               label="In Refraction"
+               type="int"
+               default="0"
+               connectable="False"
+               widget="checkBox">
+            <help>
+                If this is on, the rays are traced through the glass refractions
+                to get the masking signal. 
+
+                Warning: this will require some amount of samples to get a clean mask.
+            </help>
+        </param>
+        <param name="inReflection"
+               label="In Reflection"
+               type="int"
+               default="0"
+               connectable="False"
+               widget="checkBox">
+            <help>
+                If this is on, the rays are traced through the specular reflections to get
+                the masking signal. 
+
+                Warning: this will require some amount of samples to get a clean mask.
+            </help>
+        </param>
+        <param name="onVolumeBoundaries"
+               label="On Volume Boundaries"
+               type="int"
+               default="1"
+               connectable="False"
+               widget="checkBox">
+            <help>
+                If this is on, the bounding box or shape of volumes will appear in
+                the mask. Since this is not always desirable, this can be turned off.
+            </help>
+        </param>
+        <param name="useThroughput"
+               label="Use Throughput"
+               type="int"
+               default="1"
+               connectable="False"
+               widget="checkBox">
+            <help>
+                If this is on, the values in the mask for the reflected or refracted
+                rays will be affected by the strength of the reflection or refraction.
+                This can lead to values below and above 1.0. Turn this off if you
+                want a more solid mask.
+            </help>
+        </param>
+    </page>
+
+
+    <rfmdata nodeid="1053303"
+             classification="light:rendernode/RenderMan/light:swatch/rmanSwatch"/>
+</args>

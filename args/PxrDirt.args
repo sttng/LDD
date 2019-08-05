@@ -1,0 +1,174 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="pattern"/>
+    </shaderType>
+
+    <page name="Dirt Color" open="True">
+        <param name="occluded"
+            label="Occluded"
+            type="color"
+            default="1.0 1.0 1.0"
+            widget="default">
+            <help>
+                Occluded shading color. The default is white.
+            </help>
+        </param>
+        <param name="unoccluded"
+            label="Unoccluded"
+            type="color"
+            default="0.0 0.0 0.0"
+            widget="default">
+            <help>
+                Unoccluded shading color. The default is black.
+            </help>
+        </param>
+    </page>
+
+    <page name="Sampling" open="True">
+        <param name="numSamples"
+            label="Num Samples"
+            type="int"
+            default="4"
+            min="1"
+            slider="1"
+            slidermin="4"
+            slidermax="64"
+            widget="default"
+            connectable="False">
+            <help>
+                Controls the number of occlusion samples per camera hit point. The default is 4.
+            </help>
+        </param>
+        <param name="distribution"
+            label="Sample Distribution"
+            type="int"
+            default="1"
+            widget="mapper"
+            connectable="False">
+            <hintdict name="options">
+                <string name="Uniform" value="0"/>
+                <string name="Cosine"  value="1"/>
+            </hintdict>
+            <help>
+                Sample distribution can be uniform or cosine. The defaul is cosine.
+            </help>
+        </param>
+        <param name="cosineSpread"
+            label="Cosine Spread"
+            type="float"
+            default="1.0"
+            min="0.0"
+            slider="1"
+            slidermin="0.5"
+            slidermax="1.5"
+            widget="default"
+            connectable="False">
+            <hintdict name="conditionalVisOps">
+                <string value="equalTo" name="conditionalVisOp"/>
+                <string value="../distribution" name="conditionalVisPath"/>
+                <string value="1" name="conditionalVisValue"/>
+            </hintdict>
+            <help>
+                Sample spread of rays for cosine distribution. The defaul of 1 gives lambertian distribution.
+            </help>
+        </param>
+        <param name="falloff"
+            label="Falloff"
+            type="float"
+            default="0.0"
+            min="0.0"
+            slider="1"
+            slidermax="1.0"
+            widget="default"
+            connectable="False">
+            <help>
+                Falloff values greater than zero create a softer look. The default is 0.
+            </help>
+        </param>
+        <param name="maxDistance"
+            label="Max Distance"
+            type="float"
+            default="0.0"
+            min="0.0"
+            slider="1"
+            slidermax="100.0"
+            widget="default"
+            connectable="False">
+            <help>
+                The max distance at which objects may occlude. The default of 0 is infinite.
+            </help>
+        </param>
+        <param name="direction"
+            label="Direction"
+            type="int"
+            default="0"
+            widget="mapper"
+            connectable="False">
+            <hintdict name="options">
+                <string name="Outside" value="0"/>
+                <string name="Inside"  value="1"/>
+                <string name="Both"    value="2"/>
+            </hintdict>
+            <help>
+                Trace rays in the direction of the surface normal (outside), inverse to the normal (inside), or in both directions. The default is outside.
+            </help>
+        </param>
+        <param name="biasDirection"
+            label="Bias Direction"
+            type="vector"
+            default="0.0 0.0 0.0"
+            widget="default">
+            <help>
+                Add a directinoal bias to occlusion rays. The default is no bias.
+            </help>
+        </param>
+        <param name="biasDirectionCoordsys"
+            label="Bias Coordinate System"
+            type="string"
+            default="object"
+            widget="string"
+            connectable="False">
+            <help>
+                Name of bias direction coordinate system transform such as object, world, or camera.
+            </help>
+        </param>
+        <param name="traceSet"
+            label="Trace Set"
+            type="string"
+            default=""
+            widget="default">
+            <help>
+                Restrict ray tracing to a subset of objects defined by one or
+                more trace groups.
+            </help>
+        </param>
+    </page>
+
+    <output name="resultRGB">
+        <tags>
+            <tag value ="color"/>
+            <tag value ="vector"/>
+            <tag value ="normal"/>
+            <tag value ="point"/>
+        </tags>
+    </output>
+    <output name="resultR">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultG">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultB">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+
+    <rfmdata nodeid="1053280"
+             classification="rendernode/RenderMan/pattern/geometry"/>
+    <rfcdata nodeid="1037781" description="Xpxrdirt"/>
+</args>

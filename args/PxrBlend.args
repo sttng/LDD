@@ -1,0 +1,106 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="pattern"/>
+    </shaderType>
+    <param name="operation"  label="Operation" type="int" default="19"  widget="mapper"
+           connectable="False">
+        <hintdict name="options">
+            <string name="Color"         value="0"/>
+            <string name="Color Burn"    value="1"/>
+            <string name="Color Dodge"   value="2"/>
+            <string name="Darken"        value="3"/>
+            <string name="Darker Color"  value="4"/>
+            <string name="Difference"    value="5"/>
+            <string name="Dissolve"      value="6"/>
+            <string name="Divide"        value="7"/>
+            <string name="Exclusion"     value="8"/>
+            <string name="Hard Light"    value="9"/>
+            <string name="Hard Mix"      value="10"/>
+            <string name="Hue"           value="11"/>
+            <string name="Lighten"       value="12"/>
+            <string name="Lighter Color" value="13"/>
+            <string name="Linear Burn"   value="14"/>
+            <string name="Linear Dodge"  value="15"/>
+            <string name="Linear Light"  value="16"/>
+            <string name="Luminosity"    value="17"/>
+            <string name="Multiply"      value="18"/>
+            <string name="Normal"        value="19"/>
+            <string name="Overlay"       value="20"/>
+            <string name="Pin Light"     value="21"/>
+            <string name="Saturation"    value="22"/>
+            <string name="Screen"        value="23"/>
+            <string name="Soft Light"    value="24"/>
+            <string name="Subtract"      value="25"/>
+            <string name="Vivid Light"   value="26"/>
+        </hintdict>
+    </param>
+
+    <param name="topRGB" label="Top Color" type="color"
+           default="0. 0. 0." widget="color">
+        <tags>
+            <tag value="color"/>
+        </tags>
+    </param>
+
+    <param name="topA" label="Top Alpha" type="float"
+               default="1" min="0" max="1" widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+    </param>
+
+    <param name="bottomRGB" label="Bottom Color" type="color"
+           default="0. 0. 0." widget="color">
+        <tags>
+            <tag value="color"/>
+        </tags>
+    </param>
+
+    <param name="bottomA" label="Bottom Alpha" type="float"
+           default="1" min="0" max="1" widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+    </param>
+
+    <param name="clampOutput" label="Clamp Output" type="int"
+            default="1" widget="checkBox"
+            connectable="False">
+        <help>Clamp the output to 0-1</help>
+    </param>
+
+    <output name="resultRGB">
+        <tags>
+            <tag value ="color"/>
+            <tag value ="vector"/>
+            <tag value ="normal"/>
+            <tag value ="point"/>
+        </tags>
+    </output>
+    <output name="resultR">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultG">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultB">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultA">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+
+
+    <rfmdata nodeid="1053411"
+             classification="rendernode/RenderMan/pattern/color"/>
+    <rfcdata nodeid="1035858" description="Xpxrblend"/>
+
+</args>

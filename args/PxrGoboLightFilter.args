@@ -1,0 +1,187 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="lightfilter"/>
+    </shaderType>
+    <page name="Notes" open="False">
+        <param name="notes" type="string" default="" widget="scriptEditor" omitFromRender="True">
+            <help>General comment field for this light filter.</help>
+        </param>
+    </page>
+
+    <page name="Map" open="True">
+        <param name="map"
+               label="Map"
+               connectable="False"
+               type="string" widget="assetIdInput" options="texture"
+               default="ratGrid.tex">
+            <help>map: Filename of the projected texture.</help>
+        </param>
+        <param name="premultipliedAlpha"
+               label="Premultiplied Alpha"
+               connectable="False"
+               widget="checkBox"
+               type="int" default="1">
+            <help>
+                premultipliedAlpha: Textures are usually premultiplied by their alpha. If this not
+                the case, uncheck this.
+            </help>
+        </param>
+        <param name="refreshMap" type="int" default="0" widget="scriptButton"
+               connectable="False"
+               buttonText="Refresh Texture"
+               scriptText="currentValue = parameter.getChild('value').getValue(0.0)
+parameter.getChild('value').setValue(currentValue + 1, 0.0)
+parameter.getChild('enable').setValue(1, 0.0)">
+            <help>
+                Press this button to force a refresh of the texture during
+                Live Rendering.
+            </help>
+        </param>
+        <param name="fillColor"
+               label="Fill Color"
+               type="color" widget="color" default="1.0 1.0 1.0"
+               open="False" connectable="False">
+            <help>
+                fillColor: If the texture is not repeating, this specifies the
+                color for the region outside of and behind the projected rectangle.
+            </help>
+        </param>
+        <param name="width"
+               label="Width"
+               type="float" default="1.0" min="0.0" connectable="False">
+            <help>width: Width of the rect the light is shining through.</help>
+        </param>
+        <param name="height"
+               label="Height"
+               type="float" default="1.0" min="0.0" connectable="False">
+            <help>height: Height of the rect the light is shining through.</help>
+        </param>
+    </page>
+
+    <page name="Multiplier" open="True">
+        <param name="density"
+               label="Density"
+               type="float" default="1"
+               min="0.0" max="1.0" sensitivity="0.01" connectable="False">
+            <help>density: Controls the strength of the projected effect.</help>
+        </param>
+        <param name="invert"
+               label="Invert"
+               connectable="False"
+               type="int" widget="checkBox" default="0">
+            <help>invert: When this is on, the texture will be inverted before it is applied.
+            </help>
+        </param>
+        <param name="intensity"
+               label="Intensity"
+               type="float" min="0.0" default="1.0"
+               sensitivity="0.01" connectable="False">
+            <help>intensity: Multiplier for both the diffuse and specular result.
+            </help>
+        </param>
+        <param name="diffuse"
+               label="Diffuse"
+               type="float" default="1.0"
+               min="0.0" sensitivity="0.01"
+               connectable="False">
+            <help>diffuse: How much this light filter affects diffuse lighting.</help>
+        </param>
+        <param name="specular"
+               label="Specular"
+               type="float" default="1.0"
+               min="0.0" sensitivity="0.01"
+               connectable="False">
+            <help>specular: How much this light filter affects specular lighting.</help>
+        </param>
+    </page>
+
+    <page name="Texture Mapping" open="False">
+        <param name="tileMode"
+               label="Tile Mode"
+               connectable="False"
+               type="int" widget="mapper" default="0">
+            <hintdict name="options">
+                <string value="0" name="No Repeat"/>
+                <string value="1" name="Edge Extend"/>
+                <string value="2" name="Tile"/>
+            </hintdict>
+            <help>tileMode:
+                "No Repeat"   - texture does not repeat.
+                "Edge Extent" - extends the color of the edge to infinity.
+                "Tile"        - texture repeats (tileable texture).
+            </help>
+        </param>
+        <param name="scaleU"
+               label="Scale U"
+               type="float" default="1.0" sensitivity="0.01" connectable="False">
+            <help>scaleU: Scale of the texture in the U direction</help>
+        </param>
+        <param name="scaleV"
+               label="Scale V"
+               type="float" default="1.0" sensitivity="0.01" connectable="False">
+            <help>scaleV: Scale of the texture in the V direction</help>
+        </param>
+        <param name="offsetU"
+               label="Offset U"
+               type="float" default="0.0" sensitivity="0.01" connectable="False">
+            <help>offsetU: Offset of the texture in the U direction</help>
+        </param>
+        <param name="offsetV"
+               label="Offset V"
+               type="float" default="0.0" sensitivity="0.01" connectable="False">
+            <help>offsetV: Offset of the texture in the V direction</help>
+        </param>
+    </page>
+
+    <param name="combineMode"
+           label="Combine Mode"
+           type="string" default="mult"
+           connectable="False"
+           widget="popup" options="mult|max|min|screen">
+        <help>
+        <p>
+        combineMode: Light filters on a light are grouped by their combine mode. Light filters
+        in the same group are executed together and combined by the corresponding
+        operation:
+        </p>
+
+        <ol>
+          <li>max: the maximum result from all filters is used.
+              This works best for grey scale light filters.</li>
+          <li>min: the minimum result from all filters is used.
+              This works best for grey scale light filters.</li>
+          <li>screen: similar to the max operation, but it combines gradients
+              in a smoother way. This works best for grey scale light filters.</li>
+          <li>mult (default): the results of all the filters are multiplied together
+              (technically: they are applied one after the other)</li>
+        </ol>
+
+        <p>
+        The groups are executed in the above order and are multiplied together,
+        which means a filter that turns things black in the mult group will zero out
+        all other filters.
+        </p>
+
+        </help>
+    </param>
+
+    <!-- invisible paramers that need to be here, so they are assigned the right
+         values -->
+    <param name="coordsys"
+           connectable="False"
+           type="string" default="" widget="null"/>
+
+    <!-- We declare specially named hidden paramters that RfK 2.0 will fill
+         with the name of the light shader that the filter is attached to and
+         some of the lights parameters -->
+    <param name="__lightFilterParentShader"
+           connectable="False"
+           type="string" default="" widget="null"/>
+
+    <rfmdata nodeid="1200392"
+             classification="light:rendernode/RenderMan/lightfilter:swatch/rmanSwatch"/>
+
+</args>
+
+
+

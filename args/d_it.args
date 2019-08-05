@@ -1,0 +1,17 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="displaydriver"/>
+    </shaderType>
+    <help>
+        Render to the "it" framebuffer.
+    </help>
+    <output name="display">
+        <tags>
+            <tag value ="message"/>
+        </tags>
+    </output>
+    <rfmdata nodeid="1200426"
+             classification="RenderMan/displaydriver"
+             fileextension="it"
+             maxchannels="4"/>
+</args>

@@ -1,0 +1,250 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="pattern"/>
+    </shaderType>
+    <help>
+    PxrColorCorrect combines a number of classic remapping and color correction
+    methods.
+    </help>
+    <param name="inputRGB"
+        label="Input Color"
+        type="color"
+        default="0. 0. 0."
+        widget="default">
+        <tags>
+            <tag value="color"/>
+        </tags>
+        <help>Plug an input color pattern here.</help>
+    </param>
+    <page name="Mask" open="True">
+        <param name="inputMask"
+            label="Input Mask"
+            type="float"
+            default="1.0"
+            slider="True"
+            slidermin="0.0"
+            slidermax="1.0"
+            widget="default">
+            <tags>
+                <tag value="float"/>
+            </tags>
+            <help>A mask defining the color-corrected areas.</help>
+        </param>
+        <param name="invertMask"
+            label="Invert Mask"
+            type="int"
+            default="0"
+            widget="checkBox"
+            connectable="False">
+            <help>Inverts the mask's influence.</help>
+        </param>
+        <param name="mixMask"
+            label="Mix Mask"
+            type="float"
+            default="1.0"
+            slider="True"
+            slidermin="0.0"
+            slidermax="1.0"
+            widget="default"
+            connectable="False">
+            <tags>
+                <tag value="float"/>
+            </tags>
+            <help>Blend in the mask. When set to 0.0, there is no color
+            correction at all.</help>
+        </param>
+    </page>
+    <page name="Input Range" open="True">
+        <param name="inputMin"
+            label="Input Min"
+            type="vector"
+            default="0. 0. 0."
+            widget="default">
+            <tags>
+                <tag value="vector"/>
+            </tags>
+            <help>InputMin will remap the 0.0 value to a value of your choice.
+            When set to 0.0, nothing changes. This is equivalent to the black
+            point in Photoshop's Levels dialog.</help>
+        </param>
+        <param name="inputMax"
+            label="Input Max"
+            type="vector"
+            default="1. 1. 1."
+            widget="default">
+            <tags>
+                <tag value="vector"/>
+            </tags>
+            <help>InputMax will remap the 1.0 value to a value of your choice.
+            When set to 1.0, nothing changes.</help>
+        </param>
+    </page>
+    <page name="Color Correct" open="True">
+        <param name="gamma"
+            label="Gamma"
+            type="vector"
+            default="1. 1. 1."
+            widget="default">
+            <tags>
+                <tag value="vector"/>
+            </tags>
+            <help>Applies a per-channel gamma correction. Values lower than 0.0
+            are ignored, 1.0 is neutral.</help>
+        </param>
+        <param name="contrast"
+            label="Contrast"
+            type="vector"
+            default="0.0 0.0 0.0"
+            widget="default">
+            <tags>
+                <tag value="vector"/>
+            </tags>
+            <help>Applies a per-channel contrast. The valid range is -1 to +1.
+            0.0 is neutral</help>
+        </param>
+        <param name="contrastPivot"
+            label="Contrast Pivot"
+            type="vector"
+            default="0.5 0.5 0.5"
+            widget="default">
+            <tags>
+                <tag value="vector"/>
+            </tags>
+            <help>Specifies the per-channel pivot of the contrast curve. By
+            default, it is centered at 0.5 to mimic classic photoshop-style
+            operation.</help>
+        </param>
+        <param name="rgbGain"
+            label="RGB Gain"
+            type="color"
+            default="1. 1. 1."
+            widget="default">
+            <tags>
+                <tag value="color"/>
+            </tags>
+            <help>Use rgbGain to tint your input. This color will simply
+            multiply your input color. 1.0 is neutral.</help>
+        </param>
+        <param name="hsv"
+            label="HSV"
+            type="vector"
+            default="0.0 1.0 1.0"
+            widget="default">
+            <tags>
+                <tag value="vector"/>
+            </tags>
+            <help>Apply a Hue, Saturation, Value color correction. Hue is
+            an offset. Saturation and Value are multipliers.</help>
+        </param>
+        <param name="exposure"
+            label="Exposure"
+            type="float"
+            default="0"
+            slider="True"
+            slidermin="-4.0"
+            slidermax="4.0"
+            widget="default">
+            <tags>
+                <tag value="float"/>
+            </tags>
+            <help>Adjust the exposure of the input color by the given stops.
+            Each positive stop will double the input's intensity.  Each negative
+            stop will halve the input's intensity.  Often it is preferable to
+            use Exposure instead of a straight multiplication (like rgbGain),
+            as it is perceptually linear. </help>
+        </param>
+    </page>
+    <page name="Output Range" open="True">
+        <param name="outputMin"
+            label="Output Min"
+            type="vector"
+            default="0. 0. 0."
+            widget="default">
+            <tags>
+                <tag value="color"/>
+            </tags>
+            <help>outputMin will remap the final color's 0.0 value to a value of
+            your choice.</help>
+        </param>
+        <param name="outputMax"
+            label="Output Max"
+            type="vector"
+            default="1. 1. 1."
+            widget="default">
+            <tags>
+                <tag value="color"/>
+            </tags>
+            <help>outputMax will remap the final color's 1.0 value to a value of
+            your choice.</help>
+        </param>
+    </page>
+    <page name="Clamp Output">
+        <param name="clampOutput"
+            label="Clamp Output"
+            type="int"
+            default="0"
+            widget="checkBox"
+            connectable="False">
+            <help>The final color can optionaly be clamped to make sure it sits
+            within a user-defined range.</help>
+        </param>
+        <param name="clampMin"
+            label="Clamp Min"
+            type="vector"
+            default="0. 0. 0."
+            widget="default">
+            <hintdict name="conditionalVisOps">
+                <string value="equalTo" name="conditionalVisOp"/>
+                <string value="clampOutput" name="conditionalVisPath"/>
+                <string value="1" name="conditionalVisValue"/>
+            </hintdict>
+            <tags>
+                <tag value="color"/>
+            </tags>
+            <help>This is the lowest value output by PxrColorCorrect</help>
+        </param>
+        <param name="clampMax"
+            label="Clamp Max"
+            type="vector"
+            default="1. 1. 1."
+            widget="default">
+            <hintdict name="conditionalVisOps">
+                <string value="equalTo" name="conditionalVisOp"/>
+                <string value="clampOutput" name="conditionalVisPath"/>
+                <string value="1" name="conditionalVisValue"/>
+            </hintdict>
+            <tags>
+                <tag value="color"/>
+            </tags>
+            <help>This is the highest value output by PxrColorCorrect</help>
+        </param>
+    </page>
+
+    <output name="resultRGB">
+        <tags>
+            <tag value ="color"/>
+            <tag value ="vector"/>
+            <tag value ="normal"/>
+            <tag value ="point"/>
+        </tags>
+    </output>
+    <output name="resultR">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultG">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultB">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+
+    <rfmdata nodeid="1200405"
+             classification="rendernode/RenderMan/pattern/color"/>
+    <rfcdata nodeid="1037615" description="Xpxrcolorcorrect"/>
+</args>

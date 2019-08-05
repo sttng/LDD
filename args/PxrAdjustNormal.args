@@ -1,0 +1,50 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="pattern"/>
+    </shaderType>
+    <help>
+        Utility to adjust the normals.
+    </help>
+    <param name="inputNormal"
+           label="Input Normal"
+           type="normal"
+           default="0 0 0"
+           widget="default">
+        <tags>
+            <tag value="normal"/>
+        </tags>
+        <help>
+            Connect your normal pattern to adjust.
+        </help>
+    </param>
+    <param name="adjustAmount"
+           label="Adjust Amount"
+           type="float"
+           default="1.0" min="0" max="1"
+           widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>
+            Amount to adjust the normals.
+        </help>
+    </param>
+    <param name="surfaceNormalMix"
+           label="Surface Normal Mix"
+           type="float"
+           default="0.0" min="0" max="1"
+           slider="1" slidermin="0.0" slidermax="1.0"
+           widget="default">
+        <help>
+            The amount to mix the resulting normals with the surface normals.
+        </help>
+    </param>
+    <output name="resultN">
+      <tags>
+        <tag value="normal" />
+      </tags>
+    </output>
+
+     <rfmdata nodeid="1200406"
+        classification="rendernode/RenderMan/pattern/bump"/>
+</args>

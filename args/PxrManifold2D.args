@@ -1,0 +1,77 @@
+<args format="1.0" >
+    <shaderType>
+        <tag value="pattern"/>
+    </shaderType>
+    <help>
+        Encapsulates 2D parameterization for
+        pattern generators. Allows transformations and selection
+        of arbitrary variables bound to primitives. Uses a simple
+        struct to represent bundled dataflow of outputs.
+    </help>
+    <param name="angle"   label="Angle"    min="0" max="360" type="float"  default="0">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>Rotation angle around origin</help>
+    </param>
+    <param name="scaleS"  label="Scale S"  slidermin="-10" slidermax="10" type="float"  default="1" widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>Frequency of feature in S</help>
+    </param>
+    <param name="scaleT"  label="Scale T"  slidermin="-10" slidermax="10" type="float"  default="1" widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>Frequency of feature in T</help>
+    </param>
+    <param name="offsetS" label="Offset S" slidermin="-10" slidermax="10" type="float"  default="0" widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>Offset from origin in S</help>
+    </param>
+    <param name="offsetT" label="Offset T" slidermin="-10" slidermax="10" type="float"  default="0" widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>Offset from origin in T</help>
+    </param>
+    <param name="invertS" label="Invert S" type="int"    default="0" widget="checkBox"
+        connectable="False">
+        <help>Flip along S</help>
+    </param>
+    <param name="invertT" label="Invert T" type="int"    default="1" widget="checkBox"
+        connectable="False">
+        <help>Flip along T</help>
+    </param>
+    <param name="primvarS"  label="PrimVar S/ST"   type="string" default=""  widget="string"
+        connectable="False">
+        <help>Name of custom 1D S or 2D ST primvar</help>
+    </param>
+    <param name="primvarT"  label="PrimVar T"   type="string" default="" widget="string"
+        connectable="False">
+            <help>Name of custom 1D T primvar</help>
+    </param>
+
+    <output name="result">
+        <tags>
+            <tag value ="struct"/>
+            <tag value ="manifold"/>
+        </tags>
+    </output>
+    <output name="resultS">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultT">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+
+    <rfmdata nodeid="1053422" classification="rendernode/RenderMan/pattern/manifold"/>
+    <rfcdata nodeid="1035873" description="Xpxrmanifold2d"/>
+</args>

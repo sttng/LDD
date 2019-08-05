@@ -1,0 +1,204 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="pattern"/>
+    </shaderType>
+
+    <param
+        name="rampType"
+        label="Ramp Type"
+        type="int"
+        default="0"
+        min='0'
+        max='7'
+        widget="mapper"
+        connectable="False">
+        <hintdict name="options">
+            <string name="S Ramp"               value="0"/>
+            <string name="T Ramp"               value="1"/>
+            <string name="Diagonal"             value="2"/>
+            <string name="Radial"               value="3"/>
+            <string name="Circular"             value="4"/>
+            <string name="Box"                  value="5"/>
+            <string name="4 Corner"             value="6"/>
+            <string name="Random Object Color"  value="7"/>
+        </hintdict>
+    </param>
+    <param
+        name="tile"
+        label="Tile"
+        type="int"
+        default="0"
+        widget="checkBox"
+        connectable="False">
+    </param>
+    <param
+        name="useNewRamp"
+        label="Use Ramp UI"
+        type="int"
+        default="1"
+        widget="checkBox"
+        connectable="False">
+        <help>
+        Switch between using a ramp widget UI for the color ramp, or manually
+        adding knots and color values to the array parameters. The latter is useful for Katana users
+        if one wants to add a pattern network connection to individual knots and values. This is not
+        necessary for Maya users as the ramp widget UI allows for connections at each individual
+        color value.
+        </help>
+    </param>
+    <page name="Color Ramp (UI)" open="True" 
+            conditionalVisOp='equalTo'
+            conditionalVisPath='../useNewRamp' conditionalVisValue='1'>
+        <param name="colorRamp"
+               label="Color Ramp"
+               type="int" default="4" widget="colorRamp"
+               colorBarHeight="25" restrictComponents="True"
+            conditionalVisOp='equalTo'
+            conditionalVisPath='../../useNewRamp' conditionalVisValue='1'/>
+        <param name="colorRamp_Knots" type="float" widget="null" isDynamicArray="1"
+            default="0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1" arraySize="-1"
+            conditionalVisOp='equalTo'
+            conditionalVisPath='../../useNewRamp' conditionalVisValue='1'/>
+        <param name="colorRamp_Colors" type="color" widget="null" isDynamicArray="1"
+            default="1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1" arraySize="-1"
+            conditionalVisOp='equalTo'
+            conditionalVisPath='../../useNewRamp' conditionalVisValue='1'/>
+        <param name="colorRamp_Interpolation" type="string" default="catmull-rom"
+            widget="null" options="catmull-rom|linear|constant"
+            conditionalVisOp='equalTo'
+            conditionalVisPath='../../useNewRamp' conditionalVisValue='1'/>
+    </page>
+    <page name="Color Ramp (Manual)" open="True"             
+            conditionalVisOp='equalTo'
+            conditionalVisPath='../useNewRamp' conditionalVisValue='0'>
+        <param
+            name="positions"
+            label="Positions"
+            type="float"
+            default="0"
+            isDynamicArray="1"
+            arraySize="-1"
+            options="colorramp"
+            widget="dynamicArray"
+            conditionalVisOp='equalTo'
+            conditionalVisPath='../../useNewRamp' conditionalVisValue='0'>
+            <tags>
+                <tag value="float"/>
+            </tags>
+        </param>
+        <param
+            name="colors"
+            label="Colors"
+            type="color"
+            default="-1.0 -1.0 -1.0"
+            isDynamicArray="1"
+            options="colorramp"
+            arraySize="-1"
+            widget="dynamicArray"
+            conditionalVisOp='equalTo'
+            conditionalVisPath='../../useNewRamp' conditionalVisValue='0'>
+            <tags>
+                <tag value="color"/>
+            </tags>
+        </param>
+        <param
+            name="basis"
+            label="Spline Type"
+            type="int"
+            default="4"
+            min='0' max='6'
+            widget="mapper"
+            connectable="False"
+            conditionalVisOp='equalTo'
+            conditionalVisPath='../../useNewRamp' conditionalVisValue='0'>
+            <hintdict name="options">
+                <!-- <string name="Bezier"     value="0"/> -->
+                <!-- <string name="B-Spline"   value="1"/> -->
+                <!-- <string name="Hermite"    value="2"/> -->
+                <string name="Linear"       value="3"/>
+                <string name="Catmull-Rom"  value="4"/>
+                <string name="None"         value="5"/>
+            </hintdict>
+        </param>
+    </page>
+    <param
+        name="reverse"
+        label="Reverse"
+        type="int"
+        default="0"
+        widget="checkBox"
+        connectable="False">
+    </param>
+    <param
+        name="splineMap"
+        label="Spline Map"
+        type="float"
+        default="0"
+        min="0"
+        max="1">
+        <tags>
+            <tag value="float"/>
+        </tags>
+    </param>
+
+    <param
+        name="randomSource"
+        label="Random Source"
+        type="int"
+        default="0"
+        widget="mapper"
+        connectable="False">
+        <hintdict name="options">
+            <string name="Object Id"   value="0"/>
+            <string name="Object Name" value="1"/>
+        </hintdict>
+    </param>
+    <param
+        name="randomSeed"
+        label="Random Seed"
+        type="float"
+        default="0"
+        widget="default"
+        connectable="False">
+    </param>
+
+    <param
+        name="manifold"
+        label="Manifold"
+        type="struct" >
+        <tags>
+            <tag value="struct"/>
+            <tag value="manifold"/>
+        </tags>
+    </param>
+
+
+    <output name="resultRGB">
+        <tags>
+            <tag value ="color"/>
+            <tag value ="vector"/>
+            <tag value ="normal"/>
+            <tag value ="point"/>
+        </tags>
+    </output>
+    <output name="resultR">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultG">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultB">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+
+    <rfmdata nodeid="1053420"
+        classification="rendernode/RenderMan/pattern/color"/>
+    <rfcdata nodeid="1035884" description="Xpxrramp"/>
+
+</args>

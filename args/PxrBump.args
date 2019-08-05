@@ -1,0 +1,256 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="pattern"/>
+    </shaderType>
+    <help>
+        Calculate a bumped normal based on a floating point scalar displacement map.
+    </help>
+
+    <param name="scale"
+           label="Scale"
+           type="float"
+           default="1."
+           widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>
+            An object-space scale applied to the bump.
+        </help>
+    </param>
+    <param name="disable"
+           label="Disabled"
+           type="int"
+           default="0"
+           widget="checkBox"
+           connectable="False">
+        <help>
+            Use the geometric normal (ignore the modified bump).
+        </help>
+    </param>
+    <page name="Pattern" open="True">
+      <param name="inputBump"
+             label="Input Bump"
+             type="float"
+             default="0."
+             widget="default">
+          <tags>
+              <tag value="float"/>
+          </tags>
+          <help>
+              If "Input Bump" is connected (and "Filename" is not specified),
+              the pattern executes the upstream shader graph connected to
+              "Input Bump" 3 times, once at the shading point and once at
+              P+du and P+dv. Then it crosses the results to get the bump normal.
+
+              Note that if you have a fixed texture and UV, it is highly recommended to use
+              "Filename" method below because it is 3 times faster!
+
+              If "Filename" is specified below, "Input Bump" is ignored.
+          </help>
+      </param>
+    </page>
+    <page name="Texture" open="True">
+      <param name="filename"
+             label="Filename"
+             type="string"
+             default=""
+             widget="assetIdInput"
+             options="texture"
+             connectable="False">
+          <help>
+              Filename could be a color or monochrome file.  The shader reads only one
+              channel of the file from Channel specified below.
+              If "Filename" is specified, the pattern has no upstream graph connected.
+              Instead it reads the bump value from the texture file.  The bump pattern
+              gets the derivatives from the texture AS it filters it, so it doesn't
+              have to read texture values 3 times.  As a result, however, it can only
+              take the derivatives of a single channel, which is specificed by "First Channel".
+              The shader currently does not allow modifying the manifold of the texture.
+
+              If "Input Bump" is connected and Filename is also specified, Filename is
+              used while the connection of "Input Bump" is ignored.
+          </help>
+      </param>
+      <param name="firstChannel"
+             label="First Channel Offset"
+             type="int"
+             default="0"
+             widget="default"
+             connectable="False">
+          <hintdict name="conditionalVisOps">
+             <string value="notEqualTo" name="conditionalVisOp"/>
+             <string value="../filename" name="conditionalVisPath"/>
+             <string value="" name="conditionalVisValue"/>
+          </hintdict>
+          <help>
+              First channel offset to be looked up for Filename.
+          </help>
+      </param>
+      <param name="atlasStyle"
+             label="Atlas Style"
+             type="int"
+             default="0"
+             widget="mapper"
+             connectable="False">
+          <hintdict name="options">
+            <string name="None"                    value="0"/>
+            <string name="UDIM (Mari)"             value="1"/>
+            <string name="UV Tile Base-1 (Mudbox)" value="2"/>
+            <string name="UV Tile Base-0 (Zbrush)" value="3"/>
+          </hintdict>
+          <hintdict name="conditionalVisOps">
+             <string value="notEqualTo" name="conditionalVisOp"/>
+             <string value="../filename" name="conditionalVisPath"/>
+             <string value="" name="conditionalVisValue"/>
+          </hintdict>
+          <help>
+              Specify which atlas style.
+          </help>
+      </param>
+      <param name="invertT"
+          label="Invert T"
+          type="int"
+          default="1"
+          widget="checkBox"
+          connectable="False">
+          <hintdict name="conditionalVisOps">
+             <string value="notEqualTo" name="conditionalVisOp"/>
+             <string value="../filename" name="conditionalVisPath"/>
+             <string value="" name="conditionalVisValue"/>
+          </hintdict>
+          <help>
+              Inverts the t texture coordinate for texture lookup.
+          </help>
+      </param>
+      <param name="blur"
+             label="Blur"
+             type="float"
+             default="0."
+             widget="default">
+          <tags>
+              <tag value="float"/>
+          </tags>
+          <help>
+              Specifies how much to blur the result from the texture.
+          </help>
+          <hintdict name="conditionalVisOps">
+             <string value="notEqualTo" name="conditionalVisOp"/>
+             <string value="../filename" name="conditionalVisPath"/>
+             <string value="" name="conditionalVisValue"/>
+          </hintdict>
+      </param>
+      <param name="lerp"
+             label="Mip Interpolate"
+             type="int"
+             default="1"
+             widget="checkBox"
+             connectable="False">
+          <hintdict name="conditionalVisOps">
+             <string value="notEqualTo" name="conditionalVisOp"/>
+             <string value="../filename" name="conditionalVisPath"/>
+             <string value="" name="conditionalVisValue"/>
+          </hintdict>
+          <help>
+              Selects whether to interpolate between adjacent resolutions in
+              the multi-resolution texture, resulting in smoother transitions
+              between levels.
+          </help>
+      </param>
+      <param name="manifold"
+             label="Bump Manifold"
+             type="struct" default="" widget="default">
+          <tags>
+              <tag value="struct"/>
+              <tag value="pxrbumpmanifold2d"/>
+          </tags>
+          <help>
+              You can connect a PxrBumpManifold2D here. Any other manifold type
+              will be ignored.
+          </help>
+      </param>
+      <page name="Advanced Texture Settings" open="True">
+          <param name="mipBias" label="MIP bias" type="int" default="0" slidermin="-10" slidermax="10">
+              <help>Offset the selected MIP level picked by the renderer.
+              Positive values will bias toward lower resolution MIPs.
+              Negative values will bias toward higher resolution MIPs.</help>
+          </param>
+          <param name="maxResolution" label="Max Resolution" type="float" default="0" widget="mapper">
+              <hintdict name="options">
+                  <string name="Unlimited" value="0"/>
+                  <string name="32" value="32"/>
+                  <string name="64" value="64"/>
+                  <string name="128" value="128"/>
+                  <string name="256" value="256"/>
+                  <string name="512" value="512"/>
+                  <string name="1024" value="1024"/>
+                  <string name="2048" value="2048"/>
+                  <string name="4096" value="4096"/>
+                  <string name="8192" value="8192"/>
+              </hintdict>
+              <help>Clamp the resolution to a maximum value.</help>
+          </param>
+      </page>
+    </page>
+    <page name="Advanced" open="True">
+      <param name="inputN"
+             label="Input Normal"
+             type="normal"
+             default="1. 0. 0."
+             widget="default">
+          <tags>
+              <tag value="normal"/>
+          </tags>
+          <help>
+              An additional normal to be added to the bump normal.
+          </help>
+      </param>
+      <param name="reverse"
+             label="Reverse Normal"
+             type="int"
+             default="0"
+             widget="checkBox"
+             connectable="False">
+          <help>
+              Reverse the resulting normal.
+          </help>
+      </param>
+      <param name="adjustAmount"
+             label="Adjust Amount"
+             type="float"
+             default="1.0" min="0" max="1"
+             widget="default">
+          <tags>
+              <tag value="float"/>
+          </tags>
+          <help>
+              Amount to adjust the normals when they are facing away from the camera.
+          </help>
+      </param>
+      <param name="surfaceNormalMix"
+             label="Surface Normal Mix"
+             type="float"
+             default="0.0" min="0" max="1"
+             slider="1" slidermin="0.0" slidermax="1.0"
+             widget="default">
+          <tags>
+              <tag value="float"/>
+          </tags>
+          <help>
+              The amount to mix the resulting normals with the surface normals.
+          </help>
+      </param>
+    </page>
+
+    <output name="resultN">
+        <tags>
+            <tag value ="normal"/>
+        </tags>
+    </output>
+
+
+    <rfmdata nodeid="1053416"
+        classification="rendernode/RenderMan/pattern/bump"/>
+    <rfcdata nodeid="1035859" description="Xpxrbump"/>
+
+</args>

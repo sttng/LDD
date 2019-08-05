@@ -1,0 +1,43 @@
+<args format="1.0">
+  <shaderType>
+    <tag value="displayfilter"/>
+  </shaderType>
+  <help>
+    Display filter plugin to color the background.
+  </help>
+
+  <param name="backgroundColor"
+         label="Background Color"
+         type="color"
+         default="0 0 0"
+         widget="color"
+         connectable="False">
+    <help>
+        Color of the background. 
+    </help>
+  </param>
+
+    <param name="aov"
+        label="AOV"
+        type="string"
+        default="Ci"
+        widget="string"
+        connectable="False">
+        <help>Name of AOV to apply filter to.</help>
+    </param>
+    
+    <param name="aovAlpha"
+        label="Alpha"
+        type="string"
+        default="a"
+        widget="string"
+        connectable="False">
+        <help>Name of AOV to get alpha values from.</help>
+    </param>
+
+
+
+    <rfmdata nodeid="1053308"
+             classification="rendernode/RenderMan/displayfilter"/>
+
+</args>

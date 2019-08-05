@@ -1,0 +1,176 @@
+<!-- set your own node ID below -->
+<!-- $mayaNodeID: 548859705 $-->
+<args format="1.0">
+    <help>
+        A Tessendorf Ocean generator. Amaan Akram. www.amaanakram.com
+    </help>
+    <shaderType>
+        <tag value="pattern"/>
+    </shaderType>
+    <page name="Ocean Parameters" open="True">
+        <param name="resolution" type="int" default="3" min="3" max="7" widget="default"
+               connectable="False">
+            <help>"Specifies generated texture resolution. '3' generates a 128x128. '4' generates a 256x256. '7' is 2048x2048" </help>
+        </param>
+        <param name="oceanScale" type="float" default="100.0" min="0.001" max="10000.0"   widget="default"
+               connectable="False">
+            <help>Size of the ocean patch in meters. Larger values 'fit' a larger expanse of ocean into the rendered geo</help>
+        </param>
+        <param name="seed" type="int" default="1" min="1" max="20"   widget="default"
+               connectable="False">
+            <help>Seed for the random number generator. Different values produce different ocean patches</help>
+        </param>
+        <param name="currentTime" type="float" default="0.0" min="0.0" max="100.0"   widget="default"
+               connectable="False">
+            <help>"Current Scene time in Seconds. Use an expression to drive this parameter"</help>
+        </param>
+        <param name="repeatTime" type="float" default="1000.0" min="0.0" max="1000.0"   widget="default"
+               connectable="False">
+            <help>Waves loop (repeat their shape) after the specified amount of time in seconds</help>
+        </param>
+        <param name="fade" type="float" default="0.0" min="0.0" max="1.0"   widget="default">
+            <tags>
+                <tag value="float"/>
+            </tags>
+            <help>"Fades (scales) the ocean vector displacement strength"</help>
+        </param>
+    </page>
+    <page name="Wave Parameters" open="True">
+        <param name="chopAmount" type="float" default="1.0" min="0.0" max="100.0"   widget="default"
+               connectable="False">
+            <help>"The sharpness of the peaks of waves are controlled by this parameter. Also affects foam values."</help>
+        </param>
+        <param name="velocity" type="float" default="10.0" min="0.0001" max="30.0"   widget="default"
+               connectable="False">
+            <help>Controls the size of the waves. Higher velocities make fewer, but bigger waves. Lower velocities make a calm ocean</help>
+        </param>
+        <param name="waveSpeed" type="float" default="1.0" min="0.0" max="50.0"   widget="default"
+               connectable="False">
+            <help>Speed multiplier for waves</help>
+        </param>
+        <param name="cutoff" type="float" default="0.0" min="0.0" max="100.0"   widget="default"
+               connectable="False">
+            <help>Defines a smoothing factor for the overall ocean surface. Cuts off (removes) waves with wavelengths smaller than the specified value</help>
+        </param>
+        <param name="waveHeight" type="float" default="1.0" min="0.0" max="100.0"   widget="default"
+               connectable="False">
+            <help>Height mulitplier for waves</help>
+        </param>
+    </page>
+    <page name="Wind Parameters" open="True">
+        <param name="windDir" type="float" default="45.0" min="0.0" max="360.0"   widget="default"
+               connectable="False">
+            <help>Direction the waves travel in</help>
+        </param>
+        <param name="damp" type="float" default="0.985f" min="0.0" max="1.0"   widget="default"
+               connectable="False">
+            <help>Bias waves travelling in the direction of the wind. Value of 0 makes waves travel in and opposite the wind direction. 1.0 makes
+            the waves travel in the wind direction only</help>
+        </param>
+        <param name="windAlign" type="int" default="1" min="0" max="10"   widget="default"
+               connectable="False">
+            <help>Align waves perpendicular to the direction of the wind, as observed in shallow waters</help>
+        </param>
+    </page>
+    <page name="Foam Parameters" open="False">
+        <param name="raw" type="int" default="0"  widget="null"
+               connectable="False">
+            <help>Ouput raw eigenvalues (foam) in alpha channel without any post correction like gamma/invert etc.</help>
+        </param>
+        <param name="invertFoam" type="int" default="0"  widget="checkBox"
+               connectable="False">
+            <help>Makes wave peaks appear white, instead of make wave troughs white</help>
+        </param>
+        <param name="gamma" type="float" default="1.0" min="0.0001f" max="20.0"   widget="default">
+            <tags>
+                <tag value="float"/>
+            </tags>
+            <help>Gamma factor to apply to the eigenvalue output</help>
+        </param>
+        <param name="brightness" type="float" default="1.0" min="0.0001f" max="20.0"   widget="default">
+            <tags>
+                <tag value="float"/>
+            </tags>
+            <help>Multiplier for the eigenvalues</help>
+        </param>
+        <param name="normalize" type="int" default="0"  widget="checkBox"
+               connectable="False">
+            <help>Whether to normalize the eigenvalues. See fMin and fMax.</help>
+        </param>
+        <param name="fMin" type="float" default="-5.0" min="-10.0" max="10.0"   widget="default">
+            <tags>
+                <tag value="float"/>
+            </tags>
+            <help>fMin and fMax are used to normalize the eigenvalues, which can go into negative and positive values.
+            See render log for typical values on a frame</help>
+        </param>
+        <param name="fMax" type="float" default="5.0" min="-10.0" max="10.0"   widget="default">
+            <tags>
+                <tag value="float"/>
+            </tags>
+             <help>fMin and fMax are used to normalize the eigenvalues, which can go into negative and positive values.
+            See render log for typical values on a frame</help>
+        </param>
+    </page>
+    <page name="File Ouput Parameters" open="False">
+        <param name="writeFile" type="int" default="0"  widget="checkBox"
+               connectable="False">
+            <help>Writes out a full-float openexr vector displacement map sequence in object space</help>
+        </param>
+        <param name="outputFolder" type="string" default=""  widget="default"
+               connectable="False">
+            <help>path to the folder to output images into</help>
+        </param>
+        <param name="postfix" type="string" default=""  widget="default"
+               connectable="False">
+            <help>any postfix to apply to the generated file to identify it uniquely</help>
+        </param>
+        <param name="currentFrame" type="int" default="1" min="0" max="10000"
+               connectable="False">
+            <help>set an expression for the current frame for frame padded sequence names</help>
+        </param>
+    </page>
+    <page name="Custom UV Parameters" open="False">
+        <param name="invertT"
+               label="Invert T"
+               type="int"    default="1"  widget="checkBox"
+               connectable="False">
+        </param>
+        <param name="manifold"
+               label="Manifold"
+               type="struct" default="" widget="default">
+            <tags>
+                <tag value="struct"/>
+                <tag value="manifold"/>
+            </tags>
+        </param>
+    </page>
+    <page name="Advanced Parameters" open="False">
+        <param name="oceanDepth" type="float" default="1000.0" min="1.0" max="10000.0"   widget="default"
+               connectable="False">
+            <help>slows down waves as depth decreases</help>
+        </param>
+        <param name="surfaceTension" type="float" default="0.0" min="1.0" max="10000.0"   widget="default"
+               connectable="False">
+            <help>capillary waves that run on top of the ocean surface. for small-scale effects only. see original tessendorf paper for details</help>
+        </param>
+    </page>
+    <output name="outDisplacementRGB">
+        <tags>
+            <tag value="color"/>
+            <tag value ="vector"/>
+            <tag value ="normal"/>
+            <tag value ="point"/>
+        </tags>
+    </output>
+    <output name="outEigenvalueFloat">
+        <tags>
+            <tag value="float"/>
+        </tags>
+    </output>
+    <rfmdata nodeid="1200404"
+        classification="rendernode/RenderMan/pattern/displace"/>
+    <rfcdata nodeid="1037179" description="Xaaoceanprmanshader"/>
+</args>
+
+

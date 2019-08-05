@@ -1,0 +1,71 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="pattern"/>
+    </shaderType>
+    <help>
+        This node mixes two colors according to the
+        given mix percentage. A mix value of 0 results in Color 1.
+    </help>
+    <param name="color1"
+        label="Color 1"
+        type="color"  default="0. 0. 0."
+        widget="color">
+        <tags>
+            <tag value="color"/>
+        </tags>
+    </param>
+    <param name="color2"
+        label="Color 2"
+        type="color"  default="1. 1. 1."
+        widget="color">
+        <tags>
+            <tag value="color"/>
+        </tags>
+    </param>
+    <param name="mix"
+        label="Mix"
+        type="float"  default="0."
+        min="0" max="1" widget="default"  tag="float">
+        <tags>
+            <tag value="float"/>
+        </tags>
+    </param>
+    <param name="clampMix"
+        label="Clamp Mix"
+        type="int"  default="0"
+        widget="checkBox"  tag="int">
+        <help>Keep the mix signal between 0.0 and 1.0.</help>
+        <tags>
+            <tag value="int"/>
+        </tags>
+    </param>
+
+    <output name="resultRGB">
+        <tags>
+            <tag value ="color"/>
+            <tag value ="vector"/>
+            <tag value ="normal"/>
+            <tag value ="point"/>
+        </tags>
+    </output>
+    <output name="resultR">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultG">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultB">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+
+    <rfmdata nodeid="1053392"
+        classification="rendernode/RenderMan/pattern/color"/>
+    <rfcdata nodeid="1035877" description="Xpxrmix"/>
+
+</args>

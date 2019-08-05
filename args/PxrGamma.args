@@ -1,0 +1,61 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="pattern"/>
+    </shaderType>
+    <help>
+        Adjust the exposure of the input color by the given gamma.
+    </help>
+    <param name="inputRGB"
+        label="Input Color"
+        type="color"
+        default="0. 0. 0."
+        widget="color">
+        <tags>
+            <tag value="color"/>
+        </tags>
+        <help>Plug a color pattern here</help>
+    </param>
+    <param name="gamma"
+        label="Gamma"
+        type="float"
+        default="1.0"
+        min="0"
+        slider="True"
+        slidermin="0"
+        slidermax="4"
+        widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>The amount of gamma to adjust the input</help>
+    </param>
+
+    <output name="resultRGB">
+        <tags>
+            <tag value ="color"/>
+            <tag value ="vector"/>
+            <tag value ="normal"/>
+            <tag value ="point"/>
+        </tags>
+    </output>
+    <output name="resultR">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultG">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultB">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+
+
+    <rfmdata nodeid="1053428"
+             classification="rendernode/RenderMan/pattern/color"/>
+    <rfcdata nodeid="1035868" description="Xpxrgamma"/>
+</args>

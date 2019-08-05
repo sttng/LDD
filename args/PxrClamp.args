@@ -1,0 +1,83 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="pattern"/>
+    </shaderType>
+    <help>
+    Clamps the separate channels of a color between the specified min and
+    max values. If an RGB channel value is less then min, it will be set to the
+    min value, and if an RGB channel is greater than max, it will be set to the
+    max value.
+    </help>
+    <param name="inputRGB"
+        label="Input Color"
+        type="color"
+        default="0. 0. 0."
+        widget="color">
+        <tags>
+            <tag value ="color"/>
+        </tags>
+        <help>
+        Each of the R, G, and B channels of this color get clamped between the
+        specified min and max values. For example, if a color value of [.8 .5
+        .2] is specified, and a *min* value of [.3 .3 .3] and *max* value of
+        [.6 .6 .6] are specified, then the resulting color will be [.6 .5 .3].
+        </help>
+    </param>
+    <param name="min"
+        label="Min"
+        type="color"
+        default="0. 0. 0."
+        widget="color">
+        <tags>
+            <tag value ="color"/>
+        </tags>
+        <help>The minimum value allowed for each of the color channels.</help>
+    </param>
+    <param name="max"
+        label="Max"
+        type="color"
+        default="1. 1. 1."
+        widget="color">
+        <tags>
+            <tag value ="color"/>
+        </tags>
+        <help>The maximum value allowed for each of the color channels.</help>
+    </param>
+    <param name="modulus"
+        label="Modulus"
+        type="int"
+        default="0"
+        widget="checkBox"
+        connectable="False">
+        <help>Perform a modulus operation between min and max.</help>
+    </param>
+
+    <output name="resultRGB">
+        <tags>
+            <tag value ="color"/>
+            <tag value ="vector"/>
+            <tag value ="normal"/>
+            <tag value ="point"/>
+        </tags>
+    </output>
+    <output name="resultR">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultG">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultB">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+
+    <rfmdata nodeid="1053432"
+             classification="rendernode/RenderMan/pattern/color"/>
+    <rfcdata nodeid="1035860" description="Xpxrclamp"/>
+
+</args>

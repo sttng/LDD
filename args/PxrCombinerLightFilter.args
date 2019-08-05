@@ -1,0 +1,59 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="lightfilter"/>
+    </shaderType>
+    <param name="mult"   
+           label="Mult"
+           type="lightfilter" 
+           isDynamicArray="1"
+           arraySize="-1"
+           widget="dynamicArray">
+        <tags>
+            <tag value="lightfilter"/>
+        </tags>
+        <help>
+            mult: Combining light filters by muliplying.
+        </help>
+    </param>
+    <param name="max"    
+           label="Max"
+           type="lightfilter" 
+           isDynamicArray="1"
+           arraySize="-1"
+           widget="dynamicArray">
+        <tags>
+            <tag value="lightfilter"/>
+        </tags>
+        <help>
+            max: Combining light filters by returning the maximum result.
+        </help>
+    </param>
+    <param name="min"    
+           label="Min"
+           type="lightfilter" 
+           isDynamicArray="1"
+           arraySize="-1"
+           widget="dynamicArray">
+        <tags>
+            <tag value="lightfilter"/>
+        </tags>
+        <help>
+            min: Combining light filters by returning the mininum result.
+        </help>
+    </param>
+    <param name="screen" 
+           label="Screen"
+           type="lightfilter" 
+           isDynamicArray="1"
+           arraySize="-1"
+           widget="dynamicArray">
+        <tags>
+            <tag value="lightfilter"/>
+        </tags>
+        <help>
+            screen: Combining light filters by returning the "screen" result.
+            Screen operation is similar to the max operation, but it combines gradients
+            in a smoother way.
+        </help>
+    </param>
+</args>

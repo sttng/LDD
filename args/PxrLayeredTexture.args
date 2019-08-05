@@ -1,0 +1,300 @@
+<args format="1.0">
+    <help>
+        Read a texture file and composite it with another PxrLayeredTexture.
+        This is the most efficient way to layer textures.
+    </help>
+    <shaderType>
+        <tag value="pattern"/>
+    </shaderType>
+
+    <param name="mute"
+           label="Mute"
+           type="int"
+           default="0"
+           widget="checkBox"
+           connectable="False">
+        <help>
+            Make this node invisible in the compositing chain.
+        </help>
+    </param>
+
+    <param label="Texture Overlay"
+           name="textureOverlay"
+           type="struct">
+        <tags>
+            <tag value="struct and pxrtexoverlay"/>
+        </tags>
+    </param>
+    <page name="Mask" open="True">
+      <param name="maskValue"
+             label="Mask Value"
+             type="float"
+             default="1"
+             widget="default"
+             slider="True"
+             min="0"
+             max="1">
+          <help>
+              An optional mask for this texture. This will scale the mask
+              texture.
+          </help>
+      </param>
+      <param name="maskTexture"
+             label="Mask Texture"
+             type="string" default=""
+             widget="assetIdInput" options="texture"
+             connectable="False">
+          <help>
+              If your mask is a texture, this is the optimal way to mask it.
+              Your mask texture will be scaled by the maskValue parameter.
+          </help>
+      </param>
+      <param name="maskChannel"
+             label="Mask Channel"
+             type="int"
+             default="0"
+             widget="default"
+             connectable="False">
+          <help>
+              First channel offset to be looked up for the mask texture.
+          </help>
+      </param>
+      <param name="maskAtlasStyle"
+             label="Mask Atlas Style"
+             type="int"    default="0"  widget="mapper"
+             connectable="False">
+          <hintdict name="options">
+              <string name="None"                    value="0"/>
+              <string name="UDIM (Mari)"             value="1"/>
+              <string name="UV Tile Base-1 (Mudbox)" value="2"/>
+              <string name="UV Tile Base-0 (Zbrush)" value="3"/>
+          </hintdict>
+      </param>
+      <param name="missingMask"
+             label="Missing Mask"
+             type="float"
+             default="0.0"
+             widget="default"
+             slider="True"
+             min="0"
+             max="1">
+          <help>
+              If the texture can not be read - i.e. a missing tile in a texture
+              atlas - This value will be used.
+          </help>
+          <tags>
+              <tag value="float"/>
+          </tags>
+      </param>
+    </page>
+
+    <page name="Texture" open="True">
+      <param name="filename"
+             label="Filename"
+             type="string"
+             default=""
+             widget="assetIdInput"
+             options="texture"
+             connectable="False">
+      </param>
+
+      <param name="firstChannel"
+             label="First Channel Offset"
+             type="int"
+             default="0"
+             widget="default"
+             connectable="False">
+          <help>
+              First channel offset to be looked up for Filename.
+          </help>
+      </param>
+
+      <param name="atlasStyle"
+             label="Atlas Style"
+             type="int"
+             default="0"
+             widget="mapper"
+             connectable="False">
+          <hintdict name="options">
+              <string name="None"                    value="0"/>
+              <string name="UDIM (Mari)"             value="1"/>
+              <string name="UV Tile Base-1 (Mudbox)" value="2"/>
+              <string name="UV Tile Base-0 (Zbrush)" value="3"/>
+          </hintdict>
+      </param>
+      <param name="invertT"
+             label="Invert T"
+             type="int"
+             default="1"
+             widget="checkBox"
+             connectable="False">
+          <help>
+            Unlike RenderMan, Maya's UV have the T value inverted.  For the models created in Maya,
+            Invert T needs to be ON so that the texture orientation will be correct in the render.
+          </help>
+      </param>
+      <param name="manifold"
+             label="Manifold"
+             type="struct"
+             default=""
+             widget="default">
+          <tags>
+              <tag value="struct"/>
+              <tag value="manifold"/>
+          </tags>
+      </param>
+      <page name="Filtering And Defaults" open="True">
+        <param name="filter"
+               label="Filter"
+               type="int"
+               default="1"
+               widget="mapper"
+               connectable="False">
+          <hintdict name="options">
+             <string name="Nearest"    value="0"/>
+             <string name="Box"        value="1"/>
+             <string name="Bilinear"   value="2"/>
+             <string name="Bspline"    value="3"/>
+             <string name="Gaussian"   value="6"/>
+             <string name="Lagrangian" value="7"/>
+          </hintdict>
+        </param>
+        <param name="blur"
+               label="Blur"
+               type="float"
+               default="0."
+               widget="default">
+            <tags>
+                <tag value="float"/>
+            </tags>
+        </param>
+        <param name="lerp"
+               label="Mip Interpolate"
+               type="int"
+               default="1"
+               widget="checkBox"
+               connectable="False">
+        </param>
+        <param name="missingColor"
+               label="Missing Color"
+               type="color"
+               default="1. 0. 1."
+               widget="color">
+            <tags>
+                <tag value="color"/>
+            </tags>
+        </param>
+        <param name="missingAlpha"
+               label="Missing Alpha"
+               type="float"
+               default="1."
+               widget="default">
+            <tags>
+                <tag value="float"/>
+            </tags>
+        </param>
+        <page name="Advanced Texture Settings" open="True">
+            <param name="mipBias" label="MIP bias" type="int" default="0" slidermin="-10" slidermax="10">
+                <help>Offset the selected MIP level picked by the renderer.
+                Positive values will bias toward lower resolution MIPs.
+                Negative values will bias toward higher resolution MIPs.</help>
+            </param>
+            <param name="maxResolution" label="Max Resolution" type="float" default="0" widget="mapper">
+                <hintdict name="options">
+                    <string name="Unlimited" value="0"/>
+                    <string name="32" value="32"/>
+                    <string name="64" value="64"/>
+                    <string name="128" value="128"/>
+                    <string name="256" value="256"/>
+                    <string name="512" value="512"/>
+                    <string name="1024" value="1024"/>
+                    <string name="2048" value="2048"/>
+                    <string name="4096" value="4096"/>
+                    <string name="8192" value="8192"/>
+                </hintdict>
+                <help>Clamp the resolution to a maximum value.</help>
+            </param>
+            <param name="optimizeIndirect" label="Optimize Indirect" type="int" default="1"
+                widget="checkBox" connectable="False">
+                <help>Make indirect hits use a box filter rather than the selected one.</help>
+            </param>
+        </page>
+      </page>
+    </page>
+    <page name="Color Correct" open="True">
+      <param name="linearize"
+             label="Linearize"
+             type="int"
+             default="0"
+             widget="checkBox"
+             connectable="False">
+      </param>
+      <param name="colorTint"
+             label="Color Tint"
+             type="color"
+             default="1. 1. 1."
+             widget="color">
+          <tags>
+              <tag value="color"/>
+          </tags>
+      </param>
+      <param name="colorOffset"
+             label="Color Offset"
+             type="color"
+             default="0. 0. 0."
+             widget="color">
+          <tags>
+              <tag value="color"/>
+          </tags>
+      </param>
+    </page>
+
+    <param name="doNotOptimize"
+           type="int"
+           default="0"
+           widget="checkBox"
+           connectable="False">
+        <help>
+            Make this node much slower than it should be.
+        </help>
+    </param>
+
+
+    <output name="resultRGB">
+        <tags>
+            <tag value ="color"/>
+            <tag value ="vector"/>
+            <tag value ="normal"/>
+            <tag value ="point"/>
+        </tags>
+    </output>
+    <output name="resultR">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultG">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultB">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultA">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultOverlay">
+        <tags>
+            <tag value ="struct"/>
+            <tag value ="pxrtexoverlay"/>
+        </tags>
+    </output>
+
+    <rfmdata nodeid="1200384"
+             classification="rendernode/RenderMan/pattern/texture"/>
+</args>

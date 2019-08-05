@@ -1,0 +1,37 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="bxdf"/>
+    </shaderType>
+    <param label="Emit Color" name="emitColor" type="color"
+           default="1. 1. 1." widget="color">
+        <tags>
+            <tag value="color"/>
+        </tags>
+    </param>
+    <param label="Presence"
+           name="presence"
+           type="float"
+           default="1" min="0" max="1"
+           widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>
+            Connect a mask function here to apply a cutout pattern
+            to your object.  Presence is defined as a binary (0 or 1)
+            function that can take on continuous values to antialias the
+            shape.  Useful for modeling leaves and other thin,
+            complex shapes.
+            <p>
+            IMPORTANT NOTE: This value should be either 0 or 1.
+            A value between 0 and 1 will produce unwanted noise !!!
+            </p>
+        </help>
+    </param>
+    <rfmdata nodeid="1053405"
+             classification="shader/surface:rendernode/RenderMan/bxdf/main:swatch/rmanSwatch"/>
+   <rfcdata nodeid="1035841" description="Mpxrconstant"/>
+</args>
+
+
+

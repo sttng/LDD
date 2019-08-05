@@ -1,0 +1,224 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="pattern"/>
+    </shaderType>
+    <param name="layersMode"
+           label="Layers Mode"
+           type="int"
+           default="1"
+           arraySize="-1"
+           isDynamicArray="1"
+           widget="mapper"
+           uiStruct="Layers"
+           connectable="False">
+        <hintdict name="options">
+            <string name="Off"   value="0"/>
+            <string name="On"    value="1"/>
+            <string name="Solo"  value="2"/>
+        </hintdict>
+        <help>
+            Each layer has a mode to help you debug your setup:
+            - Off: disable this layer - it won't render.
+            - On: enable this layer - this is the default.
+            - Solo: disable all other layers - only solo-ed layers will render.
+        </help>
+    </param>
+    <param name="layersRGB"
+           label="Layers RGB"
+           type="color"
+           default="0.5 0.5 0.5"
+           isDynamicArray="1"
+           uiStruct="Layers"
+           arraySize="-1">
+        <help>
+            Each layer's color source should be connected here.
+            You should use PxrProjectionLayer.resultRGB as a source.
+        </help>
+        <tags>
+            <tag value="color"/>
+        </tags>
+    </param>
+    <param name="layersA"
+           label="Layers A"
+           type="float"
+           default="1"
+           isDynamicArray="1"
+           uiStruct="Layers"
+           arraySize="-1">
+        <help>
+            Each layer's alpha source should be connected here.
+            You should use PxrProjectionLayer.resultA as a source.
+        </help>
+        <tags>
+            <tag value="float"/>
+        </tags>
+    </param>
+
+    <param name="layersNumChannels"
+           label="Num Channels"
+           type="int"
+           default="0"
+           isDynamicArray="1"
+           uiStruct="Layers"
+           arraySize="-1">
+        <help>
+            Connect here the PxrProjectionLayer.outNumChannels plug.
+            This will indicate the number of extra color channels sent by the source PxrProjectionLayer node.
+            &lt;b&gt;Warning&lt;/b&gt;: This plug &lt;u&gt;must be connected&lt;/u&gt; so the color channels may be correctly un-packed.
+        </help>
+        <tags>
+            <tag value="int"/>
+        </tags>
+    </param>
+    <param name="layersChannelsRGB"
+           label="Channels RGB"
+           type="color"
+           default="0 0 0"
+           isDynamicArray="1"
+           uiStruct="Layers"
+           arraySize="-1">
+        <help>
+            Connect here PxrProjectionLayer.outChannelsRGB.
+            It contains all the color channels from the source PxrProjectionLayer node, packed into a single output.
+            &lt;b&gt;Warning&lt;/b&gt;: To be able to un-pack that data, &lt;u&gt;the number of channels must be provided&lt;/u&gt; by the source node via the layersNumChannels input plug.
+        </help>
+        <tags>
+            <tag value="color"/>
+        </tags>
+    </param>
+
+    <param name="channelsAovNames"
+           label="Channels AOV names"
+           type="string"
+           default=""
+           isDynamicArray="1"
+           arraySize="-1"
+           connectable="False">
+        <help>
+            Define an mapping from a channel index to a displayChannel.
+            For example, to output channel 3 to the "srfRoughness" displayChannel, enter "srfRoughness" in channelsAovNames[3].
+            An empty string means no routing.
+            channel indices start at 0.
+            The number of AOV routings is limited to 32.
+        </help>
+        <tags>
+            <tag value="string"/>
+        </tags>
+    </param>
+    <param name="outputChanIdx"
+           label="Channel # -> Output"
+           type="int"
+           default="-1"
+           arraySize="8"
+           isDynamicArray="0"
+           connectable="False">
+        <help>
+            Channels can be routed to one of the 8 channel output plugs (channelOut0 to channelOut7).
+            A channel's order is its array index, so if you want to send channel 0 to channelOut4, you need to set outputChanIdx[4] to 0.
+            Of course, you will want to make sure the channel order is the same in all PxrProjectionLayer nodes connected to this PxrProjectionStack.
+            Default: -1 which means no channel routed to this output.
+        </help>
+        <tags>
+            <tag value="int"/>
+        </tags>
+    </param>
+
+
+    <output name="resultRGB">
+        <tags>
+            <tag value ="color"/>
+            <tag value ="vector"/>
+            <tag value ="normal"/>
+            <tag value ="point"/>
+        </tags>
+    </output>
+    <output name="resultR">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultG">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultB">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultA">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="channelOut0">
+        <tags>
+            <tag value ="color"/>
+            <tag value ="vector"/>
+            <tag value ="normal"/>
+            <tag value ="point"/>
+        </tags>
+    </output>
+    <output name="channelOut1">
+        <tags>
+            <tag value ="color"/>
+            <tag value ="vector"/>
+            <tag value ="normal"/>
+            <tag value ="point"/>
+        </tags>
+    </output>
+    <output name="channelOut2">
+        <tags>
+            <tag value ="color"/>
+            <tag value ="vector"/>
+            <tag value ="normal"/>
+            <tag value ="point"/>
+        </tags>
+    </output>
+    <output name="channelOut3">
+        <tags>
+            <tag value ="color"/>
+            <tag value ="vector"/>
+            <tag value ="normal"/>
+            <tag value ="point"/>
+        </tags>
+    </output>
+    <output name="channelOut4">
+        <tags>
+            <tag value ="color"/>
+            <tag value ="vector"/>
+            <tag value ="normal"/>
+            <tag value ="point"/>
+        </tags>
+    </output>
+    <output name="channelOut5">
+        <tags>
+            <tag value ="color"/>
+            <tag value ="vector"/>
+            <tag value ="normal"/>
+            <tag value ="point"/>
+        </tags>
+    </output>
+    <output name="channelOut6">
+        <tags>
+            <tag value ="color"/>
+            <tag value ="vector"/>
+            <tag value ="normal"/>
+            <tag value ="point"/>
+        </tags>
+    </output>
+    <output name="channelOut7">
+        <tags>
+            <tag value ="color"/>
+            <tag value ="vector"/>
+            <tag value ="normal"/>
+            <tag value ="point"/>
+        </tags>
+    </output>
+
+    <rfmdata nodeid="1053388"
+             classification="rendernode/RenderMan/pattern/color"/>
+    <rfcdata nodeid="1035881" description="Xpxrprojectionstack"/>
+
+</args>

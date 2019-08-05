@@ -1,0 +1,89 @@
+<args format="1.0" >
+    <shaderType>
+        <tag value="pattern"/>
+    </shaderType>
+    <help>
+        Encapsulates 3D parameterization for
+        pattern generators. Allows selection of Pref and
+        specification of a coordinate system to transform to.
+        Uses a simple struct to represent bundled dataflow of
+        outputs.
+    </help>
+    <param name="scale"
+           label="Scale"
+           type="float"
+           slidermin="-10" slidermax="10"
+           default="1"
+           widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>
+            Scale the frequency of the feature uniformly in 3D
+        </help>
+    </param>
+    <param name="use"
+           label="Use"
+           type="int"
+           default="0"
+           widget="mapper"
+           connectable="False">
+        <hintdict name="options">
+            <string name="Current position: P"  value="0"/>
+            <string name="Undisplaced position: Po"  value="1"/>
+            <string name="Deform : __Pref"  value="2"/>
+            <string name="Deform &amp; transform: __WPref"  value="3"/>
+        </hintdict>
+        <help>Select the type of position you want to use. You can only use
+        __Pref and __WPref if these primitive variables have been attached to
+        your geometry.</help>
+    </param>
+    <param name="pref"
+           label="Pref"
+           type="string"
+           default=""
+           widget="string"
+           connectable="False">
+        <help>
+            Name of geometry Pref (Maya uses __Pref and __WPref).
+            If empty, we will use P.
+        </help>
+    </param>
+    <param name="coordsys"
+           label="Coordinate System"
+           type="string"
+           default="object"
+           widget="string"
+           connectable="False">
+        <help>
+            Name of coordinate system transform (e.g. place3dtexture node in Maya).
+            Standard coordinate systems : "object", "world", "screen", "NDC".
+        </help>
+    </param>
+
+    <output name="result">
+        <tags>
+            <tag value ="struct"/>
+            <tag value ="manifold"/>
+        </tags>
+    </output>
+    <output name="resultX">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultY">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultZ">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+
+    <rfmdata nodeid="1053423" classification="rendernode/RenderMan/pattern/manifold"/>
+    <rfcdata nodeid="1035874" description="Xpxrmanifold3d"/>
+
+</args>

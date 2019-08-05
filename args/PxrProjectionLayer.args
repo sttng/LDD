@@ -1,0 +1,251 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="pattern"/>
+    </shaderType>
+    <param name="filename"
+           label="Filename"
+           type="string"
+           default=""
+           widget="assetIdInput"
+           options="texture"
+           connectable="False">
+    </param>
+    <param name="firstChannel"
+           label="First Channel Offset"
+           type="int"
+           default="0"
+           widget="default"
+           connectable="False">
+        <help>
+            First channel offset to be looked up for Filename.
+        </help>
+    </param>
+    <param name="filter"
+           label="Filter"
+           type="int"
+           default="1"
+           widget="mapper"
+           connectable="False">
+        <hintdict name="options">
+            <string name="Nearest"    value="0"/>
+            <string name="Box"        value="1"/>
+            <string name="Bilinear"   value="2"/>
+            <string name="Bspline"    value="3"/>
+            <string name="Gaussian"   value="6"/>
+            <string name="Lagrangian" value="7"/>
+        </hintdict>
+    </param>
+    <param name="blur"
+           label="Blur"
+           type="float"
+           default="0."
+           widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+    </param>
+    <param name="lerp"
+           label="Mip Interpolate"
+           type="int"
+           default="1"
+           widget="checkBox"
+           connectable="False">
+    </param>
+    <param name="missingColor"
+           label="Missing Color"
+           type="color"
+           default="1. 0. 1."
+           widget="color">
+        <tags>
+            <tag value="color"/>
+        </tags>
+    </param>
+    <param name="missingAlpha"
+           label="Missing Alpha"
+           type="float"
+           default="1."
+           widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+    </param>
+    <param name="linearize"
+           label="Linearize"
+           type="int"
+           default="0"
+           widget="checkBox"
+           connectable="False">
+    </param>
+    <param name="premultiply"
+           label="Premultiply"
+           type="int"
+           default="0"
+           widget="checkBox"
+           connectable="False">
+    </param>
+    <param name="mask"
+           label="Mask"
+           type="float"
+           default="1.0"
+           widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+    </param>
+    <param name="channelsFilenames"
+           label="Channels Filenames"
+           type="string"
+           default=""
+           isDynamicArray="1"
+           arraySize="-1"
+           widget="fileInput"
+           options="texture"
+           uiStruct="Channels"
+           connectable="False">
+    </param>
+    <param name="channelsLinearize"
+           label="Channels Linearize"
+           type="int"
+           default="0"
+           isDynamicArray="1"
+           arraySize="-1"
+           widget="checkBox"
+           uiStruct="Channels"
+           connectable="False">
+    </param>
+    <param name="channelsMissingColor"
+           label="Channels Missing Color"
+           type="color"
+           default="0. 0. 0."
+           isDynamicArray="1"
+           arraySize="-1"
+           uiStruct="Channels"
+           connectable="False">
+    </param>
+    <param name="channelsInBlack"
+           label="Channels Input Black"
+           type="color"
+           default="0. 0. 0."
+           isDynamicArray="1"
+           arraySize="-1"
+           uiStruct="Channels"
+           connectable="False">
+    </param>
+    <param name="channelsInGamma"
+           label="Channels Input Gamma"
+           type="color"
+           default="1. 1. 1."
+           isDynamicArray="1"
+           arraySize="-1"
+           uiStruct="Channels"
+           connectable="False">
+    </param>
+    <param name="channelsInWhite"
+           label="Channels input White"
+           type="color"
+           default="1. 1. 1."
+           isDynamicArray="1"
+           arraySize="-1"
+           uiStruct="Channels"
+           connectable="False">
+    </param>
+    <param name="channelsOutBlack"
+           label="Channels Output Black"
+           type="color"
+           default="0. 0. 0."
+           isDynamicArray="1"
+           arraySize="-1"
+           uiStruct="Channels"
+           connectable="False">
+    </param>
+    <param name="channelsOutWhite"
+           label="Channels Output White"
+           type="color"
+           default="1. 1. 1."
+           isDynamicArray="1"
+           arraySize="-1"
+           uiStruct="Channels"
+           connectable="False">
+    </param>
+    <param name="manifold"
+           label="Manifold"
+           type="struct"
+           default=""
+           widget="default">
+        <tags>
+            <tag value="struct"/>
+            <tag value="manifold"/>
+        </tags>
+    </param>
+    <page name="Advanced Texture Settings" open="True">
+        <param name="mipBias" label="MIP bias" type="int" default="0"
+            slider="1" slidermin="-10" slidermax="10">
+            <help>Offset the selected MIP level picked by the renderer.
+            Positive values will bias toward lower resolution MIPs.
+            Negative values will bias toward higher resolution MIPs.</help>
+        </param>
+        <param name="maxResolution" label="Max Resolution" type="float" default="0" widget="mapper">
+            <hintdict name="options">
+                <string name="Unlimited" value="0"/>
+                <string name="32" value="32"/>
+                <string name="64" value="64"/>
+                <string name="128" value="128"/>
+                <string name="256" value="256"/>
+                <string name="512" value="512"/>
+                <string name="1024" value="1024"/>
+                <string name="2048" value="2048"/>
+                <string name="4096" value="4096"/>
+                <string name="8192" value="8192"/>
+            </hintdict>
+            <help>Clamp the resolution to a maximum value.</help>
+        </param>
+        <param name="optimizeIndirect" label="Optimize Indirect" type="int" default="1"
+            widget="checkBox" connectable="False">
+            <help>Make indirect hits use a box filter rather than the selected one.</help>
+        </param>
+    </page>
+
+    <output name="resultRGB">
+        <tags>
+            <tag value ="color"/>
+            <tag value ="vector"/>
+            <tag value ="normal"/>
+            <tag value ="point"/>
+        </tags>
+    </output>
+    <output name="resultR">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultG">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultB">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultA">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="outNumChannels">
+        <tags>
+            <tag value ="int"/>
+        </tags>
+    </output>
+    <output name="outChannelsRGB">
+        <tags>
+            <tag value ="color"/>
+        </tags>
+    </output>
+
+
+    <rfmdata nodeid="1053389"
+             classification="rendernode/RenderMan/pattern/texture"/>
+    <rfcdata nodeid="1035880" description="Xpxrprojectionlayer"/>
+</args>

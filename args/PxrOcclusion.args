@@ -1,0 +1,91 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="integrator"/>
+    </shaderType>
+    <help>
+        Render occlusion.
+    </help>
+
+    <param name="numSamples"
+        label="Num Samples"
+        type="int"
+        default="4"
+        min="1"
+        slidermin="4"
+        slidermax="64"
+        widget="default"
+        connectable="False">
+        <help>
+            Controls the number of occlusion samples per camera hit point. The default is 4.
+        </help>
+    </param>
+    <param name="distribution"
+        label="Sample Distribution"
+        type="int"
+        default="1"
+        widget="mapper"
+        connectable="False">
+        <hintdict name="options">
+            <string name="Uniform"    value="0"/>
+            <string name="Cosine"     value="1"/>
+            <string name="Reflection" value="2"/>
+        </hintdict>
+        <help>
+            Sample distribution can be uniform, cosine, or reflection. The defaul is cosine.
+        </help>
+    </param>
+    <param name="cosineSpread"
+        label="Cosine Spread"
+        type="float" 
+        default="1.0"
+        min="0.0"
+        slidermin="0.5"
+        slidermax="1.5"
+        widget="default"
+        connectable="False">
+        <hintdict name="conditionalVisOps">
+            <string value="equalTo" name="conditionalVisOp"/>
+            <string value="../distribution" name="conditionalVisPath"/>
+            <string value="1" name="conditionalVisValue"/>
+        </hintdict>
+        <help>
+            Sample spread for cosine distribution. The defaul of 1 gives lambertian distribution.
+        </help>
+    </param>
+    <param name="falloff"
+        label="Falloff"
+        type="float" 
+        default="0.0"
+        min="0.0"
+        slidermax="1.0"
+        widget="default"
+        connectable="False">
+        <help>
+            Falloff values greater than zero create a softer look. The default is 0.
+        </help>
+    </param>
+    <param name="maxDistance"
+        label="Max Distance"
+        type="float"
+        default="0.0"
+        min="0.0"
+        slidermax="100.0"
+        widget="default"
+        connectable="False">
+        <help>
+            The max distance at which objects may occlude. The default of 0 is infinite.
+        </help>
+    </param>
+    <param name="useAlbedo"
+        label="Use Albedo"
+        type="int"
+        default="0"
+        widget="checkBox"
+        connectable="False">
+        <help>
+            Tint occlusion by material albedo. The default is 0.
+        </help>
+    </param>
+
+    <rfmdata nodeid="1053319" classification="RenderMan/integrator"/>
+</args>

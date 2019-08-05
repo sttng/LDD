@@ -1,0 +1,77 @@
+<args format="1.0">
+    <help>
+        A C++ displacement plugin.
+    </help>
+    <shaderType>
+        <tag value="displacement"/>
+    </shaderType>
+    <param  name="enabled"
+            label="Enabled"
+            type="int"
+            widget="checkBox"
+            connectable="False"
+            default="1">
+        <help>
+            Enable the displacement.  When this is turned off, there will be no displacement.
+        </help>
+    </param>
+    <param  name="dispAmount"
+            label="Gain"
+            type="float"
+            widget="default"
+            default="1.0">
+       <tags>
+            <tag value="float"/>
+       </tags>
+       <help>
+            Specify the displacement gain amount.  When the amount is 0.0, there will be
+            no displacement. This is a multiplier.
+       </help>
+    </param>
+    <param  name="dispScalar"
+            label="Scalar Displacement"
+            type="float"
+            widget="default"
+            default="0.0">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>
+            Displacement value that is float or scalar.  This could be connected to a float pattern
+            which could be procedural or texture.
+        </help>
+    </param>
+    <param  name="dispVector"
+            label="Vector Displacement"
+            type="vector"
+            widget="default"
+            default="0.0 0.0 0.0">
+        <tags>
+            <tag value="vector"/>
+        </tags>
+        <help>
+            Displacement value that is vector.  This could be connected to a vector pattern
+            which could be procedural or texture.
+        </help>
+    </param>
+    <param  name="modelDispVector"
+            label="Model Displacement"
+            type="vector"
+            widget="default"
+            default="0.0 0.0 0.0">
+        <tags>
+            <tag value="vector"/>
+        </tags>
+        <help>
+            Model Displacement is the displacement for the model such as from the
+            extracted displacement versus the displacement from the shading network.
+            This could be connected to a vector pattern which could be procedural
+            or texture. This adds to the regular Vector Displacement
+        </help>
+    </param>
+    <rfmdata    nodeid="1053284"
+                classification="shader/displacement:rendernode/RenderMan/displace:swatch/rmanSwatch"/>
+    <rfcdata nodeid="1036870" description="Mpxrdisplace"/>
+
+</args>
+

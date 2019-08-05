@@ -1,0 +1,278 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="integrator"/>
+    </shaderType>
+    <param name="maxPathLength" type="int" default="10" 
+         label="Max Depth"
+         min='1' 
+         slider="1" slidermin="1" slidermax='15'
+         connectable="False">
+        <help>
+    Controls the absolute upper bound on the maximum ray depth. 
+    A value of 1 for this parameter will allow direct 
+    illumination only, while a value of 4 will permit up 
+    to 3 bounces of global illumination. 
+    The default is 10.
+        </help>
+    </param> 
+    <param name="maxContinuationLength" type="int" default="-1" 
+         label="Continuation Depth"
+         min='-1' 
+         slider="1" slidermin="-1" slidermax='15'
+         connectable="False">
+        <help>
+    Similar to maxPathLength, this controls the upper bound on the
+    maximum ray depth including continuation rays. Any negative value
+    will cause the path tracer to use an empirical heuristic to bound
+    the ray depth. A positive value will override this heuristic and
+    cause the path tracer to use the parameter value directly as the
+    maximum ray depth. Continuation rays are normally produced by
+    volumes when no density exists within subsections of them. If there
+    are many such zero density subsections overlapping then it is
+    possible to quickly hit the maximum continuation depth quickly,
+    resulting in black regions within your render.
+    The default is -1.
+        </help>
+    </param> 
+    <param name="maxNonStochasticOpacityEvents" 
+         label="Stochastic Opacity Depth"
+         type="int" 
+         default="0" 
+         min='0' 
+         slider="1" slidermin="0" slidermax='15'
+         connectable="False">
+        <help>
+    Defines the camera ray depth for which opacity 
+    calculations are computed with no noise (using 
+    continuation rays). Once this depth is exceeded, 
+    the opacity computation will switch to a stochastic 
+    "presence" style of opacity, which may introduce 
+    noise.
+    The default is 0.
+        </help>
+    </param> 
+    <param name="sampleMode" type="string" widget="popup" default="bxdf" options="manual|bxdf"
+         label="Sample Mode" 
+         connectable="False">
+        <help>
+    Controls the strategy for how indirect ray counts are apportioned
+    between diffuse vs. glossy vs. specular Bxdf lobes. Valid values
+    for this parameter are: "bxdf" or "manual". If "sampleMode" is set
+    to "bxdf", then the Bxdf is responsible for balancing the number
+    of indirect rays that will be spawned at each camera hit point
+    between the diffuse vs. glossy vs. specular lobes, and the total
+    number of indirect rays spawned at each camera hit point will be
+    controlled by the numIndirectSamples parameter. If "sampleMode" is
+    set to "manual" the user is responsible for explicitly specifying
+    the number of indirect rays to spawn per Bxdf lobe at each camera
+    hit point via the numDiffuseSamples, numSpecularSamples,
+    numSubsurfaceSamples, and numRefractionSamples parameters. 
+    The default is "bxdf".
+        </help>
+    </param>
+    <param name="numLightSamples" type="int" default="1" 
+         label="Light Samples" 
+         min='0' 
+         slider="1" slidermin="0" slidermax='8'
+         connectable="False">
+        <help>
+    Controls the number of light samples for direct 
+    illumination per camera hit point. 
+    The default is 1.
+        </help>
+    </param> 
+    <param name="numBxdfSamples" type="int" default="1" 
+         label="BXDF Samples" 
+         min='0' 
+         slider="1" slidermin="0" slidermax='8'
+         connectable="False">
+        <help>
+    Controls the number of Bxdf samples for direct 
+    illumination per camera hit point. 
+    The default is 1.
+        </help>
+    </param> 
+    <param name="numIndirectSamples" type="int" default="1" 
+         label="Indirect Samples" 
+         min='0' 
+         slider="1" slidermin="0" slidermax='8'
+         connectable="False">
+         <hintdict name="conditionalVisOps">
+            <string value="equalTo" name="conditionalVisOp"/> 
+            <string value="../sampleMode" name="conditionalVisPath"/> 
+            <string value="bxdf" name="conditionalVisValue"/>
+        </hintdict>
+        <help>
+    When sampleMode is set to Bxdf this parameter 
+    controls the total number of indirect rays to 
+    spawn per camera hit point. When sampleMode is 
+    set to manual the value of this parameter is
+    ignored. 
+    The default is 1.
+        </help>
+    </param> 
+    <param name="numDiffuseSamples" type="int" default="1" 
+         label="Diffuse Samples" 
+         min='0' 
+         slider="1" slidermin="0" slidermax='8'
+         connectable="False">
+         <hintdict name="conditionalVisOps">
+            <string value="equalTo" name="conditionalVisOp"/> 
+            <string value="../sampleMode" name="conditionalVisPath"/> 
+            <string value="manual" name="conditionalVisValue"/>
+        </hintdict>
+        <help>
+    When sampleMode is set to manual, controls the 
+    number of indirect diffuse reflection rays to 
+    spawn per camera hit point. Ignored when 
+    sampleMode is set to Bxdf. 
+    The default is 1.
+        </help>
+    </param> 
+    <param name="numSpecularSamples" type="int" default="1" 
+         label="Specular Samples" 
+         min='0' 
+         slider="1" slidermin="0" slidermax='8'
+         connectable="False">
+         <hintdict name="conditionalVisOps">
+            <string value="equalTo" name="conditionalVisOp"/> 
+            <string value="../sampleMode" name="conditionalVisPath"/> 
+            <string value="manual" name="conditionalVisValue"/>
+        </hintdict>
+        <help>
+    When sampleMode is set to manual, controls 
+    the number of indirect specular/glossy 
+    reflection rays to spawn per camera hit 
+    point. Ignored when sampleMode is set to 
+    Bxdf. 
+    The default is 1.
+        </help>
+    </param> 
+    <param name="numSubsurfaceSamples" type="int" default="1" 
+         label="Subsurface Samples" 
+         min='0' 
+         slider="1" slidermin="0" slidermax='8'
+         connectable="False">
+         <hintdict name="conditionalVisOps">
+            <string value="equalTo" name="conditionalVisOp"/> 
+            <string value="../sampleMode" name="conditionalVisPath"/> 
+            <string value="manual" name="conditionalVisValue"/>
+        </hintdict>
+        <help>
+    When sampleMode is set to manual, controls 
+    the number of subsurface rays to spawn per 
+    camera hit point. Ignored when sampleMode 
+    is set to Bxdf. 
+    The default is 1.
+        </help>
+    </param> 
+    <param name="numRefractionSamples" type="int" default="1" 
+         label="Refraction Samples" 
+         min='0' 
+         slider="1" slidermin="0" slidermax='8'
+         connectable="False">
+         <hintdict name="conditionalVisOps">
+            <string value="equalTo" name="conditionalVisOp"/> 
+            <string value="../sampleMode" name="conditionalVisPath"/> 
+            <string value="manual" name="conditionalVisValue"/>
+        </hintdict>
+        <help>
+    When sampleMode is set to manual, controls 
+    the number of refraction/transmission rays 
+    to spawn per camera hit point. Ignored when 
+    sampleMode is set to Bxdf. 
+    The default is 1.
+        </help>
+    </param>
+    <param name="allowCaustics" type="int" default="0" 
+         label="Allow Caustics" 
+         widget="checkBox"
+         connectable="False">
+        <help>
+        Controls whether illumination from 
+        caustic light paths (that is, specular 
+        illumination onto diffuse surfaces) is 
+        allowed or disallowed. 
+        The default is off.
+        </help>
+    </param>
+    <param name="accumOpacity" type="int" default="0"
+         label="Accumulate Opacity" 
+         widget="checkBox"
+         connectable="False">
+        <help>
+        Controls whether or not the path tracer 
+        will keep track of accumulated opacity
+        along the path. The default is off.
+        </help>
+    </param>
+    <page name="Russian Roulette" open="False">
+        <param name="rouletteDepth" type="int" default="4" 
+             label="Depth" 
+             min='1' 
+             slider="1" slidermin="1" slidermax='8'
+             connectable="False">
+            <help>
+            The path length at which the integrator will begin
+            performing Russian roulette (a method of probabilistically
+            terminating a ray path). Decreasing this setting will lead
+            to shorter paths and faster renders, but will result in
+            more noise.
+            </help>
+        </param> 
+        <param name="rouletteThreshold" type="float" default="0.2" 
+             label="Threshold" 
+             min='0' 
+             slider="1" slidermin="0" slidermax='1'
+             connectable="False">
+            <help>
+            The path throughput threshold below which Russian roulette
+            is applied. It is usually preferable to apply Russian
+            roulette only to paths of low importance in order to avoid
+            noise. Increasing this setting will apply Russian roulette
+            to more paths and thus increase the speed of the render,
+            but will also increase noise.
+            </help>
+        </param> 
+    </page>
+    <page name="Indirect Clamping" open="False">
+        <param name="clampDepth" type="int" default="2" 
+             label="Depth" 
+             min='1' 
+             slider="1" slidermin="1" slidermax='4'
+             connectable="False">
+            <help>
+            If a value for the clampLuminance parameter is specified, then
+            clampDepth controls the ray depth at which to begin clamping
+            based on the per-ray luminance. For example, setting this
+            parameter to 2 and also specifying a value of 4 for
+            clampLuminance will ensure that the luminance of each ray's
+            contribution is no more than 4 for all indirect illumination,
+            without affecting or clamping the direct illumination. The
+            default is 2.
+            </help>
+        </param> 
+        <param name="clampLuminance" type="float" default="10.0" 
+             label="Luminance" 
+             min='0' 
+             slider="1" slidermin="0" slidermax='30'
+             connectable="False">
+            <help>
+            By default the PxrPathTracer integrator clamps the luminance
+            of each per-ray contribution to be at most 10.0. However, it
+            is possible to change this behavior by specifying a different
+            value for the clampLuminance parameter. Specifying a
+            relatively low value for the clampLuminance parameter (for
+            example, between 2 and 20) can greatly speed up convergence
+            and, in many cases, will make PxrPathTracer converge more
+            quickly than the more sophisticated PxrVCM integrator. In some
+            cases, indirect illumination lights paths may be noticeably
+            dimmer due to clamping; this may be an acceptable trade-off in
+            certain cases. Setting this parameter to a very large number
+            (such as 1e30) will effectively disable all clamping. The
+            default is 10.0.
+            </help>
+        </param>
+    </page>
+    <rfmdata nodeid="1053320" classification="RenderMan/integrator"/>
+</args>

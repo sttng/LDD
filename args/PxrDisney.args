@@ -1,0 +1,206 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="bxdf"/>
+    </shaderType>
+    <param name="baseColor"
+           label="Base Color"
+           type="color" default=".2 .5 .8"
+           widget="color" min='0 0 0' max='1 1 1'>
+        <tags>
+            <tag value="color"/>
+        </tags>
+        <help>
+        The surface color, usually supplied by texture maps.
+        </help>
+    </param>
+    <param name="emitColor"
+           label="Emit Color"
+           type="color" default="0 0 0"
+           widget="color" min='0 0 0' max='1 1 1'>
+        <tags>
+            <tag value="color"/>
+        </tags>
+        <help>
+        The emission energy.  Non-black values represent glow.
+        </help>
+    </param>
+    <param name="subsurface"
+           label="Subsurface"
+           type="float" default="0"
+        min='0' max='1'>
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>
+        Controls diffuse shape using subsurface approximation. This
+        is *not* true subsurface.
+        </help>
+    </param>
+    <param name="subsurfaceColor"
+           label="Subsurface Color"
+           type="color" default="0 0 0"
+           widget="color" min='0 0 0' max='1 1 1' >
+        <tags>
+            <tag value="color"/>
+        </tags>
+        <help>
+        The color to mix with diffuse response according to the
+        subsurface parameter.
+        </help>
+    </param>
+    <param name="metallic"
+           label="Metallic"
+           type="float" default="0"
+           min='0' max='1' >
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>
+        The metallic-ness (0=dielectric, 1=metallic). This is a
+        linear blend between two different models. The metallic model
+        has no diffuse component and also has a tinted incident specular
+        equal to the base color.
+        </help>
+    </param>
+    <param name="specular"
+           label="Specular"
+           type="float" default=".5"
+           min='0' slidermax='1' >
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>
+        Incident (maximum) specular amount.  This is in lieu of an explicit
+        index-of-refraction.
+        </help>
+    </param>
+        <param name="specularTint"
+               label="Specular Tint"
+               type="float" default="0"
+               min='0' max='1' >
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>
+        A concession for artistic control that tints incident specular
+        towards the base color. Grazing specular is still achromatic
+        (ie it doesn't tint incoming light).
+        </help>
+    </param>
+    <param name="roughness"
+           label="Roughness"
+           type="float" default=".25"
+           min='0' max='1' >
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>
+        Surface roughness, controls both diffuse and specular response.
+        </help>
+    </param>
+    <param name="anisotropic"
+           label="Anisotropic"
+           type="float" default="0"
+           min='0' max='1'>
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>
+        Degree of anisotropy, controls the aspect ratio of the
+        specular highlight.  0: isotropic, 1: maximally anisotropic.
+        </help>
+    </param>
+    <param name="sheen"
+           label="Sheen"
+           type="float" default="0"
+           min='0' slidermax='1'>
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>
+        An additional grazing component, primarily intended for cloth.
+        </help>
+    </param>
+    <param name="sheenTint"
+           label="Sheen Tint"
+           type="float" default=".5"
+           min='0' max='1' >
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>
+        Amount of tint sheen toward base color. At 0, sheen is
+        achromatic (ie doeesn't tint incoming light).
+        </help>
+    </param>
+    <param name="clearcoat"
+           label="Clear Coat"
+           type="float" default="0"
+           min='0' slidermax='1' >
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>
+        A second, special-purpose specular lobe.
+        </help>
+    </param>
+    <param name="clearcoatGloss"
+           label="Clearcoat Gloss"
+           type="float" default="1"
+           min='0' max='1'>
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>
+        Controls clearcoat glossiness.  0 produces blurry highlights,
+        1 produces tight highlights. Note: this parameter has the
+        inverse sense of roughness.
+        </help>
+    </param>
+    <param name="bumpNormal"
+           label="Bump Normal"
+           type="normal" default="0 0 0" readOnly="True">
+        <tags>
+            <tag value="normal"/>
+        </tags>
+        <help>
+        An optional connection point for bumped normals.
+        </help>
+    </param>
+    <param name="presence"
+           label="Presence"
+           type="float"
+           default="1" min="0" max="1"
+           widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>
+            Connect a mask function here to apply a cutout pattern
+            to your object.  Presence is defined as a binary (0 or 1)
+            function that can take on continuous values to antialias the
+            shape.  Useful for modeling leaves and other thin,
+            complex shapes.
+            <p>
+            IMPORTANT NOTE: This value should be either 0 or 1.
+            A value between 0 and 1 will produce unwanted noise !!!
+            </p>
+        </help>
+    </param>
+    <param name="inputAOV"
+           label="Input AOV"
+           type="int"
+           default="0"
+           widget="default">
+        <tags>
+            <tag value="int"/>
+        </tags>
+        <help>
+            Plug here a MatteID node.
+        </help>
+    </param>
+
+    <rfmdata nodeid="1053407"
+ classification="shader/surface:rendernode/RenderMan/bxdf/legacy:swatch/rmanSwatch"/>
+    <rfcdata nodeid="1035843" description="Mpxrdisney"/>
+</args>

@@ -1,0 +1,145 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="pattern"/>
+    </shaderType>
+    <help plugin="PxrFractal">
+        A fractal noise function.
+    </help>
+
+    <param name="surfacePosition"
+           label="Surface Position"
+           type="int"
+           default="0"
+           widget="mapper"
+           connectable="False">
+        <hintdict name="options">
+            <string name="Current Position"       value="0"/>
+            <string name="Un-Displaced Position"  value="1"/>
+        </hintdict>
+        <help>If you want your displacement pattern to match surface shading,
+        use the undisplaced position. This is only active when there is no
+        connected manifold.</help>
+    </param>
+    <param name="layers"
+           label="Layers"
+           type="int" default="6" min="0" max="10"  widget="default">
+        <tags>
+            <tag value="int"/>
+        </tags>
+        <help>The number of noise layers used. More layers add successively more noise.</help>
+    </param>
+    <param name="frequency"
+           label="Frequency"
+           type="float" default="1.0f" min=".1" slidermin=".1" slidermax="10"  widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>Sets the lowest (starting) frequency of the noise layers.</help>
+    </param>
+    <param name="lacunarity"
+           label="Lacunarity"
+           type="float" default="2.0f" min="1.25" max="4"  widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>The scaler used to determine the frequency of each
+              sucessive layer of noise. Smaller numbers will cause the
+              layers to be more closely spaced in frequency. Larger
+              values will space them further apart.</help>
+    </param>
+    <param name="dimension"
+           label="Dimension"
+           type="float" default="1.0f" min="0" max="2" widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>The frequency exponent. This value is used to
+              scale the magnitude of each sucessive layer of noise using
+              the formula 1/f^(3-2*Dimension); where f is the frequency
+              of the noise being used for a given layer. It's called
+              Dimension since this value relates to the fractal
+              dimension. Bigger values are rougher, smaller values are
+              smoother.</help>
+    </param>
+    <param name="erosion"
+           label="Erosion"
+           type="float" default="0.0f" min="-2" max="2"  widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>The frequency exponent range. The frequency
+              exponent specified by the Dimension is itself offset
+              as a function of the noise magnitude. This value adjusts
+              that offset. This determines the so-called crossover
+              scale of the fractal. 0 gives a uniform appearance.
+              Negative values will smooth out the low valued areas,
+              and positive values will smooth the high valued ones.</help>
+    </param>
+    <param name="variation"
+           label="Variation"
+           type="float" default="0.0f" min="0" max="1"  widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>This value controls which particular variation
+              of the appearance you get - without altering the qualities
+              of the appearance determined by the other controls. So, for
+              example, you can use this to animate the appearance by
+              connecting this to Time, or create several unique instances
+              of the appearance by setting this to different values.</help>
+    </param>
+    <param name="turbulent"
+           label="Turbulent"
+           type="int" default="0" min="0" max="1"  widget="checkBox">
+        <tags>
+            <tag value="int"/>
+        </tags>
+        <help>Switch to a turbulent-like pattern</help>
+    </param>
+    <param name="manifold"
+           label="Manifold"
+           type="struct" >
+        <tags>
+            <tag value="struct"/>
+            <tag value="manifold"/>
+        </tags>
+        <help>The manifold over which to apply the noise. (The default is P).</help>
+    </param>
+    <page name="Adjust Output" open="True">
+        <param name="colorScale" label="Color Scale" type="color" default="1 1 1">
+            <tags>
+                <tag value="color"/>
+            </tags>
+        </param>
+        <param name="colorOffset" label="Color Offset" type="color" default="0 0 0">
+            <tags>
+                <tag value="color"/>
+            </tags>
+        </param>
+        <param name="floatScale" label="Float Scale" type="float" default="1">
+            <tags>
+                <tag value="float"/>
+            </tags>
+        </param>
+        <param name="floatOffset" label="Float Offset" type="float" default="0">
+            <tags>
+                <tag value="float"/>
+            </tags>
+        </param>
+    </page>
+
+    <output name="resultF">
+        <tags>
+            <tag value="float"/>
+        </tags>
+    </output>
+    <output name="resultRGB">
+        <tags>
+            <tag value="color"/>
+        </tags>
+    </output>
+
+    <rfmdata nodeid="1053421"
+        classification="rendernode/RenderMan/pattern/texture"/>
+    <rfcdata nodeid="1035866" description="Xpxrfractal"/>
+</args>

@@ -1,0 +1,27 @@
+<args format="1.0">
+  <shaderType>
+    <tag value="projection"/>
+  </shaderType>
+  <help>
+    A simple camera model that projects through a section of a cylinder
+    from the point at the cylinder's center.  For very wide aspect images,
+    this may be useful for rendering a circular panorama.
+  </help>
+  <param name="hsweep" label="Horizontal Sweep" type="float" widget="default"
+         default="360.0" min="1.0" max="360.0"
+         connectable="False">
+    <help>
+      The horizontal angle of the cylinder subtended by the image.  The
+      default, 360, means that the image wraps all the way around and the
+      left and right edges of the image align.
+    </help>
+  </param>
+  <param name="vsweep" label="Vertical Sweep" type="float" widget="default"
+         default="90.0" min="1.0" max="170.0"
+         connectable="False">
+    <help>
+      The vertical field of view of the image.
+    </help>
+  </param>
+  <rfmdata nodeid="1200432" classification="RenderMan/projection"/>
+</args>

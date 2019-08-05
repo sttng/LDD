@@ -1,0 +1,278 @@
+<args format="1.0">
+  <shaderType>
+    <tag value="projection"/>
+  </shaderType>
+  <help>
+    A camera model that approximates a number of real world physical
+    effects.  This supports all of the traditional prman perspective camera
+    settings including shaped motion blur and bokeh.
+  </help>
+  <page name="Standard Perspective" open="True">
+    <param name="fov" label="Field of View" type="float" widget="default"
+           default="90.0" min="1.0" max="135.0"
+           connectable="False">
+      <help>
+        Field of view (FOV) in degrees at the beginning of the frame.  For
+        rectangular images this is normally the FOV along the narrower
+        image dimension.
+      </help>
+    </param>
+    <param name="fovEnd" label="Field of View (End)" type="float" widget="default"
+           default="0.0" min="0.0" max="135.0"
+           connectable="False">
+      <help>
+        Field of view (FOV) in degrees at the end of the frame.  Used to
+        motion blur very fast zooms.  The default, zero, means to assume it
+        is the same as at the beginning of the frame.
+      </help>
+    </param>
+    <param name="fStop" label="F-stop" type="float" widget="default"
+           default="16" min="0.0" max="256"
+           connectable="False">
+      <help>
+        F-stop or aperture number.  Used to determine depth of field and
+        defocus.  This determines the lens diameter.  If the f-stop is a
+        huge number, then effectively a pin-hole camera is used and depth
+        of field is turned off.
+      </help>
+    </param>
+    <param name="focalLength" label="Focal Length" type="float" widget="default"
+           default="0.0" min="0.0" max="1.0e38"
+           connectable="False">
+      <help>
+         Focal length of the camera lens.  Used to determine depth of
+         field and defocus.  This should be in units of distance along the
+         view direction in camera coordinates.  Effectively ignored if
+         F-stop is huge.
+      </help>
+    </param>
+    <param name="focalDistance" label="Focal Distance" type="float" widget="default"
+           default="1.0" min="0.0" max="1.0e38"
+           connectable="False">
+      <help>
+         Distance at which objects will be in focus.  This should be in
+         units of distance along the view direction in camera coordinates.
+         Effectively ignored if F-stop is huge.
+      </help>
+    </param>
+  </page>
+  <page name="Tilt-Shift" open="False">
+    <param name="tilt" label="Tilt Angle" type="float" widget="default"
+           default="0.0" min="-20.0" max="20.0"
+           connectable="False">
+      <help>
+        Angle in degrees to tilt the lens.  Makes the plane of focus
+        non-parallel to the image plane.  Has no effect unless depth of
+        field is enabled.  Positive tilts up, bringing the focus in the top
+        of the image closer and pushing the focus in the bottom further.
+        Negative does the reverse.  Ignored if focus points are set.
+      </help>
+    </param>
+    <param name="roll" label="Roll Angle" type="float" widget="default"
+           default="0.0" min="-180.0" max="180.0"
+           connectable="False">
+      <help>
+        Roll the lens clockwise.  If the lens tilt is non-zero this can be
+        used to rotate the plane of focus around the image center.  Ignored
+        if focus points are set.
+      </help>
+    </param>
+    <param name="focus1" label="Focus 1" type="point" widget="default"
+           default="0.0 0.0 0.0"
+           connectable="False">
+      <help>
+        First point to keep in focus.  Specified in world space.  If all
+        three focus points are set then the tilt angles and focal distance
+        will be automatically solved to match the plane of focus they
+        define.  Note that there may not be a solution.
+      </help>
+    </param>
+    <param name="focus2" label="Focus 2" type="point" widget="default"
+           default="0.0 0.0 0.0"
+           connectable="False">
+      <help>
+        Second point to keep in focus.  Specified in world space.  If all
+        three focus points are set then the tilt angles and focal distance
+        will be automatically solved to match the plane of focus they
+        define.  Note that there may not be a solution.
+      </help>
+    </param>
+    <param name="focus3" label="Focus 3" type="point" widget="default"
+           default="0.0 0.0 0.0"
+           connectable="False">
+      <help>
+        Third point to keep in focus.  Specified in world space.  If all
+        three focus points are set then the tilt angles and focal distance
+        will be automatically solved to match the plane of focus they
+        define.  Note that there may not be a solution.
+      </help>
+    </param>
+    <param name="shiftX" label="Shift X" type="float" widget="default"
+           default="0.0" min="-1.0" max="1.0"
+           connectable="False">
+      <help>
+        Shift the lens horizontally.  This can be used to correct for
+        perspective distortion.  Positive values shift towards the right.
+      </help>
+    </param>
+    <param name="shiftY" label="Shift Y" type="float" widget="default"
+           default="0.0" min="-1.0" max="1.0"
+           connectable="False">
+      <help>
+        Shift the lens vertically.  This can be used to correct for
+        perspective distortion "keystone" effects.  To keep vertical lines
+        parallel, aim the camera horizontally and adjust this to include
+        the subject.  Positive values shift towards the top.
+      </help>
+    </param>
+  </page>
+  <page name="Lens Distortion" open="False">
+    <param name="radial1" label="Radial Distortion 1" type="float" widget="default"
+           default="0.0" min="-0.3" max="0.3"
+           connectable="False">
+      <help>
+        Quadratic radial lens distortion coefficient.  Positive values
+        produce pincushion distortion.  Negative values produce barrel
+        distortion.
+      </help>
+    </param>
+    <param name="radial2" label="Radial Distortion 2" type="float" widget="default"
+           default="0.0" min="-0.3" max="0.3"
+           connectable="False">
+      <help>
+        Quartic radial lens distortion coefficient.  Positive values
+        produce pincushion distortion.  Negative values produce barrel
+        distortion.
+      </help>
+    </param>
+    <param name="assymX" label="Assymetric Distortion X" type="float" widget="default"
+           default="0.0" min="-0.3" max="0.3"
+           connectable="False">
+      <help>
+        Distortion applied only in the X direction.  Horizontal lines will
+        remain straight.  Positive values produce pincushion-like
+        distortion.  Negative values produce barrel-like distortion.
+      </help>
+    </param>
+    <param name="assymY" label="Assymetric Distortion Y" type="float" widget="default"
+           default="0.0" min="-0.3" max="0.3"
+           connectable="False">
+      <help>
+        Distortion applied only in the Y direction.  Vertical lines will
+        remain straight.  Positive values produce pincushion-like
+        distortion.  Negative values produce barrel-like distortion.
+      </help>
+    </param>
+    <param name="squeeze" label="Anamorphic Squeeze" type="float" widget="default"
+           default="1.0" min="0.5" max="2.0"
+           connectable="False">
+      <help>
+        Anamorphic lens squeeze.  Values greater than one decrease the
+        effect of the lens distortion in the X direction.  Values less than
+        one increase it.
+      </help>
+    </param>
+  </page>
+  <page name="Chromatic Aberration" open="False">
+    <param name="transverse" label="Transverse" type="color" widget="default"
+           default="1.0 1.0 1.0"
+           connectable="False">
+      <help>
+        Transverse (or lateral) chromatic aberration.  This specifies the
+        magnification factors for the red, green, and blue primaries
+        respectively.  When unequal, this can produce a tinge which is most
+        pronounced near the image edges.  It will increase color noise,
+        however.
+      </help>
+    </param>
+    <param name="axial" label="Axial" type="color" widget="default"
+           default="0.0 0.0 0.0"
+           connectable="False">
+      <help>
+        Axial (or longitudinal) chromatic aberration.  This specifies the
+        chromatic focal shift for the red, green, and blue primaries
+        respectively.  When unequal, this can produce a tinge on bokeh and
+        out of focus objects.  It will increase color noise, however.
+      </help>
+    </param>
+  </page>
+  <page name="Vignetting" open="False">
+    <param name="natural" label="Natural" type="float" widget="default"
+           default="0.0" min="0.0" max="1.0"
+           connectable="False">
+      <help>
+        Natural vignetting.  When one, directions off of the primary camera
+        axis will be darkened realistically.  Wide-angle perspectives will
+        show this effect more strongly.  Setting to zero disables this and
+        intermediate values will blend accordingly.
+      </help>
+    </param>
+    <param name="optical" label="Optical" type="float" widget="default"
+           default="0.0" min="0.0" max="1.0"
+           connectable="False">
+      <help>
+        Optical vignetting.  Simulates light blockage due to a hood or
+        other additional lens elements.  With depth of field enabled, this
+        creates cat's eye bokeh.  However, it also increases image noise.
+      </help>
+    </param>
+  </page>
+  <page name="Shutter" open="False">
+    <param name="sweep" label="Sweep" type="string" widget="popup"
+           default="down"
+           options="down|right|up|left"
+           connectable="False">
+      <help>
+        Shutter direction.  Specifies the direction that the shutter
+        sweeps.  The default, down, is the most common direction for
+        rolling shutters.
+      </help>
+    </param>
+    <param name="duration" label="Duration" type="float" widget="default"
+           default="1.0" min="0.0" max="1.0"
+           connectable="False">
+      <help>
+        Exposure duration.  Zero means an ideal rolling shutter where each
+        line is exposed instantaneously when read.  The default, one, is
+        equivalent to a global shutter where all lines are exposed and read
+        at the same time.
+      </help>
+    </param>
+  </page>
+  <page name="Advanced" open="False">
+    <param name="detail" label="Detail Bias" type="float" widget="default"
+           default="0.0" min="-10.0" max="10.0"
+           connectable="False">
+      <help>
+        Detail bias.  Positive values will shift all texture lookups
+        towards coarser, lower resolution, MIP map levels than would
+        normally be used.  Negative values will shift them towards finer,
+        higher resolution, levels.  Also affects the level-of-detail
+        selected for geometry.
+      </help>
+    </param>
+    <param name="enhance" label="Enhancement" type="vector" widget="default"
+           default="0.0 0.0 1.0"
+           connectable="False">
+      <help>
+        Enhancement.  Embiggens the region around a pixel (X,Y) by zoom
+        factor Z for trouble-shooting.  The magnified pixel will remain
+        anchored in place relative to the image.  Camera effects such as
+        vignetting will be scaled accordingly.  Intentionally does not
+        affect level-of-detail, dicing, displacement, or MIP map levels.
+      </help>
+    </param>
+    <param name="matte" label="Matte file" type="string" widget="fileInput"
+           default=""
+           connectable="False">
+      <help>
+        Matte file.  An EXR image that cuts away parts of the render.  If
+        it is a deep image, it removes anything in the render that is
+        farther away than opaque objects in the matte file, leaving behind
+        transparent holes.  If it is a shallow image, it removes parts of
+        the render where the matte file is opaque.
+      </help>
+    </param>
+  </page>
+  <rfmdata nodeid="1053314" classification="RenderMan/projection"/>
+</args>

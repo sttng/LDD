@@ -1,0 +1,199 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="pattern"/>
+    </shaderType>
+    <param name="varname"
+           label="Variable Name"
+           type="string"
+           default=""
+           widget="default"
+           connectable="False">
+    </param>
+    <param name="type"
+           label="Variable Type"
+           type="string"
+           default="float"
+           widget="mapper"
+           connectable="False">
+        <hintdict name="options">
+            <string name="float"  value="float"   />
+            <string name="float2" value="float2"  />
+            <string name="color"  value="color"   />
+            <string name="point"  value="point"   />
+            <string name="vector" value="vector"  />
+            <string name="normal" value="normal"  />
+        </hintdict>
+    </param>
+    <param name="coordsys"
+           label="Coordinate System"
+           type="string"
+           default="object"
+           widget="string"
+           connectable="False">
+        <hintdict name="conditionalVisOps">
+            <string value="and" name="conditionalVisOp"/>
+            <string value="conditionalVis1" name="conditionalVisLeft"/>
+            <string value="conditionalVis2" name="conditionalVisRight"/>
+
+            <string value="and" name="conditionalVis2Op"/>
+            <string value="conditionalVis3" name="conditionalVis2Left"/>
+            <string value="conditionalVis4" name="conditionalVis2Right"/>
+
+            <string value="../type" name="conditionalVis1Path"/>
+            <string value="notEqualTo" name="conditionalVis1Op"/>
+            <string value="float" name="conditionalVis1Value"/>
+
+            <string value="../type" name="conditionalVis3Path"/>
+            <string value="notEqualTo" name="conditionalVis3Op"/>
+            <string value="float2" name="conditionalVis3Value"/>
+
+            <string value="../type" name="conditionalVis4Path"/>
+            <string value="notEqualTo" name="conditionalVis4Op"/>
+            <string value="color" name="conditionalVis4Value"/>
+        </hintdict>
+        <help>
+            By default, the shader uses current for coordinate system.  Possible
+            coordinate systems include world, object, or an user defined coordinate system.
+        </help>
+    </param>
+
+    <param name="defaultFloat"
+           label="Default Float"
+           type="float"  default="0.0"  widget="float">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <hintdict name="conditionalVisOps">
+            <string value="equalTo" name="conditionalVisOp"/>
+            <string value="../type" name="conditionalVisPath"/>
+            <string value="float" name="conditionalVisValue"/>
+        </hintdict>
+        <help>
+            If there is an error when retrieving a variable of type 'float', this is the value that
+            will be used.
+        </help>
+    </param>
+
+    <param name="defaultFloat3"
+           label="Default Float3"
+           type="vector"  default="0.0 0.0 0.0"  widget="vector">
+        <tags>
+            <tag value="normal"/>
+            <tag value="point"/>
+            <tag value="vector"/>
+        </tags>
+        <hintdict name="conditionalVisOps">
+            <string value="and" name="conditionalVisOp"/>
+            <string value="conditionalVis1" name="conditionalVisLeft"/>
+            <string value="conditionalVis2" name="conditionalVisRight"/>
+
+            <string value="../type" name="conditionalVis1Path"/>
+            <string value="notEqualTo" name="conditionalVis1Op"/>
+            <string value="float" name="conditionalVis1Value"/>
+
+            <string value="../type" name="conditionalVis2Path"/>
+            <string value="notEqualTo" name="conditionalVis2Op"/>
+            <string value="color" name="conditionalVis2Value"/>
+        </hintdict>
+        <help>
+            If there is an error when retrieving a variable of type 'float2', 'normal', 'point' or
+            'vector', this is the value that will be used. For the type 'float2', only the first two
+            components will be used.
+        </help>
+    </param>
+
+    <param name="transformDefaultValues"
+        label="Transform Default Values"
+        type="int" default="1"
+        widget="checkBox"
+        connectable="False">
+        <hintdict name="conditionalVisOps">
+            <string value="and" name="conditionalVisOp"/>
+            <string value="conditionalVis1" name="conditionalVisLeft"/>
+            <string value="conditionalVis2" name="conditionalVisRight"/>
+
+            <string value="and" name="conditionalVis2Op"/>
+            <string value="conditionalVis3" name="conditionalVis2Left"/>
+            <string value="conditionalVis4" name="conditionalVis2Right"/>
+
+            <string value="../type" name="conditionalVis1Path"/>
+            <string value="notEqualTo" name="conditionalVis1Op"/>
+            <string value="float" name="conditionalVis1Value"/>
+
+            <string value="../type" name="conditionalVis3Path"/>
+            <string value="notEqualTo" name="conditionalVis3Op"/>
+            <string value="float2" name="conditionalVis3Value"/>
+
+            <string value="../type" name="conditionalVis4Path"/>
+            <string value="notEqualTo" name="conditionalVis4Op"/>
+            <string value="color" name="conditionalVis4Value"/>
+        </hintdict>
+        <help>
+            If this is not checked, the default values are used directly.
+            If this is checked, the default values will be transformed from 'object' to 'Coordinate
+            System' (similarly to what happens for primvars values).
+            This setting is only used for 'normal', 'point' or 'vector' types, and only when the
+            primvar wasn't found.
+        </help>
+    </param>
+
+    <param name="defaultColor"
+           label="Default Color"
+           type="color"  default="0.0 0.0 0.0"  widget="color">
+        <tags>
+            <tag value="color"/>
+        </tags>
+        <hintdict name="conditionalVisOps">
+            <string value="equalTo" name="conditionalVisOp"/>
+            <string value="../type" name="conditionalVisPath"/>
+            <string value="color" name="conditionalVisValue"/>
+        </hintdict>
+        <help>
+            If there is an error when retrieving a variable of type 'normal', 'point' or 'vector', 
+            this is the value that will be used.
+        </help>
+    </param>
+
+    <param name="verbosity"
+        label="Verbosity"
+        type="int"
+        default="0"
+        widget="mapper"
+        connectable="False">
+        <hintdict name="options">
+            <string name="Silent"   value="0"/>
+            <string name="Warnings" value="1"/>
+            <string name="Info"     value="2"/>
+        </hintdict>
+        <help>
+            Diagnostic output levels for scene debugging.
+        </help>
+    </param>
+
+    <output name="resultRGB">
+        <tags>
+            <tag value ="color"/>
+        </tags>
+    </output>
+    <output name="resultF">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultP">
+        <tags>
+            <tag value ="vector"/>
+            <tag value ="normal"/>
+            <tag value ="point"/>
+        </tags>
+    </output>
+    <output name="width">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+
+    <rfmdata nodeid="1053400"
+             classification="rendernode/RenderMan/pattern/utility"/>
+    <rfcdata nodeid="1035879" description="Xpxrprimvar"/>
+</args>

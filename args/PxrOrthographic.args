@@ -1,0 +1,8 @@
+<args format="1.0">
+  <shaderType>
+    <tag value="projection"/>
+  </shaderType>
+  <help>
+    A simple parallel projection camera.
+  </help>
+</args>

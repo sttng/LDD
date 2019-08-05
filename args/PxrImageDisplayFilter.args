@@ -1,0 +1,135 @@
+<args format="1.0">
+  <shaderType>
+    <tag value="displayfilter"/>
+  </shaderType>
+  <help>Display filter plugin to render image planes including holdouts.</help>
+  <param name="filename"
+    label="Filename"
+    type="string"
+    default=""
+    widget="assetIdInput"
+    options="texture"
+    connectable="False">
+    <help>The name of the plate image to display.</help>
+  </param>
+  <param name="colorGain"
+    label="Color Gain"
+    type="color"
+    default="1.0 1.0 1.0"
+    widget="color"
+    connectable="False">
+    <help>Color gain.</help>
+  </param>
+  <param name="colorOffset"
+    label="Color Offset"
+    type="color"
+    default="0.0 0.0 0.0"
+    widget="color"
+    connectable="False">
+    <help>Color offset.</help>
+  </param>
+  <param name="linearize"     
+    label="Linearize"
+    type="int"
+    default="0"
+    widget="checkBox"
+    connectable="False">
+  </param>
+  <param name="fit"     
+    label="Fit"
+    type="int"
+    default="0"
+    widget="mapper"
+    connectable="False">
+    <hintdict name="options">
+        <string name="Stretch" value="0"/>
+        <string name="Inside" value="1"/>
+        <string name="Outsize" value="2"/>
+        <string name="Horizontal" value="3"/>
+        <string name="Vertical" value="4"/>
+    </hintdict>
+    <help>Fit image to display.</help>
+  </param>
+  <param name="filmMinX"
+    label="Film Window Left"
+    type="float"
+    default="0.0"
+    widget="float"
+    connectable="False">
+    <help>Film window min X</help>
+  </param>
+  <param name="filmMaxX"
+    label="Film Window Right"
+    type="float"
+    default="0.0"
+    widget="float"
+    connectable="False">
+    <help>Film window max X</help>
+  </param>
+  <param name="filmMinY"
+    label="Film Window Bottom"
+    type="float"
+    default="0.0"
+    widget="float"
+    connectable="False">
+    <help>Film window min Y</help>
+  </param>
+  <param name="filmMaxY"
+    label="Film Window Top"
+    type="float"
+    default="0.0"
+    widget="float"
+    connectable="False">
+    <help>Film window max Y</help>
+  </param>
+  <param name="offsetX"
+    label="Offset X"
+    type="float"
+    default="0.0"
+    widget="float"
+    connectable="False">
+    <help>Offset in X.</help>
+  </param>
+  <param name="offsetY"
+    label="Offset Y"
+    type="float"
+    default="0.0"
+    widget="float"
+    connectable="False">
+    <help>Offset in Y.</help>
+  </param>
+  <param name="scaleX"
+    label="Scale X"
+    type="float"
+    default="1.0"
+    widget="float"
+    connectable="False">
+    <help>Scale in X.</help>
+  </param>
+  <param name="scaleY"
+    label="Scale Y"
+    type="float"
+    default="1.0"
+    widget="float"
+    connectable="False">
+    <help>Scale in Y.</help>
+  </param>
+  <param name="rotate"
+    label="Rotate"
+    type="float"
+    default="0.0"
+    widget="float"
+    connectable="False">
+    <help>Rotation.</help>
+  </param>
+  <param name="holdoutShadowAov"
+    label="Holdout Shadow AOV"
+    type="string"
+    default=""
+    widget="string"
+    connectable="False">
+    <help>The name of the holdout shadow AOV to look up.</help>
+  </param>
+  <rfmdata nodeid="1200429"
+           classification="rendernode/RenderMan/displayfilter"/>
+</args>

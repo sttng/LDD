@@ -1,0 +1,54 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="displaydriver"/>
+    </shaderType>
+    <help>
+        Saves the image to an OpenEXR file.
+    </help>
+    <param
+        name="asrgba"
+        type="int"
+        default="1"
+        widget="checkBox"
+        label="As RGBA">
+    </param>
+    <param
+        name="storage"
+        type="string"
+        default="scanline"
+        label="Storage"
+        widget="popup"
+        options="scanline|tiled">
+    </param>
+    <param
+        name="exrpixeltype"
+        type="string"
+        default="half"
+        widget="popup"
+        options="half|float"
+        label="Type">
+    </param>
+    <param
+        name="compression"
+        type="string"
+        default="zips"
+        widget="popup"
+        options="none|rle|zip|zips|piz|pixar|b44|b44a|dwaa|dwab"
+        label="Compression">
+    </param>
+    <param
+        name="compressionlevel"
+        type="float"
+        default="45.0"
+        label="Compression Level">
+    </param>
+    <output name="display">
+        <tags>
+            <tag value ="message"/>
+        </tags>
+    </output>
+    <rfmdata nodeid="1200414"
+             classification="RenderMan/displaydriver"
+             fileextension="exr"
+             maxchannels="0"/>
+</args>

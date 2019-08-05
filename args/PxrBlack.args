@@ -1,0 +1,7 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="bxdf"/>
+    </shaderType>
+    <rfmdata nodeid="1053294"
+             classification="shader/surface:rendernode/RenderMan/bxdf/main:swatch/rmanSwatch"/>
+</args>

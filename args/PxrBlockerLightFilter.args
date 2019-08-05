@@ -1,0 +1,172 @@
+<args format="1.0">
+   <shaderType>
+        <tag value="lightfilter"/>
+    </shaderType>
+    <page name="Notes" open="False">
+        <param name="notes" type="string" default="" widget="scriptEditor" omitFromRender="True">
+            <help>General comment field for this light filter.</help>
+        </param>
+    </page>
+
+    <page name="Rod Shape" open="True">
+        <param name="width" 
+               label="Width"
+               type="float" min="0.0" default="0.0" connectable="False">
+            <help>width: Width of inner region of the rod (x axis).</help>
+        </param>
+        <param name="height" 
+               label="Height"
+               type="float" min="0.0" default="0.0" connectable="False">
+            <help>height: Height of inner region of the rod (y axis).</help>
+        </param>
+        <param name="depth" 
+               label="Depth"
+               type="float" min="0.0" default="0.0" connectable="False">
+            <help>depth: Depth of inner region of the rod (z axis).</help>
+        </param>
+        <param name="radius" 
+               label="Radius"
+               type="float" min="0.0" default="1.0" connectable="False">
+            <help>radius: Radius of corners of inner rod box.</help>
+        </param>
+        <param name="edge" 
+               label="Edge"
+               type="float" min="0.0" default="0.25" connectable="False">
+            <help>edge: Thickness of edge region.</help>
+        </param>
+    </page>
+
+    <page name="Multiplier" open="True">
+        <param name="density" 
+               label="Density"
+               type="float"
+               connectable="False"
+               min="0.0" max="1.0" default="1.0" sensitivity="0.01">
+            <help>density: How much effect the filter has (0-1).</help>
+        </param>
+        <param name="invert" 
+               label="Invert"
+               connectable="False"
+               type="int" widget="checkBox" default="0">
+            <help>invert: Inverts the entire effect of the filter.</help>
+        </param>
+        <param name="intensity" 
+               label="Intensity"
+               type="float"
+               connectable="False"
+               min="0.0" default="0.0" sensitivity="0.01">
+            <help>intensity: Multiplier for both the diffuse and specular result.
+            </help>
+        </param>
+        <param name="diffuse" 
+               label="Diffuse"
+               type="float" default="1.0"
+               min="0.0" sensitivity="0.01"
+               connectable="False">
+            <help>diffuse: How much this light filter affects diffuse lighting.</help>
+        </param>
+        <param name="specular" 
+               label="Specular"
+               type="float" default="1.0"
+               min="0.0" sensitivity="0.01"
+               connectable="False">
+            <help>specular: How much this light filter affects specular lighting.</help>
+        </param>
+        <param name="saturation" 
+               label="Saturation"
+               type="float" default="1.0"
+               min="0.0" sensitivity="0.01"
+               connectable="False">
+            <help>saturation: Saturation of the light before hitting the surface
+                  (0=greyscale,1=normal,>1=boosted colors).</help>
+        </param>
+    </page>
+
+    <page name="Falloff" open="False">
+        <param name="falloff"
+               label=""
+               type="int" widget="floatRamp" default="6" connectable="False"
+               bgColor="0.25 0.25 0.25" underSplineColor="0.5 0.5 0.5">
+            <help>falloff: Controls the transition from the core to the edge.</help>
+        </param>
+        <param name="falloff_Knots"
+               type="float"
+               widget="null"
+               isDynamicArray="1"
+               default="0 0 0.3 0.7 1 1 1 1 1 1 1 1 1 1 1 1" arraySize="-1"/>
+        <param name="falloff_Floats"
+               type="float"
+               widget="null"
+               isDynamicArray="1"
+               default="0 0 0.2 0.8 1 1 1 1 1 1 1 1 1 1 1 1" arraySize="-1"/>
+        <param name="falloff_Interpolation"
+               type="string"
+               default="bspline"
+               widget="null" options="linear|catmull-rom|bspline|constant"/>
+    </page>
+    
+    <page name="Color Ramp" open="False">
+        <param name="colorRamp"
+               label=""
+               type="int" widget="colorRamp" default="4"
+               colorBarHeight="25" restrictComponents="True">
+            <help>colorRamp: This is Optional.  It sets the color gradient 
+                  for the transition.
+           </help>
+        </param>
+        <param name="colorRamp_Knots"
+               type="float"
+               widget="null"
+               isDynamicArray="1"
+               default="0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1" arraySize="-1"/>
+        <param name="colorRamp_Colors"
+               type="color"
+               widget="null"
+               isDynamicArray="1"
+               default="1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1" arraySize="-1"/>
+        <param name="colorRamp_Interpolation"
+               type="string"
+               default="linear"
+               widget="null" options="linear|catmull-rom|bspline|constant"/>
+    </page>
+
+    <param name="combineMode" 
+           label="Combine Mode"
+           type="string" default="mult"
+           connectable="False"
+           widget="popup" options="mult|max|min|screen">
+        <help>
+        <p>
+        combineMode: Light filters on a light are grouped by their combine mode. Light filters
+        in the same group are executed together and combined by the corresponding
+        operation:
+        </p>
+
+        <ol>
+          <li>max: the maximum result from all filters is used.
+              This works best for grey scale light filters.</li>
+          <li>min: the minimum result from all filters is used.
+              This works best for grey scale light filters.</li>
+          <li>screen: similar to the max operation, but it combines gradients
+              in a smoother way. This works best for grey scale light filters.</li>
+          <li>mult (default): the results of all the filters are multiplied together
+              (Technically, they are applied one after the other.)</li>
+        </ol>
+
+        <p>
+        The groups are executed in the above order and are multiplied together,
+        which means a filter that turns things black in the mult group will zero out
+        all other filters.
+        </p>
+
+        </help>
+    </param>
+
+    <!-- invisible paramers that need to be here, so they are assigned the right
+         values -->
+    <param name="coordsys" type="string" default="" widget="null"/>
+
+     <rfmdata nodeid="1200388"
+             classification="light:rendernode/RenderMan/lightfilter:swatch/rmanSwatch"/>
+
+</args>

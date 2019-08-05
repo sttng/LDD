@@ -1,0 +1,251 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="pattern"/>
+    </shaderType>
+    <help>Bake 2d Textures</help>
+
+    <primvars>
+        <primvar name="$primVar"/>
+        <primvar name="$primVar2"/>
+    </primvars>
+
+    <page name="Input" open="True">
+        <param name="inputRGB"
+            label="Input Color"
+            type="color"
+            default="0. 0. 0."
+            widget="color">
+            <tags>
+                <tag value="color"/>
+            </tags>
+            <help>Input color value</help>
+        </param>
+        <param name="inputF"
+            label="Input Float"
+            type="float"
+            default="0."
+            widget="default">
+            <tags>
+                <tag value ="float"/>
+            </tags>
+            <help>Input float value</help>
+        </param>
+    </page>
+
+    <page name="Texture" open="True">
+        <param name="filename"
+            label="Filename"
+            type="string"
+            default=""
+            widget="assetIdOutput"
+            connectable="False">
+            <help>Input/output texture filename.</help>
+        </param>
+        <param name="atlasStyle"
+            label="Atlas Style"
+            type="int"
+            default="0"
+            widget="mapper"
+            connectable="False">
+            <help>Formating style for multi-tile (atlas) textures. Atlas filenames must contain '_MAPID_'.</help>
+            <hintdict name="options">
+                <string name="None"                    value="0"/>
+                <string name="UDIM (Mari)"             value="1"/>
+                <string name="UV Tile Base-1 (Mudbox)" value="2"/>
+                <string name="UV Tile Base-0 (Zbrush)" value="3"/>
+            </hintdict>
+        </param>
+        <page name="Additional" open="False">
+            <param name="filter"
+                label="Filter"
+                type="int"
+                default="1"
+                widget="mapper"
+                connectable="False">
+                <hintdict name="options">
+                    <string name="Nearest"    value="0"/>
+                    <string name="Box"        value="1"/>
+                    <string name="Bilinear"   value="2"/>
+                    <string name="Bspline"    value="3"/>
+                    <string name="Gaussian"   value="6"/>
+                    <string name="Lagrangian" value="7"/>
+                </hintdict>
+                <help>Selects different reconstruction filters that can be used during texture lookup.</help>
+            </param>
+            <param name="lerp"
+                label="Mip Interpolate"
+                type="int"
+                default="1"
+                widget="checkBox"
+                connectable="False">
+                <help>Interpolate values between mipmap levels.</help>
+            </param>
+            <param name="invertT"
+                label="Invert T"
+                type="int"
+                default="1"
+                widget="checkBox"
+                connectable="False">
+                <help>Inverts the T parameter for the texture lookup.</help>
+            </param>
+            <param name="missingColor"
+                label="Missing Color"
+                type="color"
+                default="1.0 0.0 1.0"
+                widget="default">
+                <help>Resulting color when there is an error opening the texture file.</help>
+            </param>
+        </page>
+    </page>
+
+    <page name="Baking" open="True">
+        <param name="bakeMode"
+            label="Bake Mode"
+            type="int"
+            default="1"
+            widget="mapper"
+            connectable="False">
+            <help>Enable or disable texture baking.</help>
+            <hintdict name="options">
+                <string name="Disabled" value="0"/>
+                <string name="Enabled" value="1"/>
+            </hintdict>
+        </param>
+        <param name="renderMode"
+            label="Render Mode"
+            type="int"
+            default="0"
+            widget="mapper"
+            connectable="False">
+            <help>Control reading from input pattern or baked texture. Automatic attempts to read baked texture first, then input pattern.</help>
+            <hintdict name="options">
+                <string name="Automatic" value="0"/>
+                <string name="Input" value="1"/>
+                <string name="Texture" value="2"/>
+            </hintdict>
+        </param>
+        <param name="display"
+            label="File Type"
+            type="string"
+            default="texture"
+            widget="mapper"
+            connectable="False">
+            <hintdict name="options">
+                <string name="txmake (.tex)" value="texture"/>
+                <string name="OpenEXR (.exr)" value="openexr"/>
+                <string name="TIFF (.tif)" value="tiff"/>
+            </hintdict>
+            <help>Output file type display driver.</help>
+        </param>
+        <param name="displayFormat"
+            label="File Format"
+            type="string"
+            default="openexr"
+            widget="mapper"
+            connectable="False">
+            <hintdict name="options">
+                <string name="OpenEXR" value="openexr"/>
+                <string name="TIFF" value="tiff"/>
+            </hintdict>
+            <hintdict name="conditionalVisOps">
+                <string value="equalTo" name="conditionalVisOp"/>
+                <string value="display" name="conditionalVisPath"/>
+                <string value="texture" name="conditionalVisValue"/>
+            </hintdict>
+            <help>txmake (.tex) file format.</help>
+        </param>
+        <param name="displayType"
+            label="Data Type"
+            type="string"
+            default="half"
+            options="half|float"
+            widget="popup"
+            connectable="False">
+            <hintdict name="conditionalVisOps">
+                <string value="notEqualTo" name="conditionalVisOp"/>
+                <string value="display" name="conditionalVisPath"/>
+                <string value="tiff" name="conditionalVisValue"/>
+            </hintdict>
+            <help>OpenEXR data type.</help>
+        </param>
+        <param name="displayCompression"
+            label="Compression"
+            type="string"
+            default="zip"
+            widget="mapper"
+            connectable="False">
+            <hintdict name="options">
+                <string name="None" value="none"/>
+                <string name="RLE (OpenEXR)" value="rle"/>
+                <string name="ZIP (OpenEXR)" value="zip"/>
+                <string name="PIZ (OpenEXR)" value="piz"/>
+                <string name="Lossless (TIFF)" value="lossless"/>
+                <string name="Lossy (TIFF)" value="lossy"/>
+            </hintdict>
+            <help>File format compression.</help>
+        </param>
+        <param name="resolutionX"
+            label="Resolution X"
+            type="int"
+            default="512"
+            widget="default"
+            connectable="False">
+            <help>Output resolution in X.</help>
+        </param>
+        <param name="resolutionY"
+            label="Resolution Y"
+            type="int"
+            default="512"
+            widget="default"
+            connectable="False">
+            <help>Output resolution in Y.</help>
+        </param>
+        <param name="primVar"
+            label="PrimVar ST/S"
+            type="string"
+            default="st"
+            connectable="False">
+            <help>2D or 1D primvar defining the texture manifold.</help>
+        </param>
+        <param name="primVar2"
+            label="PrimVar T"
+            type="string"
+            default=""
+            connectable="False">
+            <help>Optional 1D primvar defining the texture manifold.</help>
+        </param>
+        <param name="activeUdim"
+            label="Active UDIM"
+            type="string"
+            default=""
+            connectable="False">
+            <help>When set, only bake active UDIM tiles, e.g. "1001-1003,1011".</help>
+        </param>
+    </page>
+
+    <output name="resultRGB">
+        <tags>
+            <tag value ="color"/>
+            <tag value ="vector"/>
+            <tag value ="normal"/>
+            <tag value ="point"/>
+        </tags>
+    </output>
+    <output name="resultR">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultG">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultB">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+
+    <rfmdata nodeid="1053283" classification="rendernode/RenderMan/pattern/bake"/>
+</args>

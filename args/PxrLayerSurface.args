@@ -1,0 +1,1467 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="bxdf"/>
+    </shaderType>
+
+    <param name="inputMaterial"
+           label="Input Material"
+           type="float"
+           readOnly="true">
+        <tags>
+            <tag value="vstruct"/>
+        </tags>
+        <help>
+            Connect a PxrLayer or PxrLayerMixer node here to
+            apply one or more layers.  Note that when a lobe is
+            enabled (e.g. enableDiffuse) in PxrLayer, those
+            parameters for that lobe in PxrLayer will replace
+            and override the same parameters for that lobe in
+            PxrSurface.
+        </help>
+    </param>
+
+    <page name="Diffuse" open="False">
+        <param name="diffuseGain"
+               widget="null"
+               type="float" default="1.0"
+               vstructmember="inputMaterial.diffuseGain"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="diffuseColor"
+               widget="null"
+               type="color" default="0.18 0.18 0.18"
+               vstructmember="inputMaterial.diffuseColor"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="diffuseRoughness"
+               widget="null"
+               type="float" default="0.0"
+               vstructmember="inputMaterial.diffuseRoughness"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="diffuseExponent"
+               label="Exponent"
+               type="float" default="1.0"
+               vstructmember="inputMaterial.diffuseExponent">
+            <tags>
+               <tag value="float"/>
+            </tags>
+            <help>
+                Diffuse falloff exponent. This is for Lambertian model only, 
+                i.e. when diffuse roughness is 0.
+            </help>
+        </param>
+        <param name="diffuseBumpNormal" type="normal"
+               widget="null"
+               default="0 0 0"
+               vstructmember="inputMaterial.diffuseBumpNormal"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="diffuseDoubleSided"
+               label="Double Sided"
+               type="int" default="0"
+               widget="checkBox"
+               connectable="False">
+            <help>
+                If on, illuminate on both sides of the surface for this diffuse
+                lobe.
+            </help>
+        </param>
+        <param name="diffuseBackUseDiffuseColor"
+               label="Use Diffuse Color"
+               type="int" default="1"
+               widget="checkBox"
+               vstructmember="inputMaterial.diffuseBackUseDiffuseColor"
+               connectable="False"
+               conditionalVisOp='equalTo'
+               conditionalVisPath='../diffuseDoubleSided' conditionalVisValue='1'>
+            <help>
+                If on, the back side will use the regular Diffuse Color.
+                Turn it off to enable a specific Back Color field.
+            </help>
+        </param>
+        <param name="diffuseBackColor"
+               widget="null"
+               type="color" default="0.18 0.18 0.18"
+               vstructmember="inputMaterial.diffuseBackColor"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="diffuseTransmitGain"
+               widget="null"
+               type="float" default="0.0"
+               vstructmember="inputMaterial.diffuseTransmitGain"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="diffuseTransmitColor"
+               widget="null"
+               type="color" default="0.18 0.18 0.18"
+               vstructmember="inputMaterial.diffuseTransmitColor"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+    </page>
+
+    <page name="Primary Specular" open="False">
+        <param name="specularFresnelMode"
+               label="Specular Fresnel Mode"
+               type="int" default="0"
+               connectable="False"
+               widget="mapper">
+            <hintdict name="options">
+                <string name="Artistic"    value="0"/>
+                <string name="Physical"    value="1"/>
+            </hintdict>
+            <help>
+                Artistic mode uses Face and Edge Color and Fresnel Exponent.
+                Physical mode uses Refractive Index and Extinction Coefficient as in
+                  PxrLM Bxdf.
+            </help>
+        </param>
+        <param name="specularFaceColor"
+               widget="null"
+               type="color" default="0 0 0"
+               vstructmember="inputMaterial.specularFaceColor"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="specularEdgeColor"
+               widget="null"
+               label="Edge Color"
+               type="color" default="0 0 0"
+               vstructmember="inputMaterial.specularEdgeColor"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="specularFresnelShape"
+               label="Fresnel Exponent"
+               type="float" default="5.0"
+               slider="1" slidermin="0.0" slidermax="10.0"
+               min="0.0" max="10.0" sensitivity="0.1"
+               vstructmember="inputMaterial.specularFresnelShape"
+               conditionalVisOp='equalTo'
+               conditionalVisPath='../specularFresnelMode' conditionalVisValue='0'>
+            <tags>
+                <tag value="float"/>
+            </tags>
+            <help>
+                Specular Fresnel curve exponent.  5.0 is a good default.  This
+                is normaly unchanged.  If changed, this affects the face and edge
+                falloff.
+            </help>
+        </param>
+        <param name="specularIor"
+               widget="null"
+               type="color" default="1.5 1.5 1.5"
+               vstructmember="inputMaterial.specularIor"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="specularExtinctionCoeff"
+               widget="null"
+               type="color" default="0.0 0.0 0.0"
+               vstructmember="inputMaterial.specularExtinctionCoeff"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="specularRoughness"
+               widget="null"
+               type="float" default="0.2"
+               vstructmember="inputMaterial.specularRoughness"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="specularModelType"
+               label="Specular Model"
+               type="int" default="0"
+               connectable="False"
+               widget="mapper">
+            <hintdict name="options">
+                <string name="Beckmann"    value="0"/>
+                <string name="Ggx"         value="1"/>
+            </hintdict>
+            <help>
+               Select a specular model.  Both are competitively good models.
+               If you need to match the look to existing PxrLM Bxdf, use Ggx
+               because PxrLM is hard coded to use Ggx.  Beckmann highlight
+               is sharper while Ggx highlight provides softer falloff.
+               There is no set rule, pick the model which delivers the targeted
+               visual result you are after.
+            </help>
+        </param>
+        <param name="specularAnisotropy"
+               widget="null"
+               type="float" default="0.0"
+               vstructmember="inputMaterial.specularAnisotropy"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="specularAnisotropyDirection"
+               label="Shading Tangent"
+               type="vector" default="0 0 0"
+               widget="default"
+               vstructmember="inputMaterial.specularAnisotropyDirection">
+            <tags>
+                <tag value="vector"/>
+            </tags>
+            <help>
+                Controls the anisotropy direction. Only valid when
+                provided as a texture/connection.
+            </help>
+        </param>
+        <param name="specularBumpNormal" type="normal"
+               widget="null"
+               label="Bump"
+               default="0 0 0"
+               vstructmember="inputMaterial.specularBumpNormal"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="specularDoubleSided"
+               label="Double Sided"
+               type="int" default="0"
+               widget="checkBox"
+               connectable="False">
+            <help>
+                If on, illuminate on both sides of the surface for this specular lobe.
+            </help>
+        </param>
+    </page>
+
+    <page name="Rough Specular" open="False">
+        <param name="roughSpecularFresnelMode"
+               label="Specular Fresnel Mode"
+               type="int" default="0"
+               connectable="False"
+               widget="mapper">
+            <hintdict name="options">
+                <string name="Artistic"    value="0"/>
+                <string name="Physical"    value="1"/>
+            </hintdict>
+            <help>
+                Artistic mode uses Face and Edge Color and Fresnel Exponent.
+                Physical mode uses Refractive Index and Extinction Coefficient as in
+                  PxrLM Bxdf.
+            </help>
+        </param>
+        <param name="roughSpecularFaceColor"
+               widget="null"
+               type="color" default="0 0 0"
+               vstructmember="inputMaterial.roughSpecularFaceColor"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="roughSpecularEdgeColor"
+               widget="null"
+               type="color" default="0 0 0"
+               vstructmember="inputMaterial.roughSpecularEdgeColor"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="roughSpecularFresnelShape"
+               label="Fresnel Exponent"
+               type="float" default="5.0"
+               slider="1" slidermin="0.0" slidermax="10.0"
+               min="0.0" max="10.0" sensitivity="0.1"
+               vstructmember="inputMaterial.roughSpecularFresnelShape"
+               conditionalVisOp='equalTo'
+               conditionalVisPath='../roughSpecularFresnelMode' conditionalVisValue='0'>
+            <tags>
+                <tag value="float"/>
+            </tags>
+            <help>
+                Specular Fresnel curve exponent.  5.0 is a good default.  This
+                is normaly unchanged.  If changed, this affects the face and edge
+                falloff.
+            </help>
+        </param>
+        <param name="roughSpecularIor"
+               widget="null"
+               type="color" default="1.5 1.5 1.5"
+               vstructmember="inputMaterial.roughSpecularIor"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="roughSpecularExtinctionCoeff"
+               widget="null"
+               type="color" default="0.0 0.0 0.0"
+               vstructmember="inputMaterial.roughSpecularExtinctionCoeff"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="roughSpecularRoughness"
+               widget="null"
+               label="Roughness"
+               type="float" default="0.6"
+               slider="1" slidermin="0.001" slidermax="1.0"
+               min="0.001" max="1.0" sensitivity="0.01"
+               vstructmember="inputMaterial.roughSpecularRoughness"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="roughSpecularModelType"
+               label="Specular Model"
+               type="int" default="0"
+               connectable="False"
+               widget="mapper">
+            <hintdict name="options">
+                <string name="Beckmann"    value="0"/>
+                <string name="Ggx"         value="1"/>
+            </hintdict>
+            <help>
+               Select a specular model.  Both are competitively good models.
+               If you need to match the look to existing PxrLM Bxdf, use Ggx
+               because PxrLM is hard coded to use Ggx.  Beckmann highlight
+               is sharper while Ggx highlight provides softer falloff.
+               There is no set rule, pick the model which delivers the targeted
+               visual result you are after.
+            </help>
+        </param>
+        <param name="roughSpecularAnisotropy"
+               widget="null"
+               type="float" default="0.0"
+               vstructmember="inputMaterial.roughSpecularAnisotropy"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="roughSpecularAnisotropyDirection"
+               label="Shading Tangent"
+               type="vector" default="0 0 0"
+               vstructmember="inputMaterial.roughSpecularAnisotropyDirection">
+            <tags>
+                <tag value="vector"/>
+            </tags>
+            <help>
+                Controls the anisotropy direction. Only valid when
+                provided as a texture/connection.
+            </help>
+        </param>
+        <param name="roughSpecularBumpNormal" type="normal"
+               widget="null"
+               default="0 0 0"
+               vstructmember="inputMaterial.roughSpecularBumpNormal"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="roughSpecularDoubleSided"
+               label="Double Sided"
+               type="int" default="0"
+               widget="checkBox"
+               connectable="False">
+            <help>
+                If on, illuminate on both sides of the surface for this specular lobe.
+            </help>
+        </param>
+    </page>
+
+    <page name="Clear Coat" open="False">
+        <param name="clearcoatFresnelMode"
+               label="Specular Fresnel Mode"
+               type="int" default="0"
+               connectable="False"
+               widget="mapper">
+            <hintdict name="options">
+                <string name="Artistic"    value="0"/>
+                <string name="Physical"    value="2"/>
+            </hintdict>
+            <help>
+                Artistic mode uses Face and Edge Color and Fresnel Exponent.
+                Physical mode uses Refractive Index and Extinction Coefficient as in
+                  PxrLM Bxdf.
+            </help>
+        </param>
+        <param name="clearcoatFaceColor"
+               widget="null"
+               type="color" default="0 0 0"
+               vstructmember="inputMaterial.clearcoatFaceColor"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="clearcoatEdgeColor"
+               widget="null"
+               label="Edge Color"
+               type="color" default="0 0 0"
+               vstructmember="inputMaterial.clearcoatEdgeColor"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="clearcoatFresnelShape"
+               label="Fresnel Exponent"
+               type="float" default="5.0"
+               slider="1" slidermin="0.0" slidermax="10.0"
+               min="0.0" max="10.0" sensitivity="0.1"
+               vstructmember="inputMaterial.clearcoatFresnelShape"
+               conditionalVisOp='equalTo'
+               conditionalVisPath='../clearcoatFresnelMode' conditionalVisValue='0'>
+            <tags>
+                <tag value="float"/>
+            </tags>
+            <help>
+                Clearcoat Fresnel curve exponent.  5.0 is a good default.  This
+                is normaly unchanged.  If changed, this affects the face and edge
+                falloff.
+            </help>
+        </param>
+        <param name="clearcoatIor"
+               widget="null"
+               type="color" default="1.5 1.5 1.5"
+               vstructmember="inputMaterial.clearcoatIor"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="clearcoatExtinctionCoeff"
+               widget="null"
+               type="color" default="0.0 0.0 0.0"
+               vstructmember="inputMaterial.clearcoatExtinctionCoeff"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="clearcoatRoughness"
+               widget="null"
+               type="float" default="0.0"
+               vstructmember="inputMaterial.clearcoatRoughness"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="clearcoatModelType"
+               label="Specular Model"
+               type="int" default="0"
+               connectable="False"
+               widget="mapper">
+            <hintdict name="options">
+                <string name="Beckmann"    value="0"/>
+                <string name="Ggx"         value="1"/>
+            </hintdict>
+            <help>
+               Select a specular model.  Both are competitively good models.
+               If you need to match the look to existing PxrLM Bxdf, use Ggx
+               because PxrLM is hard coded to use Ggx.  Beckmann highlight
+               is sharper while Ggx highlight provides softer falloff.
+               There is no set rule, pick the model which delivers the targeted
+               visual result you are after.
+            </help>
+        </param>
+        <param name="clearcoatAnisotropy"
+               widget="null"
+               type="float" default="0.0"
+               vstructmember="inputMaterial.clearcoatAnisotropy"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="clearcoatAnisotropyDirection"
+               label="Shading Tangent"
+               type="vector" default="0 0 0"
+               vstructmember="inputMaterial.clearcoatAnisotropyDirection">
+            <tags>
+                <tag value="vector"/>
+            </tags>
+            <help>
+                Controls the anisotropy direction. Only valid when
+                provided as a texture/connection.
+            </help>
+        </param>
+        <param name="clearcoatBumpNormal" type="normal"
+               widget="null"
+               default="0 0 0"
+               vstructmember="inputMaterial.clearcoatBumpNormal"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="clearcoatThickness" type="float"
+               widget="null"
+               default="0"
+               vstructmember="inputMaterial.clearcoatThickness"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="clearcoatAbsorptionTint" type="color"
+               widget="null"
+               default="0 0 0"
+               vstructmember="inputMaterial.clearcoatAbsorptionTint"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="clearcoatDoubleSided"
+               label="Double Sided"
+               type="int" default="0"
+               widget="checkBox"
+               connectable="False">
+            <help>
+                If on, illuminate on both sides of the surface for this clearcoat lobe.
+            </help>
+        </param>
+    </page>
+
+    <page name="Specular Clearcoat Globals" open="False">
+        <param name="specularEnergyCompensation"
+               label="Specular Energy Compen"
+               connectable="False"
+               type="float" default="0.0" min="0.0"
+               slider="1" slidermin="0.0" slidermax="1.0" sensitivity="0.01">
+            <tags>
+                <tag value="float"/>
+            </tags>
+            <help>
+                When this is set to > 0.0, it applies energy compensation to
+                the diffuse and subsurface illumination.
+
+                This is a view dependent fresnel energy compensation.  This effect
+                is visible when we have a low specular face color and high edge color.
+
+                A value of 1.0 attempts to fully balance those illuminations by darkening
+                them against the specular and rough specular illumination responses.
+
+                Specular and Rough Specular roughness are also taken into account.
+                The effect fades off as specular face or edge color approaches 1.0.
+            </help>
+        </param>
+        <param name="clearcoatEnergyCompensation"
+               label="Clearcoat Energy Compen"
+               connectable="False"
+               type="float" default="0.0" min="0.0"
+               slider="1" slidermin="0.0" slidermax="1.0" sensitivity="0.01">
+            <tags>
+                <tag value="float"/>
+            </tags>
+            <help>
+                When clearcoat energy compensation is set to > 0.0, it applies
+                energy compensation to all the lobes other than the clearcoat itself.
+                We assume clearcoat is the layer above diffuse, subsurface, and
+                specular.
+
+                This is a view dependent fresnel energy compensation.  This effect
+                is visible when we have a low clearcoat face color and high edge color.
+
+                A value of 1.0 attempts to fully balance those illums by darkening them against
+                the clearcoat illumination response.
+
+                Clearcoat roughness is also taken into account.  The effect fades off as
+                clearcoat face or edge color approaches 1.0.
+            </help>
+        </param>
+    </page>
+
+    <page name="Iridescence" open="False">
+        <param name="iridescenceFaceGain"
+               widget="null"
+               type="float" default="0"
+               vstructmember="inputMaterial.iridescenceFaceGain"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="iridescenceEdgeGain"
+               widget="null"
+               type="float" default="0"
+               vstructmember="inputMaterial.iridescenceEdgeGain"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="iridescenceFresnelShape"
+               label="Fresnel Exponent"
+               type="float" default="5.0"
+               slider="1" slidermin="0.0" slidermax="10.0"
+               vstructmember="inputMaterial.iridescenceFresnelshape"
+               min="0.0" max="10.0" sensitivity="0.1">
+            <tags>
+                <tag value="float"/>
+            </tags>
+            <help>
+                Iridescence fresnel curve exponent.  5.0 is a good default.  This
+                is normally unchanged.  If changed, this affects the face and edge
+                falloff.
+            </help>
+        </param>
+        <param name="iridescenceMode"
+               type="int" default="0"
+               connectable="False"
+               widget="mapper">
+            <hintdict name="options">
+                <string name="Artistic" value="0"/>
+                <string name="Physical" value="1"/>
+            </hintdict>
+           <help>
+               In Artistic mode, we just set 2 colors. Depending on the iridescence scale
+               factor, we will see N number of "rainbows".
+
+               In Physical mode, we pass the thickness of your thin film in nanometer. The
+               iridescence effect happens when the physical thickness is close to the
+               visible spectrum. You can start around 800nm and increase the value to see
+               the effect.
+           </help>
+        </param>
+        <param name="iridescencePrimaryColor"
+               widget="null"
+               type="color" default="1 0 0"
+               vstructmember="inputMaterial.iridescencePrimaryColor"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="iridescenceSecondaryColor"
+               widget="null"
+               type="color" default="0 0 1"
+               vstructmember="inputMaterial.iridescenceSecondaryColor"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="iridescenceRoughness"
+               widget="null"
+               type="float" default="0.2"
+               vstructmember="inputMaterial.iridescenceRoughness"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="iridescenceCurve"
+               label="Falloff Speed"
+               type="float" default="1"
+               vstructmember="inputMaterial.iridescenceCurve"
+               conditionalVisOp='equalTo'
+               conditionalVisPath='../../iridescenceMode' conditionalVisValue='0'>
+            <tags>
+                <tag value="float"/>
+            </tags>
+            <help>
+                Falloff speed from Primary Color to Secondary Color.  Bigger number
+                falloffs slower.
+            </help>
+        </param>
+        <param name="iridescenceScale"
+               label="Falloff Scale"
+               type="float" default="1"
+               vstructmember="inputMaterial.iridescenceScale"
+               conditionalVisOp='equalTo'
+               conditionalVisPath='../../iridescenceMode' conditionalVisValue='0'>
+            <tags>
+                <tag value="float"/>
+            </tags>
+            <help>
+                Falloff Scale.  This sets how many times the "rainbows" repeat.
+            </help>
+        </param>
+        <param name="iridescenceFlip"
+               label="Flip Hue Direction"
+               type="int" default="0"
+               widget="checkBox"
+               connectable="False"
+               vstructmember="inputMaterial.iridescenceFlip"
+               conditionalVisOp='equalTo'
+               conditionalVisPath='../../iridescenceMode' conditionalVisValue='0'>
+            <help>
+                Flip the hue wheel direction between primary and secondary colors.
+                By default, the hue wheel direction is counter clockwise.
+            </help>
+        </param>
+        <param name="iridescenceThickness"
+               widget="null"
+               type="float" default="800"
+               vstructmember="inputMaterial.iridescenceThickness"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="iridescenceDoubleSided"
+               label="Double Sided"
+               type="int" default="0"
+               widget="checkBox"
+               connectable="False">
+            <help>
+                If on, illuminate on both sides of the surface for this iridescence lobe.
+            </help>
+        </param>
+    </page>
+
+    <page name="Fuzz" open="False">
+        <param name="fuzzGain"
+               widget="null"
+               type="float" default="0.0"
+               vstructmember="inputMaterial.fuzzGain"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="fuzzColor"
+               widget="null"
+               type="color" default="1 1 1"
+               vstructmember="inputMaterial.fuzzColor"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="fuzzConeAngle" type="float" default="8"
+               label="Cone Angle"
+               vstructmember="inputMaterial.fuzzConeAngle">
+                <tags>
+                    <tag value="float"/>
+                </tags>
+        </param>
+        <param name="fuzzBumpNormal" type="normal"
+               widget="null"
+               default="0 0 0"
+               vstructmember="inputMaterial.fuzzBumpNormal"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="fuzzDoubleSided"
+               label="Double Sided"
+               type="int" default="0"
+               widget="checkBox"
+               connectable="False">
+                <help>
+                    If this is set, this normal will be used for the fuzz
+                    illumination instead of the bump normal set in the
+                    Globals.
+                </help>
+        </param>
+    </page>
+
+    <page name="Subsurface" open="False">
+        <param name="subsurfaceType"
+               label="Subsurface Model"
+               type="int" default="0"
+               connectable="False"
+               widget="mapper">
+            <hintdict name="options">
+                <string name="Jensen Dipole"               value="0"/>
+                <string name="DEon Better Dipole"          value="3"/>
+                <string name="Burley Normalized"           value="1"/>
+                <string name="Multiple Mean Free Paths"    value="2"/>
+                <string name="Exponential Path Traced"     value="5"/>
+                <string name="Non-Exponential Path Traced" value="6"/>
+            </hintdict>
+            <help>
+                Subsurface profile types.
+                Jensen's dipole and d'Eon's better dipole profiles model
+                subsurface diffusion, i.e. subsurface scattering after many
+                bounces of scattering.  Burley's normalized profile models
+                both diffusion and single-scattering.  Path traced implements
+                brute-force Monte Carlo scattering.
+            </help>
+        </param>
+        <param name="subsurfaceGain"
+               widget="null"
+               type="float" default="0.0"
+               vstructmember="inputMaterial.subsurfaceGain"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="subsurfaceColor"
+               widget="null"
+               type="color" default="0.830 0.791 0.753"
+               vstructmember="inputMaterial.subsurfaceColor"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="subsurfaceDmfp" type="float" default="10"
+               widget="null"
+               min="0.0"
+               vstructmember="inputMaterial.subsurfaceDmfp"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="subsurfaceDmfpColor" type="color"
+               widget="null"
+               default="0.851 0.557 0.395"
+               vstructmember="inputMaterial.subsurfaceDmfpColor"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="shortSubsurfaceGain"
+               widget="null"
+               type="float" default="0.0"
+               vstructmember="inputMaterial.shortSubsurfaceGain"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="shortSubsurfaceColor" type="color" default="0.9 0.9 0.9"
+               widget="null"
+               vstructmember="inputMaterial.shortSubsurfaceColor"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="shortSubsurfaceDmfp"
+               widget="null"
+               type="float" default="5"
+               vstructmember="inputMaterial.shortSubsurfaceDmfp"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="longSubsurfaceGain"
+               widget="null"
+               type="float" default="0.0"
+               vstructmember="inputMaterial.longSubsurfaceGain"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="longSubsurfaceColor"
+               widget="null"
+               type="color" default="0.8 0.0 0.0"
+               vstructmember="inputMaterial.longSubsurfaceColor"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="longSubsurfaceDmfp"
+               widget="null"
+               type="float" default="20"
+               vstructmember="inputMaterial.longSubsurfaceDmfp"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="subsurfaceDirectionality"
+               label="Directionality"
+               type="float" default="0.0"
+               slider="1" slidermin="0.0" slidermax="0.95"
+               min="0.0" max="0.95"
+               vstructmember="inputMaterial.subsurfaceDirectionality">
+            <hintdict name="conditionalVisOps">
+                <string name="conditionalVisOp" value="or"/>
+                <string name="conditionalVisLeft" value="conditionalVis1"/>
+                <string name="conditionalVisRight" value="conditionalVis2"/>
+                <string name="conditionalVis1Path" value="../subsurfaceType"/>
+                <string name="conditionalVis2Path" value="../subsurfaceType"/>
+                <string name="conditionalVis1Op" value="equalTo"/>
+                <string name="conditionalVis1Value" value="5"/>
+                <string name="conditionalVis2Op" value="equalTo"/>
+                <string name="conditionalVis2Value" value="6"/>
+            </hintdict>
+            <tags>
+                <tag value="float"/>
+            </tags>
+            <help>
+                Anisotropy (&quot;specularity&quot;) of the subsurface medium.
+                Higher values makes light scatter predominantly forward.
+            </help>
+        </param>
+        <param name="subsurfaceBleed"
+               label="Bleed"
+               type="float" default="0.0"
+               slider="1" slidermin="0.0" slidermax="1.0"
+               min="0.0" max="100.0"
+               conditionalVisPath="../subsurfaceType" conditionalVisOp="equalTo"
+               conditionalVisValue="6"
+               vstructmember="inputMaterial.subsurfaceBleed">
+            <tags>
+                <tag value="float"/>
+            </tags>
+            <help>
+                Controls the depth of light bleed in the subsurface medium. Has
+                the effect of increasing the distance light travels in the medium
+                while preserving fine detail, compared to increasing the Mean Free Path.
+            </help>
+        </param>
+        <param name="subsurfaceDiffuseBlend"
+               label="Diffuse Blend"
+               type="float" default="0.0"
+               slider="1" slidermin="0.0" slidermax="1.0"
+               min="0.0" max="1.0"
+               vstructmember="inputMaterial.subsurfaceDiffuseBlend">
+            <hintdict name="conditionalVisOps">
+                <string name="conditionalVisOp" value="or"/>
+                <string name="conditionalVisLeft" value="conditionalVis1"/>
+                <string name="conditionalVisRight" value="conditionalVis2"/>
+                <string name="conditionalVis1Path" value="../subsurfaceType"/>
+                <string name="conditionalVis2Path" value="../subsurfaceType"/>
+                <string name="conditionalVis1Op" value="equalTo"/>
+                <string name="conditionalVis1Value" value="5"/>
+                <string name="conditionalVis2Op" value="equalTo"/>
+                <string name="conditionalVis2Value" value="6"/>
+            </hintdict>
+            <tags>
+                <tag value="float"/>
+            </tags>
+            <help>
+                Blends a diffuse component into the subsurface calculation.
+                Useful on objects with very sharp edges where dark artifacts
+                can be seen.
+            </help>
+        </param>
+        <param name="subsurfaceResolveSelfIntersections"
+               label="Resolve Self Intersections"
+               type="int" default="0"
+               connectable="False"
+               widget="checkBox">
+            <hintdict name="conditionalVisOps">
+                <string name="conditionalVisOp" value="or"/>
+                <string name="conditionalVisLeft" value="conditionalVis1"/>
+                <string name="conditionalVisRight" value="conditionalVis2"/>
+                <string name="conditionalVis1Path" value="../subsurfaceType"/>
+                <string name="conditionalVis2Path" value="../subsurfaceType"/>
+                <string name="conditionalVis1Op" value="equalTo"/>
+                <string name="conditionalVis1Value" value="5"/>
+                <string name="conditionalVis2Op" value="equalTo"/>
+                <string name="conditionalVis2Value" value="6"/>
+            </hintdict>
+            <help>
+                If the geometry has self-intersections, enabling this option will track
+                the surfaces so that only the outer-most ones are active for subsurface
+                light transport.
+            </help>
+        </param>
+        <param name="subsurfaceIor"
+               label="Internal reflection index"
+               type="float" default="1.4"
+               min="1.0" sensitivity="0.01"
+               connectable="False">
+            <hintdict name="conditionalVisOps">
+                <string name="conditionalVisOp" value="or"/>
+                <string name="conditionalVisLeft" value="conditionalVis1"/>
+                <string name="conditionalVisRight" value="conditionalVis2"/>
+                <string name="conditionalVis1Path" value="../subsurfaceType"/>
+                <string name="conditionalVis2Path" value="../subsurfaceType"/>
+                <string name="conditionalVis1Op" value="equalTo"/>
+                <string name="conditionalVis1Value" value="5"/>
+                <string name="conditionalVis2Op" value="equalTo"/>
+                <string name="conditionalVis2Value" value="6"/>
+            </hintdict>
+            <help>
+                When enabled, light will only exit the surface at perpendicular angles to the surface,
+                and oblique paths are internally reflected. This can help avoid excessive brightness
+                in curved areas.
+            </help>
+        </param>
+        <param name="subsurfacePostTint"
+               widget="null"
+               type="color" default="1.0 1.0 1.0"
+               vstructmember="inputMaterial.subsurfacePostTint"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="subsurfaceDiffuseSwitch"
+               label="Diffuse Computation Switch"
+               type="float" default="1.0" min="0.0"
+               connectable="False">
+             <help>
+                Switch the subsurface computation to a diffuse computation
+                if the dmfp is smaller than the ray footprint.  This gives
+                a useful speed-up for frontlit objects, but gives incorrect
+                results for thin backlit objects where the subsurface
+                scattering will traverse the object whereas diffuse will
+                not.
+             </help>
+        </param>
+        <param name="subsurfaceDoubleSided"
+               label="Double Sided"
+               type="int" default="0"
+               widget="checkBox"
+               connectable="False">
+                <hintdict name="conditionalVisOps">
+                    <string name="conditionalVisOp" value="and"/>
+                    <string name="conditionalVisLeft" value="conditionalVis1"/>
+                    <string name="conditionalVisRight" value="conditionalVis2"/>
+                    <string name="conditionalVis1Path" value="../../subsurfaceType"/>
+                    <string name="conditionalVis2Path" value="../../subsurfaceType"/>
+                    <string name="conditionalVis1Op" value="notEqualTo"/>
+                    <string name="conditionalVis1Value" value="5"/>
+                    <string name="conditionalVis2Op" value="notEqualTo"/>
+                    <string name="conditionalVis2Value" value="6"/>
+                </hintdict>
+            <help>
+                If on, illuminate on both sides of the surface for this subsurface lobe.
+            </help>
+        </param>
+        <param name="subsurfaceTransmitGain"
+               widget="null"
+               type="float" default="0.0"
+               vstructmember="inputMaterial.subsurfaceTransmitGain"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+
+        <page name="Trace Control" open="False">
+            <param name="considerBackside" type="int" default="1"
+                   label="Consider Backside"
+                   connectable="False"
+                   widget="checkBox">
+                <hintdict name="conditionalVisOps">
+                    <string name="conditionalVisOp" value="and"/>
+                    <string name="conditionalVisLeft" value="conditionalVis1"/>
+                    <string name="conditionalVisRight" value="conditionalVis2"/>
+                    <string name="conditionalVis1Path" value="../../subsurfaceType"/>
+                    <string name="conditionalVis2Path" value="../../subsurfaceType"/>
+                    <string name="conditionalVis1Op" value="notEqualTo"/>
+                    <string name="conditionalVis1Value" value="5"/>
+                    <string name="conditionalVis2Op" value="notEqualTo"/>
+                    <string name="conditionalVis2Value" value="6"/>
+                </hintdict>
+                <help>
+                    Whether subsurface respects surfaces on the otherside.
+                    * "Off" - It will ignore surfaces on the other side completely.
+                    This is useful to make objects appear thicker than they are.
+                    * "On" - Normal mode, where the diffusion happens between the front and
+                    the first surface behind it.
+                </help>
+            </param>
+            <param name="continuationRayMode" type="int" default="0"
+                   label="Continuation Ray Mode"
+                   connectable="False"
+                   widget="mapper">
+                <hintdict name="conditionalVisOps">
+                    <string name="conditionalVisOp" value="and"/>
+                    <string name="conditionalVisLeft" value="conditionalVis1"/>
+                    <string name="conditionalVisRight" value="conditionalVis2"/>
+                    <string name="conditionalVis1Path" value="../../subsurfaceType"/>
+                    <string name="conditionalVis2Path" value="../../subsurfaceType"/>
+                    <string name="conditionalVis1Op" value="notEqualTo"/>
+                    <string name="conditionalVis1Value" value="5"/>
+                    <string name="conditionalVis2Op" value="notEqualTo"/>
+                    <string name="conditionalVis2Value" value="6"/>
+                </hintdict>
+                <hintdict name="options">
+                    <string name="Off"               value="0"/>
+                    <string name="Last Hit"          value="1"/>
+                    <string name="All Hits"          value="2"/>
+                </hintdict>
+                <help>
+                    Control continuation ray mode.
+                    * "Off" - Simply trace out of the object (default)
+                    * "LastHit" - Ignore internal geometry and jump to the last surface
+                    * "AllHits" - Scatter (collect light) on all hits as the ray leaves the object.
+                    This can bring additional brightness, at the cost of additional noise.
+                </help>
+            </param>
+            <param name="maxContinuationHits" type="int" default="2"
+                   label="Max Continuation Hits"
+                   connectable="False"
+                   conditionalVisOp='equalTo'
+                   conditionalVisPath='../continuationRayMode'
+                   conditionalVisValue='2'>
+                <help>
+                    Maximum number of hits to test in all hits mode.
+                </help>
+            </param>
+            <param name="followTopology" type="float" default="0.0"
+                   label="Follow Topology"
+                   connectable="False"
+                   slider="1" slidermin="0.0" slidermax="1.0"
+                   min="0.0" max="1.0" sensitivity="0.01">
+                <hintdict name="conditionalVisOps">
+                    <string name="conditionalVisOp" value="and"/>
+                    <string name="conditionalVisLeft" value="conditionalVis1"/>
+                    <string name="conditionalVisRight" value="conditionalVis2"/>
+                    <string name="conditionalVis1Path" value="../../subsurfaceType"/>
+                    <string name="conditionalVis2Path" value="../../subsurfaceType"/>
+                    <string name="conditionalVis1Op" value="notEqualTo"/>
+                    <string name="conditionalVis1Value" value="5"/>
+                    <string name="conditionalVis2Op" value="notEqualTo"/>
+                    <string name="conditionalVis2Value" value="6"/>
+                </hintdict>
+                <help>
+                    Controls how strongly normals are considered in the
+                    subsurface computation.
+                </help>
+            </param>
+            <param name="subsurfaceSubset"
+                   label="Trace Subset"
+                   type="string" default=""
+                   connectable="False"/>
+        </page>
+    </page>
+
+    <page name="Single Scatter" open="False">
+        <param name="singlescatterGain"
+               widget="null"
+               type="float" default="0.0"
+               vstructmember="inputMaterial.singlescatterGain"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="singlescatterColor" type="color"
+               widget="null"
+               default="0.830 0.791 0.753"
+               vstructmember="inputMaterial.singlescatterColor"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="singlescatterMfp"
+               widget="null"
+               type="float" default="10"
+               vstructmember="inputMaterial.singlescatterMfp"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="singlescatterMfpColor" type="color"
+               widget="null"
+               default="0.851 0.557 0.395"
+               vstructmember="inputMaterial.singlescatterMfpColor"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="singlescatterDirectionality" type="float" default="0"
+               widget="null"
+               vstructmember="inputMaterial.singlescatterDirectionality"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="singlescatterIor" type="float" default="1.3"
+               widget="null"
+               min="1.0" sensitivity="0.01"
+               vstructmember="inputMaterial.singlescatterIor"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="singlescatterBlur" type="float" default="0.0"
+               widget="null"
+               vstructmember="inputMaterial.singlescatterBlur"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="singlescatterDirectGain" type="float" default="0.0"
+               widget="null"
+               vstructmember="inputMaterial.singlescatterDirectGain"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="singlescatterDirectGainTint" type="color"
+               widget="null"
+               default="1.0 1.0 1.0"
+               vstructmember="inputMaterial.singlescatterDirectGainTint"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="singlescatterDoubleSided"
+               label="Double Sided"
+               type="int" default="0"
+               widget="checkBox"
+               connectable="False">
+            <help>
+                If on, illuminate on both sides of the surface for this single scatter lobe.
+            </help>
+        </param>
+
+        <page name="Trace Control" open="False">
+            <param name="singlescatterConsiderBackside"
+                   label="Consider Backside"
+                   type="int" default="1"
+                   connectable="False"
+                   widget="checkBox">
+                <help>
+                    Whether single scatter respects surfaces on the otherside.
+                    * "Off" - It will ignore surfaces on the other side completely.
+                    This is useful to make objects apear thicker than they are.
+                    * "On" - Normal mode, where the scattering happens between the front and
+                    the first surface behind it.
+                </help>
+            </param>
+            <param name="singlescatterContinuationRayMode" type="int" default="0"
+                   label="Continuation Ray Mode"
+                   connectable="False"
+                   widget="mapper">
+                <hintdict name="options">
+                    <string name="Off"               value="0"/>
+                    <string name="Last Hit"          value="1"/>
+                    <string name="All Hits"          value="2"/>
+                </hintdict>
+                <help>
+                    Control continuation ray mode.
+                    * "Off" - Simply trace out of the object (default)
+                    * "LastHit" - Ignore internal geometry and jump to the last surface
+                    * "AllHits" - Scatter (collect light) on all hits as the ray leaves the object.
+                    This can bring additional brightness, at the cost of additional noise.
+                </help>
+            </param>
+            <param name="singlescatterMaxContinuationHits" type="int" default="2"
+                   label="Max Continuation Hits"
+                   connectable="False"
+                   conditionalVisOp='equalTo'
+                   conditionalVisPath='../singlescatterContinuationRayMode'
+                   conditionalVisValue='2'>
+                <help>
+                    Maximum number of hits to test in all hits mode.
+                </help>
+            </param>
+            <param name="singlescatterDirectGainMode"
+                   label="Direct Gain Mode"
+                   type="int" default="0"
+                   connectable="False"
+                   widget="mapper">
+                <hintdict name="options">
+                    <string name="First Hit" value="0"/>
+                    <string name="Last Hit"  value="1"/>
+                    <string name="All Hits"  value="2"/>
+                </hintdict>
+                <help>
+                    Control the continuation ray mode for direct gain.
+                    * "FirstHit" - Simply trace to the next surface (this is tied to considerBackside)
+                    * "LastHit" - Ignore internal geometry and jump to the last surface
+                    * "AllHits" - Scatter (collect light) on all hits as the ray leaves the object.
+                    This can bring additional brightness, at the cost of additional noise.
+                </help>
+            </param>
+            <param name="singlescatterSubset"
+                   label="Trace Subset"
+                   type="string" default=""
+                   connectable="False"/>
+        </page>
+    </page>
+
+    <page name="Scattering Globals" open="False">
+        <param name="irradianceTint" type="color"
+                label="Irradiance Tint"
+                default="1.0 1.0 1.0"
+                vstructmember="inputMaterial.irradianceTint">
+            <tags>
+                <tag value="color"/>
+            </tags>
+            <help>
+                A tint applied to illumination before being scattered by
+                subsurface or single scatter.
+            </help>
+        </param>
+        <param name="irradianceRoughness" type="float"
+                label="Irradiance Roughness"
+                default="0.0"
+                slider="1" slidermin="0.0" slidermax="1.0"
+                min="0.0" max="1.0" sensitivity="0.01"
+                vstructmember="inputMaterial.irradianceRoughness">
+           <tags>
+               <tag value="float"/>
+           </tags>
+            <help>
+                Diffuse roughness (OrenNayar model) to be applied for subsurface
+                or single scatter.
+            </help>
+        </param>
+        <param label="Unit Length"
+               name="unitLength"
+               type="float"
+               default="0.1"
+               connectable="False">
+           <help>
+                Subsurface and single scatter unit length.  It is a multiplier on
+                Mean Free Path Distance.  Mean Free Path Distance is often measured in
+                millimeters.  If the scene is modeled in some other scale, Unit Length
+                should be set accordingly.  The default value of 0.1 is appropriate for
+                scenes modeled in centimeters and Mean Free Path Distance measured in
+                millimeters.
+           </help>
+        </param>
+    </page>
+
+
+    <page name="Glass" open="False">
+        <param name="refractionGain"
+               widget="null"
+               type="float" default="0.0"
+               vstructmember="inputMaterial.refractionGain"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="reflectionGain"
+               widget="null"
+               type="float" default="0.0"
+               vstructmember="inputMaterial.reflectionGain"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="refractionColor"
+               widget="null"
+               type="color" default="1 1 1"
+               vstructmember="inputMaterial.refractionColor"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="glassRoughness"
+               widget="null"
+               type="float" default="0.1"
+               vstructmember="inputMaterial.glassRoughness"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="glassIor"
+               widget="null"
+               type="float" default="1.5"
+               vstructmember="inputMaterial.glassIor"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="mwWalkable"
+            label="Enable Manifold Walk"
+            type="int" default="0"
+            widget="checkBox" connectable="False">
+            <help>
+                If on, enables the use of manifold exploration algorithms (such as manifold walk and caustic connection strategies) on this surface.
+            </help>
+        </param>
+        <param name="mwIor"
+               widget="null"
+               type="float" default="-1.0"
+               vstructmember="inputMaterial.mwIor"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="thinGlass"
+            label="Thin"
+            type="int" default="0"
+            widget="checkBox" connectable="False">
+            <help>
+                If on, correctly split energy according to IOR between reflection
+                and refraction, but do not bend the ray in refraction (simulating
+                a double pane of glass with a single pane).
+            </help>
+        </param>
+        <param name="ignoreFresnel"
+            label="Ignore Fresnel Weight"
+            type="int" default="0"
+            widget="checkBox" connectable="False"
+            conditionalVisPath="thinGlass" conditionalVisOp="equalTo"
+            conditionalVisValue="0">
+            <help>
+                If on, forces the fresnel IOR weighting to be off
+                (which has the side-effect of turning reflection off).
+                This is sometimes desirable for extracting a pure refraction distortion
+                mask for compositing.
+            </help>
+        </param>
+        <param name="ignoreAccumOpacity"
+                label="Ignore Accum Opacity"
+                type="int" default="0"
+                widget="checkBox" connectable="False">
+                <help>
+                    If on, even if the integrator has Accum Opacity on (where the
+                    intention is to generate a partial alpha from refraction for
+                    compositing), the alpha will be locally forced to 1.0 after refraction.
+                </help>
+        </param>
+        <page name="Interior">
+            <param name="ssAlbedo"
+                   label="Single Scatter Albedo"
+                   type="color" default="0.0 0.0 0.0"
+                   >
+                <help>
+                    Color of the particles in the volume.
+                </help>
+            </param>
+            <param name="extinction"
+                   label="Extinction"
+                   type="color" default="0.0 0.0 0.0"
+                   >
+                <help>
+                    Extinction coefficient that controls how light is absorbed
+                    as it travels through the volume. Higher values will block more light.
+                </help>
+            </param>
+
+            <page name="Advanced" open="False">
+                <param name="g"
+                       label="Scattering Directionality"
+                       type="float" default="0.0"
+                       slider="1" slidermin="-1.0" slidermax="1.0"
+                     connectable="False">
+                    <help>
+                        Controls the directionality of the scattering
+                        (1: forward, -1: backward, 0:isotropic).
+                    </help>
+                </param>
+                 <param name = "multiScatter"
+                       label = "Multiscattering Type"
+                       type = "int" default = "0"
+                       widget = "mapper"
+                       connectable="False"
+                       conditionalVisOp='equalTo'
+                       conditionalVisPath='../volumeAggregate'
+                       conditionalVisValue='0'>
+                    <hintdict name = "options">
+                        <string name = "Off" value = "0"/>
+                        <string name = "On" value = "1"/>
+                        <string name = "SurfaceOnly" value = "2"/>
+                    </hintdict>
+                </param>
+                <param name="enableOverlappingVolumes"
+                       label="Overlapping Volumes"
+                       type="int" default="0"
+                       widget="checkBox"
+                       connectable="False"
+                       conditionalVisOp='equalTo'
+                       conditionalVisPath='../volumeAggregate'
+                       conditionalVisValue='0'>
+                    <help>
+                        If enable, the interior volume can be overlapped with other
+                        volumes to create combined effects.
+                    </help>
+                </param>
+
+           </page>
+       </page>
+    </page>
+
+    <page name="Glow" widget="null" open="False">
+        <param name="glowGain"
+               widget="null"
+               label="Gain"
+               type="float" default="0.0"
+               slider="1" slidermin="0.0" slidermax="1.0"
+               min="0.0" max="1.0" sensitivity="0.01"
+               vstructmember="inputMaterial.glowGain"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+            <tags>
+                <tag value="float"/>
+            </tags>
+            <help>
+                Glow gain.  This is a multiplier for the glow.
+            </help>
+         </param>
+        <param name="glowColor"
+               widget="null"
+               label="Color"
+               type="color" default="1 1 1"
+               vstructmember="inputMaterial.glowColor"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+            <tags>
+                <tag value="color"/>
+            </tags>
+            <help>
+                Controls the glow (incandescence) of the material.
+            </help>
+        </param>
+    </page>
+
+    <page name="Globals" open="False">
+        <param name="bumpNormal"
+               widget="null"
+               type="normal" default="0 0 0"
+               vstructmember="inputMaterial.bumpNormal"
+               connectable="False">  <!-- connectable only via vstruct, not as a param -->
+        </param>
+        <param name="shadowColor" type="color"
+               label="Shadow Color"
+               default="0.0 0.0 0.0"
+               vstructmember="inputMaterial.shadowColor">
+            <tags>
+                <tag value="color"/>
+            </tags>
+            <help>
+                Shadow color.
+            </help>
+        </param>
+        <param name="shadowMode"
+               label="Shadow Mode"
+               type="int" default="0"
+               connectable="False"
+               widget="mapper">
+            <hintdict name="options">
+                <string name="Shader and shadow color"           value="0"/>
+                <string name="Shadow color only"                 value="1"/>
+            </hintdict>
+            <help>
+                Shadow computation mode.
+                "Shade and shadow color" mode evaluates the shader for the
+                 opacity color for computing the shadow color.
+            </help>
+        </param>
+        <param name="presence"
+               label="Presence"
+               type="float"
+               default="1" min="0" max="1"
+               widget="default"
+               vstructmember="inputMaterial.presence">
+           <tags>
+               <tag value="float"/>
+           </tags>
+           <help>
+               Connect a mask function here to apply a cutout pattern
+               to your object.  Presence is defined as a binary (0 or 1) function
+               that can take on continuous values to antialias the
+               shape.  Useful for modeling leaves and other thin,
+               complex shapes.
+               <p>
+               IMPORTANT NOTE: This value should be either 0 or 1.
+               A value between 0 and 1 will produce unwanted noise !!!
+               </p>
+           </help>
+        </param>
+        <param name="presenceCached" type="int" default="1"
+               label="Presence Cached"
+               connectable="False"
+               widget="mapper">
+            <hintdict name="options">
+                <string name="Non cached"  value="0"/>
+                <string name="Cached"      value="1"/>
+            </hintdict>
+        </param>
+
+        <param name="mwStartable"
+            label="Enable Manifold Exploration"
+            type="int" default="0"
+            widget="checkBox" connectable="False"
+            conditionalVisOp='equalTo'
+            conditionalVisPath='../../Glass/Advanced/mwWalkable'
+            conditionalVisValue='0'>
+            <help>
+                If on, allows the manifold exploration algorithm to start on this surface.
+            </help>
+        </param>
+
+        <param name="roughnessMollificationClamp"
+               type="float"
+               default="32"
+               connectable="False"
+               label="Specular Curvature Clamp" >
+            <help>
+               The integrator parameter Specular Curvature Filter increases roughness after hitting curved and or partially rough objects.  This clamp can be used to limit the effect of the integrator parameter for particular surfaces.
+            </help>
+        </param>
+
+        <param name="userColor"
+            label="User Color"
+            type="color" default="0.0 0.0 0.0">
+            <tags>
+                <tag value="color"/>
+            </tags>
+            <help>
+                User color provided to the bxdf to be stored in the user lobe 4.
+            </help>
+        </param>
+    </page>
+
+    <param name="utilityPattern"
+           label="Utility Pattern"
+           type="int" default="0"
+           isDynamicArray="1" arraySize="-1" widget="dynamicArray">
+        <tags>
+            <tag value="int"/>
+        </tags>
+        <help>
+            Utility patterns are evaluated but their results are not used by the bxdf.
+            This is where input AOV is connected.
+        </help>
+    </param>
+    <rfmdata nodeid="1200411"
+        classification="shader/surface:rendernode/RenderMan/bxdf/main:swatch/rmanSwatch"/>
+    <rfcdata nodeid="1037557" description="Mpxrlayersurface"/>
+
+
+</args>

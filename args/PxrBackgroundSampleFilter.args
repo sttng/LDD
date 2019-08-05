@@ -1,0 +1,23 @@
+<args format="1.0">
+  <shaderType>
+    <tag value="samplefilter"/>
+  </shaderType>
+  <help>
+    Sample filter plugin to color the background.
+  </help>
+
+  <param name="backgroundColor"
+         label="Background Color"
+         type="color"
+         default="0 0 0"
+         widget="color"
+         connectable="False">
+    <help>
+        Color of the background. 
+    </help>
+  </param>
+
+    <rfmdata nodeid="1053309"
+             classification="rendernode/RenderMan/samplefilter"/>
+
+</args>

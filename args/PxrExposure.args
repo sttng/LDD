@@ -1,0 +1,61 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="pattern"/>
+    </shaderType>
+    <help>
+    Adjust the exposure of the input color by the given stops.  Each positive
+    stop will double the input's intensity.  Each negative stop will halve the
+    input's intensity.  Often it is preferable to use Exposure instead of a
+    straight multiplication (also called gain), as it is perceptually linear.
+    </help>
+    <param name="inputRGB"
+        label="Input Color"
+        type="color"
+        default="0. 0. 0."
+        widget="color">
+        <tags>
+            <tag value="color"/>
+        </tags>
+        <help>Plug a color pattern here.</help>
+    </param>
+    <param name="stops"
+        label="Stops"
+        type="float"
+        default="0.0"
+        min="-10" max="10"
+        slider="True" slidermin="-4" slidermax="4"
+        widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>The result is multiplied by pow(2, stops).</help>
+    </param>
+
+    <output name="resultRGB">
+        <tags>
+            <tag value ="color"/>
+            <tag value ="vector"/>
+            <tag value ="normal"/>
+            <tag value ="point"/>
+        </tags>
+    </output>
+    <output name="resultR">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultG">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultB">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+
+    <rfmdata nodeid="1053427"
+             classification="rendernode/RenderMan/pattern/color"/>
+    <rfcdata nodeid="1035863" description="Xpxrexposure"/>
+</args>

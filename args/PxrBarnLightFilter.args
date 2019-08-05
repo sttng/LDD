@@ -1,0 +1,310 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="lightfilter"/>
+    </shaderType>
+    <page name="Notes" open="False">
+        <param name="notes" type="string" default="" widget="scriptEditor" omitFromRender="True">
+            <help>General comment field for this light filter.</help>
+        </param>
+    </page>
+
+    <param name="barnMode" 
+           label="Barn Mode"
+           connectable="False"
+           type="int" widget="mapper" default="0">
+        <hintdict name="options">
+            <string value="0" name="physical"/>
+            <string value="1" name="analytic"/>
+        </hintdict>
+        <help>barnMode: 
+
+        In 'physical' mode the barn behaves like an open window through which 
+        light falls. The falloff and blur are determined by the size of the 
+        light, the distance to the light and distance from the barn. 
+
+        In 'analytic' mode, the barn has a fixed projection and manual
+        falloff controls.
+        </help>
+    </param>
+
+    <page name="Projection" open="True"
+          conditionalVisOp="equalTo"
+          conditionalVisPath="../barnMode"
+          conditionalVisValue="1">
+        <param name="directional" 
+               label="Directional"
+               connectable="False"
+               type="int" widget="checkBox" default="0">
+            <help>directional: Whether or not the light projects along a direction or
+            out from a point.
+            </help>
+        </param>
+        <param name="shearX" 
+               label="Shear X"
+               type="float" default="0" sensitivity="0.01" connectable="False">
+            <help>shearX: Shear the projection along the x-axis.</help>
+        </param>
+        <param name="shearY" 
+               label="Shear Y"
+               type="float" default="0" sensitivity="0.01" connectable="False">
+            <help>shearY: Shear the projection along the y-axis.</help>
+        </param>
+        <param name="apex" 
+               label="Apex"
+               type="float" default="25" min="0.0" connectable="False"
+            conditionalVisOp="equalTo"
+            conditionalVisPath="../directional"
+            conditionalVisValue="0">
+            <help>apex: Distance between center of barn and center of projection.
+            </help>
+        </param>
+        <param name="useLightDirection" 
+               label="Use Light Direction"
+               connectable="False"
+               type="int" widget="checkBox" default="0">
+            <help> useLightDirection: If checked the projection direction 
+                   is determined by the position of the center of the light source. 
+                   Otherwise it only follows the orientation of the cookie. 
+                   WARNING: this does not work with dome and geometric area lights.
+            </help>
+        </param>
+    </page>
+
+    <page name="Barn Shape" open="True">
+
+        <param name="width" 
+               label="Width"
+               type="float" min="0.0" default="1.0" connectable="False">
+            <help>width: Width of the inner region of the barn (x axis).</help>
+        </param>
+        <param name="height" 
+               label="Height"
+               type="float" min="0.0" default="1.0" connectable="False">
+            <help>height: Height of the inner region of the barn (y axis).</help>
+        </param>
+        <param name="radius" 
+               label="Radius"
+               type="float" min="0.0" default="0.5" connectable="False">
+            <help>radius: Radius of the corners of the inner barn square.</help>
+        </param>
+        <param name="edge" 
+               label="Edge"
+               type="float" min="0.0" default="0.0" connectable="False">
+            <help>edge: Thickness of the edge region.  Greater value will add 
+                  more softness to the edges of the barn shape.  
+            </help>
+        </param>
+        <param name="preBarn" 
+               label="Pre Barn"
+               connectable="False"
+               type="int" widget="mapper" default="2">
+            <hintdict name="options">
+                <string value="0" name="no effect"/>
+                <string value="1" name="cone"/>
+                <string value="2" name="no light"/>
+            </hintdict>
+            <help>preBarn: The effect on the light before it reaches the barn.</help>
+        </param>
+
+        <page name="Scale" open="False">
+            <param name="scaleWidth" 
+                   label="Scale Width"
+                   type="float" min="0.0" default="1.0" connectable="False">
+                <help>
+                    scaleWidth: Scale the width of the inner barn shape (x axis).
+                    This includes scaling the radius.
+                </help>
+            </param>
+            <param name="scaleHeight" 
+                   label="Scale Height"
+                   type="float" min="0.0" default="1.0" connectable="False">
+                <help>
+                   scaleHeight: Scale the height of the inner barn shape (y axis).
+                   This includes scaling the radius.
+                </help>
+            </param>
+        </page>
+
+        <page name="Refine Shape" open="False">
+            <param name="left" 
+                   label="Left"
+                   type="float" min="0.0" default="0.0" connectable="False">
+                <help>left: Additional offset of the left region (-x axis).</help>
+            </param>
+            <param name="right" 
+                   label="Right"
+                   type="float" min="0.0" default="0.0" connectable="False">
+                <help>right: Additional offset of the right region (+x axis).</help>
+            </param>
+            <param name="bottom" 
+                   label="Bottom"
+                   type="float" min="0.0" default="0.0" connectable="False">
+                <help>bottom: Additional offset of the bottom region (-y axis).</help>
+            </param>
+            <param name="top" 
+                   label="Top"
+                   type="float" min="0.0" default="0.0" connectable="False">
+                <help>top: Additional offset of the top region (+y axis).</help>
+            </param>
+        </page>
+
+        <page name="Scale Edges" open="False"
+                  conditionalVisOp="greaterThan"
+                  conditionalVisPath="../edge"
+                  conditionalVisValue="0">
+            <param name="leftEdge" 
+                   label="Left Edge"
+                   type="float" min="0.0" default="1.0" connectable="False">
+                <help>
+                    leftEdge: When edge is > 0, this scales the edge of the left region (-x axis).
+                </help>
+            </param>
+            <param name="rightEdge" 
+                   label="Right Edge"
+                   type="float" min="0.0" default="1.0" connectable="False">
+                <help>
+                    rightEdge: When edge is > 0, this scales the edge of the right region (+x axis).
+                </help>
+            </param>
+            <param name="bottomEdge" 
+                   label="Bottom Edge"
+                   type="float" min="0.0" default="1.0" connectable="False">
+                <help>
+                    bottomEdge: When edge is > 0, this scales the edge of the bottom region (-y axis).
+                </help>
+            </param>
+            <param name="topEdge" 
+                   label="Top Edge"
+                   type="float" min="0.0" default="1.0" connectable="False">
+                <help>
+                    topEdge: When edge is > 0, this scales the edge of the top region (+y axis).
+                </help>
+            </param>
+        </page>
+
+    </page>
+
+    <page name="Multiplier" open="False">
+        <param name="density" 
+               label="Density"
+               type="float" default="1.0"
+            min="0.0" max="1.0" sensitivity="0.01" connectable="False">
+            <help>density: How much effect the component has (0-1).</help>
+        </param>
+        <param name="invert" type="int" 
+               label="Invert"
+               connectable="False"
+               widget="checkBox" default="0">
+            <help>invert: When this is on, invert the entire effect of the light
+                  filter.
+            </help>
+        </param>
+        <param name="intensity" 
+               label="Intensity"
+               type="float" default="0.0" min="0.0"
+               sensitivity="0.01" connectable="False">
+            <help>intensity: Multiplier for both the diffuse and specular result.
+            </help>
+        </param>
+        <param name="diffuse" 
+               label="Diffuse"
+               type="float" default="1.0"
+               min="0.0" sensitivity="0.01"
+               connectable="False">
+            <help>diffuse: How much this light filter affects diffuse lighting.</help>
+        </param>
+        <param name="specular" 
+               label="Specular"
+               type="float" default="1.0"
+               min="0.0" sensitivity="0.01"
+               connectable="False">
+            <help>specular: How much this light filter affects specular lighting.</help>
+        </param>
+    </page>
+
+    <page name="Density Falloff" open="False"
+        conditionalVisOp="equalTo"
+        conditionalVisPath="../barnMode"
+        conditionalVisValue="1">
+        <param name="densityNear" 
+               label="Density Near"
+               type="float" default="0.0" min="0.0" connectable="False">
+            <help>densityNear: Distance from the barn where the density interpolation starts.</help>
+        </param>
+        <param name="densityFar" 
+               label="Density Far"
+               type="float" default="10.0" min="0.0" connectable="False">
+            <help>densityFar: Distance from the barn where the density interpolation ends.</help>
+        </param>
+        <param name="densityNearVal" 
+               label="Density Near Val"
+               type="float" default="1.0"
+               min="0.0" max="1.0" sensitivity="0.01" connectable="False">
+            <help>densityNearVal: Density multiplier where the blur interpolation starts.</help>
+        </param>
+        <param name="densityFarVal" 
+               label="Density Far Val"
+               type="float" default="1.0"
+               min="0.0" max="1.0" sensitivity="0.01" connectable="False">
+            <help>densityFarVal: Density multiplier where the blur interpolation ends.</help>
+        </param>
+        <param name="densityPow" 
+               label="Density Exponent"
+               type="float" default="1.0" min="0.0" connectable="False">
+            <help>densityPow: Exponent of the density interpolation.</help>
+        </param>
+    </page>
+
+    <param name="combineMode" type="string" default="mult"
+           connectable="False"
+           label="Combine Mode"
+           widget="popup" options="mult|max|min|screen">
+        <help>
+        <p>
+        combineMode: Light filters on a light are grouped by their combine mode. Light filters
+        in the same group are executed together and combined by the corresponding
+        operation:
+        </p>
+
+        <ol>
+          <li>max: the maximum result from all filters is used.
+              This works best for grey scale light filters.</li>
+          <li>min: the minimum result from all filters is used.
+              This works best for grey scale light filters.</li>
+          <li>screen: similar to the max operation, but it combines gradients
+              in a smoother way. This works best for grey scale light filters.</li>
+          <li>mult (default): the results of all the filters are multiplied together
+              (Technically, they are applied one after the other.)</li>
+        </ol>
+
+        <p>
+        The groups are executed in the above order and are multiplied together,
+        which means a filter that turns things black in the mult group will zero out
+        all other filters.
+        </p>
+
+        </help>
+    </param>
+
+    <!-- invisible paramers that need to be here, so they are assigned the right
+         values -->
+    <param name="coordsys" 
+           connectable="False"
+           type="string" default="" widget="null"/>
+
+    <!-- We declare specially named hidden paramters that RfK 2.0 will fill
+         with the name of the light shader that the filter is attached to and
+         some of the lights parameters -->
+    <param name="__lightFilterParentShader"
+           connectable="False"
+           type="string" default="" widget="null"/>
+
+    <param name="linkingGroups" 
+           connectable="False"
+           type="string" default="" widget="null"/>
+
+    <rfmdata nodeid="1200386"
+             classification="light:rendernode/RenderMan/lightfilter:swatch/rmanSwatch"/>
+
+</args>
+

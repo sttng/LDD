@@ -1,0 +1,110 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="pattern"/>
+    </shaderType>
+    <help>Bake 3d Point Clouds</help>
+
+    <page name="Input" open="True">
+        <param name="inputRGB"
+            label="Input Color"
+            type="color"
+            default="0. 0. 0."
+            widget="color">
+            <tags>
+                <tag value="color"/>
+            </tags>
+            <help>Input color value</help>
+        </param>
+        <param name="inputF"
+            label="Input Float"
+            type="float"
+            default="0."
+            widget="default">
+            <tags>
+                <tag value ="float"/>
+            </tags>
+            <help>Input float value</help>
+        </param>
+    </page>
+
+    <page name="Texture" open="True">
+        <param name="filename"
+            label="Filename"
+            type="string"
+            default=""
+            widget="default"
+            connectable="False">
+            <help>Input/output point cloud filename.</help>
+        </param>
+    </page>
+
+    <page name="Baking" open="True">
+        <param name="bakeMode"
+            label="Bake Mode"
+            type="int"
+            default="1"
+            widget="mapper"
+            connectable="False">
+            <help>Enable or disable point cloud baking.</help>
+            <hintdict name="options">
+                <string name="Disabled" value="0"/>
+                <string name="Enabled" value="1"/>
+            </hintdict>
+        </param>
+        <param name="display"
+            label="File Type"
+            type="string"
+            default="pointcloud"
+            widget="mapper"
+            connectable="False">
+            <hintdict name="options">
+                <string name="PTC (.ptc)" value="pointcloud"/>
+            </hintdict>
+            <help>Output file type display driver.</help>
+        </param>
+        <param name="density"
+            label="Density"
+            type="float"
+            default="10.0"
+            widget="default"
+            connectable="False">
+            <help>Density of baking points per unit in world space. Larger values create more points.</help>
+        </param>
+        <param name="coordsys"
+            label="Coordinate System"
+            type="string"
+            default="object"
+            options="world|object|camera|ptex"
+            widget="popup"
+            connectable="False">
+            <help>Output coordinate space. Ptex requires that the geometry have a '__faceindex' primvar.</help>
+        </param>
+    </page>
+
+    <output name="resultRGB">
+        <tags>
+            <tag value ="color"/>
+            <tag value ="vector"/>
+            <tag value ="normal"/>
+            <tag value ="point"/>
+        </tags>
+    </output>
+    <output name="resultR">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultG">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+    <output name="resultB">
+        <tags>
+            <tag value ="float"/>
+        </tags>
+    </output>
+
+    <rfmdata nodeid="1053277"
+             classification="rendernode/RenderMan/pattern/bake"/>
+</args>

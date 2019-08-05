@@ -1,0 +1,431 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="light"/>
+    </shaderType>
+
+    <page name="Notes" open="False">
+        <param name="notes" type="string" widget="scriptEditor" omitFromRender="True">
+            <help>General comment field for this light.</help>
+        </param>
+    </page>
+
+    <page name="Basic" open="True">
+        <param name="intensity"
+               label="Intensity"
+               type="float"
+               default="1.0" min="0.0" 
+               slider="1" slidermax="2.0"
+               connectable="False"
+               widget="default">
+            <help>
+                intensity:  Specify the intensity of the light source linearly.
+            </help>
+        </param>
+        <param name="exposure"
+               label="Exposure"
+               type="float" default="0" 
+               slider="1" slidermin="-10.0" slidermax="10.0"
+               connectable="False"
+               widget="default">
+            <help>
+                exposure:  Specify the intensity of the light source as a power of 2 (in stops).
+                Increasing the exposure by 1 will double the energy emitted by the light source.
+                A value of 0 produces an intensity of 1, -1 produces .5. You may wonder why you
+                might use Exposure, and the answer is that real world lighting has high energies
+                and typical exposures are low values while you may have to type a really large
+                number for equivalent Intensity. This is also comfortable to artists familiar with
+                photographic measurements.
+            </help>
+        </param>
+        <param name="lightColor"
+               label="Color"
+               type="color"
+               default="1 1 1"
+               connectable="False"
+               widget="color">
+            <help>
+               lightColor: The color of the emitted light. If a color map is specified, this
+               tints the color map.
+            </help>
+        </param>
+        <param name="lightColorMap"
+               label="Color Map"
+               type="string" widget="assetIdInput" options="env"
+               connectable="False">
+            <help>
+                lightColorMap: Filename of the dome texture.
+            </help>
+        </param>
+        <param name="colorMapGamma"
+               label="Map Gamma"
+               type="vector"
+               default="1.0 1.0 1.0"
+               connectable="False">
+            <help>
+                colorMapGamma: Gamma-correct the texture.
+            </help>
+        </param>
+        <param name="colorMapSaturation"
+               label="Map Saturation"
+               type="float"
+               default="1.0"
+               min="0.0" max="2.0"
+               connectable="False">
+            <help>
+                colorMapSaturation: Adjust the texture's saturation.
+            </help>
+        </param>
+        <param name="enableTemperature"
+               label="Enable Temperature"
+               type="int"
+               default="0"
+               widget="checkBox"
+               connectable="False">
+            <help>
+                enableTemperature: Turns color temperature on or off.
+            </help>
+        </param>
+        <param name="temperature" label="Temperature"
+               type="float" default="6500" min="1000" max="50000"
+               connectable="False"
+               widget="default">
+            <help>
+                temperature: Allow the user to choose the color temperature of
+                the light in Kelvins. This control will act like a filter
+                (a tinted transparent surface) in front of your light. If your
+                light is white, you will get the chosen color temperature.
+                If your light is colored, the color temperature will make it
+                cooler (over 6500K) or warmer (below 6500K).
+
+                NOTE: The effect will be less pronounced on fully saturated
+                mono-chromatic lights.
+
+                Defaults to 6500 K, the D65 illuminant (white point) used by
+                sRGB and Rec. 709.
+            </help>
+            <hintdict name="conditionalVisOps">
+                <string value="equalTo" name="conditionalVisOp"/>
+                <string value="../enableTemperature" name="conditionalVisPath"/>
+                <string value="1" name="conditionalVisValue"/>
+            </hintdict>
+        </param>
+        <attribute name="visibility:camera"
+               label="Primary Visibility"
+               type="int"
+               default="1"
+               widget="checkBox"
+               connectable="False">
+            <help>
+                visibility:camera: Primary visibility of the light.
+            </help>
+        </attribute>
+    </page>
+
+    <page name="Refine" open="False">
+        <param name="specular"
+               label="Specular Amount"
+               type="float" min="0.0" max="1.0"
+               default="1.0"
+               connectable="False"
+               slider="1" slidermin="0.0" slidermax="1.0">
+            <help>
+                specular: Amount of specular light that is emitted. This is a non-physical control.
+                You could use a light with Specular Amount 0.0 to act purely as a source of diffuse
+                light for your scene objects and avoid adding highlights.
+            </help>
+        </param>
+        <param name="diffuse"
+               label="Diffuse Amount"
+               type="float" min="0.0" max="1.0"
+               default="1.0"
+               connectable="False"
+               slider="1" slidermin="0.0" slidermax="1.0">
+            <help>
+                diffuse: Amount of diffuse light that is emitted. This is a non-physical control.
+                You could use a light with Diffuse Amount 0.0 to act purely as a source of
+                highlights for your scene objects
+            </help>
+        </param>
+     </page>
+
+    <page name="Shadows" open="False">
+         <param name="enableShadows"
+                label="Enable Shadows"
+                type="int" default="1"
+                widget="checkBox"
+                connectable="False">
+            <hintdict name="conditionalVisOps">
+                <string value="equalTo" name="conditionalVisOp"/>
+                <string value="../../Advanced/traceLightPaths" name="conditionalVisPath"/>
+                <string value="0" name="conditionalVisValue"/>
+            </hintdict>
+            <help>
+                enableShadows: Enable raytraced shadows.
+            </help>
+        </param>
+        <param name="shadowColor"
+               label="Shadow Color"
+               type="color" default="0 0 0"
+               connectable="False"
+               widget="color">
+            <help>
+                shadowColor:  The color of the shadows cast by emitted light.
+            </help>
+            <hintdict name="conditionalVisOps">
+                <string value="../enableShadows" name="conditionalVis1Path"/>
+                <string value="equalTo" name="conditionalVis2Op"/>
+                <string value="1" name="conditionalVis1Value"/>
+                <string value="and" name="conditionalVisOp"/>
+                <string value="equalTo" name="conditionalVis1Op"/>
+                <string value="conditionalVis1" name="conditionalVisLeft"/>
+                <string value="conditionalVis2" name="conditionalVisRight"/>
+                <string value="../../Advanced/traceLightPaths" name="conditionalVis2Path"/>
+                <string value="0" name="conditionalVis2Value"/>
+            </hintdict>
+        </param>
+        <param name="shadowDistance"
+               label="Shadow Max Distance"
+               type="float" default="-1.0"
+               widget="default"
+               connectable="False">
+            <help>
+                shadowDistance: The maximum distance of the shadow starting from the position
+                of the point being shaded.
+                -1.0 is unset which will use the distance between the point being
+                shaded and the point on the light. You may use this control to artificially reduce
+                the distance shadows are cast. This may also increase render speed by not
+                calculating shadows outside this distance.
+            </help>
+            <hintdict name="conditionalVisOps">
+                <string value="../enableShadows" name="conditionalVis1Path"/>
+                <string value="equalTo" name="conditionalVis2Op"/>
+                <string value="1" name="conditionalVis1Value"/>
+                <string value="and" name="conditionalVisOp"/>
+                <string value="equalTo" name="conditionalVis1Op"/>
+                <string value="conditionalVis1" name="conditionalVisLeft"/>
+                <string value="conditionalVis2" name="conditionalVisRight"/>
+                <string value="../../Advanced/traceLightPaths" name="conditionalVis2Path"/>
+                <string value="0" name="conditionalVis2Value"/>
+            </hintdict>
+        </param>
+        <param name="shadowFalloff"
+               label="Shadow Falloff"
+               default="-1.0"
+               type="float" min="-1.0" 
+               slider="1" slidermax="100.0"
+               connectable="False">
+            <hintdict name="conditionalVisOps">
+                <string value="../enableShadows" name="conditionalVis1Path"/>
+                <string value="equalTo" name="conditionalVis2Op"/>
+                <string value="1" name="conditionalVis1Value"/>
+                <string value="and" name="conditionalVisOp"/>
+                <string value="equalTo" name="conditionalVis1Op"/>
+                <string value="conditionalVis1" name="conditionalVisLeft"/>
+                <string value="conditionalVis2" name="conditionalVisRight"/>
+                <string value="../../Advanced/traceLightPaths" name="conditionalVis2Path"/>
+                <string value="0" name="conditionalVis2Value"/>
+            </hintdict>
+            <help>
+                shadowFalloff: the distance from the light at which shadow falloff begins.
+                -1.0 turns off shadow falloff. This is used along with Shadow Max Distance to
+                create a false fade for shadows that are reduced or cut off by the Shadow Max
+                Distance parameter.
+            </help>
+        </param>
+        <param name="shadowFalloffGamma"
+               label="Shadow Falloff Gamma"
+               default="1.0"
+               type="float" min="0.0" sensitivity="0.01"
+               connectable="False">
+            <hintdict name="conditionalVisOps">
+                <string value="../enableShadows" name="conditionalVis1Path"/>
+                <string value="equalTo" name="conditionalVis2Op"/>
+                <string value="1" name="conditionalVis1Value"/>
+                <string value="and" name="conditionalVisOp"/>
+                <string value="equalTo" name="conditionalVis1Op"/>
+                <string value="conditionalVis1" name="conditionalVisLeft"/>
+                <string value="conditionalVis2" name="conditionalVisRight"/>
+                <string value="../../Advanced/traceLightPaths" name="conditionalVis2Path"/>
+                <string value="0" name="conditionalVis2Value"/>
+            </hintdict>
+            <help>
+                shadowFalloffGamma: The gamma of the shadow strength in the falloff zone. This
+                requires the use of Shadow Max Distance and Shadow Falloff. The falloff is more
+                obvious as the value decreases.
+            </help>
+        </param>
+        <param name="shadowSubset"
+               label="Trace Subset"
+               type="string"
+               default=""
+               connectable="False">
+            <hintdict name="conditionalVisOps">
+                <string value="../enableShadows" name="conditionalVis1Path"/>
+                <string value="equalTo" name="conditionalVis2Op"/>
+                <string value="1" name="conditionalVis1Value"/>
+                <string value="and" name="conditionalVisOp"/>
+                <string value="equalTo" name="conditionalVis1Op"/>
+                <string value="conditionalVis1" name="conditionalVisLeft"/>
+                <string value="conditionalVis2" name="conditionalVisRight"/>
+                <string value="../../Advanced/traceLightPaths" name="conditionalVis2Path"/>
+                <string value="0" name="conditionalVis2Value"/>
+            </hintdict>
+            <help>
+                shadowSubset: Set of geometry to consider for traced shadow intersection.
+                If this is not specified, all geometry are considered for traced shadow
+                intersection.
+           </help>
+        </param>
+        <param name="shadowExcludeSubset" label="Don&apos;t Trace Subset"
+               type="string" default=""
+               widget="default"
+               connectable="False">
+            <help>
+               shadowExcludeSubset: Set of geometry to ignore for traced shadow intersection.
+               If this is not specified, all geometry is used for traced shadow intersection.
+            </help>
+            <hintdict name="conditionalVisOps">
+                <string value="../enableShadows" name="conditionalVis1Path"/>
+                <string value="equalTo" name="conditionalVis2Op"/>
+                <string value="1" name="conditionalVis1Value"/>
+                <string value="and" name="conditionalVisOp"/>
+                <string value="equalTo" name="conditionalVis1Op"/>
+                <string value="conditionalVis1" name="conditionalVisLeft"/>
+                <string value="conditionalVis2" name="conditionalVisRight"/>
+                <string value="../../Advanced/traceLightPaths" name="conditionalVis2Path"/>
+                <string value="0" name="conditionalVis2Value"/>
+            </hintdict>
+        </param>
+    </page>
+    <page name="Advanced" open="False">
+                <param name="traceLightPaths"
+               label="Trace Light Paths"
+               type="int"
+               default="0"
+               widget="checkBox"
+               connectable="False">
+            <hintdict name="conditionalVisOps">
+                <string value="equalTo" name="conditionalVisOp"/>
+                <string value="../cheapCaustics" name="conditionalVisPath"/>
+                <string value="0" name="conditionalVisValue"/>
+            </hintdict>
+            <help>
+                traceLightPaths: Enable light and photon tracing from this light. This value
+                enforces a physically-based light and as a side-effect disables the above
+                Shadows controls. Users may use this feature to selectively decide which
+                lights emit photons when using the PxrVCM or PxrUnified Integrators.
+            </help>
+        </param>
+        <param name="thinShadow"
+               label="Thin Shadow"
+               type="int"
+               default="1"
+               widget="checkBox"
+               connectable="False">
+            <hintdict name="conditionalVisOps">
+                <string value="equalTo" name="conditionalVisOp"/>
+                <string value="../traceLightPaths" name="conditionalVisPath"/>
+                <string value="0" name="conditionalVisValue"/>
+            </hintdict>
+            <help>
+                thinShadow: Enable thin shadow and disable refraction caustics for this light.
+                This parameter will be ignored if Trace Light Paths is enabled. This is a
+                non-physical control that creates "fake" colored shadows for transmissive
+                objects without needing to generate photons for caustics.
+                Also for the paths where Cheap Caustics is enabled (surfaces marked "MWWalkable"),
+                then thinShadow is ignored as well.
+            </help>
+        </param>
+        <param name="visibleInRefractionPath"
+               label="Visible In Refraction"
+               type="int"
+               default="1"
+               widget="checkBox"
+               connectable="False">
+            <hintdict name="conditionalVisOps">
+                <string value="../traceLightPaths" name="conditionalVis1Path"/>
+                <string value="equalTo" name="conditionalVis2Op"/>
+                <string value="0" name="conditionalVis1Value"/>
+                <string value="and" name="conditionalVisOp"/>
+                <string value="equalTo" name="conditionalVis1Op"/>
+                <string value="conditionalVis1" name="conditionalVisLeft"/>
+                <string value="conditionalVis2" name="conditionalVisRight"/>
+                <string value="../thinShadow" name="conditionalVis2Path"/>
+                <string value="1" name="conditionalVis2Value"/>
+            </hintdict>
+            <help>
+                visibleInRefractionPath: Make this light source visible in refraction paths.
+                This parameter will be ignored if Manifold Walk is enabled.
+            </help>
+        </param>
+        <param name="cheapCaustics"
+               label="Manifold Walk"
+               type="int"
+               default="0"
+               widget="checkBox"
+               connectable="False">
+            <hintdict name="conditionalVisOps">
+                <string value="equalTo" name="conditionalVisOp"/>
+                <string value="../traceLightPaths" name="conditionalVisPath"/>
+                <string value="0" name="conditionalVisValue"/>
+            </hintdict>
+            <help>
+                Enable manifold walk computation and disable thin shadow for this light.
+                This parameter will be ignored if Trace Light Paths is enabled.
+            </help>
+        </param>
+        <param name="cheapCausticsExcludeGroup"
+               label="Manifold Walk Exclude Group"
+               type="string"
+               default=""
+               widget="default"
+               connectable="False">
+            <hintdict name="conditionalVisOps">
+                <string value="notEqualTo" name="conditionalVisOp"/>
+                <string value="../cheapCaustics" name="conditionalVisPath"/>
+                <string value="0" name="conditionalVisValue"/>
+            </hintdict>
+            <help>
+                Specifies the exclude shadow subset for manifold walk. Will be used to prevent occlusion during the search of caustic paths.
+            </help>
+        </param>
+        <param name="fixedSampleCount"
+               label="Light Samples"
+               type="int" default="0"
+               slider="True"
+               connectable="False"
+               slidermin="0" slidermax="64">
+            <help>
+                fixedSampleCount: Specifies an override of the number of light samples to be taken for this
+                light source. If set to something other than zero, it will override the
+                sampling performed by the integrator. It's recommended to leave this at the
+                default unless you experience unsolvable noise from the light.
+            </help>
+        </param>
+        <param name="lightGroup"
+               label="Light Group"
+               type="string"
+               default=""
+               widget="default"
+               connectable="False">
+            <help>
+                lightGroup:  Specify the light group name used for light group LPEs. This is useful to
+                generate per-light AOVs for later adjustment in compositing.
+            </help>
+        </param>
+        <param name="importanceMultiplier"
+               label="Importance Multiplier"
+               type="float"
+               default="1.0"
+               widget="default"
+               connectable="False">
+            <help>
+                Importance of this light for noise control.
+            </help>
+        </param>
+    </page>
+
+
+    <rfmdata nodeid="1053289"
+             classification="light:envlight:rendernode/RenderMan/light:swatch/rmanSwatch"/>
+</args>

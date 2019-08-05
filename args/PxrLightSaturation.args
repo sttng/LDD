@@ -1,0 +1,81 @@
+<args format="1.0">
+  <shaderType>
+    <tag value="displayfilter"/>
+  </shaderType>
+  <help>
+    A small example display filter that changes the color saturation in the
+    beauty pass (or any other AOV) according to whether a region is lit or
+    shadowed by particular light group.
+  </help>
+
+  <param name="aov"
+         label="AOV"
+         type="string"
+         default="Ci"
+         widget="string"
+         connectable="False">
+    <help>
+      Name of a color AOV to adjust saturation in.
+    </help>
+  </param>
+
+  <param name="light"
+         label="Light AOV"
+         type="string"
+         default=""
+         widget="string"
+         connectable="False">
+    <help>
+      Name of the color AOV with the contribution from the light group.
+      The AOV should be populated using a direct-lighting LPE such as:
+      &lt;p&gt;
+        Display "+satlighttiny" "null" "color lpe:C[DGS]&lt;L.'tiny'&gt;"
+      &lt;/p&gt;
+      in which case the value of this parameter would be "satlighttiny".
+      This AOV shows direct illumination from any lights with parameter:
+      &lt;p&gt;
+        "string __group" "tiny"
+      &lt;/p&gt;
+    </help>
+  </param>
+
+  <param name="threshold"
+           label="Threshold"
+           type="float"
+           default="1.0"
+           widget="float"
+           connectable="False">
+    <help>
+      Luminance in the light AOV less than this is considered shadowed.
+    </help>
+  </param>
+
+  <param name="invert"
+         label="Invert?"
+         type="int"
+         default="0"
+         widget="checkBox"
+         connectable="False">
+    <help>
+      If unset then areas lit by the light will be modified and areas fully
+      in shadow will be left alone.  Set this to invert that and change the
+      saturation of the shadows of this light.
+    </help>
+  </param>
+
+  <param name="shift"
+         label="Shift"
+         type="float"
+         default="1.0"
+         widget="float"
+         connectable="False">
+    <help>
+      Amount and direction to shift saturation.  Positive values increase
+      saturation, negative values desaturate.  Recommended range is -2.0 to
+      2.0.
+    </help>
+  </param>
+
+  <rfmdata nodeid="1200410"
+           classification="rendernode/RenderMan/displayfilter"/>
+</args>
