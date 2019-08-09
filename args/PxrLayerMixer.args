@@ -132,7 +132,57 @@
             <tag value="color"/>
         </tags>
     </output>
-
+    <output name="pxrMaterialOut_diffuseRoughness">
+        <tags>
+            <tag value="float"/>
+        </tags>
+    </output>
+    <output name="pxrMaterialOut_diffuseBackColor">
+        <tags>
+            <tag value="color"/>
+        </tags>
+    </output>
+    <output name="pxrMaterialOut_diffuseTransmitGain">
+        <tags>
+            <tag value="float"/>
+        </tags>
+    </output>
+    <output name="pxrMaterialOut_diffuseTransmitColor">
+        <tags>
+            <tag value="color"/>
+        </tags>
+    </output>
+    <output name="pxrMaterialOut_specularFaceColor">
+        <tags>
+            <tag value="color"/>
+        </tags>
+    </output>
+    <output name="pxrMaterialOut_specularEdgeColor">
+        <tags>
+            <tag value="color"/>
+        </tags>
+    </output>
+    <output name="pxrMaterialOut_specularIor">
+        <tags>
+            <tag value="color"/>
+        </tags>
+    </output>
+    <output name="pxrMaterialOut_specularExtinctionCoeff">
+        <tags>
+            <tag value="color"/>
+        </tags>
+    </output>
+    <output name="pxrMaterialOut_specularRoughness">
+        <tags>
+            <tag value="float"/>
+        </tags>
+    </output>
+    <output name="pxrMaterialOut_specularAnisotropy">
+        <tags>
+            <tag value="float"/>
+        </tags>
+    </output>
+	
     <rfmdata nodeid="1111111"
         classification="rendernode/RenderMan/pattern/texture"/>
     <rfcdata nodeid="1111111" description="Xpxrwireframe"/>
