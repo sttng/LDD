@@ -1,0 +1,45 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="pattern"/>
+    </shaderType>
+    <help plugin="PxrWireframe">
+        This pattern is meant to draw geometry wireframes as a pattern assignment.
+    </help>
+
+    <param name="wireframeColor"
+           label="Wireframe Color"
+           type="color"
+           default="0 0 0">
+    </param>
+    <param name="backgroundColor"
+           label="Background Color"
+           type="color"
+           default="1 1 1">
+    </param>
+    <param name="wireframeOpacity"
+           label="Wireframe Opacity"
+           type="float" default="1.0f" min=".1" slidermin=".1" slidermax="10"  widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>The opacity or visibility of the drawn lines.</help>
+    </param>
+    <param name="wireframeWidth"
+           label="Wireframe Width"
+           type="float" default="2.0f" min="1.25" max="4"  widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>The width or thickness of the drawn wires.</help>
+    </param>
+
+    <output name="Cout">
+        <tags>
+            <tag value="color"/>
+        </tags>
+    </output>
+
+    <rfmdata nodeid="1111111"
+        classification="rendernode/RenderMan/pattern/texture"/>
+    <rfcdata nodeid="1111111" description="Xpxrwireframe"/>
+</args>
