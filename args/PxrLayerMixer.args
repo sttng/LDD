@@ -12,7 +12,7 @@
            type="int"
            default="1">
     </param>
-    <param name="baselayer_enableDiffus"
+    <param name="baselayer_enableDiffuse"
            label="Base Material"
            type="int"
            default="1">
