@@ -1,0 +1,139 @@
+<args format="1.0">
+    <shaderType>
+        <tag value="pattern"/>
+    </shaderType>
+    <help plugin="PxrLayerMixer">
+        PxrLayerMixer is an OSL pattern which mixes the input PxrLayer nodes.
+        Each PxrLayerMixer supports up to 4 optional layers in addition to the base layer which is always required.
+    </help>
+
+    <param name="enableDiffuseAlways"
+           label="Base Material"
+           type="int"
+           default="1">
+    </param>
+    <param name="baselayer_enableDiffus"
+           label="Base Material"
+           type="int"
+           default="1">
+    </param>
+    <param name="baselayer_diffuseGain"
+           label="Base Material"
+           type="float" default="1.0f" min=".1" slidermin=".1" slidermax="10"  widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help></help>
+    </param>
+    <param name="baselayer_diffuseColor"
+           label="Base Material"
+           type="color" default="1.0" min=".2" max="2"  widget="default">
+        <tags>
+            <tag value="color"/>
+        </tags>
+        <help></help>
+    </param>
+
+    <param name="layer1Enabled"
+           label="Enabled"
+           type="int"
+           default="1">
+    </param>
+    <param name="layer1_diffuseColor"
+           label="Layer 1"
+           type="color" default="1.0" min=".2" max="2"  widget="default">
+        <tags>
+            <tag value="color"/>
+        </tags>
+        <help>Connection to a PxrLayer that is for layer 1. This is where you connect your material layer like glass, label, dirt, etc.</help>
+    </param>
+    <param name="layer1Mask"
+           label="Layer 1 Mask"
+           type="float" default="1.0f" min=".1" slidermin=".1" slidermax="10"  widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>Mask for this layer 1. Values closer to zero will apply less of this layer. A value of 0.0 is off or invisible while 1.0 is on or completely visible.</help>
+    </param>
+
+    <param name="layer2Enabled"
+           label="Enabled"
+           type="int"
+           default="1">
+    </param>
+    <param name="layer2_diffuseColor"
+           label="Layer 2"
+           type="color" default="1.0" min=".2" max="2"  widget="default">
+        <tags>
+            <tag value="color"/>
+        </tags>
+        <help>Connection to a PxrLayer that is for layer 2. This is where you connect your material layer like glass, label, dirt, etc.</help>
+    </param>
+    <param name="layer2Mask"
+           label="Layer 2 Mask"
+           type="float" default="1.0f" min=".1" slidermin=".1" slidermax="10"  widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>Mask for this layer 2. Values closer to zero will apply less of this layer. A value of 0.0 is off or invisible while 1.0 is on or completely visible.</help>
+    </param>
+
+    <param name="layer3Enabled"
+           label="Enabled"
+           type="int"
+           default="1">
+    </param>
+    <param name="layer3_diffuseColor"
+           label="Layer 1"
+           type="color" default="1.0" min=".2" max="2"  widget="default">
+        <tags>
+            <tag value="color"/>
+        </tags>
+        <help>Connection to a PxrLayer that is for layer 3. This is where you connect your material layer like glass, label, dirt, etc.</help>
+    </param>
+    <param name="layer3Mask"
+           label="Layer 3 Mask"
+           type="float" default="1.0f" min=".1" slidermin=".1" slidermax="10"  widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>Mask for this layer 3. Values closer to zero will apply less of this layer. A value of 0.0 is off or invisible while 1.0 is on or completely visible.</help>
+    </param>
+
+    <param name="layer4Enabled"
+           label="Enabled"
+           type="int"
+           default="1">
+    </param>
+    <param name="layer4_diffuseColor"
+           label="Layer 4"
+           type="color" default="1.0" min=".2" max="2"  widget="default">
+        <tags>
+            <tag value="color"/>
+        </tags>
+        <help>Connection to a PxrLayer that is for layer 4. This is where you connect your material layer like glass, label, dirt, etc.</help>
+    </param>
+    <param name="layer4Mask"
+           label="Layer 4 Mask"
+           type="float" default="1.0f" min=".1" slidermin=".1" slidermax="10"  widget="default">
+        <tags>
+            <tag value="float"/>
+        </tags>
+        <help>Mask for this layer 4. Values closer to zero will apply less of this layer. A value of 0.0 is off or invisible while 1.0 is on or completely visible.</help>
+    </param>
+	
+    <output name="pxrMaterialOut_diffuseGain">
+        <tags>
+            <tag value="float"/>
+        </tags>
+    </output>
+    <output name="pxrMaterialOut_diffuseColor">
+        <tags>
+            <tag value="color"/>
+        </tags>
+    </output>
+
+    <rfmdata nodeid="1111111"
+        classification="rendernode/RenderMan/pattern/texture"/>
+    <rfcdata nodeid="1111111" description="Xpxrwireframe"/>
+</args>
