@@ -433,12 +433,23 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 
 					op.write('def Mesh "Brick {0}.{1}"\n'.format(written_obj, part))
 					op.write('{\n')
-
+					op.write('\tpoint3f[] points = [')
+					fmt = ""
 					for point in geo.Parts[part].outpositions:
-						op.write(point.string("v"))
+						op.write('{0}({1}, {2}, {3})'.format(fmt, point.x, point.y, point.z))
+						fmt = ", "
+						#op.write(point.string("v"))
+					op.write(']\n')
 
+					op.write('\tnormal3f[] normals = [')
+					fmt = ""
 					for normal in geo.Parts[part].outnormals:
-						op.write(normal.string("vn"))
+						op.write('{0}({1}, {2}, {3})'.format(fmt, normal.x, normal.y, normal.z))
+						fmt = ", "
+						#op.write(normal.string("vn"))
+					op.write('] (\n')
+					op.write('\t\tinterpolation = "uniform"\n')
+					op.write('\t)\n')
 
 					for text in geo.Parts[part].textures:
 						op.write(text.string("vt"))
@@ -489,13 +500,25 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 					      
 					op.write('ReadArchive "' + filename + '_Materials_Archive.zip!material_' + matname + '.rib"\n')
 					
+					
+					op.write('\tint[] faceVertexCounts = [')
+					fmt = ""
+					for face in geo.Parts[part].faces:
+						op.write('{0}3'.format(fmt))
+						fmt = ", "
+					op.write(']\n')
+					
+					op.write('\tint[] faceVertexIndices = [')
+					fmt = ""
 					for face in geo.Parts[part].faces:
 						if len(geo.Parts[part].textures) > 0:
 							op.write(face.string("\tint[] faceVertexIndices = [",indexOffset,textOffset))  
 						else:
-							op.write(face.string("\tint[] faceVertexIndices = [",indexOffset)) 
+							op.write('{0}{1},{2},{3}'.format(fmt, face.a + indexOffset, face.b + indexOffset, face.c + indexOffset))
+							fmt = ", "
+							#op.write(face.string("\tint[] faceVertexIndices = [",indexOffset)) 
 
-					op.write('\tuniform token subdivisionScheme = "none"\n}')
+					op.write(']\n\tuniform token subdivisionScheme = "none"\n}')
 
 					indexOffset += len(geo.Parts[part].outpositions)
 					textOffset += len(geo.Parts[part].textures) 
@@ -512,9 +535,9 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 				
 				if not written_obj in writtenribs:
 						writtenribs.append(written_obj)
-						zf.write(written_obj + '.rib', compress_type=compression)
+						zf.write(written_obj + '.usda', compress_type=compression)
 				
-				os.remove(written_obj + '.rib')
+				os.remove(written_obj + '.usda')
 						
 		if useplane == True: # write the floor plane in case True
 			out.write('''\tAttributeBegin
