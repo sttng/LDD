@@ -486,7 +486,7 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 
 					if not matname in usedmaterials:
 						usedmaterials.append(matname)
-						outmat = open("material_" + matname + ".rib", "w+")
+						outmat = open("material_" + matname + ".usda", "w+")
 						
 						if not deco == '0':
 							outmat.write(lddmatri.string(deco))
@@ -495,10 +495,10 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 							outmat.write(lddmatri.string(None))
 						
 						outmat.close()
-						zfmat.write("material_" + matname + ".rib", compress_type=compression)
-						os.remove("material_" + matname + ".rib")
+						zfmat.write("material_" + matname + ".usda", compress_type=compression)
+						os.remove("material_" + matname + ".usda")
 					      
-					op.write('ReadArchive "' + filename + '_Materials_Archive.zip!material_' + matname + '.rib"\n')
+					op.write('ReadArchive "' + filename + '_Materials_Archive.zip!material_' + matname + '.usda"\n')
 					
 					
 					op.write('\tint[] faceVertexCounts = [')
