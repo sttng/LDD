@@ -431,7 +431,7 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 									#transform with inverted values (to undo the transformation)
 									#geo.Parts[part].outnormals[k].transformW(undoTransformMatrix)
 
-					op.write('def Mesh "Brick {0}.{1}"\n'.format(written_obj, part))
+					op.write('def Mesh "brick_{0}_part_{1}"\n'.format(written_obj, part))
 					op.write('{\n')
 					
 					op.write('\tpoint3f[] points = [')
@@ -497,8 +497,8 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 						outmat.close()
 						zfmat.write("material_" + matname + ".usda", compress_type=compression)
 						os.remove("material_" + matname + ".usda")
-					      
-					op.write('ReadArchive "' + filename + '_Materials_Archive.zip!material_' + matname + '.usda"\n')
+
+					op.write('#ReadArchive "' + filename + '_Materials_Archive.zip!material_' + matname + '.usda"\n')
 					
 					
 					op.write('\tint[] faceVertexCounts = [')
