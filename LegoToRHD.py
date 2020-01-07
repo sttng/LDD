@@ -25,7 +25,7 @@ import random
 
 __version__ = "0.1"
 
-compression = zipfile.ZIP_STORED #uncompressed archive for USDZ , otherwise would use ZIP_DEFLATED, the usual zip compression
+compression = zipfile.ZIP_STORED #uncompressed archive for USDZ, otherwise would use ZIP_DEFLATED, the usual zip compression
 
 class Materials:
 	def __init__(self, data):
