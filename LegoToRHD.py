@@ -433,6 +433,7 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 
 					op.write('def Mesh "Brick {0}.{1}"\n'.format(written_obj, part))
 					op.write('{\n')
+					
 					op.write('\tpoint3f[] points = [')
 					fmt = ""
 					for point in geo.Parts[part].outpositions:
@@ -451,9 +452,15 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 					op.write('\t\tinterpolation = "uniform"\n')
 					op.write('\t)\n')
 
+					op.write('\tfloat2[] primvars:st = [')
+					fmt = ""
 					for text in geo.Parts[part].textures:
-						op.write(text.string("vt"))
-
+						op.write('{0}({1}, {2})'.format(fmt, text.x, text.y))
+						fmt = ", "
+						#op.write(text.string("vt"))
+					op.write('] (\n')
+					op.write('\t\tinterpolation = "faceVarying"\n')
+					op.write('\t)\n')
 
 				decoCount = 0
 				for part in geo.Parts:
@@ -516,7 +523,7 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 						else:
 							op.write('{0}{1},{2},{3}'.format(fmt, face.a + indexOffset, face.b + indexOffset, face.c + indexOffset))
 							fmt = ", "
-							#op.write(face.string("\tint[] faceVertexIndices = [",indexOffset)) 
+							#out.write(face.string("f",indexOffset))
 
 					op.write(']\n\tuniform token subdivisionScheme = "none"\n}')
 
