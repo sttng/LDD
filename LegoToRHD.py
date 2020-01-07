@@ -25,7 +25,7 @@ import random
 
 __version__ = "0.1"
 
-compression = zipfile.ZIP_DEFLATED
+compression = zipfile.ZIP_STORED #uncompressed archive for USDZ , otherwise would use ZIP_DEFLATED, the usual zip compression
 
 class Materials:
 	def __init__(self, data):
@@ -479,17 +479,10 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 						extfile = deco + '.png'
 						matname += "_" + deco
 						decofilename = DECORATIONPATH + deco + '.png'
-						if not os.path.isfile(deco + '.tex') and self.database.fileexist(decofilename):
+						if not os.path.isfile(extfile) and self.database.fileexist(decofilename):
 							with open(extfile, "wb") as f:
 								f.write(self.database.filelist[decofilename].read())
 								f.close()
-
-								if os.path.exists(FindRmtree()):
-									txmake_cmd = FindRmtree() + 'bin' + os.sep + 'txmake -t:8 -compression zip -mode clamp -resize up {0} {1}.tex'.format(extfile, deco)
-									os.system(txmake_cmd)
-									os.remove(extfile)
-								else:
-									print("RMANTREE environment variable not set correctly. Set with: export RMANTREE=/Applications/Pixar/RenderManProServer-22.6/")
 
 					if not matname in usedmaterials:
 						usedmaterials.append(matname)
@@ -517,9 +510,9 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 					
 					op.write('\tint[] faceVertexIndices = [')
 					fmt = ""
-					# Need still to check if index is 0 or 1 started in LXF, USD requires 0 started index and depending on implement
+					# USD requires 0 started index, thats why -1
 					for face in geo.Parts[part].faces:
-						op.write('{0}{1},{2},{3}'.format(fmt, face.a + indexOffset, face.b + indexOffset, face.c + indexOffset))
+						op.write('{0}{1},{2},{3}'.format(fmt, face.a + indexOffset - 1, face.b + indexOffset - 1, face.c + indexOffset - 1))
 						fmt = ", "
 						#out.write(face.string("f",indexOffset))
 					op.write(']\n\n')
@@ -527,8 +520,9 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 					if len(geo.Parts[part].textures) > 0:
 						op.write('\tint[] primvars:st:indices = [')
 						fmt = ""
+						# USD requires 0 started index, thats why -1
 						for face in geo.Parts[part].faces:
-							op.write('{0}{1},{2},{3}'.format(fmt, face.a + textOffset, face.b + textOffset, face.c + textOffset))
+							op.write('{0}{1},{2},{3}'.format(fmt, face.a + textOffset - 1, face.b + textOffset - 1, face.c + textOffset - 1))
 							fmt = ", "
 							#out.write(face.string("f",indexOffset,textOffset))  
 						op.write(']\n\n')
