@@ -518,14 +518,21 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 					op.write('\tint[] faceVertexIndices = [')
 					fmt = ""
 					for face in geo.Parts[part].faces:
-						if len(geo.Parts[part].textures) > 0:
-							op.write(face.string("\tint[] faceVertexIndices = [",indexOffset,textOffset))  
-						else:
-							op.write('{0}{1},{2},{3}'.format(fmt, face.a + indexOffset, face.b + indexOffset, face.c + indexOffset))
+						op.write('{0}{1},{2},{3}'.format(fmt, face.a + indexOffset, face.b + indexOffset, face.c + indexOffset))
+						fmt = ", "
+						#out.write(face.string("f",indexOffset))
+					op.write(']\n\n')
+					
+					if len(geo.Parts[part].textures) > 0:
+						op.write('\tint[] primvars:st:indices = [')
+						fmt = ""
+						for face in geo.Parts[part].faces:
+							op.write('{0}{1},{2},{3}'.format(fmt, face.a + textureoffset, face.b + textureoffset, face.c + textureoffset))
 							fmt = ", "
-							#out.write(face.string("f",indexOffset))
-
-					op.write(']\n\tuniform token subdivisionScheme = "none"\n}')
+							#out.write(face.string("f",indexOffset,textOffset))  
+						op.write(']\n\n')
+					
+					op.write('\tuniform token subdivisionScheme = "none"\n}')
 
 					indexOffset += len(geo.Parts[part].outpositions)
 					textOffset += len(geo.Parts[part].textures) 
