@@ -517,6 +517,7 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 					
 					op.write('\tint[] faceVertexIndices = [')
 					fmt = ""
+					# Need still to check if index is 0 or 1 started in LXF, USD requires 0 started index and depending on implement
 					for face in geo.Parts[part].faces:
 						op.write('{0}{1},{2},{3}'.format(fmt, face.a + indexOffset, face.b + indexOffset, face.c + indexOffset))
 						fmt = ", "
@@ -527,7 +528,7 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 						op.write('\tint[] primvars:st:indices = [')
 						fmt = ""
 						for face in geo.Parts[part].faces:
-							op.write('{0}{1},{2},{3}'.format(fmt, face.a + textureoffset, face.b + textureoffset, face.c + textureoffset))
+							op.write('{0}{1},{2},{3}'.format(fmt, face.a + textOffset, face.b + textOffset, face.c + textOffset))
 							fmt = ", "
 							#out.write(face.string("f",indexOffset,textOffset))  
 						op.write(']\n\n')
