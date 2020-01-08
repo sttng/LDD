@@ -404,7 +404,7 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 					written_obj = written_obj + "_" + uniqueId
 				
 				op = open(written_obj + ".usda", "w+")
-				op.write("#usda 1.0\n")
+				op.write('#usda 1.0\ndef Xform "{0}" (\n\tassetInfo = {\n\t\tasset identifier = @{0}.usda@\n\t\tstring name = "{0}"\n\t}\n\tkind = "component"\n\n)\n{').format(written_obj))
 				
 				# transform -------------------------------------------------------
 				for part in geo.Parts:
@@ -522,7 +522,7 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 							#out.write(face.string("f",indexOffset))
 	
 					op.write(']\n')
-					op.write('\tuniform token subdivisionScheme = "none"\n}')
+					op.write('\tuniform token subdivisionScheme = "none"\n}\n}')
 
 					indexOffset += len(geo.Parts[part].outpositions)
 					textOffset += len(geo.Parts[part].textures) 
