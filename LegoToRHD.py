@@ -384,7 +384,8 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 				if not (len(pa.Bones) > flexflag):
 				# Flex parts don't need to be moved
 				# Renderman is lefthanded coordinate system, but LDD is right handed.
-					out.write("\t\tConcatTransform [{0} {1} {2} {3} {4} {5} {6} {7} {8} {9} {10} {11} {12} {13} {14} {15}]\n\t\tScale 1 1 1\n".format(n11, n12, -1 * n13, n14, n21, n22, -1 * n23, n24, -1 * n31, -1 * n32, n33, n34, n41, n42 ,-1 * n43, n44))
+					#out.write("\t\tConcatTransform [{0} {1} {2} {3} {4} {5} {6} {7} {8} {9} {10} {11} {12} {13} {14} {15}]\n\t\tScale 1 1 1\n".format(n11, n12, -1 * n13, n14, n21, n22, -1 * n23, n24, -1 * n31, -1 * n32, n33, n34, n41, n42 ,-1 * n43, n44))
+					out.write("\t\tdouble16 xformOp:transform = ({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}, {15})\n\t\tdouble3 xformOp:scale = (1, 1, 1)\n".format(n11, n12, -1 * n13, n14, n21, n22, -1 * n23, n24, -1 * n31, -1 * n32, n33, n34, n41, n42 ,-1 * n43, n44))	
 					
 					# minx used for floor plane later
 					if minx > float(n43):
@@ -499,7 +500,7 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 						os.remove("material_" + matname + ".usda")
 
 					op.write('#ReadArchive "' + filename + '_Materials_Archive.zip!material_' + matname + '.usda"\n')
-					
+					op.write('color3f[] primvars:displayColor = [(1, 0, 0)]')
 					
 					op.write('\tint[] faceVertexCounts = [')
 					fmt = ""
@@ -585,52 +586,20 @@ def generate_rib_header(infile, srate, pixelvar, width, height, fov, fstop, sear
 	infile = os.path.realpath(infile.name)
 	infile = os.path.splitext(os.path.basename(infile))[0]
 	
-	rib_header = '''##RenderMan RIB
-# Generated with LegoToR {0} on {1}
-version 3.04
-Option "searchpath" "string archive" ["{2}"] "string texture" [".:@:{3}lib/RenderManAssetLibrary/EnvironmentMaps/Outdoor/GriffithObservatory.rma:{4}"]
-Option "Ri" "int Frame" [1]
-	"float PixelVariance" [{5}]
-	"string PixelFilterName" ["gaussian"]
-	"float[2] PixelFilterWidth" [2 2]
-	#"int[2] FormatResolution" [960 540] # Low res
-	#"int[2] FormatResolution" [1280 720] # 720p
-	#"int[2] FormatResolution" [1920 1080] # 1080p 
-	#"int[2] FormatResolution" [4096 2160] # 4k
-	"int[2] FormatResolution" [{6} {7}]
-	"float FormatPixelAspectRatio" [1]
-	"float[2] Clipping" [0.1 10000]
-	"float[4] ScreenWindow" [-1 1 -0.5625 0.5625]
-	"float[2] Shutter" [0 0]
-Option "bucket" "string order" ["circle"]
-Option "statistics" "int level" [1] "string xmlfilename" ["{8}.xml"]
+	rib_header = '''# Generated with LegoToRHD {0} on {1}
+#usda 1.0
+(
+    defaultPrim = "LXF_file"
+)
 
-{9}
-Hider "raytrace" "int minsamples" [32] "int maxsamples" [64] "float darkfalloff" [0.025] "int incremental" [1] "string pixelfiltermode" ["importance"]
-ShadingRate {10}
+def Xform "LXF_file" (
+    assetInfo = {
+        asset identifier = @LXF_file.usda@
+        string name = "LXF_file"
+    }
+    kind = "component"
 
-# Beauty
-DisplayChannel "color Ci"
-DisplayChannel "float a"
-DisplayChannel "color mse" "string source" "color Ci" "string statistics" "mse"
-
-# Shading
-DisplayChannel "color albedo" "string source" "color lpe:nothruput;noinfinitecheck;noclamp;unoccluded;overwrite;C(U2L)|O"
-DisplayChannel "color albedo_var" "string source" "color lpe:nothruput;noinfinitecheck;noclamp;unoccluded;overwrite;C(U2L)|O" "string statistics" "variance"
-DisplayChannel "color diffuse" "string source" "color lpe:C(D[DS]*[LO])|O"
-DisplayChannel "color diffuse_mse" "string source" "color lpe:C(D[DS]*[LO])|O" "string statistics" "mse"
-DisplayChannel "color specular" "string source" "color lpe:CS[DS]*[LO]"
-DisplayChannel "color specular_mse" "string source" "color lpe:CS[DS]*[LO]" "string statistics" "mse"
-
-# Geometry
-DisplayChannel "float zfiltered" "string source" "float z" "string filter" "gaussian"
-DisplayChannel "float zfiltered_var" "string source" "float z" "string filter" "gaussian" "string statistics" "variance"
-DisplayChannel "normal normal" "string source" "normal Nn"
-DisplayChannel "normal normal_var" "string source" "normal Nn" "string statistics" "variance"
-DisplayChannel "vector forward" "string source" "vector motionFore"
-DisplayChannel "vector backward" "string source" "vector motionBack"
-
-Projection "PxrCamera" "float fov" [{11}] "float fStop" [3.5] "float focalLength" [0.8] "float focalDistance" [5] "point focus1" [0.0 0.0 -1] "point focus2" [1 0.0 -1] "point focus3" [1 1 -1]
+)
 '''.format(__version__, datetime.datetime.now(), str(searcharchive) + os.sep, FindRmtree(), str(searchtexture) + os.sep, pixelvar, width, height, str(cwd) + os.sep + str(infile), integrator, srate, fov)
 
 	with open('rib_header.rib', 'w') as file_writer:
