@@ -404,7 +404,21 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 					written_obj = written_obj + "_" + uniqueId
 				
 				op = open(written_obj + ".usda", "w+")
-				op.write('#usda 1.0\ndef Xform "{0}" (\n\tassetInfo = {\n\t\tasset identifier = @{0}.usda@\n\t\tstring name = "{0}"\n\t}\n\tkind = "component"\n\n)\n{').format(written_obj))
+				op.write('''#usda 1.0
+(
+	defaultPrim = "{0}"
+	upAxis = "Y"
+)
+
+def Xform "{0}" (
+	assetInfo = {
+		asset identifier = @{0}@
+		string name = "{0}"
+	}
+	kind = "component"
+
+)
+{''').format(written_obj))
 				
 				# transform -------------------------------------------------------
 				for part in geo.Parts:
