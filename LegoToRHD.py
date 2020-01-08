@@ -511,23 +511,17 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 					
 					op.write('\tint[] faceVertexIndices = [')
 					fmt = ""
-					# USD requires 0 started index, thats why -1
 					for face in geo.Parts[part].faces:
-						op.write('{0}{1},{2},{3}'.format(fmt, face.a + indexOffset - 1, face.b + indexOffset - 1, face.c + indexOffset - 1))
-						fmt = ", "
-						#out.write(face.string("f",indexOffset))
-					op.write(']\n\n')
-					
-					if len(geo.Parts[part].textures) > 0:
-						op.write('\tint[] primvars:st:indices = [')
-						fmt = ""
-						# USD requires 0 started index, thats why -1
-						for face in geo.Parts[part].faces:
-							op.write('{0}{1},{2},{3}'.format(fmt, face.a + textOffset - 1, face.b + textOffset - 1, face.c + textOffset - 1))
+						if len(geo.Parts[part].textures) > 0:
+							op.write('{0}{1},{2},{3}'.format(fmt, face.a + indexOffset - 1, face.b + indexOffset - 1, face.c + indexOffset - 1))
 							fmt = ", "
 							#out.write(face.string("f",indexOffset,textOffset))  
-						op.write(']\n\n')
-					
+						else:
+							op.write('{0}{1},{2},{3}'.format(fmt, face.a + indexOffset - 1, face.b + indexOffset - 1, face.c + indexOffset - 1))
+							fmt = ", "
+							#out.write(face.string("f",indexOffset))
+	
+					op.write(']\n')
 					op.write('\tuniform token subdivisionScheme = "none"\n}')
 
 					indexOffset += len(geo.Parts[part].outpositions)
@@ -550,13 +544,14 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 				os.remove(written_obj + '.usda')
 						
 		if useplane == True: # write the floor plane in case True
-			out.write('''\tAttributeBegin
-		Attribute "identifier" "string name" ["groundplane"]
-		Translate {0} 0 10
-		Scale 200 1 200
-		Polygon "P" [-0.5 0 -0.5  -0.5 0 0.5  0.5 0 0.5  0.5 0 -0.5]
-		"st" [0 0  0 1  1 1  1 0]
-	AttributeEnd\n\n'''.format(minx))
+			out.write('''\tdef "GroundPlane_1" (
+		add references = @./assets/GroundPlane_1/GroundPlane_1.usd@
+		)
+		{
+			double3 xformOp:translate = ({0}, 0, 10)
+			float3 xformOp:scale = (200, 1, 200)
+			uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+		}\n\n'''.format(minx))
 		
 		zf.close()
 		zfmat.close()
