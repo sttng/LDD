@@ -446,10 +446,9 @@ def Xform "{0}" (
 									#transform with inverted values (to undo the transformation)
 									#geo.Parts[part].outnormals[k].transformW(undoTransformMatrix)
 
-					op.write('def Mesh "brick_{0}_part_{1}"\n'.format(written_obj, part))
-					op.write('{\n')
+					op.write('\tdef Mesh "brick_{0}_part_{1}"\n{\n'.format(written_obj, part))
 					
-					op.write('\tpoint3f[] points = [')
+					op.write('\t\tpoint3f[] points = [')
 					fmt = ""
 					for point in geo.Parts[part].outpositions:
 						op.write('{0}({1}, {2}, {3})'.format(fmt, point.x, point.y, point.z))
@@ -457,25 +456,25 @@ def Xform "{0}" (
 						#op.write(point.string("v"))
 					op.write(']\n')
 
-					op.write('\tnormal3f[] normals = [')
+					op.write('\t\tnormal3f[] normals = [')
 					fmt = ""
 					for normal in geo.Parts[part].outnormals:
 						op.write('{0}({1}, {2}, {3})'.format(fmt, normal.x, normal.y, normal.z))
 						fmt = ", "
 						#op.write(normal.string("vn"))
 					op.write('] (\n')
-					op.write('\t\tinterpolation = "uniform"\n')
-					op.write('\t)\n')
+					op.write('\t\t\tinterpolation = "uniform"\n')
+					op.write('\t\t)\n')
 
-					op.write('\tfloat2[] primvars:st = [')
+					op.write('\t\tfloat2[] primvars:st = [')
 					fmt = ""
 					for text in geo.Parts[part].textures:
 						op.write('{0}({1}, {2})'.format(fmt, text.x, text.y))
 						fmt = ", "
 						#op.write(text.string("vt"))
 					op.write('] (\n')
-					op.write('\t\tinterpolation = "faceVarying"\n')
-					op.write('\t)\n')
+					op.write('\t\t\tinterpolation = "faceVarying"\n')
+					op.write('\t\t)\n')
 
 				decoCount = 0
 				for part in geo.Parts:
@@ -514,16 +513,16 @@ def Xform "{0}" (
 						os.remove("material_" + matname + ".usda")
 
 					op.write('#ReadArchive "' + filename + '_Materials_Archive.zip!material_' + matname + '.usda"\n')
-					op.write('color3f[] primvars:displayColor = [(1, 0, 0)]')
+					op.write('\tcolor3f[] primvars:displayColor = [(1, 0, 0)]')
 					
-					op.write('\tint[] faceVertexCounts = [')
+					op.write('\t\tint[] faceVertexCounts = [')
 					fmt = ""
 					for face in geo.Parts[part].faces:
 						op.write('{0}3'.format(fmt))
 						fmt = ", "
 					op.write(']\n')
 					
-					op.write('\tint[] faceVertexIndices = [')
+					op.write('\t\tint[] faceVertexIndices = [')
 					fmt = ""
 					for face in geo.Parts[part].faces:
 						if len(geo.Parts[part].textures) > 0:
@@ -536,7 +535,7 @@ def Xform "{0}" (
 							#out.write(face.string("f",indexOffset))
 	
 					op.write(']\n')
-					op.write('\tuniform token subdivisionScheme = "none"\n}\n}')
+					op.write('\t\tuniform token subdivisionScheme = "none"\n\t}\n}')
 
 					indexOffset += len(geo.Parts[part].outpositions)
 					textOffset += len(geo.Parts[part].textures) 
