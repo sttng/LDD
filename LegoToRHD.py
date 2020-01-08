@@ -403,6 +403,10 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 				# Flex parts are "unique". Ensure they get a unique filename
 					written_obj = written_obj + "_" + uniqueId
 				
+				out.write('\t\tdef "{0}" (\n').format(written_obj))
+				out.write('\t\t\tadd references = @./assets/{0}.usda@\n').format(written_obj))
+				out.write('\t\t)\n\t\t{\n\n')
+				
 				op = open(written_obj + ".usda", "w+")
 				op.write('''#usda 1.0
 (
