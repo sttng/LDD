@@ -393,7 +393,7 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 				
 				material_string = '_' + '_'.join(pa.materials)
 				written_obj = geo.designID + material_string
-				uniqueId = str(uuid.uuid4())
+				uniqueId = str(uuid.uuid4().hex)
 				
 				if hasattr(pa, 'decoration'):
 					decoration_string = '_' + '_'.join(pa.decoration)
@@ -482,8 +482,8 @@ def Xform "brick_{0}" (
 					op.write('\t\t\tinterpolation = "faceVarying"\n')
 					op.write('\t\t)\n')
 
-				decoCount = 0
-				for part in geo.Parts:
+					decoCount = 0
+				#for part in geo.Parts:
 					
 					lddmatri = self.allMaterials.getMaterialRibyId(pa.materials[part])
 					matname = pa.materials[part]
@@ -541,10 +541,13 @@ def Xform "brick_{0}" (
 							#out.write(face.string("f",indexOffset))
 	
 					op.write(']\n')
-					op.write('\t\tuniform token subdivisionScheme = "none"\n\t}\n}')
+					op.write('\t\tuniform token subdivisionScheme = "none"\n\t}\n')
 
-					indexOffset += len(geo.Parts[part].outpositions)
-					textOffset += len(geo.Parts[part].textures) 
+					#indexOffset += len(geo.Parts[part].outpositions)
+					#textOffset += len(geo.Parts[part].textures) 
+					indexOffset = 1
+					textOffset = 1
+				op.write('}\n')
 				# -----------------------------------------------------------------
 				op.close()
 								
