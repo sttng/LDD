@@ -385,7 +385,7 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 				# Flex parts don't need to be moved
 				# Renderman is lefthanded coordinate system, but LDD is right handed.
 					#out.write("\t\tConcatTransform [{0} {1} {2} {3} {4} {5} {6} {7} {8} {9} {10} {11} {12} {13} {14} {15}]\n\t\tScale 1 1 1\n".format(n11, n12, -1 * n13, n14, n21, n22, -1 * n23, n24, -1 * n31, -1 * n32, n33, n34, n41, n42 ,-1 * n43, n44))
-					out.write("\t\tdouble16 xformOp:transform = ({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}, {15})\n\t\tdouble3 xformOp:scale = (1, 1, 1)\n".format(n11, n12, -1 * n13, n14, n21, n22, -1 * n23, n24, -1 * n31, -1 * n32, n33, n34, n41, n42 ,-1 * n43, n44))	
+					out.write('\t\tdouble16 xformOp:transform = ({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}, {15})\n\t\tdouble3 xformOp:scale = (1, 1, 1)\n'.format(n11, n12, -1 * n13, n14, n21, n22, -1 * n23, n24, -1 * n31, -1 * n32, n33, n34, n41, n42 ,-1 * n43, n44))	
 					
 					# minx used for floor plane later
 					if minx > float(n43):
@@ -403,9 +403,11 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 				# Flex parts are "unique". Ensure they get a unique filename
 					written_obj = written_obj + "_" + uniqueId
 				
-				out.write('\t\tdef "{0}" (\n').format(written_obj))
-				out.write('\t\t\tadd references = @./assets/{0}.usda@\n').format(written_obj))
-				out.write('\t\t)\n\t\t{\n\n')
+				out.write('''
+		def "{0}" (
+			add references = @./assets/{0}@
+		)
+		{{'''.format(written_obj))
 				
 				op = open(written_obj + ".usda", "w+")
 				op.write('''#usda 1.0
@@ -415,14 +417,14 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 )
 
 def Xform "{0}" (
-	assetInfo = {
+	assetInfo = {{
 		asset identifier = @{0}@
 		string name = "{0}"
-	}
+	}}
 	kind = "component"
 
 )
-{''').format(written_obj))
+{'''.format(written_obj))
 				
 				# transform -------------------------------------------------------
 				for part in geo.Parts:
@@ -561,14 +563,15 @@ def Xform "{0}" (
 				os.remove(written_obj + '.usda')
 						
 		if useplane == True: # write the floor plane in case True
-			out.write('''\tdef "GroundPlane_1" (
+			out.write('''
+	def "GroundPlane_1" (
 		add references = @./assets/GroundPlane_1/GroundPlane_1.usd@
 		)
-		{
+		{{
 			double3 xformOp:translate = ({0}, 0, 10)
 			float3 xformOp:scale = (200, 1, 200)
 			uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
-		}\n\n'''.format(minx))
+		}}\n\n'''.format(minx))
 		
 		zf.close()
 		zfmat.close()
@@ -601,15 +604,15 @@ def generate_rib_header(infile, srate, pixelvar, width, height, fov, fstop, sear
 	rib_header = '''# Generated with LegoToRHD {0} on {1}
 #usda 1.0
 (
-    defaultPrim = "LXF_file"
+	defaultPrim = "LXF_file"
 )
 
 def Xform "LXF_file" (
-    assetInfo = {
-        asset identifier = @LXF_file.usda@
-        string name = "LXF_file"
-    }
-    kind = "component"
+	assetInfo = {{
+		asset identifier = @LXF_file.usda@
+	string name = "LXF_file"
+	}}
+	kind = "component"
 
 )
 '''.format(__version__, datetime.datetime.now(), str(searcharchive) + os.sep, FindRmtree(), str(searchtexture) + os.sep, pixelvar, width, height, str(cwd) + os.sep + str(infile), integrator, srate, fov)
