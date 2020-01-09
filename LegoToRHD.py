@@ -412,19 +412,19 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 				op = open(written_obj + ".usda", "w+")
 				op.write('''#usda 1.0
 (
-	defaultPrim = "{0}"
+	defaultPrim = "brick_{0}"
 	upAxis = "Y"
 )
 
-def Xform "{0}" (
+def Xform "brick_{0}" (
 	assetInfo = {{
-		asset identifier = @{0}@
-		string name = "{0}"
+		asset identifier = @brick_{0}.usda@
+		string name = "brick_{0}"
 	}}
 	kind = "component"
 
 )
-{'''.format(written_obj))
+{{\n'''.format(written_obj))
 				
 				# transform -------------------------------------------------------
 				for part in geo.Parts:
@@ -452,7 +452,7 @@ def Xform "{0}" (
 									#transform with inverted values (to undo the transformation)
 									#geo.Parts[part].outnormals[k].transformW(undoTransformMatrix)
 
-					op.write('\tdef Mesh "brick_{0}_part_{1}"\n{\n'.format(written_obj, part))
+					op.write('\tdef Mesh "brick_{0}_part_{1}"\n{{\n'.format(written_obj, part))
 					
 					op.write('\t\tpoint3f[] points = [')
 					fmt = ""
@@ -519,7 +519,7 @@ def Xform "{0}" (
 						os.remove("material_" + matname + ".usda")
 
 					op.write('#ReadArchive "' + filename + '_Materials_Archive.zip!material_' + matname + '.usda"\n')
-					op.write('\tcolor3f[] primvars:displayColor = [(1, 0, 0)]')
+					op.write('\tcolor3f[] primvars:displayColor = [(1, 0, 0)]\n')
 					
 					op.write('\t\tint[] faceVertexCounts = [')
 					fmt = ""
