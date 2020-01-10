@@ -370,8 +370,17 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 				
 				# Only parts with more then 1 bone are flex parts and for these we need to undo the transformation later
 				flexflag = 1
+				uniqueId = str(uuid.uuid4().hex)
+				material_string = '_' + '_'.join(pa.materials)
+				written_obj = geo.designID + material_string
+				
+				if hasattr(pa, 'decoration'):
+					decoration_string = '_' + '_'.join(pa.decoration)
+					written_obj = written_obj + decoration_string
+				
 				if (len(pa.Bones) > flexflag):
-					
+					# Flex parts are "unique". Ensure they get a unique filename
+					written_obj = written_obj + "_" + uniqueId
 					# Create numpy matrix from them and create inverted matrix
 					x = np.array([[n11,n21,n31,n41],[n12,n22,n32,n42],[n13,n23,n33,n43],[n14,n24,n34,n44]])
 					x_inv = np.linalg.inv(x)
@@ -380,35 +389,24 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 					undoTransformMatrix = Matrix3D(n11=x_inv[0][0],n12=x_inv[0][1],n13=x_inv[0][2],n14=x_inv[0][3],n21=x_inv[1][0],n22=x_inv[1][1],n23=x_inv[1][2],n24=x_inv[1][3],n31=x_inv[2][0],n32=x_inv[2][1],n33=x_inv[2][2],n34=x_inv[2][3],n41=x_inv[3][0],n42=x_inv[3][1],n43=x_inv[3][2],n44=x_inv[3][3])
 				
 				out.write("\tAttributeBegin\n")
+				out.write('''
+		def "{0}" (
+			add references = @./assets/{0}.usda@
+		)
+		{{'''.format(written_obj))
 				
 				if not (len(pa.Bones) > flexflag):
 				# Flex parts don't need to be moved
 				# Renderman is lefthanded coordinate system, but LDD is right handed.
 					#out.write("\t\tConcatTransform [{0} {1} {2} {3} {4} {5} {6} {7} {8} {9} {10} {11} {12} {13} {14} {15}]\n\t\tScale 1 1 1\n".format(n11, n12, -1 * n13, n14, n21, n22, -1 * n23, n24, -1 * n31, -1 * n32, n33, n34, n41, n42 ,-1 * n43, n44))
-					out.write('\t\tdouble16 xformOp:transform = ({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}, {15})\n\t\tdouble3 xformOp:scale = (1, 1, 1)\n'.format(n11, n12, -1 * n13, n14, n21, n22, -1 * n23, n24, -1 * n31, -1 * n32, n33, n34, n41, n42 ,-1 * n43, n44))	
+					out.write('\t\tdouble16 xformOp:transform = ({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}, {15})\n'.format(n11, n12, -1 * n13, n14, n21, n22, -1 * n23, n24, -1 * n31, -1 * n32, n33, n34, n41, n42 ,-1 * n43, n44))	
+					out.write('\t\tdouble3 xformOp:scale = (1, 1, 1)\n')
+					out.write('\t\tuniform token[] xformOpOrder = ["xformOp:transform", "xformOp:scale"]\n')
 					
 					# minx used for floor plane later
 					if minx > float(n43):
 						minx = n43
-				
-				material_string = '_' + '_'.join(pa.materials)
-				written_obj = geo.designID + material_string
-				uniqueId = str(uuid.uuid4().hex)
-				
-				if hasattr(pa, 'decoration'):
-					decoration_string = '_' + '_'.join(pa.decoration)
-					written_obj = written_obj + decoration_string
-				
-				if (len(pa.Bones) > flexflag):
-				# Flex parts are "unique". Ensure they get a unique filename
-					written_obj = written_obj + "_" + uniqueId
-				
-				out.write('''
-		def "{0}" (
-			add references = @./assets/{0}@
-		)
-		{{'''.format(written_obj))
-				
+											
 				op = open(written_obj + ".usda", "w+")
 				op.write('''#usda 1.0
 (
