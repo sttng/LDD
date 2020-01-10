@@ -519,6 +519,7 @@ def Xform "brick_{0}" (
 						os.remove("material_" + matname + ".usda")
 
 					op.write('#ReadArchive "' + filename + '_Materials_Archive.zip!material_' + matname + '.usda"\n')
+					op.write('\t#rel material:binding = </{0}/{1}>\n'.format(filename, matname))
 					op.write('\tcolor3f[] primvars:displayColor = [(1, 0, 0)]\n')
 					
 					op.write('\t\tint[] faceVertexCounts = [')
@@ -656,7 +657,7 @@ def main():
 		print "\nFinally denoise the final output with:./denoise {0}{1}.beauty.001.exr\n".format(cl.args.searcharchive, os.sep + obj_filename)
 		
 	else:
-		print("no LDD database found please install LEGO-Digital-Designer")
+		print("no LDD database found. Please install LEGO-Digital-Designer")
 
 if __name__ == "__main__":
 	main()
