@@ -9,13 +9,14 @@
 #
 # Updates:
 # 
+# 0.4.8.1 Streamlined logic for flex parts handling. Corrected spelling mistakes.
 # 0.4.8 Upgraded pyldd2obj to Version 0.4.8. Added uneveness to materials.
 # 0.4.7.1 Changes in transparent materials
 # 0.4.7 Import pyldd2obj by jonnysp - overwrite Materials, Converter class, add other functions
 # 0.4.5 Added changes based on pyldd2obj Version 0.4.7
 # 0.4.4 Complete rewrite based on the great work from jonnysp and pyldd2obj Version 0.4.3. Brings flex parts support.
-# 0.3 support for all parts (except flex parts) and textures
-# 0.2 support for basic parts without textures
+# 0.3 Support for all parts (except flex parts) and textures
+# 0.2 Support for basic parts without textures
 # 
 # License: MIT License
 #
@@ -29,7 +30,7 @@ import shutil
 import ParseCommandLine as cl
 import random
 
-__version__ = "0.4.8"
+__version__ = "0.4.8.1"
 
 compression = zipfile.ZIP_DEFLATED
 
