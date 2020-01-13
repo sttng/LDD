@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 #
-# LegoToRHD Version 0.1 - Copyright (c) 2020 by m2m
+# LegoToRHD Version 0.2 - Copyright (c) 2020 by m2m
 # based on pyldd2obj Version 0.4.8 - Copyright (c) 2019 by jonnysp 
 # LegoToRHD parses LXF files and command line parameters to creates a USDA compliant files.
 # 
@@ -9,7 +9,8 @@
 #
 # Updates:
 # 
-# 0.1 Start
+# 0.2 support for all parts without textures
+# 0.1 initial version
 # 
 # License: MIT License
 #
@@ -23,7 +24,7 @@ import shutil
 import ParseCommandLine as cl
 import random
 
-__version__ = "0.1"
+__version__ = "0.2"
 
 compression = zipfile.ZIP_STORED #uncompressed archive for USDZ, otherwise would use ZIP_DEFLATED, the usual zip compression
 
@@ -298,7 +299,7 @@ def "World"
 			double3 xformOp:translate = (0, -2, 80)
 			float3 xformOp:rotateXYZ = (-25, 45, 0)
 			uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ"]
-		}\n\n''')
+		}\n''')
 		
 		for cam in self.scene.Scenecamera:
 			
@@ -443,7 +444,6 @@ def Xform "brick_{0}" (
 							for j, p in enumerate(geo.Parts[part].outpositions):
 								if (geo.Parts[part].bonemap[j] == i):
 									p.transform( invert * b.matrix)
-									
 									#transform with inverted values (to undo the transformation)
 									#geo.Parts[part].outpositions[j].transform(undoTransformMatrix)
 									
@@ -451,7 +451,6 @@ def Xform "brick_{0}" (
 							for k, n in enumerate(geo.Parts[part].outnormals):
 								if (geo.Parts[part].bonemap[k] == i):
 									n.transformW( invert * b.matrix)
-									
 									#transform with inverted values (to undo the transformation)
 									#geo.Parts[part].outnormals[k].transformW(undoTransformMatrix)
 
@@ -547,8 +546,6 @@ def Xform "brick_{0}" (
 					op.write(']\n')
 					op.write('\t\tuniform token subdivisionScheme = "none"\n\t}\n')
 
-					#indexOffset += len(geo.Parts[part].outpositions)
-					#textOffset += len(geo.Parts[part].textures) 
 					indexOffset = 1
 					textOffset = 1
 				op.write('}\n')
@@ -615,7 +612,7 @@ def generate_rib_header(infile, srate, pixelvar, width, height, fov, fstop, sear
 def Xform "LXF_file" (
 	assetInfo = {{
 		asset identifier = @LXF_file.usda@
-	string name = "LXF_file"
+		string name = "LXF_file"
 	}}
 	kind = "component"
 
@@ -658,7 +655,7 @@ def main():
 		print "\nFinally denoise the final output with:./denoise {0}{1}.beauty.001.exr\n".format(cl.args.searcharchive, os.sep + obj_filename)
 		
 	else:
-		print("No LDD database found. Please install LEGO-Digital-Designer")
+		print("No LDD database found. Please install LEGO Digital-Designer.")
 
 if __name__ == "__main__":
 	main()
