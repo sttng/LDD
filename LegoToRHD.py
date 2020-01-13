@@ -397,7 +397,6 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 				if not (len(pa.Bones) > flexflag):
 				# Flex parts don't need to be moved
 				# Renderman is lefthanded coordinate system, but LDD is right handed.
-					#out.write("\t\tConcatTransform [{0} {1} {2} {3} {4} {5} {6} {7} {8} {9} {10} {11} {12} {13} {14} {15}]\n\t\tScale 1 1 1\n".format(n11, n12, -1 * n13, n14, n21, n22, -1 * n23, n24, -1 * n31, -1 * n32, n33, n34, n41, n42 ,-1 * n43, n44))
 					out.write('\t\t\tmatrix4d xformOp:transform = ( ({0}, {1}, {2}, {3}), ({4}, {5}, {6}, {7}), ({8}, {9}, {10}, {11}), ({12}, {13}, {14}, {15}) )\n'.format(n11, n12, -1 * n13, n14, n21, n22, -1 * n23, n24, -1 * n31, -1 * n32, n33, n34, n41, n42 ,-1 * n43, n44))	
 					#out.write('\t\t\tdouble3 xformOp:scale = (1, 1, 1)\n')
 					out.write('\t\t\tuniform token[] xformOpOrder = ["xformOp:transform"]\n')
@@ -600,10 +599,10 @@ def generate_rib_header(infile, srate, pixelvar, width, height, fov, fstop, sear
 	infile = os.path.realpath(infile.name)
 	infile = os.path.splitext(os.path.basename(infile))[0]
 	
-	rib_header = '''# Generated with LegoToRHD {0} on {1}
-#usda 1.0
+	rib_header = '''#usda 1.0
 (
 	defaultPrim = "LXF_file"
+	doc = """Generated with LegoToRHD {0} on {1}"""
 )
 
 def Xform "LXF_file" (
@@ -652,7 +651,7 @@ def main():
 		print "\nFinally denoise the final output with:./denoise {0}{1}.beauty.001.exr\n".format(cl.args.searcharchive, os.sep + obj_filename)
 		
 	else:
-		print("no LDD database found. Please install LEGO-Digital-Designer")
+		print("No LDD database found. Please install LEGO-Digital-Designer")
 
 if __name__ == "__main__":
 	main()
