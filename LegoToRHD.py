@@ -389,18 +389,18 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 					undoTransformMatrix = Matrix3D(n11=x_inv[0][0],n12=x_inv[0][1],n13=x_inv[0][2],n14=x_inv[0][3],n21=x_inv[1][0],n22=x_inv[1][1],n23=x_inv[1][2],n24=x_inv[1][3],n31=x_inv[2][0],n32=x_inv[2][1],n33=x_inv[2][2],n34=x_inv[2][3],n41=x_inv[3][0],n42=x_inv[3][1],n43=x_inv[3][2],n44=x_inv[3][3])
 				
 				out.write('''
-		def "brick_{0}" (
+		def "brick{0}_{1}" (
 			add references = @./assets/{0}.usda@
 		)
-		{{\n'''.format(written_obj))
+		{{\n'''.format(current, written_obj))
 				
 				if not (len(pa.Bones) > flexflag):
 				# Flex parts don't need to be moved
 				# Renderman is lefthanded coordinate system, but LDD is right handed.
 					#out.write("\t\tConcatTransform [{0} {1} {2} {3} {4} {5} {6} {7} {8} {9} {10} {11} {12} {13} {14} {15}]\n\t\tScale 1 1 1\n".format(n11, n12, -1 * n13, n14, n21, n22, -1 * n23, n24, -1 * n31, -1 * n32, n33, n34, n41, n42 ,-1 * n43, n44))
-					out.write('\t\t\tdouble16 xformOp:transform = ({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}, {15})\n'.format(n11, n12, -1 * n13, n14, n21, n22, -1 * n23, n24, -1 * n31, -1 * n32, n33, n34, n41, n42 ,-1 * n43, n44))	
+					out.write('\t\t\tmatrix4d xformOp:transform = ( ({0}, {1}, {2}, {3}), ({4}, {5}, {6}, {7}), ({8}, {9}, {10}, {11}), ({12}, {13}, {14}, {15}) )\n'.format(n11, n12, -1 * n13, n14, n21, n22, -1 * n23, n24, -1 * n31, -1 * n32, n33, n34, n41, n42 ,-1 * n43, n44))	
 					#out.write('\t\t\tdouble3 xformOp:scale = (1, 1, 1)\n')
-					#out.write('\t\t\tuniform token[] xformOpOrder = ["xformOp:transform", "xformOp:scale"]\n')
+					out.write('\t\t\tuniform token[] xformOpOrder = ["xformOp:transform"]\n')
 					
 					# minx used for floor plane later
 					if minx > float(n43):
