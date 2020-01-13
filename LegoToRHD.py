@@ -398,7 +398,7 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 				
 				out.write('''
 		def "brick{0}_{1}" (
-			add references = @./assets/{0}.usda@
+			add references = @./assets/{1}.usda@
 		)
 		{{\n'''.format(current, written_obj))
 				
