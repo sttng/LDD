@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 #
-# LegoToR Version 0.4.8 - Copyright (c) 2019 by m2m
+# LegoToR Version 0.4.8 - Copyright (c) 2020 by m2m
 # based on pyldd2obj Version 0.4.8 - Copyright (c) 2019 by jonnysp 
 # LegoToR parses LXF files and command line parameters to create a renderman compliant rib file.
 # 
@@ -355,7 +355,7 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 				# n13=c, n23=f, n33=i, n43=z,
 				# n14=0, n24=0, n34=0, n44=1
 				
-				# Read out 1st Bone matrix values
+				# Read out 1st Bone matrix values. Might use later
 				ind = 0
 				n11 = pa.Bones[ind].matrix.n11
 				n12 = pa.Bones[ind].matrix.n12
@@ -376,7 +376,17 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 				
 				# Only parts with more then 1 bone are flex parts and for these we need to undo the transformation later
 				flexflag = 1
+				uniqueId = str(uuid.uuid4().hex)
+				material_string = '_' + '_'.join(pa.materials)
+				written_obj = geo.designID + material_string
+				
+				if hasattr(pa, 'decoration'):
+					decoration_string = '_' + '_'.join(pa.decoration)
+					written_obj = written_obj + decoration_string
+				
 				if (len(pa.Bones) > flexflag):
+					# Flex parts are "unique". Ensure they get a unique filename
+					written_obj = written_obj + "_" + uniqueId
 					
 					# Create numpy matrix from them and create inverted matrix
 					x = np.array([[n11,n21,n31,n41],[n12,n22,n32,n42],[n13,n23,n33,n43],[n14,n24,n34,n44]])
@@ -395,18 +405,6 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 					# minx used for floor plane later
 					if minx > float(n43):
 						minx = n43
-				
-				material_string = '_' + '_'.join(pa.materials)
-				written_obj = geo.designID + material_string
-				uniqueId = str(uuid.uuid4())
-				
-				if hasattr(pa, 'decoration'):
-					decoration_string = '_' + '_'.join(pa.decoration)
-					written_obj = written_obj + decoration_string
-				
-				if (len(pa.Bones) > flexflag):
-				# Flex parts are "unique". Ensure they get a unique filename
-					written_obj = written_obj + "_" + uniqueId
 				
 				op = open(written_obj + ".rib", "w+")
 				op.write("##RenderMan RIB-Structure 1.1 Entity\n")
@@ -637,7 +635,7 @@ def main():
 		print "\nFinally denoise the final output with:./denoise {0}{1}.beauty.001.exr\n".format(cl.args.searcharchive, os.sep + obj_filename)
 		
 	else:
-		print("no LDD database found please install LEGO-Digital-Designer")
+		print("No LDD database found. Please install LEGO Digital-Designer.")
 
 if __name__ == "__main__":
 	main()
