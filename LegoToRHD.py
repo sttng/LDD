@@ -280,43 +280,45 @@ class Converter:
 		useplane = cl.useplane
 		
 		out.write('''
-def Camera "Cam_Minus_1"
-	{
-		float4[] clippingPlanes = []
-		float2 clippingRange = (0.15815565, 6045.622)
-		float focalLength = 50
-		float focusDistance = 5
-		float fStop = 5.6
-		float horizontalAperture = 41.4214
-		float horizontalApertureOffset = 0
-		float verticalAperture = 23.299536
-		token projection = "perspective"
-		float verticalApertureOffset = 0
+def "World"
+{
+	def Camera "Cam_Minus_1"
+		{
+			float4[] clippingPlanes = []
+			float2 clippingRange = (0.15815565, 6045.622)
+			float focalLength = 50
+			float focusDistance = 5
+			float fStop = 5.6
+			float horizontalAperture = 41.4214
+			float horizontalApertureOffset = 0
+			float verticalAperture = 23.299536
+			float verticalApertureOffset = 0
+			token projection = "perspective"
 		
-		double3 xformOp:translate = (0, -2, 80)
-		float3 xformOp:rotateXYZ = (-25, 45, 0)
-		uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ"]
-	}\n\n''')
+			double3 xformOp:translate = (0, -2, 80)
+			float3 xformOp:rotateXYZ = (-25, 45, 0)
+			uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ"]
+		}\n\n''')
 		
 		for cam in self.scene.Scenecamera:
 			
 			out.write('''
-def Camera "Cam_{0}"
-	{{
-		float4[] clippingPlanes = []
-		float2 clippingRange = (0.15815565, 6045.622)
-		float focalLength = 50
-		float focusDistance = 5
-		float fStop = 5.6
-		float horizontalAperture = 41.4214
-		float horizontalApertureOffset = 0
-		float verticalAperture = 23.299536
-		token projection = "perspective"
-		float verticalApertureOffset = 0
+	def Camera "Cam_{0}"
+		{{
+			float4[] clippingPlanes = []
+			float2 clippingRange = (0.15815565, 6045.622)
+			float focalLength = 50
+			float focusDistance = 5
+			float fStop = 5.6
+			float horizontalAperture = 41.4214
+			float horizontalApertureOffset = 0
+			float verticalAperture = 23.299536
+			float verticalApertureOffset = 0
+			token projection = "perspective"
 		
-		matrix4d xformOp:transform = ( ({1}, {2}, {3}, {4}), ({5}, {6}, {7}, {8}), ({9}, {10}, {11}, {12}), ({13}, {14}, {15}, {16}) )	
-		uniform token[] xformOpOrder = ["xformOp:transform"]
-	}}\n'''.format(cam.refID, cam.matrix.n11, cam.matrix.n12, -1 * cam.matrix.n13, cam.matrix.n14, cam.matrix.n21, cam.matrix.n22, -1 * cam.matrix.n23, cam.matrix.n24, -1 * cam.matrix.n31, -1 * cam.matrix.n32, cam.matrix.n33, cam.matrix.n34, cam.matrix.n41, cam.matrix.n42 ,-1 * cam.matrix.n43, cam.matrix.n44))
+			matrix4d xformOp:transform = ( ({1}, {2}, {3}, {4}), ({5}, {6}, {7}, {8}), ({9}, {10}, {11}, {12}), ({13}, {14}, {15}, {16}) )	
+			uniform token[] xformOpOrder = ["xformOp:transform"]
+		}}\n'''.format(cam.refID, cam.matrix.n11, cam.matrix.n12, -1 * cam.matrix.n13, cam.matrix.n14, cam.matrix.n21, cam.matrix.n22, -1 * cam.matrix.n23, cam.matrix.n24, -1 * cam.matrix.n31, -1 * cam.matrix.n32, cam.matrix.n33, cam.matrix.n34, cam.matrix.n41, cam.matrix.n42 ,-1 * cam.matrix.n43, cam.matrix.n44))
 		
 		out.write('''
 Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse,diffuse_mse,specular,specular_mse,zfiltered,zfiltered_var,normal,normal_var,forward,backward" "int asrgba" 1
@@ -578,7 +580,7 @@ def Xform "brick_{0}" (
 		
 		zf.close()
 		zfmat.close()
-		out.write('WorldEnd')
+		out.write('}\n\nWorldEnd')
 		sys.stdout.write('%s\r' % ('                                                                                                 '))
 		print("--- %s seconds ---" % (time.time() - start_time))
 
