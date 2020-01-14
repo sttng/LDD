@@ -271,8 +271,16 @@ class Converter:
 		start_time = time.time()
 		
 		out = open(filename + ".usda", "w+")
-		zf = zipfile.ZipFile(filename + "_Bricks_Archive.zip", "w")
+		#zf = zipfile.ZipFile(filename + "_Bricks_Archive.zip", "w")
 		zfmat = zipfile.ZipFile(filename + "_Materials_Archive.zip", "w")
+		
+		assetsDir = filename + "_assets"
+		
+		if not os.path.exists(assetsDir):
+			os.mkdir(assetsDir)
+			#print("Directory " , assetsDir ,  " Created ")
+		else:
+			print("Directory " , assetsDir ,  " already exists")
 		
 		total = len(self.scene.Bricks)
 		current = 0
@@ -383,9 +391,9 @@ class Converter:
 				
 				out.write('''
 		def "brick{0}_{1}" (
-			add references = @./assets/{1}.usda@
+			add references = @./{2}/{1}.usda@
 		)
-		{{\n'''.format(currentpart, written_obj))
+		{{\n'''.format(currentpart, written_obj, assetsDir))
 				
 				if not (len(pa.Bones) > flexflag):
 				# Flex parts don't need to be moved
@@ -544,7 +552,8 @@ def Xform "brick_{0}" (
 				
 				if not written_obj in writtenribs:
 						writtenribs.append(written_obj)
-						zf.write(written_obj + '.usda', compress_type=compression)
+						#zf.write(written_obj + '.usda', compress_type=compression)
+						dest = shutil.copy(written_obj + '.usda', assetsDir)
 				
 				os.remove(written_obj + '.usda')
 						
@@ -559,7 +568,7 @@ def Xform "brick_{0}" (
 			uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
 		}}\n\n'''.format(minx))
 		
-		zf.close()
+		#zf.close()
 		zfmat.close()
 		out.write('}\n')
 		sys.stdout.write('%s\r' % ('                                                                                                 '))
