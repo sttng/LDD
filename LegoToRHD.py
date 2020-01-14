@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 #
-# LegoToRHD Version 0.2 - Copyright (c) 2020 by m2m
+# LegoToRHD Version 0.3 - Copyright (c) 2020 by m2m
 # based on pyldd2obj Version 0.4.8 - Copyright (c) 2019 by jonnysp 
 # LegoToRHD parses LXF files and command line parameters to creates a USDA compliant files.
 # 
@@ -9,6 +9,7 @@
 #
 # Updates:
 # 
+# 0.3 support for all lxf files without textures
 # 0.2 support for all parts without textures
 # 0.1 initial version
 # 
@@ -24,7 +25,7 @@ import shutil
 import ParseCommandLine as cl
 import random
 
-__version__ = "0.2"
+__version__ = "0.3"
 
 compression = zipfile.ZIP_STORED #uncompressed archive for USDZ, otherwise would use ZIP_DEFLATED, the usual zip compression
 
@@ -275,13 +276,13 @@ class Converter:
 		
 		total = len(self.scene.Bricks)
 		current = 0
+		currentpart = 0
 		
 		# minx used for floor plane later
 		minx = 1000
 		useplane = cl.useplane
 		
 		out.write('''
-def "World"
 {
 	def Camera "Cam_Minus_1"
 		{
@@ -319,29 +320,13 @@ def "World"
 		
 			matrix4d xformOp:transform = ( ({1}, {2}, {3}, {4}), ({5}, {6}, {7}, {8}), ({9}, {10}, {11}, {12}), ({13}, {14}, {15}, {16}) )	
 			uniform token[] xformOpOrder = ["xformOp:transform"]
-		}}\n'''.format(cam.refID, cam.matrix.n11, cam.matrix.n12, -1 * cam.matrix.n13, cam.matrix.n14, cam.matrix.n21, cam.matrix.n22, -1 * cam.matrix.n23, cam.matrix.n24, -1 * cam.matrix.n31, -1 * cam.matrix.n32, cam.matrix.n33, cam.matrix.n34, cam.matrix.n41, cam.matrix.n42 ,-1 * cam.matrix.n43, cam.matrix.n44))
-		
-		out.write('''
-Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse,diffuse_mse,specular,specular_mse,zfiltered,zfiltered_var,normal,normal_var,forward,backward" "int asrgba" 1
-	"string storage" ["scanline"]
-	"string exrpixeltype" ["half"]
-	"string compression" ["zips"]
-	"float compressionlevel" [45]
-	"string camera" ["Cam--1"]\n\n'''.format(os.getcwd(), os.sep, filename))
-		
-		out.write('WorldBegin\n\tScale 1 1 1\n')
-		out.write('''\tAttributeBegin
-		Attribute "visibility" "int indirect" [0] "int transmission" [0]
-		Attribute "visibility" "int camera" [1]
-		Rotate 50 0 1 0
-		Rotate -90 1 0 0
-		Light "PxrDomeLight" "domeLight" "string lightColorMap" ["islandsun_small.tex"]
-	AttributeEnd\n\n''')
+		}}\n'''.format(cam.refID, cam.matrix.n11, cam.matrix.n12, cam.matrix.n13, cam.matrix.n14, cam.matrix.n21, cam.matrix.n22, cam.matrix.n23, cam.matrix.n24, cam.matrix.n31, cam.matrix.n32, cam.matrix.n33, cam.matrix.n34, cam.matrix.n41, cam.matrix.n42, cam.matrix.n43, cam.matrix.n44))
 
 		for bri in self.scene.Bricks:
 			current += 1
 
 			for pa in bri.Parts:
+				currentpart += 1
 
 				if pa.designID not in geometriecache:
 					geo = Geometry(designID=pa.designID, database=self.database)
@@ -400,12 +385,11 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 		def "brick{0}_{1}" (
 			add references = @./assets/{1}.usda@
 		)
-		{{\n'''.format(current, written_obj))
+		{{\n'''.format(currentpart, written_obj))
 				
 				if not (len(pa.Bones) > flexflag):
 				# Flex parts don't need to be moved
-				# Renderman is lefthanded coordinate system, but LDD is right handed.
-					out.write('\t\t\tmatrix4d xformOp:transform = ( ({0}, {1}, {2}, {3}), ({4}, {5}, {6}, {7}), ({8}, {9}, {10}, {11}), ({12}, {13}, {14}, {15}) )\n'.format(n11, n12, -1 * n13, n14,  n21, n22, -1 * n23, n24,  -1 * n31, -1 * n32, n33, n34,  n41, n42 ,-1 * n43, n44))	
+					out.write('\t\t\tmatrix4d xformOp:transform = ( ({0}, {1}, {2}, {3}), ({4}, {5}, {6}, {7}), ({8}, {9}, {10}, {11}), ({12}, {13}, {14}, {15}) )\n'.format(n11, n12, n13, n14, n21, n22, n23, n24, n31, n32, n33, n34, n41, n42 ,n43, n44))	
 					#out.write('\t\t\tdouble3 xformOp:scale = (1, 1, 1)\n')
 					out.write('\t\t\tuniform token[] xformOpOrder = ["xformOp:transform"]\n')
 					
@@ -417,7 +401,7 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 				op.write('''#usda 1.0
 (
 	defaultPrim = "brick_{0}"
-	upAxis = "Y"
+	upAxis = "X"
 )
 
 def Xform "brick_{0}" (
@@ -577,7 +561,7 @@ def Xform "brick_{0}" (
 		
 		zf.close()
 		zfmat.close()
-		out.write('}\n\nWorldEnd')
+		out.write('}\n')
 		sys.stdout.write('%s\r' % ('                                                                                                 '))
 		print("--- %s seconds ---" % (time.time() - start_time))
 
@@ -606,6 +590,7 @@ def generate_rib_header(infile, srate, pixelvar, width, height, fov, fstop, sear
 	rib_header = '''#usda 1.0
 (
 	defaultPrim = "LXF_file"
+	upAxis = "X"
 	doc = """Generated with LegoToRHD {0} on {1}"""
 )
 
