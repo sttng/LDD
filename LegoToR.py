@@ -434,6 +434,7 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 					out.write("\t\tConcatTransform [{0} {1} {2} {3} {4} {5} {6} {7} {8} {9} {10} {11} {12} {13} {14} {15}]\n\t\tScale 1 1 1\n".format(n11, n12, -1 * n13, n14, n21, n22, -1 * n23, n24, -1 * n31, -1 * n32, n33, n34, n41, n42 ,-1 * n43, n44))
 					
 					# minx used for floor plane later
+					# Still wondering I take n43 ?? - Need to clarfiy ! Isn't n43 Z-Translation (going "out" of the monitor) ?
 					if minx > float(n43):
 						minx = n43
 				
