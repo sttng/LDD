@@ -403,7 +403,8 @@ def Xform "brick_{0}" (
 							outmat.write(lddmatri.string(None))
 						
 						outmat.close()
-						zfmat.write("material_" + matname + ".usda", compress_type=compression)
+						#zfmat.write("material_" + matname + ".usda", compress_type=compression)
+						dest = shutil.copy("material_" + matname + '.usda', assetsDir)
 						os.remove("material_" + matname + ".usda")
 
 					op.write('#ReadArchive "' + filename + '_Materials_Archive.zip!material_' + matname + '.usda"\n')
@@ -451,9 +452,9 @@ def Xform "brick_{0}" (
 				out.write('\t\t}\n')
 				
 				if not written_obj in writtenribs:
-						writtenribs.append(written_obj)
-						#zf.write(written_obj + '.usda', compress_type=compression)
-						dest = shutil.copy(written_obj + '.usda', assetsDir)
+					writtenribs.append(written_obj)
+					#zf.write(written_obj + '.usda', compress_type=compression)
+					dest = shutil.copy(written_obj + '.usda', assetsDir)
 				
 				os.remove(written_obj + '.usda')
 						
