@@ -408,6 +408,12 @@ def Xform "brick_{0}" (
 
 					op.write('#ReadArchive "' + filename + '_Materials_Archive.zip!material_' + matname + '.usda"\n')
 					op.write('\t#rel material:binding = </{0}/{1}>\n'.format(filename, matname))
+					op.write('''\tdef “Material” (
+	references = [@{0}.usda@</Material1>]
+	)
+	{{
+		over color3f color = (1, 1, 0)
+	}}'''.format(matname))
 					op.write('\tcolor3f[] primvars:displayColor = [(1, 0, 0)]\n')
 					
 					op.write('\t\tint[] faceVertexCounts = [')
