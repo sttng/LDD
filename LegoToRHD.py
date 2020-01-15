@@ -97,9 +97,11 @@ Pattern "PxrBlend" "Blend{0}"
 			rgb_or_dec_str = '({0}, {1}, {2})'.format(self.r, self.g, self.b)
 			
 		if self.materialType == 'Transparent':
-			bxdf_mat_str = texture_strg + '''def Material "Material1"
+			bxdf_mat_str = texture_strg + '''def Scope "Materials"
 	{{
-		def Shader "pbr"
+		def Material "Material1"
+		{{
+			def Shader "pbr"
 			{{
 				uniform token info:id = "UsdPreviewSurface"
 				color3f inputs:diffuseColor = {2}
@@ -107,13 +109,16 @@ Pattern "PxrBlend" "Blend{0}"
 				float inputs:roughness = 0
 				token outputs:surface
 			}}
-		token outputs:surface.connect = <…/Material1/pbr.outputs:surface>
+			token outputs:surface.connect = <pbr.outputs:surface>
+		}}
 	}}\n'''.format(self.materialId, ref_strg, rgb_or_dec_str, round(random.random(), 3))
 			
 		elif self.materialType == 'Metallic':
-			bxdf_mat_str = texture_strg + '''def Material "Material1"
+			bxdf_mat_str = texture_strg + '''def Scope "Materials"
 	{{
-		def Shader "pbr"
+		def Material "Material1"
+		{{
+			def Shader "pbr"
 			{{
 				uniform token info:id = "UsdPreviewSurface"
 				color3f inputs:diffuseColor = {2}
@@ -121,13 +126,16 @@ Pattern "PxrBlend" "Blend{0}"
 				float inputs:roughness = 0
 				token outputs:surface
 			}}
-		token outputs:surface.connect = <…/Material1/pbr.outputs:surface>
+			token outputs:surface.connect = <pbr.outputs:surface>
+		}}
 	}}\n'''.format(self.materialId, ref_strg, rgb_or_dec_str, round(random.random(), 3))
 		
 		else:
-			bxdf_mat_str = texture_strg + '''def Material "Material1"
+			bxdf_mat_str = texture_strg + '''def Scope "Materials"
 	{{
-		def Shader "pbr"
+		def Material "Material1"
+		{{
+			def Shader "pbr"
 			{{
 				uniform token info:id = "UsdPreviewSurface"
 				color3f inputs:diffuseColor = {2}
@@ -135,7 +143,8 @@ Pattern "PxrBlend" "Blend{0}"
 				float inputs:roughness = 0
 				token outputs:surface
 			}}
-		token outputs:surface.connect = <…/Material1/pbr.outputs:surface>
+			token outputs:surface.connect = <pbr.outputs:surface>
+		}}
 	}}\n'''.format(self.materialId, ref_strg, rgb_or_dec_str, round(random.random(), 3))
 		
 		return bxdf_mat_str
@@ -166,7 +175,7 @@ class Converter:
 		
 		out = open(filename + ".usda", "w+")
 		#zf = zipfile.ZipFile(filename + "_Bricks_Archive.zip", "w")
-		zfmat = zipfile.ZipFile(filename + "_Materials_Archive.zip", "w")
+		#zfmat = zipfile.ZipFile(filename + "_Materials_Archive.zip", "w")
 		
 		assetsDir = filename + "_assets"
 		
@@ -407,14 +416,13 @@ def Xform "brick_{0}" (
 						dest = shutil.copy("material_" + matname + '.usda', assetsDir)
 						os.remove("material_" + matname + ".usda")
 
-					op.write('#ReadArchive "' + filename + '_Materials_Archive.zip!material_' + matname + '.usda"\n')
-					op.write('\t#rel material:binding = </{0}/{1}>\n'.format(filename, matname))
-					op.write('''\tdef “Material” (
-	references = [@{0}.usda@</Material1>]
+					op.write('\t#rel material:binding = </brick_{0}/Materials/Material1>\n'.format(written_obj))
+					op.write('''\tdef "Material" (
+	references = [@material_{0}.usda@</Material1>]
 	)
 	{{
 		over color3f color = (1, 1, 0)
-	}}'''.format(matname))
+	}}\n\n'''.format(matname))
 					op.write('\tcolor3f[] primvars:displayColor = [(1, 0, 0)]\n')
 					
 					op.write('\t\tint[] faceVertexCounts = [')
@@ -470,7 +478,7 @@ def Xform "brick_{0}" (
 		}}\n\n'''.format(minx))
 		
 		#zf.close()
-		zfmat.close()
+		#zfmat.close()
 		out.write('}\n')
 		sys.stdout.write('%s\r' % ('                                                                                                 '))
 		print("--- %s seconds ---" % (time.time() - start_time))
