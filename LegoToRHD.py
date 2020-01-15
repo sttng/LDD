@@ -532,7 +532,7 @@ def main():
 		os.remove(obj_filename + "_Bricks_Archive.zip")
 
 	converter = Converter()
-	print("LegoToR Version " + __version__)
+	print("LegoToRHD Version " + __version__)
 	if os.path.exists(FindDatabase()):
 		converter.LoadDatabase(databaselocation = FindDatabase())
 		converter.LoadScene(filename=lxf_filename)
