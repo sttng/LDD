@@ -94,155 +94,49 @@ Pattern "PxrBlend" "Blend{0}"
 		
 		else:
 		# We don't have decorations
-			rgb_or_dec_str = '{0} {1} {2}'.format(self.r, self.g, self.b)
+			rgb_or_dec_str = '({0}, {1}, {2})'.format(self.r, self.g, self.b)
 			
 		if self.materialType == 'Transparent':
-			bxdf_mat_str = texture_strg + '''Pattern "PxrFractal" "Unevenness" 
-	"int surfacePosition" [0]
-	"int layers" [1]
-	"float frequency" [0.8]
-	"float lacunarity" [16.0]
-	"float dimension" [5]
-	"float erosion" [0.0]
-	"float variation" [{3}]
-	"int turbulent" [0]
-
-Pattern "PxrNormalMap" "PxrNormalMap1"
-	"float bumpScale" [-0.07]
-	"reference color inputRGB" ["Unevenness:resultRGB"]
-	#"string filename" ["Body_Normal.tex"]
-	"normal bumpOverlay" [0 0 0]
-	"int invertBump" [0]
-	"int orientation" [2]
-	"int flipX" [0]
-	"int flipY" [0]
-	"int firstChannel" [0]
-	"int atlasStyle" [0]
-	"int invertT" [1]
-	"float blur" [0.0]
-	"int lerp" [1]
-	"int filter" [1]
-	"int reverse" [0]
-	"float adjustAmount" [0.0]
-	"float surfaceNormalMix" [0.0]
-	"int disable" [0]
-
-Bxdf "PxrSurface" "Transparent {0}"
-	"float diffuseGain" [0.5]
-	"{1}color diffuseColor" [{2}]
-	"int diffuseDoubleSided" [1]
-	"color specularFaceColor" [0.2 0.2 0.2]
-	"color specularEdgeColor" [0.2 0.2 0.2]
-	"color specularIor" [1.585 1.585 1.585] # Polycarbonate IOR = 1.584 - 1.586
-	"float specularRoughness" [0.25]
-	"int specularDoubleSided" [1]
-	"color clearcoatFaceColor" [0 0 0]
-	"color clearcoatEdgeColor" [0 0 0]
-	"color clearcoatIor" [1.5 1.5 1.5]
-	"color clearcoatExtinctionCoeff" [0.0 0.0 0.0]
-	"float clearcoatRoughness" [0.0]
-	"float iridescenceFaceGain" [0]
-	"float iridescenceEdgeGain" [0]
-	"color iridescencePrimaryColor" [1 0 0]
-	"color iridescenceSecondaryColor" [0 0 1]
-	"float iridescenceRoughness" [0.2]
-	"float fuzzGain" [0.0]
-	"color fuzzColor" [1 1 1]
-	"float fuzzConeAngle" [8]
-	"float refractionGain" [1]
-	"float reflectionGain" [0.2]
-	"{1}color refractionColor" [{2}]
-	"float glassRoughness" [0.05] 
-	"float glassIor" [1.585] # Polycarbonate IOR = 1.584 - 1.586
-	"int thinGlass" [1]
-	"float glowGain" [0.0]
-	"color glowColor" [1 1 1]
-	"float presence" [1]\n
-	"reference normal bumpNormal" ["PxrNormalMap1:resultN"]'''.format(self.materialId, ref_strg, rgb_or_dec_str, round(random.random(), 3))
+			bxdf_mat_str = texture_strg + '''def Material "Material1"
+	{{
+		def Shader "pbr"
+			{{
+				uniform token info:id = "UsdPreviewSurface"
+				color3f inputs:diffuseColor = {2}
+				float inputs:metallic = 1
+				float inputs:roughness = 0
+				token outputs:surface
+			}}
+		token outputs:surface.connect = <…/Material1/pbr.outputs:surface>
+	}}\n'''.format(self.materialId, ref_strg, rgb_or_dec_str, round(random.random(), 3))
 			
 		elif self.materialType == 'Metallic':
-			bxdf_mat_str = texture_strg + '''Pattern "PxrFractal" "Unevenness" 
-	"int surfacePosition" [0]
-	"int layers" [1]
-	"float frequency" [0.8]
-	"float lacunarity" [16.0]
-	"float dimension" [5]
-	"float erosion" [0.0]
-	"float variation" [{3}]
-	"int turbulent" [0]
-
-Pattern "PxrNormalMap" "PxrNormalMap1"
-	"float bumpScale" [-0.07]
-	"reference color inputRGB" ["Unevenness:resultRGB"]
-	#"string filename" ["Body_Normal.tex"]
-	"normal bumpOverlay" [0 0 0]
-	"int invertBump" [0]
-	"int orientation" [2]
-	"int flipX" [0]
-	"int flipY" [0]
-	"int firstChannel" [0]
-	"int atlasStyle" [0]
-	"int invertT" [1]
-	"float blur" [0.0]
-	"int lerp" [1]
-	"int filter" [1]
-	"int reverse" [0]
-	"float adjustAmount" [0.0]
-	"float surfaceNormalMix" [0.0]
-	"int disable" [0]
-
-Bxdf "PxrSurface" "Metallic {0}"
-	"float diffuseGain" [0.5]
-	"{1}color diffuseColor" [{2}] 
-	"int diffuseDoubleSided" [1]
-	"color specularFaceColor" [0.8 0.8 0.8]
-	"color specularIor"  [1.54 1.54 1.54] # ABS Refractive Index, Average value: 1.54
-	"float specularRoughness" [0.25]
-	"int specularDoubleSided" [0]
-	"float presence" [1]
-	"reference normal bumpNormal" ["PxrNormalMap1:resultN"]\n'''.format(self.materialId, ref_strg, rgb_or_dec_str, round(random.random(), 3))
+			bxdf_mat_str = texture_strg + '''def Material "Material1"
+	{{
+		def Shader "pbr"
+			{{
+				uniform token info:id = "UsdPreviewSurface"
+				color3f inputs:diffuseColor = {2}
+				float inputs:metallic = 1
+				float inputs:roughness = 0
+				token outputs:surface
+			}}
+		token outputs:surface.connect = <…/Material1/pbr.outputs:surface>
+	}}\n'''.format(self.materialId, ref_strg, rgb_or_dec_str, round(random.random(), 3))
 		
 		else:
-			bxdf_mat_str = texture_strg + '''Pattern "PxrFractal" "Unevenness" 
-	"int surfacePosition" [0]
-	"int layers" [1]
-	"float frequency" [0.8]
-	"float lacunarity" [16.0]
-	"float dimension" [5]
-	"float erosion" [0.0]
-	"float variation" [{3}]
-	"int turbulent" [0]
-
-Pattern "PxrNormalMap" "PxrNormalMap1"
-	"float bumpScale" [-0.07]
-	"reference color inputRGB" ["Unevenness:resultRGB"]
-	#"string filename" ["Body_Normal.tex"]
-	"normal bumpOverlay" [0 0 0]
-	"int invertBump" [0]
-	"int orientation" [2]
-	"int flipX" [0]
-	"int flipY" [0]
-	"int firstChannel" [0]
-	"int atlasStyle" [0]
-	"int invertT" [1]
-	"float blur" [0.0]
-	"int lerp" [1]
-	"int filter" [1]
-	"int reverse" [0]
-	"float adjustAmount" [0.0]
-	"float surfaceNormalMix" [0.0]
-	"int disable" [0]
-
-Bxdf "PxrSurface" "Solid Material {0}" 
-	"float diffuseGain" [0.5] 
-	"{1}color diffuseColor" [{2}] 
-	"int diffuseDoubleSided" [1]
-	"color specularFaceColor" [0.1 0.1 0.15]
-	"color specularIor" [1.54 1.54 1.54] # ABS Refractive Index, Average value: 1.54
-	"float specularRoughness" [0.25]
-	"int specularDoubleSided" [0]
-	"float presence" [1]
-	"reference normal bumpNormal" ["PxrNormalMap1:resultN"]\n'''.format(self.materialId, ref_strg, rgb_or_dec_str, round(random.random(), 3))
+			bxdf_mat_str = texture_strg + '''def Material "Material1"
+	{{
+		def Shader "pbr"
+			{{
+				uniform token info:id = "UsdPreviewSurface"
+				color3f inputs:diffuseColor = {2}
+				float inputs:metallic = 1
+				float inputs:roughness = 0
+				token outputs:surface
+			}}
+		token outputs:surface.connect = <…/Material1/pbr.outputs:surface>
+	}}\n'''.format(self.materialId, ref_strg, rgb_or_dec_str, round(random.random(), 3))
 		
 		return bxdf_mat_str
 
