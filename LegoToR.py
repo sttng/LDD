@@ -305,36 +305,6 @@ TransformEnd\n\n''')
 		
 		for cam in self.scene.Scenecamera:
 			
-			# n11=a, n21=d, n31=g, n41=x,
-			# n12=b, n22=e, n32=h, n42=y,
-			# n13=c, n23=f, n33=i, n43=z,
-			# n14=0, n24=0, n34=0, n44=1
-				
-			# Read out Camera matrix transform values. Might use later
-			n11 = cam.matrix.n11
-			n12 = cam.matrix.n12
-			n13 = cam.matrix.n13
-			n14 = cam.matrix.n14
-			n21 = cam.matrix.n21
-			n22 = cam.matrix.n22
-			n23 = cam.matrix.n23
-			n24 = cam.matrix.n24
-			n31 = cam.matrix.n31
-			n32 = cam.matrix.n32
-			n33 = cam.matrix.n33
-			n34 = cam.matrix.n34
-			n41 = cam.matrix.n41
-			n42 = cam.matrix.n42
-			n43 = cam.matrix.n43
-			n44 = cam.matrix.n44
-			
-			# Create numpy matrix from them and create inverted matrix
-			x = np.array([[n11,n21,n31,n41],[n12,n22,n32,n42],[n13,n23,n33,n43],[n14,n24,n34,n44]])
-			x_inv = np.linalg.inv(x)
-			
-			# undoTransformMatrix not used currently. Might use later
-			undoTransformMatrix = Matrix3D(n11=x_inv[0][0],n12=x_inv[0][1],n13=x_inv[0][2],n14=x_inv[0][3],n21=x_inv[1][0],n22=x_inv[1][1],n23=x_inv[1][2],n24=x_inv[1][3],n31=x_inv[2][0],n32=x_inv[2][1],n33=x_inv[2][2],n34=x_inv[2][3],n41=x_inv[3][0],n42=x_inv[3][1],n43=x_inv[3][2],n44=x_inv[3][3])
-			
 			out.write('''# Camera {0}
 TransformBegin
 	ConcatTransform [{1} {2} {3} {4} {5} {6} {7} {8} {9} {10} {11} {12} {13} {14} {15} {16}]
@@ -434,7 +404,6 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 					out.write("\t\tConcatTransform [{0} {1} {2} {3} {4} {5} {6} {7} {8} {9} {10} {11} {12} {13} {14} {15}]\n\t\tScale 1 1 1\n".format(n11, n12, -1 * n13, n14, n21, n22, -1 * n23, n24, -1 * n31, -1 * n32, n33, n34, n41, n42 ,-1 * n43, n44))
 					
 					# minx used for floor plane later
-					# Still wondering I take n43 ?? - Need to clarfiy ! Isn't n43 Z-Translation (going "out" of the monitor) ?
 					if minx > float(n43):
 						minx = n43
 				
@@ -494,7 +463,7 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 									os.system(txmake_cmd)
 									os.remove(extfile)
 								else:
-									print("RMANTREE environment variable not set correctly. Set with: export RMANTREE=/Applications/Pixar/RenderManProServer-22.6/")
+									print("RMANTREE environment variable not set correctly. Set with: export RMANTREE=/Applications/Pixar/RenderManProServer-23.0/")
 
 					if not matname in usedmaterials:
 						usedmaterials.append(matname)
@@ -547,7 +516,6 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 				os.remove(written_obj + '.rib')
 						
 		if useplane == True: # write the floor plane in case True
-			# Still wondering why to translate in X direction ?? - Need to clarfiy !
 			out.write('''\tAttributeBegin
 		Attribute "identifier" "string name" ["groundplane"]
 		Translate {0} 0 10
@@ -568,14 +536,14 @@ def FindRmtree():
 		if rmtree is not None:
 			return str(rmtree)
 		else:
-			print("RMANTREE environment variable not set correctly. Set with: export RMANTREE=/Applications/Pixar/RenderManProServer-22.6/")
+			print("RMANTREE environment variable not set correctly. Set with: export RMANTREE=/Applications/Pixar/RenderManProServer-23.0/")
 			exit()
 	else:
 		rmtree = os.getenv('RMANTREE')
 		if rmtree is not None:
 			return str(rmtree)
 		else:
-			print('RMANTREE environment variable not set correctly. Set with: setx RMANTREE "C:\Program Files\Pixar\RenderManProServer-22.6\" /M')
+			print('RMANTREE environment variable not set correctly. Set with: setx RMANTREE "C:\Program Files\Pixar\RenderManProServer-23.0\" /M')
 			exit()
 
 
