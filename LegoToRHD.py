@@ -507,9 +507,11 @@ def generate_rib_header(infile, srate, pixelvar, width, height, fov, fstop, sear
 	
 	rib_header = '''#usda 1.0
 (
+	customLayerData = {{
+		string creator = "Generated with LegoToRHD {0} on {1}"
+	}}
 	defaultPrim = "LXF_file"
 	upAxis = "X"
-	doc = """Generated with LegoToRHD {0} on {1}"""
 )
 
 def Xform "LXF_file" (
