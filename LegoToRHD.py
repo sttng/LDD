@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 #
-# LegoToRHD Version 0.3 - Copyright (c) 2020 by m2m
+# LegoToRHD Version 0.3.5- Copyright (c) 2020 by m2m
 # based on pyldd2obj Version 0.4.8 - Copyright (c) 2019 by jonnysp 
 # LegoToRHD parses LXF files and command line parameters to creates a USDA compliant files.
 # 
@@ -9,6 +9,7 @@
 #
 # Updates:
 # 
+# 0.3.5 initial. support for material but without textures
 # 0.3 support for all lxf files without textures
 # 0.2 support for all parts without textures
 # 0.1 initial version
@@ -25,7 +26,7 @@ import shutil
 import ParseCommandLine as cl
 import random
 
-__version__ = "0.3"
+__version__ = "0.3.5"
 
 compression = zipfile.ZIP_STORED #uncompressed archive for USDZ, otherwise would use ZIP_DEFLATED, the usual zip compression
 
@@ -97,27 +98,52 @@ Pattern "PxrBlend" "Blend{0}"
 			rgb_or_dec_str = '({0}, {1}, {2})'.format(self.r, self.g, self.b)
 			
 		if self.materialType == 'Transparent':
-			bxdf_mat_str = texture_strg + '''def Scope "Materials"
+			bxdf_mat_str = texture_strg + '''#usda 1.0
+(
+	defaultPrim = "material_{0}"
+)
+def Xform "material_{0}" (
+	assetInfo = {{
+		asset identifier = @material_{0}.usda@
+		string name = "material_{0}"
+	}}
+	kind = "component"
+
+)
+{{
+def Material "material_{0}a"
 	{{
-		def Material "Material1"
-		{{
+		
 			def Shader "pbr"
 			{{
 				uniform token info:id = "UsdPreviewSurface"
 				color3f inputs:diffuseColor = {2}
-				float inputs:metallic = 1
+				float inputs:metallic = 0
 				float inputs:roughness = 0
 				token outputs:surface
 			}}
 			token outputs:surface.connect = <pbr.outputs:surface>
-		}}
-	}}\n'''.format(self.materialId, ref_strg, rgb_or_dec_str, round(random.random(), 3))
+		
+	}}
+}}\n'''.format(self.materialId, ref_strg, rgb_or_dec_str, round(random.random(), 3))
 			
 		elif self.materialType == 'Metallic':
-			bxdf_mat_str = texture_strg + '''def Scope "Materials"
+			bxdf_mat_str = texture_strg + '''#usda 1.0
+(
+	defaultPrim = "material_{0}"
+)
+def Xform "material_{0}" (
+	assetInfo = {{
+		asset identifier = @material_{0}.usda@
+		string name = "material_{0}"
+	}}
+	kind = "component"
+
+)
+{{
+def Material "material_{0}a"
 	{{
-		def Material "Material1"
-		{{
+		
 			def Shader "pbr"
 			{{
 				uniform token info:id = "UsdPreviewSurface"
@@ -127,25 +153,39 @@ Pattern "PxrBlend" "Blend{0}"
 				token outputs:surface
 			}}
 			token outputs:surface.connect = <pbr.outputs:surface>
-		}}
-	}}\n'''.format(self.materialId, ref_strg, rgb_or_dec_str, round(random.random(), 3))
+		
+	}}
+}}\n'''.format(self.materialId, ref_strg, rgb_or_dec_str, round(random.random(), 3))
 		
 		else:
-			bxdf_mat_str = texture_strg + '''def Scope "Materials"
+			bxdf_mat_str = texture_strg + '''#usda 1.0
+(
+	defaultPrim = "material_{0}"
+)
+def Xform "material_{0}" (
+	assetInfo = {{
+		asset identifier = @material_{0}.usda@
+		string name = "material_{0}"
+	}}
+	kind = "component"
+
+)
+{{
+def Material "material_{0}a"
 	{{
-		def Material "Material1"
-		{{
+		
 			def Shader "pbr"
 			{{
 				uniform token info:id = "UsdPreviewSurface"
 				color3f inputs:diffuseColor = {2}
-				float inputs:metallic = 1
+				float inputs:metallic = 0
 				float inputs:roughness = 0
 				token outputs:surface
 			}}
 			token outputs:surface.connect = <pbr.outputs:surface>
-		}}
-	}}\n'''.format(self.materialId, ref_strg, rgb_or_dec_str, round(random.random(), 3))
+		
+	}}
+}}\n'''.format(self.materialId, ref_strg, rgb_or_dec_str, round(random.random(), 3))
 		
 		return bxdf_mat_str
 
@@ -416,14 +456,12 @@ def Xform "brick_{0}" (
 						dest = shutil.copy("material_" + matname + '.usda', assetsDir)
 						os.remove("material_" + matname + ".usda")
 
-					op.write('\t#rel material:binding = </brick_{0}/Materials/Material1>\n'.format(written_obj))
-					op.write('''\tdef "Material" (
-	references = [@material_{0}.usda@</Material1>]
+					op.write('\trel material:binding = </brick_{0}/brick_{0}_part_{1}/Material{2}/material_{2}a>\n'.format(written_obj, part, matname))
+					op.write('''\tdef "Material{0}" (
+		add references = @./material_{0}.usda@
 	)
 	{{
-		over color3f color = (1, 1, 0)
 	}}\n\n'''.format(matname))
-					op.write('\tcolor3f[] primvars:displayColor = [(1, 0, 0)]\n')
 					
 					op.write('\t\tint[] faceVertexCounts = [')
 					fmt = ""
