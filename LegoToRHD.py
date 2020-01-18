@@ -69,29 +69,59 @@ class MaterialRi:
 		
 		if decorationId != None and decorationId != '0':
 		# We have decorations
-			rgb_or_dec_str = '"Blend{0}:resultRGB"'.format(decorationId)
+			rgb_or_dec_str = '({0}, {1}, {2})'.format(self.r, self.g, self.b)
 			ref_strg = 'reference '
 			
-			texture_strg = '''Pattern "PxrManifold2D" "PxrManifold2D1"
-	"float angle" [0]
-	"float scaleS" [1]
-	"float scaleT" [1]
-	"int invertT" [1]
-	
-# txmake -t:8 -compression zip -mode clamp -resize up {0}.png {0}.tex
-Pattern "PxrTexture" "Texture{0}"
-	"string filename" ["{0}.tex"]
-	"int invertT" [0]
-	"int linearize" [1]
-	"reference struct manifold" ["PxrManifold2D1:result"]
+			texture_strg = '''#usda 1.0
+(
+	defaultPrim = "material_{0}_{1}"
+)
+def Xform "material_{0}_{1}" (
+	assetInfo = {{
+		asset identifier = @material_{0}_{1}.usda@
+		string name = "material_{0}_{1}"
+	}}
+	kind = "component"
+
+)
+{{
+def Material "material_{0}_{1}a"
+	{{
+		
+			token outputs:surface.connect = <pbr.outputs:surface>
 			
-Pattern "PxrBlend" "Blend{0}"
-	"int operation" [19]
-	"reference color topRGB" ["Texture{0}:resultRGB"]
-	"reference float topA" ["Texture{0}:resultA"]
-	"color bottomRGB" [{1} {2} {3}]
-	"float bottomA" [1]
-	"int clampOutput" [1]\n\n'''.format(decorationId, self.r, self.g, self.b)
+			def Shader "pbr"
+			{{
+				uniform token info:id = "UsdPreviewSurface"
+				color3f inputs:diffuseColor.connect = <diffuseColor_texture.outputs:rgb>
+				color3f inputs:diffuseColor = {3}
+				float inputs:metallic = 0
+				float inputs:roughness = 0
+				float inputs:opacity = 0
+				float inputs:opacityThreshold = 0.0
+				token outputs:surface
+			}}
+			
+			def Shader "uvReader_st"
+			{{
+				uniform token info:id = "UsdPrimvarReader_float2"
+				token inputs:varname = "st"
+				float2 outputs:result
+			}}
+			
+			def Shader "diffuseColor_texture"
+			{{
+				uniform token info:id = "UsdUVTexture"
+				float4 inputs:fallback = (0, 0, 0, 1)
+				asset inputs:file = @{1}.png@
+				float2 inputs:st.connect = <uvReader_st.outputs:result>
+				token inputs:wrapS = "repeat"
+				token inputs:wrapT = "repeat"
+				float3 outputs:rgb
+			}}
+		
+	}}
+}}\n\n'''.format(self.materialId, decorationId, ref_strg, rgb_or_dec_str, round(random.random(), 3))
 		
 		else:
 		# We don't have decorations
@@ -114,15 +144,17 @@ def Xform "material_{0}" (
 def Material "material_{0}a"
 	{{
 		
+			token outputs:surface.connect = <pbr.outputs:surface>
+			
 			def Shader "pbr"
 			{{
 				uniform token info:id = "UsdPreviewSurface"
 				color3f inputs:diffuseColor = {2}
 				float inputs:metallic = 0
 				float inputs:roughness = 0
+				float inputs:opacity = 0.2
 				token outputs:surface
 			}}
-			token outputs:surface.connect = <pbr.outputs:surface>
 		
 	}}
 }}\n'''.format(self.materialId, ref_strg, rgb_or_dec_str, round(random.random(), 3))
@@ -144,6 +176,8 @@ def Xform "material_{0}" (
 def Material "material_{0}a"
 	{{
 		
+			token outputs:surface.connect = <pbr.outputs:surface>
+			
 			def Shader "pbr"
 			{{
 				uniform token info:id = "UsdPreviewSurface"
@@ -152,7 +186,6 @@ def Material "material_{0}a"
 				float inputs:roughness = 0
 				token outputs:surface
 			}}
-			token outputs:surface.connect = <pbr.outputs:surface>
 		
 	}}
 }}\n'''.format(self.materialId, ref_strg, rgb_or_dec_str, round(random.random(), 3))
@@ -174,6 +207,8 @@ def Xform "material_{0}" (
 def Material "material_{0}a"
 	{{
 		
+			token outputs:surface.connect = <pbr.outputs:surface>
+			
 			def Shader "pbr"
 			{{
 				uniform token info:id = "UsdPreviewSurface"
@@ -182,7 +217,6 @@ def Material "material_{0}a"
 				float inputs:roughness = 0
 				token outputs:surface
 			}}
-			token outputs:surface.connect = <pbr.outputs:surface>
 		
 	}}
 }}\n'''.format(self.materialId, ref_strg, rgb_or_dec_str, round(random.random(), 3))
