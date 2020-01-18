@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 #
-# LegoToRHD Version 0.3.5- Copyright (c) 2020 by m2m
+# LegoToRHD Version 0.3.5 - Copyright (c) 2020 by m2m
 # based on pyldd2obj Version 0.4.8 - Copyright (c) 2019 by jonnysp 
 # LegoToRHD parses LXF files and command line parameters to creates a USDA compliant files.
 # 
@@ -88,37 +88,26 @@ def Xform "material_{0}_{1}" (
 def Material "material_{0}_{1}a"
 	{{
 		
-			token outputs:surface.connect = <pbr.outputs:surface>
-			
-			def Shader "pbr"
-			{{
-				uniform token info:id = "UsdPreviewSurface"
-				color3f inputs:diffuseColor.connect = <diffuseColor_texture.outputs:rgb>
-				color3f inputs:diffuseColor = {3}
-				float inputs:metallic = 0
-				float inputs:roughness = 0
-				float inputs:opacity = 0
-				float inputs:opacityThreshold = 0.0
-				token outputs:surface
-			}}
-			
-			def Shader "uvReader_st"
-			{{
-				uniform token info:id = "UsdPrimvarReader_float2"
+			def Shader "stAttr" {{
+				uniform token info:id = "UsdPrimvarReader_float2" 
 				token inputs:varname = "st"
 				float2 outputs:result
 			}}
-			
-			def Shader "diffuseColor_texture"
-			{{
+
+			def Shader "diffuse" {{
 				uniform token info:id = "UsdUVTexture"
-				float4 inputs:fallback = (0, 0, 0, 1)
 				asset inputs:file = @{1}.png@
-				float2 inputs:st.connect = <uvReader_st.outputs:result>
-				token inputs:wrapS = "repeat"
-				token inputs:wrapT = "repeat"
+				float2 inputs:st.connect = <stAttr.outputs:result>
 				float3 outputs:rgb
 			}}
+			
+			def Shader "pbr" {{
+				uniform token info:id = "UsdPreviewSurface"
+				color3f inputs:diffuseColor.connect = <diffuse.outputs:rgb> 
+				token outputs:surface
+			}}
+			
+			token outputs:surface.connect = <pbr.outputs:surface>
 		
 	}}
 }}\n\n'''.format(self.materialId, decorationId, ref_strg, rgb_or_dec_str, round(random.random(), 3))
