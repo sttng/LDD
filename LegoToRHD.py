@@ -616,9 +616,8 @@ def main():
 		os.remove(obj_filename + '.usda')
 		os.remove('rib_header.rib')
 		
-		print "\nNow start Renderman with (for preview):\n./prman -d it -t:-2 {0}{1}_Scene.rib".format(cl.args.searcharchive, os.sep + obj_filename)
-		print "Or start Renderman with (for final mode without preview):\n./prman -t:-2 -checkpoint 1m {0}{1}_Scene.rib".format(cl.args.searcharchive, os.sep + obj_filename)
-		print "\nFinally denoise the final output with:./denoise {0}{1}.beauty.001.exr\n".format(cl.args.searcharchive, os.sep + obj_filename)
+		print "\nNow start usdcat to convert from usda to usdc with :\n./usdcat -o {0}{1}_Scene.usdc {0}{1}_Scene.usda".format(cl.args.searcharchive, os.sep + obj_filename)
+		print "\nFinally put the file into an usdz archive with:./usdzconvert {0}{1}_Scene.usdc\n".format(cl.args.searcharchive, os.sep + obj_filename)
 		
 	else:
 		print("No LDD database found. Please install LEGO Digital-Designer.")
