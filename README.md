@@ -56,6 +56,7 @@ https://rmanwiki.pixar.com/display/REN22/Checkpointing+and+Recovery
 * https://www.janwalter.org/jekyll/blender/cloud/attic/2016/07/13/attic.html
 * http://www.fundza.com/cutter/whatsnew/index.html
 * https://rmanwiki.pixar.com/display/REN22/Denoising
+* https://graphics.pixar.com/usd/docs/USD-Frequently-Asked-Questions.html#USDFrequentlyAskedQuestions-WhyIsn'tPythonFindingUSDModules?
 
 ## Lego plastic materials
 
