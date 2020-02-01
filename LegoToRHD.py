@@ -72,7 +72,8 @@ class MaterialRi:
 			rgb_or_dec_str = '({0}, {1}, {2})'.format(self.r, self.g, self.b)
 			ref_strg = 'reference '
 			
-			texture_strg = '''#usda 1.0
+			#texture_strg 
+			bxdf_mat_str = '''#usda 1.0
 (
 	defaultPrim = "material_{0}_{1}"
 )
@@ -117,7 +118,8 @@ def Material "material_{0}_{1}a"
 			rgb_or_dec_str = '({0}, {1}, {2})'.format(self.r, self.g, self.b)
 			
 		if self.materialType == 'Transparent':
-			bxdf_mat_str = texture_strg + '''#usda 1.0
+			#bxdf_mat_str = texture_strg + 
+			bxdf_mat_str = '''#usda 1.0
 (
 	defaultPrim = "material_{0}"
 )
@@ -380,7 +382,7 @@ class Converter:
 
 def Xform "brick_{0}" (
 	assetInfo = {{
-		asset identifier = @{0}_Scene.usda@
+		asset identifier = @{0}.usda@
 		string name = "brick_{0}"
 	}}
 	kind = "component"
@@ -577,7 +579,7 @@ def generate_rib_header(infile, srate, pixelvar, width, height, fov, fstop, sear
 
 def Xform "LXF_file" (
 	assetInfo = {{
-		asset identifier = @{2}.usda@
+		asset identifier = @{2}_Scene.usda@
 		string name = "LXF_file"
 	}}
 	kind = "component"
