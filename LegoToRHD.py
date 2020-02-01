@@ -9,7 +9,7 @@
 #
 # Updates:
 # 
-# 0.3.5 initial. support for material but without textures
+# 0.3.5 initial support for materials but without textures
 # 0.3 support for all lxf files without textures
 # 0.2 support for all parts without textures
 # 0.1 initial version
@@ -71,22 +71,23 @@ class MaterialRi:
 		# We have decorations
 			rgb_or_dec_str = '({0}, {1}, {2})'.format(self.r, self.g, self.b)
 			ref_strg = 'reference '
+			matId_or_decId = '{0}_{1}'.format(self.materialId, decorationId)
 			
 			#texture_strg 
 			bxdf_mat_str = '''#usda 1.0
 (
-	defaultPrim = "material_{0}_{1}"
+	defaultPrim = "material_{0}"
 )
-def Xform "material_{0}_{1}" (
+def Xform "material_{0}" (
 	assetInfo = {{
-		asset identifier = @material_{0}_{1}.usda@
-		string name = "material_{0}_{1}"
+		asset identifier = @material_{0}.usda@
+		string name = "material_{0}"
 	}}
 	kind = "component"
 
 )
 {{
-def Material "material_{0}_{1}a"
+def Material "material_{0}a"
 	{{
 		
 			def Shader "stAttr" {{
@@ -111,11 +112,12 @@ def Material "material_{0}_{1}a"
 			token outputs:surface.connect = <pbr.outputs:surface>
 		
 	}}
-}}\n\n'''.format(self.materialId, decorationId, ref_strg, rgb_or_dec_str, round(random.random(), 3))
+}}\n\n'''.format(matId_or_decId, ref_strg, rgb_or_dec_str, round(random.random(), 3))
 		
 		else:
 		# We don't have decorations
 			rgb_or_dec_str = '({0}, {1}, {2})'.format(self.r, self.g, self.b)
+			matId_or_decId = self.materialId
 			
 		if self.materialType == 'Transparent':
 			#bxdf_mat_str = texture_strg + 
@@ -148,7 +150,7 @@ def Material "material_{0}a"
 			}}
 		
 	}}
-}}\n'''.format(self.materialId, ref_strg, rgb_or_dec_str, round(random.random(), 3))
+}}\n'''.format(matId_or_decId, ref_strg, rgb_or_dec_str, round(random.random(), 3))
 			
 		elif self.materialType == 'Metallic':
 			bxdf_mat_str = texture_strg + '''#usda 1.0
@@ -179,7 +181,7 @@ def Material "material_{0}a"
 			}}
 		
 	}}
-}}\n'''.format(self.materialId, ref_strg, rgb_or_dec_str, round(random.random(), 3))
+}}\n'''.format(matId_or_decId, ref_strg, rgb_or_dec_str, round(random.random(), 3))
 		
 		else:
 			bxdf_mat_str = texture_strg + '''#usda 1.0
@@ -210,7 +212,7 @@ def Material "material_{0}a"
 			}}
 		
 	}}
-}}\n'''.format(self.materialId, ref_strg, rgb_or_dec_str, round(random.random(), 3))
+}}\n'''.format(matId_or_decId, ref_strg, rgb_or_dec_str, round(random.random(), 3))
 		
 		return bxdf_mat_str
 
@@ -618,7 +620,7 @@ def main():
 		os.remove(obj_filename + '.usda')
 		os.remove('rib_header.rib')
 		
-		print "\nNow start usdcat to convert from usda to usdc with :\n./usdcat -o {0}{1}_Scene.usdc {0}{1}_Scene.usda".format(cl.args.searcharchive, os.sep + obj_filename)
+		print "\nNow start usdcat to convert from usda to usdc with :\n./usdcat -f -o {0}{1}_Scene.usdc {0}{1}_Scene.usda".format(cl.args.searcharchive, os.sep + obj_filename)
 		print "\nFinally put the file into an usdz archive with:./usdzconvert {0}{1}_Scene.usdc\n".format(cl.args.searcharchive, os.sep + obj_filename)
 		
 	else:
