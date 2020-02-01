@@ -375,12 +375,12 @@ class Converter:
 				op.write('''#usda 1.0
 (
 	defaultPrim = "brick_{0}"
-	upAxis = "X"
+	upAxis = "Y"
 )
 
 def Xform "brick_{0}" (
 	assetInfo = {{
-		asset identifier = @brick_{0}.usda@
+		asset identifier = @{0}_Scene.usda@
 		string name = "brick_{0}"
 	}}
 	kind = "component"
@@ -572,18 +572,18 @@ def generate_rib_header(infile, srate, pixelvar, width, height, fov, fstop, sear
 		string creator = "Generated with LegoToRHD {0} on {1}"
 	}}
 	defaultPrim = "LXF_file"
-	upAxis = "X"
+	upAxis = "Y"
 )
 
 def Xform "LXF_file" (
 	assetInfo = {{
-		asset identifier = @LXF_file.usda@
+		asset identifier = @{2}.usda@
 		string name = "LXF_file"
 	}}
 	kind = "component"
 
 )
-'''.format(__version__, datetime.datetime.now(), str(searcharchive) + os.sep, FindRmtree(), str(searchtexture) + os.sep, pixelvar, width, height, str(cwd) + os.sep + str(infile), integrator, srate, fov)
+'''.format(__version__, datetime.datetime.now(), infile)
 
 	with open('rib_header.rib', 'w') as file_writer:
 		file_writer.write(rib_header)
