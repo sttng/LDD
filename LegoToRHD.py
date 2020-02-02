@@ -238,6 +238,7 @@ class Converter:
 		usedmaterials = []
 		geometriecache = {}
 		writtenribs = []
+		#usedgeo = [] not used currently
 		
 		start_time = time.time()
 		
@@ -423,7 +424,7 @@ def Xform "brick_{0}" (
 					op.write('\tdef "g{0}" (\n'.format(part))
 					op.write('\t\tadd references = @./geo{0}.usda@\n\t)\n\t{{\n'.format(written_geo))
 					
-					gop = open("geo" + written_geo + ".usda", "w+")
+					gop = open(os.path.join(assetsDir,"geo" + written_geo + ".usda"), "w+")
 					gop.write('''#usda 1.0
 (
 	defaultPrim = "geo{0}"
@@ -436,13 +437,10 @@ def Xform "geo{0}" (
 		string name = "geo{0}"
 	}}
 	kind = "component"
-
 )
 {{
 	def Mesh "mesh{0}"
 	{{\n'''.format(written_geo))
-					
-					
 					
 					gop.write('\t\tpoint3f[] points = [')
 					fmt = ""
@@ -462,18 +460,7 @@ def Xform "geo{0}" (
 					gop.write('\t\t\tinterpolation = "uniform"\n')
 					gop.write('\t\t)\n')
 
-					gop.write('\t\tfloat2[] primvars:st = [')
-					fmt = ""
-					for text in geo.Parts[part].textures:
-						gop.write('{0}({1}, {2})'.format(fmt, text.x, text.y))
-						fmt = ", "
-						#op.write(text.string("vt"))
-					gop.write('] (\n')
-					gop.write('\t\t\tinterpolation = "faceVarying"\n')
-					gop.write('\t\t)\n')
-
 					decoCount = 0
-				#for part in geo.Parts:
 					
 					lddmatri = self.allMaterials.getMaterialRibyId(pa.materials[part])
 					matname = pa.materials[part]
@@ -483,20 +470,20 @@ def Xform "geo{0}" (
 						if decoCount <= len(pa.decoration):
 							deco = pa.decoration[decoCount]
 						decoCount += 1
-	
+
 					extfile = ''
 					if not deco == '0':
 						extfile = deco + '.png'
 						matname += "_" + deco
 						decofilename = DECORATIONPATH + deco + '.png'
-						if not os.path.isfile(extfile) and self.database.fileexist(decofilename):
-							with open(extfile, "wb") as f:
+						if not os.path.isfile(os.path.join(assetsDir, extfile)) and self.database.fileexist(decofilename):
+							with open(os.path.join(assetsDir, extfile), "wb") as f:
 								f.write(self.database.filelist[decofilename].read())
 								f.close()
 
 					if not matname in usedmaterials:
 						usedmaterials.append(matname)
-						outmat = open("material_" + matname + ".usda", "w+")
+						outmat = open(os.path.join(assetsDir,"material_" + matname + ".usda"), "w+")
 						
 						if not deco == '0':
 							outmat.write(lddmatri.string(deco))
@@ -505,16 +492,13 @@ def Xform "geo{0}" (
 							outmat.write(lddmatri.string(None))
 						
 						outmat.close()
-						#zfmat.write("material_" + matname + ".usda", compress_type=compression)
-						dest = shutil.copy("material_" + matname + '.usda', assetsDir)
-						os.remove("material_" + matname + ".usda")
 
-					op.write('\trel material:binding = <Material{0}/material_{0}a>\n'.format(matname))
-					op.write('''\tdef "Material{0}" (
-		add references = @./material_{0}.usda@
-	)
-	{{
-	}}
+					op.write('\t\trel material:binding = <Material{0}/material_{0}a>\n'.format(matname))
+					op.write('''\t\tdef "Material{0}" (
+			add references = @./material_{0}.usda@
+		)
+		{{
+		}}
 	}}\n\n'''.format(matname))
 					
 					gop.write('\t\tint[] faceVertexCounts = [')
@@ -527,21 +511,34 @@ def Xform "geo{0}" (
 					gop.write('\t\tint[] faceVertexIndices = [')
 					fmt = ""
 					for face in geo.Parts[part].faces:
-						if len(geo.Parts[part].textures) > 0:
-							gop.write('{0}{1},{2},{3}'.format(fmt, face.a + indexOffset - 1, face.b + indexOffset - 1, face.c + indexOffset - 1))
-							fmt = ", "
-							#out.write(face.string("f",indexOffset,textOffset))  
-						else:
-							gop.write('{0}{1},{2},{3}'.format(fmt, face.a + indexOffset - 1, face.b + indexOffset - 1, face.c + indexOffset - 1))
-							fmt = ", "
+						gop.write('{0}{1},{2},{3}'.format(fmt, face.a + indexOffset - 1, face.b + indexOffset - 1, face.c + indexOffset - 1))
+						fmt = ", "
 							#out.write(face.string("f",indexOffset))
-	
 					gop.write(']\n')
+					
+					if len(geo.Parts[part].textures) > 0:
+						
+						gop.write('\n\t\tfloat2[] primvars:st = [')
+						fmt = ""
+						for text in geo.Parts[part].textures:
+							gop.write('{0}({1}, {2})'.format(fmt, text.x, text.y))
+							fmt = ", "
+							#op.write(text.string("vt"))
+						gop.write('] (\n')
+						gop.write('\t\t\tinterpolation = "faceVarying"\n')
+						gop.write('\t\t)\n')
+					
+						gop.write('\t\tint[] primvars:st:indices = [')
+						fmt = ""
+						for face in geo.Parts[part].faces:
+							gop.write('{0}{1},{2},{3}'.format(fmt, face.a + textOffset - 1, face.b + textOffset - 1, face.c + textOffset - 1))
+							fmt = ", "
+							#out.write(face.string("f",indexOffset,textOffset))
+						gop.write(']\n\n')
+					
 					gop.write('\t\tuniform token subdivisionScheme = "none"\n\t}\n')
 					gop.write('}\n')
 					gop.close()
-					dest = shutil.copy('geo' + written_geo + '.usda', assetsDir)
-					os.remove('geo' + written_geo + '.usda')
 
 					indexOffset = 1
 					textOffset = 1
@@ -630,12 +627,6 @@ def main():
 	lxf_filename = os.path.realpath(cl.args.infile.name)
 	obj_filename = os.path.splitext(os.path.basename(lxf_filename))[0]
 	generate_rib_header(cl.args.infile, cl.args.srate, cl.args.pixelvar, cl.args.width, cl.args.height, cl.args.fov, cl.args.fstop, cl.args.searcharchive, cl.args.searchtexture, cl.integrator, cl.integratorParams, cl.useplane)
-
-	# Clean up before writing
-	if os.path.exists(obj_filename + "_Materials_Archive.zip"):
-		os.remove(obj_filename + "_Materials_Archive.zip")
-	if os.path.exists(obj_filename + "_Bricks_Archive.zip"):
-		os.remove(obj_filename + "_Bricks_Archive.zip")
 
 	converter = Converter()
 	print("LegoToRHD Version " + __version__)
