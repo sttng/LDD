@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 #
-# LegoToRHD Version 0.3.5 - Copyright (c) 2020 by m2m
+# LegoToRHD Version 0.3.6 - Copyright (c) 2020 by m2m
 # based on pyldd2obj Version 0.4.8 - Copyright (c) 2019 by jonnysp 
 # LegoToRHD parses LXF files and command line parameters to creates a USDA compliant files.
 # 
@@ -9,6 +9,7 @@
 #
 # Updates:
 # 
+# 0.3.6 improved efficiency with geo-file referencing
 # 0.3.5 initial support for materials but without textures
 # 0.3 support for all lxf files without textures
 # 0.2 support for all parts without textures
@@ -26,7 +27,7 @@ import shutil
 import ParseCommandLine as cl
 import random
 
-__version__ = "0.3.5"
+__version__ = "0.3.6"
 
 compression = zipfile.ZIP_STORED #uncompressed archive for USDZ, otherwise would use ZIP_DEFLATED, the usual zip compression
 
@@ -395,12 +396,15 @@ def Xform "brick_{0}" (
 				# transform -------------------------------------------------------
 				for part in geo.Parts:
 					
+					written_geo = str(geo.designID) + '_' + str(part)
+					
 					geo.Parts[part].outpositions = [elem.copy() for elem in geo.Parts[part].positions]
 					geo.Parts[part].outnormals = [elem.copy() for elem in geo.Parts[part].normals]
 					
 					# translate / rotate only parts with more then 1 bone. This are flex parts
 					if (len(pa.Bones) > flexflag):
 
+						written_geo = written_geo + '_' + uniqueId
 						for i, b in enumerate(pa.Bones):
 							# positions
 							for j, p in enumerate(geo.Parts[part].outpositions):
@@ -416,35 +420,57 @@ def Xform "brick_{0}" (
 									#transform with inverted values (to undo the transformation)
 									#geo.Parts[part].outnormals[k].transformW(undoTransformMatrix)
 
-					op.write('\tdef Mesh "brick_{0}_part_{1}"\n{{\n'.format(written_obj, part))
+					op.write('\tdef "g{0}" (\n'.format(part))
+					op.write('\t\tadd references = @./geo{0}.usda@\n\t)\n\t{{\n'.format(written_geo))
 					
-					op.write('\t\tpoint3f[] points = [')
+					gop = open("geo" + written_geo + ".usda", "w+")
+					gop.write('''#usda 1.0
+(
+	defaultPrim = "geo{0}"
+	upAxis = "Y"
+)
+
+def Xform "geo{0}" (
+	assetInfo = {{
+		asset identifier = @geo{0}.usda@
+		string name = "geo{0}"
+	}}
+	kind = "component"
+
+)
+{{
+	def Mesh "mesh{0}"
+	{{\n'''.format(written_geo))
+					
+					
+					
+					gop.write('\t\tpoint3f[] points = [')
 					fmt = ""
 					for point in geo.Parts[part].outpositions:
-						op.write('{0}({1}, {2}, {3})'.format(fmt, point.x, point.y, point.z))
+						gop.write('{0}({1}, {2}, {3})'.format(fmt, point.x, point.y, point.z))
 						fmt = ", "
 						#op.write(point.string("v"))
-					op.write(']\n')
+					gop.write(']\n')
 
-					op.write('\t\tnormal3f[] normals = [')
+					gop.write('\t\tnormal3f[] normals = [')
 					fmt = ""
 					for normal in geo.Parts[part].outnormals:
-						op.write('{0}({1}, {2}, {3})'.format(fmt, normal.x, normal.y, normal.z))
+						gop.write('{0}({1}, {2}, {3})'.format(fmt, normal.x, normal.y, normal.z))
 						fmt = ", "
 						#op.write(normal.string("vn"))
-					op.write('] (\n')
-					op.write('\t\t\tinterpolation = "uniform"\n')
-					op.write('\t\t)\n')
+					gop.write('] (\n')
+					gop.write('\t\t\tinterpolation = "uniform"\n')
+					gop.write('\t\t)\n')
 
-					op.write('\t\tfloat2[] primvars:st = [')
+					gop.write('\t\tfloat2[] primvars:st = [')
 					fmt = ""
 					for text in geo.Parts[part].textures:
-						op.write('{0}({1}, {2})'.format(fmt, text.x, text.y))
+						gop.write('{0}({1}, {2})'.format(fmt, text.x, text.y))
 						fmt = ", "
 						#op.write(text.string("vt"))
-					op.write('] (\n')
-					op.write('\t\t\tinterpolation = "faceVarying"\n')
-					op.write('\t\t)\n')
+					gop.write('] (\n')
+					gop.write('\t\t\tinterpolation = "faceVarying"\n')
+					gop.write('\t\t)\n')
 
 					decoCount = 0
 				#for part in geo.Parts:
@@ -483,34 +509,39 @@ def Xform "brick_{0}" (
 						dest = shutil.copy("material_" + matname + '.usda', assetsDir)
 						os.remove("material_" + matname + ".usda")
 
-					op.write('\trel material:binding = </brick_{0}/brick_{0}_part_{1}/Material{2}/material_{2}a>\n'.format(written_obj, part, matname))
+					op.write('\trel material:binding = <Material{0}/material_{0}a>\n'.format(matname))
 					op.write('''\tdef "Material{0}" (
 		add references = @./material_{0}.usda@
 	)
 	{{
+	}}
 	}}\n\n'''.format(matname))
 					
-					op.write('\t\tint[] faceVertexCounts = [')
+					gop.write('\t\tint[] faceVertexCounts = [')
 					fmt = ""
 					for face in geo.Parts[part].faces:
-						op.write('{0}3'.format(fmt))
+						gop.write('{0}3'.format(fmt))
 						fmt = ", "
-					op.write(']\n')
+					gop.write(']\n')
 					
-					op.write('\t\tint[] faceVertexIndices = [')
+					gop.write('\t\tint[] faceVertexIndices = [')
 					fmt = ""
 					for face in geo.Parts[part].faces:
 						if len(geo.Parts[part].textures) > 0:
-							op.write('{0}{1},{2},{3}'.format(fmt, face.a + indexOffset - 1, face.b + indexOffset - 1, face.c + indexOffset - 1))
+							gop.write('{0}{1},{2},{3}'.format(fmt, face.a + indexOffset - 1, face.b + indexOffset - 1, face.c + indexOffset - 1))
 							fmt = ", "
 							#out.write(face.string("f",indexOffset,textOffset))  
 						else:
-							op.write('{0}{1},{2},{3}'.format(fmt, face.a + indexOffset - 1, face.b + indexOffset - 1, face.c + indexOffset - 1))
+							gop.write('{0}{1},{2},{3}'.format(fmt, face.a + indexOffset - 1, face.b + indexOffset - 1, face.c + indexOffset - 1))
 							fmt = ", "
 							#out.write(face.string("f",indexOffset))
 	
-					op.write(']\n')
-					op.write('\t\tuniform token subdivisionScheme = "none"\n\t}\n')
+					gop.write(']\n')
+					gop.write('\t\tuniform token subdivisionScheme = "none"\n\t}\n')
+					gop.write('}\n')
+					gop.close()
+					dest = shutil.copy('geo' + written_geo + '.usda', assetsDir)
+					os.remove('geo' + written_geo + '.usda')
 
 					indexOffset = 1
 					textOffset = 1
