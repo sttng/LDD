@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 #
-# LegoToRHD Version 0.3.6 - Copyright (c) 2020 by m2m
+# LegoToRHD Version 0.4 - Copyright (c) 2020 by m2m
 # based on pyldd2obj Version 0.4.8 - Copyright (c) 2019 by jonnysp 
 # LegoToRHD parses LXF files and command line parameters to creates a USDA compliant files.
 # 
@@ -9,6 +9,7 @@
 #
 # Updates:
 # 
+# 0.4 Initial Texture support - appaer transparent however
 # 0.3.6 improved efficiency with geo-file referencing
 # 0.3.5 initial support for materials but without textures
 # 0.3 support for all lxf files without textures
@@ -27,7 +28,7 @@ import shutil
 import ParseCommandLine as cl
 import random
 
-__version__ = "0.3.6"
+__version__ = "0.4"
 
 compression = zipfile.ZIP_STORED #uncompressed archive for USDZ, otherwise would use ZIP_DEFLATED, the usual zip compression
 
@@ -70,50 +71,28 @@ class MaterialRi:
 		
 		if decorationId != None and decorationId != '0':
 		# We have decorations
-			rgb_or_dec_str = '({0}, {1}, {2})'.format(self.r, self.g, self.b)
-			ref_strg = 'reference '
+			rgb_or_dec_str = '<../diffuseColor_texture.outputs:rgb>'
+			ref_strg = '.connect'
 			matId_or_decId = '{0}_{1}'.format(self.materialId, decorationId)
 			
 			#texture_strg 
-			bxdf_mat_str = '''#usda 1.0
-(
-	defaultPrim = "material_{0}"
-)
-def Xform "material_{0}" (
-	assetInfo = {{
-		asset identifier = @material_{0}.usda@
-		string name = "material_{0}"
-	}}
-	kind = "component"
+			texture_strg = '''
+		def Shader "stAttrReader" 
+		{{
+			uniform token info:id = "UsdPrimvarReader_float2" 
+			token inputs:varname = "st"
+			float2 outputs:result
+		}}
 
-)
-{{
-def Material "material_{0}a"
-	{{
-		
-			def Shader "stAttr" {{
-				uniform token info:id = "UsdPrimvarReader_float2" 
-				token inputs:varname = "st"
-				float2 outputs:result
-			}}
+		def Shader "diffuseColor_texture"
+		{{
+			uniform token info:id = "UsdUVTexture"
+			asset inputs:file = @{0}.png@
+			float2 inputs:st.connect = <../stAttrReader.outputs:result>
+			float3 outputs:rgb
+		}}
 
-			def Shader "diffuse" {{
-				uniform token info:id = "UsdUVTexture"
-				asset inputs:file = @{1}.png@
-				float2 inputs:st.connect = <stAttr.outputs:result>
-				float3 outputs:rgb
-			}}
-			
-			def Shader "pbr" {{
-				uniform token info:id = "UsdPreviewSurface"
-				color3f inputs:diffuseColor.connect = <diffuse.outputs:rgb> 
-				token outputs:surface
-			}}
-			
-			token outputs:surface.connect = <pbr.outputs:surface>
-		
-	}}
-}}\n\n'''.format(matId_or_decId, ref_strg, rgb_or_dec_str, round(random.random(), 3))
+'''.format(decorationId, round(random.random(), 3))
 		
 		else:
 		# We don't have decorations
@@ -135,26 +114,26 @@ def Xform "material_{0}" (
 
 )
 {{
-def Material "material_{0}a"
+	def Material "material_{0}a"
 	{{
 		
-			token outputs:surface.connect = <pbr.outputs:surface>
-			
-			def Shader "pbr"
-			{{
-				uniform token info:id = "UsdPreviewSurface"
-				color3f inputs:diffuseColor = {2}
-				float inputs:metallic = 0
-				float inputs:roughness = 0
-				float inputs:opacity = 0.2
-				token outputs:surface
-			}}
+		token outputs:surface.connect = <surfaceShader.outputs:surface>
+{1}		
+		def Shader "surfaceShader"
+		{{
+			uniform token info:id = "UsdPreviewSurface"
+			color3f inputs:diffuseColor{3} = {2}
+			float inputs:metallic = 0
+			float inputs:roughness = 0
+			float inputs:opacity = 0.2
+			token outputs:surface
+		}}
 		
 	}}
-}}\n'''.format(matId_or_decId, ref_strg, rgb_or_dec_str, round(random.random(), 3))
+}}\n'''.format(matId_or_decId, texture_strg, rgb_or_dec_str, ref_strg, round(random.random(), 3))
 			
 		elif self.materialType == 'Metallic':
-			bxdf_mat_str = texture_strg + '''#usda 1.0
+			bxdf_mat_str = '''#usda 1.0
 (
 	defaultPrim = "material_{0}"
 )
@@ -167,25 +146,25 @@ def Xform "material_{0}" (
 
 )
 {{
-def Material "material_{0}a"
+	def Material "material_{0}a"
 	{{
 		
-			token outputs:surface.connect = <pbr.outputs:surface>
-			
-			def Shader "pbr"
-			{{
-				uniform token info:id = "UsdPreviewSurface"
-				color3f inputs:diffuseColor = {2}
-				float inputs:metallic = 1
-				float inputs:roughness = 0
-				token outputs:surface
-			}}
+		token outputs:surface.connect = <surfaceShader.outputs:surface>
+{1}		
+		def Shader "surfaceShader"
+		{{
+			uniform token info:id = "UsdPreviewSurface"
+			color3f inputs:diffuseColor{3} = {2}
+			float inputs:metallic = 1
+			float inputs:roughness = 0
+			token outputs:surface
+		}}
 		
 	}}
-}}\n'''.format(matId_or_decId, ref_strg, rgb_or_dec_str, round(random.random(), 3))
+}}\n'''.format(matId_or_decId, texture_strg, rgb_or_dec_str, ref_strg, round(random.random(), 3))
 		
 		else:
-			bxdf_mat_str = texture_strg + '''#usda 1.0
+			bxdf_mat_str = '''#usda 1.0
 (
 	defaultPrim = "material_{0}"
 )
@@ -198,22 +177,22 @@ def Xform "material_{0}" (
 
 )
 {{
-def Material "material_{0}a"
+	def Material "material_{0}a"
 	{{
 		
-			token outputs:surface.connect = <pbr.outputs:surface>
-			
-			def Shader "pbr"
-			{{
-				uniform token info:id = "UsdPreviewSurface"
-				color3f inputs:diffuseColor = {2}
-				float inputs:metallic = 0
-				float inputs:roughness = 0
-				token outputs:surface
-			}}
+		token outputs:surface.connect = <surfaceShader.outputs:surface>
+{1}		
+		def Shader "surfaceShader"
+		{{
+			uniform token info:id = "UsdPreviewSurface"
+			color3f inputs:diffuseColor{3} = {2}
+			float inputs:metallic = 0
+			float inputs:roughness = 0
+			token outputs:surface
+		}}
 		
 	}}
-}}\n'''.format(matId_or_decId, ref_strg, rgb_or_dec_str, round(random.random(), 3))
+}}\n'''.format(matId_or_decId, texture_strg, rgb_or_dec_str, ref_strg, round(random.random(), 3))
 		
 		return bxdf_mat_str
 
@@ -521,7 +500,7 @@ def Xform "geo{0}" (
 						gop.write('\n\t\tfloat2[] primvars:st = [')
 						fmt = ""
 						for text in geo.Parts[part].textures:
-							gop.write('{0}({1}, {2})'.format(fmt, text.x, text.y))
+							gop.write('{0}({1}, {2})'.format(fmt, text.x, (-1) * text.y))
 							fmt = ", "
 							#op.write(text.string("vt"))
 						gop.write('] (\n')
