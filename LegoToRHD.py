@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 #
-# LegoToRHD Version 0.4 - Copyright (c) 2020 by m2m
+# LegoToRHD Version 0.4.1 - Copyright (c) 2020 by m2m
 # based on pyldd2obj Version 0.4.8 - Copyright (c) 2019 by jonnysp 
 # LegoToRHD parses LXF files and command line parameters to create USDA compliant files.
 # 
@@ -29,7 +29,7 @@ import shutil
 import ParseCommandLine as cl
 import random
 
-__version__ = "0.4"
+__version__ = "0.4.1"
 
 compression = zipfile.ZIP_STORED #uncompressed archive for USDZ, otherwise would use ZIP_DEFLATED, the usual zip compression
 
