@@ -543,7 +543,7 @@ def Xform "geo{0}" (
 						
 		if useplane == True: # write the floor plane in case True
 			out.write('''
-		def Mesh "GroundPlane_1"
+	def Mesh "GroundPlane_1"
 		{{
 			float3[] extent = [ (-0.5, -0.1, -0.5), (0.5, 0.1, 0.5)]
 			int[] faceVertexCounts = [4, 4]
@@ -567,8 +567,8 @@ def Xform "geo{0}" (
 		
 			rel material:binding = </mat>
 			
-			double3 xformOp:translate = (0, {0}, 10)
-			float3 xformOp:scale = (200, 1, 200)
+			double3 xformOp:translate = (0, {0}, 0)
+			float3 xformOp:scale = (100, 1, 100)
 			uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
 			
 		}}\n\n'''.format(miny))
