@@ -9,7 +9,7 @@
 #
 # Updates:
 # 
-# 0.4.2 Added grounplane
+# 0.4.2 Added groundplane
 # 0.4.1 Fix on textures
 # 0.4 Initial Texture support - appear transparent however
 # 0.3.6 improved efficiency with geo-file referencing
