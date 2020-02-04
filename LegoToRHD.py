@@ -3,13 +3,14 @@
 #
 # LegoToRHD Version 0.4 - Copyright (c) 2020 by m2m
 # based on pyldd2obj Version 0.4.8 - Copyright (c) 2019 by jonnysp 
-# LegoToRHD parses LXF files and command line parameters to creates a USDA compliant files.
+# LegoToRHD parses LXF files and command line parameters to create a USDA compliant files.
 # 
 # Usage: ./LegoToRHD.py /Users/username/Documents/LEGO\ Creations/Models/mylfxfile.lxf -np
 #
 # Updates:
 # 
-# 0.4 Initial Texture support - appaer transparent however
+# 0.4.1 Fix on textures
+# 0.4 Initial Texture support - appear transparent however
 # 0.3.6 improved efficiency with geo-file referencing
 # 0.3.5 initial support for materials but without textures
 # 0.3 support for all lxf files without textures
@@ -374,6 +375,7 @@ def Xform "brick_{0}" (
 {{\n'''.format(written_obj))
 				
 				# transform -------------------------------------------------------
+				decoCount = 0 #moved from below
 				for part in geo.Parts:
 					
 					written_geo = str(geo.designID) + '_' + str(part)
@@ -439,7 +441,7 @@ def Xform "geo{0}" (
 					gop.write('\t\t\tinterpolation = "uniform"\n')
 					gop.write('\t\t)\n')
 
-					decoCount = 0
+					#decoCount = 0 moved it up
 					
 					lddmatri = self.allMaterials.getMaterialRibyId(pa.materials[part])
 					matname = pa.materials[part]
