@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 #
-# LegoToRHD Version 0.4.1 - Copyright (c) 2020 by m2m
+# LegoToRHD Version 0.4.2 - Copyright (c) 2020 by m2m
 # based on pyldd2obj Version 0.4.8 - Copyright (c) 2019 by jonnysp 
 # LegoToRHD parses LXF files and command line parameters to create USDA compliant files.
 # 
@@ -9,6 +9,7 @@
 #
 # Updates:
 # 
+# 0.4.2 Added grounplane
 # 0.4.1 Fix on textures
 # 0.4 Initial Texture support - appear transparent however
 # 0.3.6 improved efficiency with geo-file referencing
@@ -29,7 +30,7 @@ import shutil
 import ParseCommandLine as cl
 import random
 
-__version__ = "0.4.1"
+__version__ = "0.4.2"
 
 compression = zipfile.ZIP_STORED #uncompressed archive for USDZ, otherwise would use ZIP_DEFLATED, the usual zip compression
 
@@ -239,7 +240,7 @@ class Converter:
 		currentpart = 0
 		
 		# minx used for floor plane later
-		minx = 1000
+		miny = 1000
 		useplane = cl.useplane
 		
 		out.write('''
@@ -354,8 +355,8 @@ class Converter:
 					out.write('\t\t\tuniform token[] xformOpOrder = ["xformOp:transform"]\n')
 					
 					# minx used for floor plane later
-					if minx > float(n43):
-						minx = n43
+					if miny > float(n42):
+						miny = n42
 											
 				op = open(written_obj + ".usda", "w+")
 				op.write('''#usda 1.0
@@ -542,36 +543,35 @@ def Xform "geo{0}" (
 						
 		if useplane == True: # write the floor plane in case True
 			out.write('''
-	def Mesh "GroundPlane_1"
-{{
-	float3[] extent = [ (-0.5, -0.1, -0.5), (0.5, 0.1, 0.5)]
-	int[] faceVertexCounts = [4, 4]
-	int[] faceVertexIndices = [0, 1, 4, 3, 1, 2, 5, 4]
-	normal3f[] normals = [(0, 1, 0), (0, 1, 0), (0, 1, 0), (0, 1, 0), (0, 1, 0), (0, 1, 0)]
-	point3f[]  points = [(-0.5, 0, 0.5), (0, 0, 0.5), (0.5, 0, 0.5), (-0.5, 0, -0.5), (0, 0, -0.5), (0.5, 0, -0.5)]
-	float[] primvars:ao = [0, 0.5, 1, 1, 0.1, 1] (
-		interpolation = "vertex"
-	)
-	int[] primvars:ao:indices = [0, 1, 4, 3, 2, 5]
-
-	texCoord2f[] primvars:st = [(0, 0), (0.5, 0), (0.5, 1), (0, 1), (1, 0), (1, 1)] (
-		interpolation = "vertex"
-	)
-	int[] primvars:st:indices = [0, 1, 4, 3, 2, 5]
-	texCoord2f[] primvars:st1 = [(0, 0), (0.5, 0), (0.5, 1), (0, 1), (1, 0), (1, 1)] (
-		interpolation = "vertex"
-	)
-	int[] primvars:st1:indices = [0, 1, 4, 3, 2, 5]
-	uniform token subdivisionScheme = "none"
-
-	rel material:binding = </mat>
-}}
-
+		def Mesh "GroundPlane_1"
 		{{
-			double3 xformOp:translate = ({0}, 0, 10)
+			float3[] extent = [ (-0.5, -0.1, -0.5), (0.5, 0.1, 0.5)]
+			int[] faceVertexCounts = [4, 4]
+			int[] faceVertexIndices = [0, 1, 4, 3, 1, 2, 5, 4]
+			normal3f[] normals = [(0, 1, 0), (0, 1, 0), (0, 1, 0), (0, 1, 0), (0, 1, 0), (0, 1, 0)]
+			point3f[] points = [(-0.5, 0, 0.5), (0, 0, 0.5), (0.5, 0, 0.5), (-0.5, 0, -0.5), (0, 0, -0.5), (0.5, 0, -0.5)]
+			float[] primvars:ao = [0, 0.5, 1, 1, 0.1, 1] (
+			interpolation = "vertex"
+			)
+			int[] primvars:ao:indices = [0, 1, 4, 3, 2, 5]
+		
+			texCoord2f[] primvars:st = [(0, 0), (0.5, 0), (0.5, 1), (0, 1), (1, 0), (1, 1)] (
+				interpolation = "vertex"
+			)
+			int[] primvars:st:indices = [0, 1, 4, 3, 2, 5]
+			texCoord2f[] primvars:st1 = [(0, 0), (0.5, 0), (0.5, 1), (0, 1), (1, 0), (1, 1)] (
+				interpolation = "vertex"
+			)
+			int[] primvars:st1:indices = [0, 1, 4, 3, 2, 5]
+			uniform token subdivisionScheme = "none"
+		
+			rel material:binding = </mat>
+			
+			double3 xformOp:translate = (0, {0}, 10)
 			float3 xformOp:scale = (200, 1, 200)
 			uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
-		}}\n\n'''.format(minx))
+			
+		}}\n\n'''.format(miny))
 		
 		#zf.close()
 		#zfmat.close()
