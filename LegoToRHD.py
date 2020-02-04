@@ -376,7 +376,7 @@ def Xform "brick_{0}" (
 {{\n'''.format(written_obj))
 				
 				# transform -------------------------------------------------------
-				decoCount = 0 #moved from below
+				decoCount = 0
 				for part in geo.Parts:
 					
 					written_geo = str(geo.designID) + '_' + str(part)
@@ -441,8 +441,6 @@ def Xform "geo{0}" (
 					gop.write('] (\n')
 					gop.write('\t\t\tinterpolation = "uniform"\n')
 					gop.write('\t\t)\n')
-
-					#decoCount = 0 moved it up
 					
 					lddmatri = self.allMaterials.getMaterialRibyId(pa.materials[part])
 					matname = pa.materials[part]
