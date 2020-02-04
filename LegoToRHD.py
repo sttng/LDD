@@ -3,7 +3,7 @@
 #
 # LegoToRHD Version 0.4 - Copyright (c) 2020 by m2m
 # based on pyldd2obj Version 0.4.8 - Copyright (c) 2019 by jonnysp 
-# LegoToRHD parses LXF files and command line parameters to create a USDA compliant files.
+# LegoToRHD parses LXF files and command line parameters to create USDA compliant files.
 # 
 # Usage: ./LegoToRHD.py /Users/username/Documents/LEGO\ Creations/Models/mylfxfile.lxf -np
 #
