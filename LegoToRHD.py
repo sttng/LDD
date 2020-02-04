@@ -542,9 +542,31 @@ def Xform "geo{0}" (
 						
 		if useplane == True: # write the floor plane in case True
 			out.write('''
-	def "GroundPlane_1" (
-		add references = @./assets/GroundPlane_1.usd@
-		)
+	def Mesh "GroundPlane_1"
+{{
+	float3[] extent = [ (-0.5, -0.1, -0.5), (0.5, 0.1, 0.5)]
+	int[] faceVertexCounts = [4, 4]
+	int[] faceVertexIndices = [0, 1, 4, 3, 1, 2, 5, 4]
+	normal3f[] normals = [(0, 1, 0), (0, 1, 0), (0, 1, 0), (0, 1, 0), (0, 1, 0), (0, 1, 0)]
+	point3f[]  points = [(-0.5, 0, 0.5), (0, 0, 0.5), (0.5, 0, 0.5), (-0.5, 0, -0.5), (0, 0, -0.5), (0.5, 0, -0.5)]
+	float[] primvars:ao = [0, 0.5, 1, 1, 0.1, 1] (
+		interpolation = "vertex"
+	)
+	int[] primvars:ao:indices = [0, 1, 4, 3, 2, 5]
+
+	texCoord2f[] primvars:st = [(0, 0), (0.5, 0), (0.5, 1), (0, 1), (1, 0), (1, 1)] (
+		interpolation = "vertex"
+	)
+	int[] primvars:st:indices = [0, 1, 4, 3, 2, 5]
+	texCoord2f[] primvars:st1 = [(0, 0), (0.5, 0), (0.5, 1), (0, 1), (1, 0), (1, 1)] (
+		interpolation = "vertex"
+	)
+	int[] primvars:st1:indices = [0, 1, 4, 3, 2, 5]
+	uniform token subdivisionScheme = "none"
+
+	rel material:binding = </mat>
+}}
+
 		{{
 			double3 xformOp:translate = ({0}, 0, 10)
 			float3 xformOp:scale = (200, 1, 200)
