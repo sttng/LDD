@@ -16,11 +16,16 @@ LxfRoRib.py will read in a Lego Digital Designer .lxf scene file and construct a
 
 ## prman commands
 ```terminal
-export RMANTREE=/Applications/Pixar/RenderManProServer-22.5/
+export RMANTREE=/Applications/Pixar/RenderManProServer-23.1/
 
 prman -d it -t:-2 ribfile.rib
 
 oslc Primvar.osl
+```
+
+## USD commands
+```terminal
+export PYTHONPATH=$PYTHONPATH:USD_INSTALL_ROOT/lib/python
 ```
 
 ### Checkpointing
@@ -48,6 +53,7 @@ https://rmanwiki.pixar.com/display/REN22/Checkpointing+and+Recovery
 * https://www.rockraidersunited.com/topic/3764-lego-digital-designer-lif-extractor/?do=findComment&comment=133146
 * http://stefanmuller.com/exploring-lego-material-part-1/
 * http://stefanmuller.com/exploring-lego-material-part-2/
+* http://stefanmuller.com/exploring-lego-material-part-3/
 * https://github.com/chipgw/LibLDD
 * https://sdm.scad.edu/faculty/mkesson/vsfx502/wip/best/fall11/kevin_george/rib_teapot/index.html
 * http://julius-ihle.de/?p=547
@@ -56,10 +62,10 @@ https://rmanwiki.pixar.com/display/REN22/Checkpointing+and+Recovery
 * https://www.janwalter.org/jekyll/blender/cloud/attic/2016/07/13/attic.html
 * http://www.fundza.com/cutter/whatsnew/index.html
 * https://rmanwiki.pixar.com/display/REN22/Denoising
-* https://graphics.pixar.com/usd/docs/USD-Frequently-Asked-Questions.html#USDFrequentlyAskedQuestions-WhyIsn'tPythonFindingUSDModules?
+* https://graphics.pixar.com/usd/docs/USD-Frequently-Asked-Questions.html#USDFrequentlyAskedQuestions-WhyIsn'tPythonFindingUSDModules?/
 
 ## Lego plastic materials
 
-* Virtually all plastic used by LEGO is a proprietary version of Lanxess’ Novodur acrylonitrile butadiene styrene (ABS), Makrolon polycarbonate (PC) is used for transparent elements and Macrolex dyes for coloring.   Delrin or nylon variants are used to make cloth and string elements. http://www.craftechind.com/which-plastic-material-is-used-in-lego-sets/
+* Virtually all plastic used by LEGO is a proprietary version of Lanxess’ Novodur acrylonitrile butadiene styrene (ABS), Makrolon polycarbonate (PC) is used for transparent elements and Macrolex dyes for coloring. Delrin or nylon variants are used to make cloth and string elements. http://www.craftechind.com/which-plastic-material-is-used-in-lego-sets/
 * Tyres and elastic materials are made from a slightly different polymer to ABS, styrene butadiene styrene (SBS). https://www.compoundchem.com/2018/04/09/lego/
 * Green leaves, bushes, and trees in their products will be made from polyethene derived from sustainable sugar cane sources. https://www.compoundchem.com/2018/04/09/lego/
