@@ -5,7 +5,7 @@ mkdir Pixar
 cd Pixar
 git clone https://github.com/PixarAnimationStudios/USD
 
-xcode-select
+xcode-select --install 
 
 sudo easy_install pip
 sudo pip install pyopengl
