@@ -10,3 +10,4 @@ xcode-select --install
 sudo easy_install pip
 sudo pip install pyopengl
 sudo pip install pyside2
+export PATH="$PATH:/Applications/CMake.app/Contents/bin"
