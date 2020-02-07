@@ -1,3 +1,4 @@
+```terminal
 cd $HOME
 mkdir Projects
 cd Projects
@@ -11,3 +12,4 @@ sudo easy_install pip
 sudo pip install pyopengl
 sudo pip install pyside2
 export PATH="$PATH:/Applications/CMake.app/Contents/bin"
+```
