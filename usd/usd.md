@@ -18,7 +18,8 @@ sudo easy_install pip
 sudo pip install --prefix /opt/local pyopengl
 sudo pip install --prefix /opt/local pyside2
 export PATH="$PATH:/opt/local/bin"
-
+export RMANTREE=/Applications/Pixar/RenderManProServer-23.1/
+export PYTHONPATH="$PYTHONPATH:/opt/local/lib/python2.7/site-packages"
 export PATH="$PATH:/Applications/CMake.app/Contents/bin"
 
 python USD/build_scripts/build_usd.py --embree --prman /opt/local/USD
