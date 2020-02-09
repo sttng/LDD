@@ -20,7 +20,7 @@ sudo mkdir /opt/local
 sudo mkdir /opt/local/USD
 sudo chmod -R 777 /opt/local/USD/
 
-python USD/build_scripts/build_usd.py /opt/local/USD
+python USD/build_scripts/build_usd.py --embree --prman /opt/local/USD
 
 export PYTHONPATH="$PYTHONPATH:/opt/local/USD/lib/python"
 export PATH="$PATH:/opt/local/USD/bin"
