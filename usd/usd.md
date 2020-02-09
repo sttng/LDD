@@ -4,9 +4,11 @@ mkdir Projects
 cd Projects
 mkdir Pixar
 cd Pixar
-git clone https://github.com/PixarAnimationStudios/USD
 
 xcode-select --install 
+
+git clone https://github.com/PixarAnimationStudios/USD
+
 
 pip install --prefix /myfolder [packages]
 
