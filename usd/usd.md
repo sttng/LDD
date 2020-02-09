@@ -8,6 +8,8 @@ git clone https://github.com/PixarAnimationStudios/USD
 
 xcode-select --install 
 
+pip install --prefix /myfolder [packages]
+
 sudo easy_install pip
 sudo pip install pyopengl
 sudo pip install pyside2
