@@ -14,12 +14,11 @@ sudo mkdir /opt/local
 sudo mkdir /opt/local/USD
 sudo chmod -R 777 /opt/local/USD/
 
-
-pip install --prefix /myfolder [packages]
-
 sudo easy_install pip
-sudo pip install pyopengl
-sudo pip install pyside2
+sudo pip install --prefix /opt/local pyopengl
+sudo pip install --prefix /opt/local pyside2
+export PATH="$PATH:/opt/local/bin"
+
 export PATH="$PATH:/Applications/CMake.app/Contents/bin"
 
 python USD/build_scripts/build_usd.py --embree --prman /opt/local/USD
