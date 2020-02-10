@@ -23,7 +23,7 @@ git pull
 sudo mkdir -p /opt/local/USD
 sudo chmod -R 777 /opt/local/USD/
 
-sudo easy_install pip
+sudo easy_install pip ( sudo python -m easy_install pip )
 sudo pip install --prefix /opt/local pyopengl
 #sudo pip install --prefix /opt/local pyside2
 sudo pip install -Iv pyside2==5.12.2  (or 5.13.0)
@@ -49,8 +49,6 @@ See documentation at http://openusd.org/docs/RenderMan-USD-Imaging-Plugin.html f
 
 
 ## Tested
-
-Our test machines have the following software versions installed
 
 | Software      | macOS 10.14.6 |
 | ------------- | ------------ |
