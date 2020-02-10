@@ -1,8 +1,8 @@
 Get cmake, install it, add path:
-`
+```
 https://cmake.org/download/
 export PATH="$PATH:/Applications/CMake.app/Contents/bin"
-`
+```
 
 ```terminal
 cd $HOME
