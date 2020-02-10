@@ -1,17 +1,13 @@
 ```terminal
 cd $HOME
-mkdir Projects
-cd Projects
-mkdir Pixar
-cd Pixar
+mkdir -p Projects/Pixar/
+cd Projects/Pixar/
 
 xcode-select --install 
 
 git clone https://github.com/PixarAnimationStudios/USD
 
-sudo mkdir /opt
-sudo mkdir /opt/local
-sudo mkdir /opt/local/USD
+sudo mkdir -p /opt/local/USD
 sudo chmod -R 777 /opt/local/USD/
 
 sudo easy_install pip
