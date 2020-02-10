@@ -4,6 +4,7 @@ https://cmake.org/download/
 export PATH="$PATH:/Applications/CMake.app/Contents/bin"
 ```
 
+Download source code archives from GitHub and clone the repository:
 ```terminal
 cd $HOME
 mkdir -p Projects/Pixar/
