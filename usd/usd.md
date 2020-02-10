@@ -46,3 +46,54 @@ export PATH="$PATH:/opt/local/USD/bin"
 See documentation at http://openusd.org/docs/RenderMan-USD-Imaging-Plugin.html for setting up the RenderMan plugin.
 
 ```
+
+
+## Tested
+
+Our test machines have the following software versions installed
+
+| Software      | macOS 10.14.6 |
+| ------------- | ------------ |
+| C++ Compiler  |              |
+| CMake         | 3.16.14      |
+| Python        | 2.7.10       |
+| Boost         |              |
+| Intel TBB     |              |
+| OpenSubdiv    |              |
+| GLEW          |              |
+| OpenImageIO   |              |
+| OpenColorIO   |              |
+| OSL           |              |
+| Ptex          |              |
+| PySide        |              |
+| PyOpenGL      |              |
+| Embree        |              |
+| RenderMan     | 23.1         |
+| Alembic       |              |
+| OpenEXR       |              |
+| Maya          |              |
+| Katana        |              |
+| Houdini       |              |
+| MaterialX     |              |
+| Jinja2        |              |
+| Flex          |              |
+| Bison         |              |
+| Doxygen       |              |
+| GraphViz      |              |
+
+
+## Other Known Versions
+
+These other versions have been known to work as well:
+
+| Software      | macOS 10.14.6 |
+| ------------- | ------------ |
+| C++ Compiler  |              |
+| Boost         |              |
+| Alembic       |              |
+| Maya          |              |
+| PySide2       |              |
+| HDF5          |              |
+| Houdini       |              |
+| OpenImageIO   |              |
+
