@@ -90,7 +90,7 @@ These other versions have been known to work as well:
 | Boost         |              |
 | Alembic       |              |
 | Maya          |              |
-| PySide2       |              |
+| PySide2       | 5.14.1       |
 | HDF5          |              |
 | Houdini       |              |
 | OpenImageIO   |              |
