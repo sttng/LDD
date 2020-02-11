@@ -41,7 +41,7 @@ python USD/build_scripts/build_usd.py --embree --prman /opt/local/USD
 export PYTHONPATH="$PYTHONPATH:/opt/local/USD/lib/python"
 export PATH="$PATH:/opt/local/USD/bin"
 
-
+usdview ./USD/extras/usd/tutorials/convertingLayerFormats/Sphere.usda
 
 
 See documentation at http://openusd.org/docs/RenderMan-USD-Imaging-Plugin.html for setting up the RenderMan plugin.
