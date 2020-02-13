@@ -69,7 +69,7 @@ See documentation at http://openusd.org/docs/RenderMan-USD-Imaging-Plugin.html f
 | OpenColorIO   |              |
 | OSL           |              |
 | Ptex          |              |
-| PySide2       | 5.14.1       |
+| PySide2       | 5.14.1 https://download.qt.io/official_releases/QtForPython/pyside2/PySide2-5.14.1-5.14.1-cp27-cp27m-macosx_10_13_intel.whl (147.9 MB) |
 | PyOpenGL      |              |
 | Embree        |              |
 | RenderMan     | 23.1         |
