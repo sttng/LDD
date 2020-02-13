@@ -474,6 +474,7 @@ def Xform "geo{0}" (
 						
 						outmat.close()
 
+					op.write('\n\t\tcolor3f[] primvars:displayColor = [({0}, {1}, {2})]\n'.format(lddmatri.r, lddmatri.g, lddmatri.b))
 					op.write('\t\trel material:binding = <Material{0}/material_{0}a>\n'.format(matname))
 					op.write('''\t\tdef "Material{0}" (
 			add references = @./material_{0}.usda@
@@ -496,8 +497,7 @@ def Xform "geo{0}" (
 						fmt = ", "
 							#out.write(face.string("f",indexOffset))
 					gop.write(']\n')
-					gop.write('\n\t\tcolor3f[] primvars:displayColor = [({0}, {1}, {2})]\n'.format(lddmatri.r, lddmatri.g, lddmatri.b))
-					
+							
 					if len(geo.Parts[part].textures) > 0:
 						
 						gop.write('\n\t\tfloat2[] primvars:st = [')
