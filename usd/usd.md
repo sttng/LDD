@@ -71,7 +71,7 @@ See documentation at http://openusd.org/docs/RenderMan-USD-Imaging-Plugin.html f
 | Ptex          |              |
 | PySide2       | 5.14.1 https://download.qt.io/official_releases/QtForPython/pyside2/PySide2-5.14.1-5.14.1-cp27-cp27m-macosx_10_13_intel.whl (147.9 MB) |
 | Shiboken (as required by PySide2 | 5.14.1       |
-| PyOpenGL      |              |
+| PyOpenGL      | 3.1.5        |
 | Embree        |              |
 | RenderMan     | 23.1         |
 | Alembic       |              |
