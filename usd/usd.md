@@ -57,7 +57,7 @@ See documentation at http://openusd.org/docs/RenderMan-USD-Imaging-Plugin.html f
 
 | Software      | macOS 10.14.6 |
 | ------------- | ------------ |
-| Xcode         | 10.3
+| Xcode         | 10.311.3.1 (11C504) |
 | C++ Compiler  | AppleClang   |
 | CMake         | 3.16.14      |
 | Python        | 2.7.10       |
