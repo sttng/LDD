@@ -1,4 +1,4 @@
-Get cmake, install it, add path:
+1) Download cmake, extract it, add cmake to path:
 ```
 curl -L -o ~/Downloads/cmake-3.16.4-Darwin-x86_64.tar.gz https://github.com/Kitware/CMake/releases/download/v3.16.4/cmake-3.16.4-Darwin-x86_64.tar.gz
 tar -xzvf  ~/Downloads/cmake-3.16.4-Darwin-x86_64.tar.gz -C ~/Downloads/
@@ -7,34 +7,38 @@ mv ~/Downloads/cmake-3.16.4-Darwin-x86_64/CMake.app /Applications/
 export PATH="$PATH:/Applications/CMake.app/Contents/bin"
 ```
 
-Download source code archives from GitHub and clone the repository:
+2) Prepare source directories (for source and build), download source code archives from GitHub and clone the repository:
 ```terminal
 cd $HOME
 mkdir -p Projects/Pixar/
 cd Projects/Pixar/
 
-xcode-select --install 
+xcode-select --install
+
+sudo mkdir -p /opt/local/USD
+sudo chmod -R 777 /opt/local/USD/
 
 git clone https://github.com/PixarAnimationStudios/USD
 cd USD
 git checkout dev
 git pull
+```
 
-sudo mkdir -p /opt/local/USD
-sudo chmod -R 777 /opt/local/USD/
+3) Install pip, and install required additional packages (pyopengl, pyside2)
+```terminal
 
 sudo easy_install pip ( sudo python -m easy_install pip )
 sudo pip install pyopengl
 #sudo pip install --prefix /opt/local pyside2
 sudo python -m pip install --index-url=https://download.qt.io/official_releases/QtForPython/ pyside2 --trusted-host download.qt.io
 sudo pip install -Iv pyside2==5.12.2  (or 5.13.0)
+```
 
-
-
+4) Set RenderMan environment variable: RMTREE. Start building.
+```terminal
 #export PATH="$PATH:/opt/local/bin"
 export RMANTREE=/Applications/Pixar/RenderManProServer-23.1/
 #export PYTHONPATH="$PYTHONPATH:/opt/local/lib/python2.7/site-packages"
-export PATH="$PATH:/Applications/CMake.app/Contents/bin"
 
 python USD/build_scripts/build_usd.py --embree --prman /opt/local/USD
 
@@ -53,7 +57,7 @@ See documentation at http://openusd.org/docs/RenderMan-USD-Imaging-Plugin.html f
 
 | Software      | macOS 10.14.6 |
 | ------------- | ------------ |
-| C++ Compiler  |              |
+| C++ Compiler  | AppleClang   |
 | CMake         | 3.16.14      |
 | Python        | 2.7.10       |
 | Boost         |              |
@@ -64,7 +68,7 @@ See documentation at http://openusd.org/docs/RenderMan-USD-Imaging-Plugin.html f
 | OpenColorIO   |              |
 | OSL           |              |
 | Ptex          |              |
-| PySide        |              |
+| PySide2       | 5.14.1       |
 | PyOpenGL      |              |
 | Embree        |              |
 | RenderMan     | 23.1         |
@@ -91,7 +95,6 @@ These other versions have been known to work as well:
 | Boost         |              |
 | Alembic       |              |
 | Maya          |              |
-| PySide2       | 5.14.1       |
 | HDF5          |              |
 | Houdini       |              |
 | OpenImageIO   |              |
