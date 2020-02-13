@@ -497,6 +497,7 @@ def Xform "geo{0}" (
 						fmt = ", "
 							#out.write(face.string("f",indexOffset))
 					gop.write(']\n')
+					gop.write('\n\t\tcolor3f[] primvars:displayColor = [(1, 0, 0)]\n')
 							
 					if len(geo.Parts[part].textures) > 0:
 						
