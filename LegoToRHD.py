@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 #
-# LegoToRHD Version 0.4.2 - Copyright (c) 2020 by m2m
+# LegoToRHD Version 0.4.3 - Copyright (c) 2020 by m2m
 # based on pyldd2obj Version 0.4.8 - Copyright (c) 2019 by jonnysp 
 # LegoToRHD parses LXF files and command line parameters to create USDA compliant files.
 # 
@@ -9,6 +9,7 @@
 #
 # Updates:
 # 
+# 0.4.3 Added displayColor attribute and other fixes
 # 0.4.2 Added groundplane
 # 0.4.1 Fix on textures
 # 0.4 Initial Texture support - appear transparent however
@@ -30,7 +31,7 @@ import shutil
 import ParseCommandLine as cl
 import random
 
-__version__ = "0.4.2"
+__version__ = "0.4.3"
 
 compression = zipfile.ZIP_STORED #uncompressed archive for USDZ, otherwise would use ZIP_DEFLATED, the usual zip compression
 
@@ -495,6 +496,7 @@ def Xform "geo{0}" (
 						fmt = ", "
 							#out.write(face.string("f",indexOffset))
 					gop.write(']\n')
+					gop.write('\n\t\tcolor3f[] primvars:displayColor = [({0}, {1}, {2})]\n'.format(lddmatri.r, lddmatri.g, lddmatri.b))
 					
 					if len(geo.Parts[part].textures) > 0:
 						
@@ -507,7 +509,6 @@ def Xform "geo{0}" (
 						gop.write('] (\n')
 						gop.write('\t\t\tinterpolation = "faceVarying"\n')
 						gop.write('\t\t)\n')
-						gop.write('\t\tcolor3f[] primvars:displayColor = [(1, 0, 0)]\n')
 					
 						gop.write('\t\tint[] primvars:st:indices = [')
 						fmt = ""
