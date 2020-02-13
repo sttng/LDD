@@ -507,6 +507,7 @@ def Xform "geo{0}" (
 						gop.write('] (\n')
 						gop.write('\t\t\tinterpolation = "faceVarying"\n')
 						gop.write('\t\t)\n')
+						gop.write('\t\tcolor3f[] primvars:displayColor = [(1, 0, 0)]\n')
 					
 						gop.write('\t\tint[] primvars:st:indices = [')
 						fmt = ""
