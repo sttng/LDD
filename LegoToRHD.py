@@ -9,10 +9,10 @@
 #
 # Updates:
 # 
-# 0.4.3 Added displayColor attribute and other fixes
-# 0.4.2 Added groundplane
-# 0.4.1 Fix on textures
-# 0.4 Initial Texture support - appear transparent however
+# 0.4.3 added displayColor primvar and other fixes
+# 0.4.2 added groundplane
+# 0.4.1 fix on textures
+# 0.4 initial Texture support - appear transparent however
 # 0.3.6 improved efficiency with geo-file referencing
 # 0.3.5 initial support for materials but without textures
 # 0.3 support for all lxf files without textures
