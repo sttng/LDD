@@ -60,10 +60,10 @@ See documentation at http://openusd.org/docs/RenderMan-USD-Imaging-Plugin.html f
 | C++ Compiler  | AppleClang 10.0.1 |
 | CMake         | 3.16.14      |
 | Python        | 2.7.10       |
-| Boost         |              |
+| Boost         | 1.61.0       |
 | Intel TBB     |              |
-| OpenSubdiv    |              |
-| GLEW          |              |
+| OpenSubdiv    | 3.1.1        |
+| GLEW          | 2.0.0        |
 | OpenImageIO   |              |
 | OpenColorIO   |              |
 | OSL           |              |
@@ -74,7 +74,7 @@ See documentation at http://openusd.org/docs/RenderMan-USD-Imaging-Plugin.html f
 | Embree        |              |
 | RenderMan     | 23.1         |
 | Alembic       |              |
-| OpenEXR       |              |
+| OpenEXR       | 2.2.0        |
 | Maya          |              |
 | Katana        |              |
 | Houdini       |              |
