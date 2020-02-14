@@ -24,19 +24,19 @@ git checkout dev
 git pull
 ```
 
-3) Install pip, and install required additional packages (pyopengl, pyside2)
+3) Install pip and required packages (pyopengl, pyside2)
 ```terminal
-
 sudo easy_install pip ( sudo python -m easy_install pip )
+
 sudo pip install pyopengl
-#sudo pip install --prefix /opt/local pyside2
 sudo python -m pip install --index-url=https://download.qt.io/official_releases/QtForPython/ pyside2 --trusted-host download.qt.io
-sudo pip install -Iv pyside2==5.12.2  (or 5.13.0)
+
+#sudo pip install pyopengl --prefix /opt/local
+#sudo python -m pip install --index-url=https://download.qt.io/official_releases/QtForPython/ pyside2 --trusted-host download.qt.io --prefix /opt/local
 ```
 
 4) Set RenderMan environment variable: RMTREE. Start building.
 ```terminal
-#export PATH="$PATH:/opt/local/bin"
 export RMANTREE=/Applications/Pixar/RenderManProServer-23.1/
 #export PYTHONPATH="$PYTHONPATH:/opt/local/lib/python2.7/site-packages"
 
@@ -49,7 +49,6 @@ usdview ./USD/extras/usd/tutorials/convertingLayerFormats/Sphere.usda
 
 
 See documentation at http://openusd.org/docs/RenderMan-USD-Imaging-Plugin.html for setting up the RenderMan plugin.
-
 ```
 
 
@@ -85,19 +84,4 @@ See documentation at http://openusd.org/docs/RenderMan-USD-Imaging-Plugin.html f
 | Bison         |              |
 | Doxygen       |              |
 | GraphViz      |              |
-
-
-## Other Known Versions
-
-These other versions have been known to work as well:
-
-| Software      | macOS 10.14.6 |
-| ------------- | ------------ |
-| C++ Compiler  |              |
-| Boost         |              |
-| Alembic       |              |
-| Maya          |              |
-| HDF5          |              |
-| Houdini       |              |
-| OpenImageIO   |              |
 
