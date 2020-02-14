@@ -240,7 +240,7 @@ class Converter:
 		current = 0
 		currentpart = 0
 		
-		# minx used for floor plane later
+		# miny used for floor plane later
 		miny = 1000
 		useplane = cl.useplane
 		
@@ -355,7 +355,7 @@ class Converter:
 					#out.write('\t\t\tdouble3 xformOp:scale = (1, 1, 1)\n')
 					out.write('\t\t\tuniform token[] xformOpOrder = ["xformOp:transform"]\n')
 					
-					# minx used for floor plane later
+					# miny used for floor plane later
 					if miny > float(n42):
 						miny = n42
 											
