@@ -40,7 +40,8 @@ sudo python -m pip install --index-url=https://download.qt.io/official_releases/
 export RMANTREE=/Applications/Pixar/RenderManProServer-23.1/
 #export PYTHONPATH="$PYTHONPATH:/opt/local/lib/python2.7/site-packages"
 
-python USD/build_scripts/build_usd.py --embree --prman /opt/local/USD
+python USD/build_scripts/build_usd.py --prman /opt/local/USD
+#python USD/build_scripts/build_usd.py --embree --embree-location /opt/local/lib --prman /opt/local/USD
 
 export PYTHONPATH="$PYTHONPATH:/opt/local/USD/lib/python"
 export PATH="$PATH:/opt/local/USD/bin"
