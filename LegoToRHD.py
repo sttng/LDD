@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 #
-# LegoToRHD Version 0.4.3 - Copyright (c) 2020 by m2m
+# LegoToRHD Version 0.4.5 - Copyright (c) 2020 by m2m
 # based on pyldd2obj Version 0.4.8 - Copyright (c) 2019 by jonnysp 
 # LegoToRHD parses LXF files and command line parameters to create USDA compliant files.
 # 
@@ -9,6 +9,8 @@
 #
 # Updates:
 # 
+# 0.4.5 remove parts writing of normals for the time being
+# 0.4.4 small optimization, removal of legacy code
 # 0.4.3 added displayColor primvar and other fixes
 # 0.4.2 added groundplane
 # 0.4.1 fix on textures
@@ -31,7 +33,7 @@ import shutil
 import ParseCommandLine as cl
 import random
 
-__version__ = "0.4.3"
+__version__ = "0.4.5"
 
 compression = zipfile.ZIP_STORED #uncompressed archive for USDZ, otherwise would use ZIP_DEFLATED, the usual zip compression
 
@@ -433,15 +435,16 @@ def Xform "geo{0}" (
 						#op.write(point.string("v"))
 					gop.write(']\n')
 
-					gop.write('\t\tnormal3f[] normals = [')
-					fmt = ""
-					for normal in geo.Parts[part].outnormals:
-						gop.write('{0}({1}, {2}, {3})'.format(fmt, normal.x, normal.y, normal.z))
-						fmt = ", "
-						#op.write(normal.string("vn"))
-					gop.write('] (\n')
-					gop.write('\t\t\tinterpolation = "uniform"\n')
-					gop.write('\t\t)\n')
+					# SOME PARTS HAVE BAD NORMALS. - THATS WHY REMOVED FOR THE TIME. BEING
+					#gop.write('\t\tnormal3f[] normals = [')
+					#fmt = ""
+					#for normal in geo.Parts[part].outnormals:
+					#	gop.write('{0}({1}, {2}, {3})'.format(fmt, normal.x, normal.y, normal.z))
+					#	fmt = ", "
+					#	#op.write(normal.string("vn"))
+					#gop.write('] (\n')
+					#gop.write('\t\t\tinterpolation = "uniform"\n')
+					#gop.write('\t\t)\n')
 					
 					lddmatri = self.allMaterials.getMaterialRibyId(pa.materials[part])
 					matname = pa.materials[part]
@@ -577,22 +580,6 @@ def Xform "geo{0}" (
 		out.write('}\n')
 		sys.stdout.write('%s\r' % ('                                                                                                 '))
 		print("--- %s seconds ---" % (time.time() - start_time))
-
-def FindRmtree():
-	if os.name =='posix':
-		rmtree = os.getenv('RMANTREE')
-		if rmtree is not None:
-			return str(rmtree)
-		else:
-			print("RMANTREE environment variable not set correctly. Set with: export RMANTREE=/Applications/Pixar/RenderManProServer-22.6/")
-			exit()
-	else:
-		rmtree = os.getenv('RMANTREE')
-		if rmtree is not None:
-			return str(rmtree)
-		else:
-			print('RMANTREE environment variable not set correctly. Set with: setx RMANTREE "C:\Program Files\Pixar\RenderManProServer-22.6\" /M')
-			exit()
 
 
 def generate_rib_header(infile, srate, pixelvar, width, height, fov, fstop, searcharchive, searchtexture, integrator, integratorParams, useplane):
