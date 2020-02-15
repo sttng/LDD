@@ -493,7 +493,7 @@ def Xform "geo{0}" (
 					gop.write('\t\tint[] faceVertexIndices = [')
 					fmt = ""
 					for face in geo.Parts[part].faces:
-						gop.write('{0}{1},{2},{3}'.format(fmt, face.a + indexOffset - 1, face.b + indexOffset - 1, face.c + indexOffset - 1))
+						gop.write('{0}{1},{2},{3}'.format(fmt, face.a , face.b, face.c))
 						fmt = ", "
 							#out.write(face.string("f",indexOffset))
 					gop.write(']\n')
@@ -514,7 +514,7 @@ def Xform "geo{0}" (
 						gop.write('\t\tint[] primvars:st:indices = [')
 						fmt = ""
 						for face in geo.Parts[part].faces:
-							gop.write('{0}{1},{2},{3}'.format(fmt, face.a + textOffset - 1, face.b + textOffset - 1, face.c + textOffset - 1))
+							gop.write('{0}{1},{2},{3}'.format(fmt, face.a, face.b, face.c))
 							fmt = ", "
 							#out.write(face.string("f",indexOffset,textOffset))
 						gop.write(']\n\n')
@@ -523,8 +523,6 @@ def Xform "geo{0}" (
 					gop.write('}\n')
 					gop.close()
 
-					indexOffset = 1
-					textOffset = 1
 				op.write('}\n')
 				# -----------------------------------------------------------------
 				op.close()
