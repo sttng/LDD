@@ -35,6 +35,7 @@ integrator = '''Integrator "PxrPathTracer" "PxrPathTracer1"
 args = []
 cwd = os.getcwd()
 useplane = True
+usenormal = True
 
 def ParseCommandLine(_filename) :
 	global filename
@@ -43,6 +44,7 @@ def ParseCommandLine(_filename) :
 	global args
 	global cwd
 	global useplane
+	global usenormal
 	
 	parser = argparse.ArgumentParser(description = 'Modify LegoToR render parameters')
 	
@@ -95,6 +97,7 @@ def ParseCommandLine(_filename) :
 	parser.add_argument('-fl', '--flat', action = 'count', help = 'use PxrVisualizer with wireframe flat')
 	
 	parser.add_argument('-np', '--noplane', action = 'count', help = 'disable ground plane. Useful for space ships!')
+	parser.add_argument('-nn', '--nonormals', action = 'count', help = 'disable writing of normals, as some normals in LDD may have problems')
 	
 	args = parser.parse_args()
 		
@@ -178,3 +181,5 @@ def ParseCommandLine(_filename) :
 			"float wireframeWidth" [1.0]'''
 	if args.noplane:
 		useplane = False
+	if args.nonormals:
+		usenormal = False
