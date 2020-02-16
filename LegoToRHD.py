@@ -438,7 +438,7 @@ def Xform "geo{0}" (
 					gop.write(']\n')
 
 					if usenormal == True: # write normals in case flag True
-						# WARNING: SOME PARTS HAVE BAD NORMALS. FOR EXAMPLE PART: (85861) PL.ROUND 1X1 W. THROUGHG. HOLE
+						# WARNING: SOME PARTS MAY HAVE BAD NORMALS. FOR EXAMPLE MAYBE PART: (85861) PL.ROUND 1X1 W. THROUGHG. HOLE
 						gop.write('\t\tnormal3f[] normals = [')
 						fmt = ""
 						for normal in geo.Parts[part].outnormals:
@@ -446,7 +446,7 @@ def Xform "geo{0}" (
 							fmt = ", "
 							#op.write(normal.string("vn"))
 						gop.write('] (\n')
-						gop.write('\t\t\tinterpolation = "uniform"\n')
+						gop.write('\t\t\tinterpolation = "faceVarying"\n')
 						gop.write('\t\t)\n')
 
 					lddmatri = self.allMaterials.getMaterialRibyId(pa.materials[part])
