@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 #
-# LegoToR Version 0.4.8.1 - Copyright (c) 2020 by m2m
+# LegoToR Version 0.4.8.2 - Copyright (c) 2020 by m2m
 # based on pyldd2obj Version 0.4.8 - Copyright (c) 2019 by jonnysp 
 # LegoToR parses LXF files and command line parameters to create a renderman compliant rib file.
 # 
@@ -9,6 +9,7 @@
 #
 # Updates:
 # 
+# 0.4.8.2 Added nonormals switch, to ignore normals writing as some parts of LDD have incorrect normals.
 # 0.4.8.1 Streamlined logic for flex parts handling. Corrected spelling mistakes.
 # 0.4.8 Upgraded pyldd2obj to Version 0.4.8. Added uneveness to materials.
 # 0.4.7.1 Changes in transparent materials
@@ -30,7 +31,7 @@ import shutil
 import ParseCommandLine as cl
 import random
 
-__version__ = "0.4.8.1"
+__version__ = "0.4.8.2"
 
 compression = zipfile.ZIP_DEFLATED
 
@@ -285,6 +286,7 @@ class Converter:
 		# minx used for floor plane later
 		minx = 1000
 		useplane = cl.useplane
+		usenormal = cl.usenormal
 		
 		out.write('''# Camera Minus One
 TransformBegin
@@ -411,6 +413,7 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 				op.write("##RenderMan RIB-Structure 1.1 Entity\n")
 				
 				# transform -------------------------------------------------------
+				decoCount = 0
 				for part in geo.Parts:
 					
 					geo.Parts[part].outpositions = [elem.copy() for elem in geo.Parts[part].positions]
@@ -435,9 +438,6 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 									
 									#transform with inverted values (to undo the transformation)
 									#geo.Parts[part].outnormals[k].transformW(undoTransformMatrix)
-
-				decoCount = 0
-				for part in geo.Parts:
 					
 					lddmatri = self.allMaterials.getMaterialRibyId(pa.materials[part])
 					matname = pa.materials[part]
@@ -488,7 +488,10 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 						op.write('\tPolygon\n')
 						# NOTE RENDERMAN is left handed coordinate system, obj is right handed -> z-axis inverted
 						op.write('\t\t"P" [ {0} {1} {2}  {3} {4} {5}  {6} {7} {8} ]\n'.format(geo.Parts[part].outpositions[face.a].x, geo.Parts[part].outpositions[face.a].y, -1 * geo.Parts[part].outpositions[face.a].z, geo.Parts[part].outpositions[face.b].x, geo.Parts[part].outpositions[face.b].y, -1 * geo.Parts[part].outpositions[face.b].z, geo.Parts[part].outpositions[face.c].x, geo.Parts[part].outpositions[face.c].y, -1 * geo.Parts[part].outpositions[face.c].z))
-						op.write('\t\t"N" [ {0} {1} {2}  {3} {4} {5}  {6} {7} {8} ]\n'.format(geo.Parts[part].outnormals[face.a].x, geo.Parts[part].outnormals[face.a].y, -1 * geo.Parts[part].outnormals[face.a].z, geo.Parts[part].outnormals[face.b].x, geo.Parts[part].outnormals[face.b].y, -1 * geo.Parts[part].outnormals[face.b].z, geo.Parts[part].outnormals[face.c].x, geo.Parts[part].outnormals[face.c].y, -1 * geo.Parts[part].outnormals[face.c].z))
+						
+						if usenormal == True: # write normals in case flag True
+							# WARNING: SOME PARTS HAVE BAD NORMALS. FOR EXAMPLE PART: (85861) PL.ROUND 1X1 W. THROUGHG. HOLE
+							op.write('\t\t"N" [ {0} {1} {2}  {3} {4} {5}  {6} {7} {8} ]\n'.format(geo.Parts[part].outnormals[face.a].x, geo.Parts[part].outnormals[face.a].y, -1 * geo.Parts[part].outnormals[face.a].z, geo.Parts[part].outnormals[face.b].x, geo.Parts[part].outnormals[face.b].y, -1 * geo.Parts[part].outnormals[face.b].z, geo.Parts[part].outnormals[face.c].x, geo.Parts[part].outnormals[face.c].y, -1 * geo.Parts[part].outnormals[face.c].z))
 						
 						if len(geo.Parts[part].textures) > 0:
 							# NOTE RENDERMAN Maps Textures in the T from top to bottom so we calculate 1.0 - t so the image will map properly
@@ -547,7 +550,7 @@ def FindRmtree():
 			exit()
 
 
-def generate_rib_header(infile, srate, pixelvar, width, height, fov, fstop, searcharchive, searchtexture, integrator, integratorParams, useplane):
+def generate_rib_header(infile, srate, pixelvar, width, height, fov, fstop, searcharchive, searchtexture, integrator, integratorParams, useplane, usenormal):
 	cwd = os.getcwd()
 	infile = os.path.realpath(infile.name)
 	infile = os.path.splitext(os.path.basename(infile))[0]
@@ -609,7 +612,7 @@ def main():
 	cl.ParseCommandLine('')
 	lxf_filename = os.path.realpath(cl.args.infile.name)
 	obj_filename = os.path.splitext(os.path.basename(lxf_filename))[0]
-	generate_rib_header(cl.args.infile, cl.args.srate, cl.args.pixelvar, cl.args.width, cl.args.height, cl.args.fov, cl.args.fstop, cl.args.searcharchive, cl.args.searchtexture, cl.integrator, cl.integratorParams, cl.useplane)
+	generate_rib_header(cl.args.infile, cl.args.srate, cl.args.pixelvar, cl.args.width, cl.args.height, cl.args.fov, cl.args.fstop, cl.args.searcharchive, cl.args.searchtexture, cl.integrator, cl.integratorParams, cl.useplane, cl.usenormal)
 
 	# Clean up before writing
 	if os.path.exists(obj_filename + "_Materials_Archive.zip"):
