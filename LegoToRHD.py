@@ -9,7 +9,7 @@
 #
 # Updates:
 # 
-# 0.4.7 added brick seams via scale factor of 0.985 for each brick (experimental)
+# 0.4.7 added brick seams via scale factor of 0.99 for each brick (experimental)
 # 0.4.6 added nonormals switch (-nn), to ignore normals writing as some parts of LDD seem to have incorrect normals.
 # 0.4.5 remove parts writing of normals for the time being
 # 0.4.4 small optimization, removal of legacy code
@@ -357,7 +357,7 @@ class Converter:
 				if not (len(pa.Bones) > flexflag):
 				# Flex parts don't need to be moved
 					out.write('\t\t\tmatrix4d xformOp:transform = ( ({0}, {1}, {2}, {3}), ({4}, {5}, {6}, {7}), ({8}, {9}, {10}, {11}), ({12}, {13}, {14}, {15}) )\n'.format(n11, n12, n13, n14, n21, n22, n23, n24, n31, n32, n33, n34, n41, n42 ,n43, n44))	
-					out.write('\t\t\tdouble3 xformOp:scale = (0.985, 0.985, 0.985)\n')
+					out.write('\t\t\tdouble3 xformOp:scale = ({0}, {0}, {0})\n'.format(random.uniform(0.99,1.000)))
 					out.write('\t\t\tuniform token[] xformOpOrder = ["xformOp:transform", "xformOp:scale"]\n')
 					
 					# miny used for floor plane later
