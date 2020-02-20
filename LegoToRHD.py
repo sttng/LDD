@@ -446,7 +446,7 @@ def Xform "geo{0}" (
 							fmt = ", "
 							#op.write(normal.string("vn"))
 						gop.write('] (\n')
-						gop.write('\t\t\tinterpolation = "faceVarying"\n')
+						gop.write('\t\t\tinterpolation = "vertex"\n')
 						gop.write('\t\t)\n')
 
 					lddmatri = self.allMaterials.getMaterialRibyId(pa.materials[part])
