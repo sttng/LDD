@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 #
-# LegoToR Version 0.4.8.2 - Copyright (c) 2020 by m2m
+# LegoToR Version 0.4.8.3 - Copyright (c) 2020 by m2m
 # based on pyldd2obj Version 0.4.8 - Copyright (c) 2019 by jonnysp 
 # LegoToR parses LXF files and command line parameters to create a renderman compliant rib file.
 # 
@@ -9,6 +9,7 @@
 #
 # Updates:
 # 
+# 0.4.8.3 Added brick seams via scale factor of 0.99 for each brick (experimental)
 # 0.4.8.2 Added nonormals switch, to ignore normals writing as some parts of LDD have incorrect normals.
 # 0.4.8.1 Streamlined logic for flex parts handling. Corrected spelling mistakes.
 # 0.4.8 Upgraded pyldd2obj to Version 0.4.8. Added uneveness to materials.
@@ -31,7 +32,7 @@ import shutil
 import ParseCommandLine as cl
 import random
 
-__version__ = "0.4.8.2"
+__version__ = "0.4.8.3"
 
 compression = zipfile.ZIP_DEFLATED
 
@@ -403,7 +404,7 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 				if not (len(pa.Bones) > flexflag):
 				# Flex parts don't need to be moved
 				# Renderman is lefthanded coordinate system, but LDD is right handed.
-					out.write("\t\tConcatTransform [{0} {1} {2} {3} {4} {5} {6} {7} {8} {9} {10} {11} {12} {13} {14} {15}]\n\t\tScale 1 1 1\n".format(n11, n12, -1 * n13, n14, n21, n22, -1 * n23, n24, -1 * n31, -1 * n32, n33, n34, n41, n42 ,-1 * n43, n44))
+					out.write("\t\tConcatTransform [{0} {1} {2} {3} {4} {5} {6} {7} {8} {9} {10} {11} {12} {13} {14} {15}]\n\t\tScale {16} {16} {16}\n".format(n11, n12, -1 * n13, n14, n21, n22, -1 * n23, n24, -1 * n31, -1 * n32, n33, n34, n41, n42 ,-1 * n43, n44, random.uniform(0.99, 1.000)))
 					
 					# minx used for floor plane later
 					if minx > float(n43):
