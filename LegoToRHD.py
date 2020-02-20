@@ -9,14 +9,14 @@
 #
 # Updates:
 # 
-# 0.4.7 added brick seams via scale factor of 0.985 for each brick
+# 0.4.7 added brick seams via scale factor of 0.985 for each brick (experimental)
 # 0.4.6 added nonormals switch (-nn), to ignore normals writing as some parts of LDD seem to have incorrect normals.
 # 0.4.5 remove parts writing of normals for the time being
 # 0.4.4 small optimization, removal of legacy code
 # 0.4.3 added displayColor primvar and other fixes
 # 0.4.2 added groundplane
-# 0.4.1 fix on textures
-# 0.4 initial Texture support - appear transparent however
+# 0.4.1 small fix on textures
+# 0.4 initial texture support - appear transparent however
 # 0.3.6 improved efficiency with geo-file referencing
 # 0.3.5 initial support for materials but without textures
 # 0.3 support for all lxf files without textures
