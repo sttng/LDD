@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 #
-# LegoToRHD Version 0.4.6 - Copyright (c) 2020 by m2m
+# LegoToRHD Version 0.4.7 - Copyright (c) 2020 by m2m
 # based on pyldd2obj Version 0.4.8 - Copyright (c) 2019 by jonnysp 
 # LegoToRHD parses LXF files and command line parameters to create USDA compliant files.
 # 
@@ -9,7 +9,8 @@
 #
 # Updates:
 # 
-# 0.4.6 Added nonormals switch, to ignore normals writing as some parts of LDD have incorrect normals.
+# 0.4.7 added brick seams via scale factor of 0.985 for each brick
+# 0.4.6 Added nonormals switch (-nn), to ignore normals writing as some parts of LDD seem to have incorrect normals.
 # 0.4.5 remove parts writing of normals for the time being
 # 0.4.4 small optimization, removal of legacy code
 # 0.4.3 added displayColor primvar and other fixes
@@ -34,7 +35,7 @@ import shutil
 import ParseCommandLine as cl
 import random
 
-__version__ = "0.4.6"
+__version__ = "0.4.7"
 
 compression = zipfile.ZIP_STORED #uncompressed archive for USDZ, otherwise would use ZIP_DEFLATED, the usual zip compression
 
@@ -356,8 +357,8 @@ class Converter:
 				if not (len(pa.Bones) > flexflag):
 				# Flex parts don't need to be moved
 					out.write('\t\t\tmatrix4d xformOp:transform = ( ({0}, {1}, {2}, {3}), ({4}, {5}, {6}, {7}), ({8}, {9}, {10}, {11}), ({12}, {13}, {14}, {15}) )\n'.format(n11, n12, n13, n14, n21, n22, n23, n24, n31, n32, n33, n34, n41, n42 ,n43, n44))	
-					#out.write('\t\t\tdouble3 xformOp:scale = (1, 1, 1)\n')
-					out.write('\t\t\tuniform token[] xformOpOrder = ["xformOp:transform"]\n')
+					out.write('\t\t\tdouble3 xformOp:scale = (0.985, 0.985, 0.985)\n')
+					out.write('\t\t\tuniform token[] xformOpOrder = ["xformOp:transform", "xformOp:scale"]\n')
 					
 					# miny used for floor plane later
 					if miny > float(n42):
@@ -434,7 +435,7 @@ def Xform "geo{0}" (
 					for point in geo.Parts[part].outpositions:
 						gop.write('{0}({1}, {2}, {3})'.format(fmt, point.x, point.y, point.z))
 						fmt = ", "
-						#op.write(point.string("v"))
+						
 					gop.write(']\n')
 
 					if usenormal == True: # write normals in case flag True
@@ -444,7 +445,7 @@ def Xform "geo{0}" (
 						for normal in geo.Parts[part].outnormals:
 							gop.write('{0}({1}, {2}, {3})'.format(fmt, normal.x, normal.y, normal.z))
 							fmt = ", "
-							#op.write(normal.string("vn"))
+							
 						gop.write('] (\n')
 						gop.write('\t\t\tinterpolation = "vertex"\n')
 						gop.write('\t\t)\n')
@@ -501,7 +502,7 @@ def Xform "geo{0}" (
 					for face in geo.Parts[part].faces:
 						gop.write('{0}{1},{2},{3}'.format(fmt, face.a , face.b, face.c))
 						fmt = ", "
-							#out.write(face.string("f",indexOffset))
+							
 					gop.write(']\n')
 					#gop.write('\n\t\tcolor3f[] primvars:displayColor = [(1, 0, 0)]\n')
 							
@@ -512,7 +513,7 @@ def Xform "geo{0}" (
 						for text in geo.Parts[part].textures:
 							gop.write('{0}({1}, {2})'.format(fmt, text.x, (-1) * text.y))
 							fmt = ", "
-							#op.write(text.string("vt"))
+							
 						gop.write('] (\n')
 						gop.write('\t\t\tinterpolation = "faceVarying"\n')
 						gop.write('\t\t)\n')
