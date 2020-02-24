@@ -326,13 +326,9 @@ TransformEnd\n\n'''.format(cam.refID, cam.matrix.n11, cam.matrix.n12, -1 * cam.m
 			# Create numpy matrix from them and create inverted matrix
 			x = np.array([[cam.matrix.n11,cam.matrix.n21,cam.matrix.n31,cam.matrix.n41],[cam.matrix.n12,cam.matrix.n22,cam.matrix.n32,cam.matrix.n42],[cam.matrix.n13,cam.matrix.n23,cam.matrix.n33,cam.matrix.n43],[cam.matrix.n14,cam.matrix.n24,cam.matrix.n34,cam.matrix.n44]])
 			x_inv = np.linalg.inv(x)
-			
-			print x
 					
-			# undoTransformMatrix not used currently. Might use later
+			# undoTransformMatrix = inverted matrix
 			undoTransformMatrix = Matrix3D(n11=x_inv[0][0],n12=x_inv[0][1],n13=x_inv[0][2],n14=x_inv[0][3],n21=x_inv[1][0],n22=x_inv[1][1],n23=x_inv[1][2],n24=x_inv[1][3],n31=x_inv[2][0],n32=x_inv[2][1],n33=x_inv[2][2],n34=x_inv[2][3],n41=x_inv[3][0],n42=x_inv[3][1],n43=x_inv[3][2],n44=x_inv[3][3])
-			
-			print undoTransformMatrix
 			
 			out.write('''# Inverse Camera {0}
 TransformBegin
