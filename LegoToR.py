@@ -307,33 +307,18 @@ TransformBegin
 TransformEnd\n\n''')
 		
 		for cam in self.scene.Scenecamera:
-			
-			out.write('''# Camera {0}
-TransformBegin
-	ConcatTransform [{1} {2} {3} {4} {5} {6} {7} {8} {9} {10} {11} {12} {13} {14} {15} {16}]
-	Camera "Cam-{0}"
-		"float shutterOpenTime" [0] 
-		"float shutterCloseTime" [1] 
-		"int apertureNSides" [0] 
-		"float apertureAngle" [0] 
-		"float apertureRoundness" [0] 
-		"float apertureDensity" [0] 
-		"float dofaspect" [1] 
-		"float nearClip" [0.100000001] 
-		"float farClip" [10000]
-TransformEnd\n\n'''.format(cam.refID, cam.matrix.n11, cam.matrix.n12, -1 * cam.matrix.n13, cam.matrix.n14, cam.matrix.n21, cam.matrix.n22, -1 * cam.matrix.n23, cam.matrix.n24, -1 * cam.matrix.n31, -1 * cam.matrix.n32, cam.matrix.n33, cam.matrix.n34, cam.matrix.n41, cam.matrix.n42, -1 * cam.matrix.n43, cam.matrix.n44))
 		
-			# Create numpy matrix from them and create inverted matrix
+			# Create numpy matrix from camera matrix to create inverted matrix later
 			x = np.array([[cam.matrix.n11,cam.matrix.n21,cam.matrix.n31,cam.matrix.n41],[cam.matrix.n12,cam.matrix.n22,cam.matrix.n32,cam.matrix.n42],[cam.matrix.n13,cam.matrix.n23,cam.matrix.n33,cam.matrix.n43],[cam.matrix.n14,cam.matrix.n24,cam.matrix.n34,cam.matrix.n44]])
 			x_inv = np.linalg.inv(x)
 					
 			# undoTransformMatrix = inverted matrix
 			undoTransformMatrix = Matrix3D(n11=x_inv[0][0],n12=x_inv[0][1],n13=x_inv[0][2],n14=x_inv[0][3],n21=x_inv[1][0],n22=x_inv[1][1],n23=x_inv[1][2],n24=x_inv[1][3],n31=x_inv[2][0],n32=x_inv[2][1],n33=x_inv[2][2],n34=x_inv[2][3],n41=x_inv[3][0],n42=x_inv[3][1],n43=x_inv[3][2],n44=x_inv[3][3])
 			
-			out.write('''# Inverse Camera {0}
+			out.write('''# Camera {0}
 TransformBegin
 	ConcatTransform [{1} {2} {3} {4} {5} {6} {7} {8} {9} {10} {11} {12} {13} {14} {15} {16}]
-	Camera "Inv-Cam-{0}"
+	Camera "Cam-{0}"
 		"float shutterOpenTime" [0] 
 		"float shutterCloseTime" [1] 
 		"int apertureNSides" [0] 
