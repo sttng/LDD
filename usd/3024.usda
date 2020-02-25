@@ -28,6 +28,11 @@ def Xform "3024" (
         custom float userProperties:PhysicsAttributes_mass = 0.180000007153
         custom bool userProperties:PhysicsAttributes_frictionType = 0
         
+        custom float3 userProperties:CollisionBox_scale = (0.39, 0.39, 0.39)
+        custom float userProperties:CollisionBox_angle = 180
+        custom float3 userProperties:CollisionBox_rotationAxis = (0, 0.707107, 0.707107)
+        custom float3 userProperties:CollisionBox_translate = (0, 0.16, 0)
+        
         custom string userProperties:hash = "99b90246a8005cf19a109494b0802c86"
         custom string userProperties:modelName = ""
         custom string userProperties:modelVariant = ""
