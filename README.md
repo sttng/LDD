@@ -17,6 +17,7 @@ LxfToRib.py will read in a Lego Digital Designer .lxf scene file and construct a
 ## prman commands
 ```terminal
 export RMANTREE=/Applications/Pixar/RenderManProServer-23.1/
+export PATH="$PATH:$RMANTREE/bin"
 
 prman -d it -t:-2 ribfile.rib
 
