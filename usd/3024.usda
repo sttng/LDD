@@ -23,6 +23,11 @@ def Xform "3024" (
         
         custom float3[] userProperties:Bounding = [(-0.4, 0, -0.4), (0.4, 0.498, 0.4)]
         custom float3[] userProperties:GeometryBounding = [(-0.4, 0, -0.4), (0.4, 0.498, 0.4)]
+        custom matrix3d userProperties:PhysicsAttributes_inertiaTensor = (0.013108, 0, 0, 0, 0.02051, 0, 0, 0, 0.013108)
+        custom float3 userProperties:PhysicsAttributes_centerOfMass = (0, 0.219694, 0)
+        custom float userProperties:PhysicsAttributes_mass = 0.180000007153
+        custom bool userProperties:PhysicsAttributes_frictionType = 0
+        
         custom string userProperties:hash = "99b90246a8005cf19a109494b0802c86"
         custom string userProperties:modelName = ""
         custom string userProperties:modelVariant = ""
