@@ -83,6 +83,10 @@ def ParseCommandLine(_filename) :
 	parser.add_argument('-st', '--searchtexture', nargs = '?', 
 		default = cwd,
 		help = 'searchpath texture. Default current working dir')
+	
+	parser.add_argument('-cam', '--camera', nargs = '?', 
+		const = -1, default = -1, type = int,
+		help = 'set active camera. Default is -1 for Cam--1 \'Minus 1\'')	
 		
 	parser.add_argument('-d', '--default', action = 'count', help = 'use PxrPathTracer')
 	parser.add_argument('-v', '--vcm', action = 'count', help = 'use PxrVCM')
