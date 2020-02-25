@@ -20,6 +20,9 @@ def Xform "3024" (
         custom string userProperties:Annotation_platformid = "200"
         custom string userProperties:Annotation_platformname = "SYSTEM"
         custom string userProperties:Annotation_version = "5"
+        
+        custom float3[] userProperties:Bounding = [(-0.4, 0, -0.4), (0.4, 0.498, 0.4)]
+        custom float3[] userProperties:GeometryBounding = [(-0.4, 0, -0.4), (0.4, 0.498, 0.4)]
         custom string userProperties:hash = "99b90246a8005cf19a109494b0802c86"
         custom string userProperties:modelName = ""
         custom string userProperties:modelVariant = ""
