@@ -337,7 +337,7 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 	"string exrpixeltype" ["half"]
 	"string compression" ["zips"]
 	"float compressionlevel" [45]
-	"string camera" ["Cam--1"]\n\n'''.format('.', os.sep, filename))
+	"string camera" ["Cam-{3}"]\n\n'''.format('.', os.sep, filename, cl.args.camera))
 		
 		out.write('WorldBegin\n\tScale 1 1 1\n')
 		out.write('''\tAttributeBegin
