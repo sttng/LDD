@@ -371,10 +371,10 @@ class Bone2:
 		rotationMatrix.n43 -= p.z
 		self.matrix = rotationMatrix
 
-class 2DField:
-	def __init__(self, type=0, width=0, height=0, angle=0, ax=0, ay=0, az=0, tx=0, ty=0, tz=0, 2DFieldRawData='none'):
+class Field2D:
+	def __init__(self, type=0, width=0, height=0, angle=0, ax=0, ay=0, az=0, tx=0, ty=0, tz=0, Field2DRawData='none'):
 		self.type = type
-		self.2DFieldRawData = 2DFieldRawData
+		self.Field2DRawData = Field2DRawData
 		rotationMatrix = Matrix3D()
 		rotationMatrix.rotate(angle = -angle * math.pi / 180.0,axis = Point3D(x=ax,y=ay,z=az))
 		p = Point3D(x=tx,y=ty,z=tz)
@@ -395,14 +395,14 @@ class 2DField:
 				print(a[i][j], end=' ')
 		
 		Custom2DField = [[0 for j in range(cols_count)] for i in range(rows_count)]
-		temp[] = 2DFieldRawData.splitlines()
+		temp[] = Field2DRawData.splitlines()
 		print temp[0].strip().split(',')
 
 class Primitive:
 	def __init__(self,data):
 		self.Designname = ''
 		self.Bones = []
-		self.2DFields = []
+		self.Fields2D = []
 		xml = minidom.parseString(data)
 		for node in xml.firstChild.childNodes: 
 			if node.nodeName == 'Flex': 
@@ -416,7 +416,7 @@ class Primitive:
 			elif node.nodeName == 'Connectivity':
 				for childnode in node.childNodes:
 					if childnode.nodeName == 'Custom2DField':
-						self.2DFields.append(2DField(boneId=int(childnode.getAttribute('type')), width=int(childnode.getAttribute('width')), height=int(childnode.getAttribute('height')), angle=float(childnode.getAttribute('angle')), ax=float(childnode.getAttribute('ax')), ay=float(childnode.getAttribute('ay')), az=float(childnode.getAttribute('az')), tx=float(childnode.getAttribute('tx')), ty=float(childnode.getAttribute('ty')), tz=float(childnode.getAttribute('tz'))), 2DFieldRawData=str(childnode.data))
+						self.Fields2D.append(Field2D(boneId=int(childnode.getAttribute('type')), width=int(childnode.getAttribute('width')), height=int(childnode.getAttribute('height')), angle=float(childnode.getAttribute('angle')), ax=float(childnode.getAttribute('ax')), ay=float(childnode.getAttribute('ay')), az=float(childnode.getAttribute('az')), tx=float(childnode.getAttribute('tx')), ty=float(childnode.getAttribute('ty')), tz=float(childnode.getAttribute('tz'))), Field2DRawData=str(childnode.data))
 
 class LOCReader:
 	def __init__(self, data):
