@@ -24,11 +24,11 @@ Size | Data type | Description
  4 bytes     | Int32   | options / Meshtype (58 or 59 or 62 or 63)
  3 * 4 bytes |         | position 1 (X, Y, Z)
  3 * 4 bytes |         | ...
- 3 * 4 bytes |         | normal 1
+ 3 * 4 bytes |         | normal 1 (X, Y, Z)
  3 * 4 bytes |         | ...
- 2 * 4 bytes |         | texture UV 1 (if options 59 or 63)
+ 2 * 4 bytes |         | texture UV 1 (X, Y) (if options 59 or 63)
  2 * 4 bytes |         | ...
- 3 * 4 bytes |         | triangle / face 1
+ 3 * 4 bytes |         | triangle / face 1 (point a, b, c) - 3 points make 1 triangle
  3 * 4 bytes |         | ...
  4 bytes     | Int32   | Num 1 ?? (if options 62 or 63)
  4 bytes     | Int32   | Num 2 ?? (if options 62 or 63)
