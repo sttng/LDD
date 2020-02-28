@@ -7,12 +7,12 @@ This is done to keep information between and around the studs.
 So for a 2x2 brick, the height and width attributes would be equal to 4.
 This gives a 5x5 2D array that would look like this: 
 
-  X   |   X   |   X   |   X   |   X 
+  x   |   x   |   x   |   x   |   x 
 ------|-------|-------|-------|------
-**X** | **O** |       | **O** | **X**
-**X** |       |       |       | **X**
-**X** | **O** |       | **O** | **X**
-**X** | **X** | **X** | **X** | **X**
+**x** | **O** |       | **O** | **x**
+**x** |       |       |       | **x**
+**x** | **O** |       | **O** | **x**
+**x** | **x** | **x** | **x** | **x**
 
 The **type** attribute can be 22 or 23. 
 22 is used for female connections and 23 for male connections.
