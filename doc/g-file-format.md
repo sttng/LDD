@@ -1,4 +1,4 @@
-# G File Structure
+# g-file Format Structure
 ## File structure
 * File header
 * 3D Data
