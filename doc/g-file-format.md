@@ -18,7 +18,7 @@
 
 Size | Data type | Description 
 :------- | :---: | :--- 
- 4 bytes     | Char[4] | 4CC (ASCI = '10GB')
+ 4 bytes     | Char[4] | 4CC (ASCII = '10GB')
  4 bytes     | Int32   | vertex count
  4 bytes     | Int32   | index count
  4 bytes     | Int32   | options / Meshtype (58 or 59 or 62 or 63)
