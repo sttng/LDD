@@ -30,6 +30,9 @@ Size | Data type | Description
  2 * 4 bytes |         | ...
  3 * 4 bytes |         | triangle / face 1
  3 * 4 bytes |         | ...
+ 4 bytes     | Int32   | Num 1 ?? (if options 62 or 63)
+ 4 bytes     | Int32   | Num 2 ?? (if options 62 or 63)
+ 4 bytes     | Int32   | bonelength ??
  n bytes     |         | Round edge shader data
  n bytes     |         | Average normals
  4 bytes     | Int32   | Bone Id. References to the primitive xml FlexBone node.
