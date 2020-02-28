@@ -1,7 +1,7 @@
-# Custom2DField data specification
+# Custom2DField Specification
 ## XML element description
 The **height** and **width** attributes are always double the number of studs.
-The contained text is a 2D array that is always **height**+1 and **width**+1.
+The contained text is a 2D array that is always **height**+1 and **width**+1 (or rather 0-indexed).
 
 This is done to keep information between and around the studs.
 So for a 2x2 brick, the height and width attributes would be equal to 4.
@@ -14,7 +14,8 @@ This gives a 5x5 2D array that would look like this:
 **X** | **O** |       | **O** | **X**
 **X** | **X** | **X** | **X** | **X**
 
-The **type** attribute can be 22 or 23. 22 is used for female connections and 23 for male connections.
+The **type** attribute can be 22 or 23. 
+22 is used for female connections and 23 for male connections.
 
 ## Possible values
 Conn. type  | Gender | Description
