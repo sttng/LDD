@@ -15,9 +15,9 @@
   * Mapping for each **vertex**
 * Stud culling information
 
-4CC  | vertex count | index count | options / type | position 1 | ... |  normal 1  | ... | texture UV 1 | ... | triangle / face 1 |
------|:------------:|:-----------:|:--------------:|:----------:|:---:|:----------:|:---:|:------------:|:---:|:-----------------:|
-10GB |  int         | int         |       int      |3 * 4 bytes |     |3 * 4 bytes |     | 2 * 4 bytes  |     |   int, int, int   |
+4CC  | vertex count | index count | options/type | position 1 | ... |  normal 1  | ... | texture UV 1 | ... | triangle/face 1 | ... |
+-----|:------------:|:-----------:|:------------:|:----------:|:---:|:----------:|:---:|:------------:|:---:|:---------------:|:---:|
+10GB |  int         | int         |       int    |3 * 4 bytes |     |3 * 4 bytes |     | 2 * 4 bytes  |     |  int, int, int  |     |
 
 
 ### File Header
