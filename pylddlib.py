@@ -372,9 +372,9 @@ class Bone2:
 		self.matrix = rotationMatrix
 
 class Field2D:
-	def __init__(self, type=0, width=0, height=0, angle=0, ax=0, ay=0, az=0, tx=0, ty=0, tz=0, Field2DRawData='none'):
+	def __init__(self, type=0, width=0, height=0, angle=0, ax=0, ay=0, az=0, tx=0, ty=0, tz=0, field2DRawData='none'):
 		self.type = type
-		self.Field2DRawData = Field2DRawData
+		self.field2DRawData = field2DRawData
 		rotationMatrix = Matrix3D()
 		rotationMatrix.rotate(angle = -angle * math.pi / 180.0,axis = Point3D(x=ax,y=ay,z=az))
 		p = Point3D(x=tx,y=ty,z=tz)
@@ -383,23 +383,24 @@ class Field2D:
 		rotationMatrix.n42 -= p.y
 		rotationMatrix.n43 -= p.z
 		self.matrix = rotationMatrix
+		self.custom2DField = []
 		
 		#The height and width are always double the number of studs. The contained text is a 2D array that is always height + 1 and width + 1.
-		rows_count = height
-		cols_count = width 
-		#	creation looks reverse
-		#	create an array of "cols_count" cols, for each of the "rows_count" rows
-		#		all elements are initialized to 0
-		#for i in range(3):
-		#	for j in range(len(a[i])):
-		#		print(a[i][j])
+		rows_count = height + 1
+		cols_count = width + 1
+		# creation looks reverse
+		# create an array of "cols_count" cols, for each of the "rows_count" rows
+		#	all elements are initialized to 0
+		custom2DField = [[0 for j in range(cols_count)] for i in range(rows_count)]
 		
-		Custom2DField = [[0 for j in range(cols_count)] for i in range(rows_count)]
-		temp = Field2DRawData.splitlines()
-		#of = open("test.txt", "w+")
-		#of.write(Field2DRawData)
-		print "\nmummu\n"
-		#print temp[0].strip().split(',')
+		custom2DFieldRow = field2DRawData.splitlines()
+		#Remove 1st and last element after split
+		custom2DFieldRow = custom2DFieldRow[1:-1]
+		
+		for i in range(rows_count):
+			temp = custom2DFieldRow[i].strip().split(',')
+			for j in range(cols_count):
+				custom2DField[i][j] = temp[j]
 
 class Primitive:
 	def __init__(self,data):
@@ -419,7 +420,7 @@ class Primitive:
 			elif node.nodeName == 'Connectivity':
 				for childnode in node.childNodes:
 					if childnode.nodeName == 'Custom2DField':
-						self.Fields2D.append(Field2D(type=int(childnode.getAttribute('type')), width=int(childnode.getAttribute('width')), height=int(childnode.getAttribute('height')), angle=float(childnode.getAttribute('angle')), ax=float(childnode.getAttribute('ax')), ay=float(childnode.getAttribute('ay')), az=float(childnode.getAttribute('az')), tx=float(childnode.getAttribute('tx')), ty=float(childnode.getAttribute('ty')), tz=float(childnode.getAttribute('tz')), Field2DRawData=str(childnode.firstChild.data)))
+						self.Fields2D.append(Field2D(type=int(childnode.getAttribute('type')), width=int(childnode.getAttribute('width')), height=int(childnode.getAttribute('height')), angle=float(childnode.getAttribute('angle')), ax=float(childnode.getAttribute('ax')), ay=float(childnode.getAttribute('ay')), az=float(childnode.getAttribute('az')), tx=float(childnode.getAttribute('tx')), ty=float(childnode.getAttribute('ty')), tz=float(childnode.getAttribute('tz')), field2DRawData=str(childnode.firstChild.data)))
 
 class LOCReader:
 	def __init__(self, data):
