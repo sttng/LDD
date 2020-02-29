@@ -396,7 +396,8 @@ class Field2D:
 		
 		Custom2DField = [[0 for j in range(cols_count)] for i in range(rows_count)]
 		temp = Field2DRawData.splitlines()
-		print Field2DRawData
+		#of = open("test.txt", "w+")
+		#of.write(Field2DRawData)
 		print "\nmummu\n"
 		#print temp[0].strip().split(',')
 
