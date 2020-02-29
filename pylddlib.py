@@ -391,7 +391,7 @@ class Field2D:
 		# creation looks reverse
 		# create an array of "cols_count" cols, for each of the "rows_count" rows
 		#	all elements are initialized to 0
-		custom2DField = [[0 for j in range(cols_count)] for i in range(rows_count)]
+		self.custom2DField = [[0 for j in range(cols_count)] for i in range(rows_count)]
 		
 		custom2DFieldRow = field2DRawData.splitlines()
 		#Remove 1st and last element after split
@@ -400,7 +400,10 @@ class Field2D:
 		for i in range(rows_count):
 			temp = custom2DFieldRow[i].strip().split(',')
 			for j in range(cols_count):
-				custom2DField[i][j] = temp[j]
+				self.custom2DField[i][j] = temp[j]
+				
+	def __str__(self):
+		return '[type={0}, transform={1}, custom2DField={2}]'.format(self.type, self.matrix, self.custom2DField)
 
 class Primitive:
 	def __init__(self,data):
@@ -421,6 +424,7 @@ class Primitive:
 				for childnode in node.childNodes:
 					if childnode.nodeName == 'Custom2DField':
 						self.Fields2D.append(Field2D(type=int(childnode.getAttribute('type')), width=int(childnode.getAttribute('width')), height=int(childnode.getAttribute('height')), angle=float(childnode.getAttribute('angle')), ax=float(childnode.getAttribute('ax')), ay=float(childnode.getAttribute('ay')), az=float(childnode.getAttribute('az')), tx=float(childnode.getAttribute('tx')), ty=float(childnode.getAttribute('ty')), tz=float(childnode.getAttribute('tz')), field2DRawData=str(childnode.firstChild.data)))
+						print(str(self.Fields2D[0]))
 
 class LOCReader:
 	def __init__(self, data):
