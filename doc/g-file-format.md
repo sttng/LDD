@@ -16,22 +16,22 @@
 * Stud culling information
 
 
-Size | Data type | Description 
-:------- | :---: | :--- 
- 4 bytes     | Char[4] | 4CC (ASCII = '10GB')
- 4 bytes     | Int32   | vertex count
- 4 bytes     | Int32   | index count
- 4 bytes     | Int32   | options / Meshtype (58 or 59 or 62 or 63)
- 3 * 4 bytes |         | position 1 (X, Y, Z)
- 3 * 4 bytes |         | ...
- 3 * 4 bytes |         | normal 1 (X, Y, Z)
- 3 * 4 bytes |         | ...
- 2 * 4 bytes |         | texture UV 1 (X, Y) (if options 59 or 63)
- 2 * 4 bytes |         | ...
- 3 * 4 bytes |         | triangle / face 1 (point a, b, c) - 3 points make 1 triangle
- 3 * 4 bytes |         | ...
- 4 bytes     | Int32   | Num 1 ?? (if options 62 or 63)
- 4 bytes     | Int32   | Num 2 ?? (if options 62 or 63)
+Size | Data type | Description | Example (3024.g)
+:------- | :---: | :---: | :--- 
+ 4 bytes     | Char[4] | 4CC (ASCII = '10GB') | 0x31 0x30 0x47 0x42
+ 4 bytes     | Int32   | vertex count | 85 
+ 4 bytes     | Int32   | triangle / face index count | 192
+ 4 bytes     | Int32   | options / Meshtype (58 or 59 or 62 or 63) | Hex: 0x3A Dec: 58
+ 3 * 4 bytes | float   | position 1 (X, Y, Z) | -0.4,  0.32, 0.4
+ 3 * 4 bytes | float   | ... | 0.4, 0.32, 0.4, ... , -6.477
+ 3 * 4 bytes | float   | normal 1 (X, Y, Z) | 0.0, 1.0, 0.0
+ 3 * 4 bytes | float   | ... |  0.0, 1.0, 0.0, ... , 0.0
+ 2 * 4 bytes | float   | texture UV 1 (X, Y) (if options 59 or 63) | n.a.
+ 2 * 4 bytes | float   | ... | n.a.
+ 3 * 4 bytes | Int32   | triangle / face 1 (point a, b, c) - 3 points make 1 triangle | 0, 1, 2
+ 3 * 4 bytes | Int32   | ... | 1, 3, 2, ... , 84, 73, 72 (until offeset B04)
+ 4 bytes     | Int32   | Num 1 ?? (if options 62 or 63) | n.a ?
+ 4 bytes     | Int32   | Num 2 ?? (if options 62 or 63) | n.a ?
  4 bytes     | Int32   | bonelength ??
  n bytes     |         | Round edge shader data
  n bytes     |         | Average normals
