@@ -26,7 +26,7 @@
 # License: MIT License
 #
 
-from pyldd2obj import *
+from pylddlib import *
 import numpy as np
 import uuid
 import csv
@@ -529,6 +529,27 @@ def Xform "geo{0}" (
 					gop.write('\t\tuniform token subdivisionScheme = "none"\n\t}\n')
 					gop.write('}\n')
 					gop.close()
+
+				#Logo on studs
+				for studs in geo.studsFields2D:
+					if studs.type == 23:
+						for i in range(len(studs.custom2DField)):
+							for j in range(len(studs.custom2DField[0])):
+								if studs.custom2DField[i][j] in {"2:4:1", "0:4:1"}: #Valid Conn. type which are "allowed" for logo on stud
+									#print "STUUUUDuuuuuuuu\n"
+									op.write('\tdef "stud{0}_{1}" (\n'.format(i, j))
+									op.write('\t\tadd references = @./logoonstuds.usda@\n\t)\n\t{')
+									op.write('\n\t\tdouble3 xformOp:translate = ({0}, {1}, {2})'.format(-0.4 + j * 0.4 - 0.02, studs.ty + 0.14, -0.4 + i * 0.4 - 0.02)) #minx of bounding = -0.4, 0.46 =ty of field + 0.14
+									op.write('\n\t\tdouble3 xformOp:scale = ({0}, {0}, {0})'.format(0.82))
+									op.write('\n\t\tuniform token[] xformOpOrder = ["xformOp:translate","xformOp:scale"]\n')
+									op.write('\n\t\tcolor3f[] primvars:displayColor = [({0}, {1}, {2})]\n'.format(lddmatri.r, lddmatri.g, lddmatri.b))
+									op.write('\t\trel material:binding = <Material{0}/material_{0}a>\n'.format(matname))
+									op.write('''\t\tdef "Material{0}" (
+			add references = @./material_{0}.usda@
+		)
+		{{
+		}}
+	}}\n\n'''.format(matname))
 
 				op.write('}\n')
 				# -----------------------------------------------------------------
