@@ -17,7 +17,7 @@
 
 
 Size | Data type | Description | Example (3024.g)
-:------- | :---: | :---: | :--- 
+:----------- | :-----: | :---: | :--- 
  4 bytes     | Char[4] | 4CC (ASCII = '10GB') | 0x31 0x30 0x47 0x42
  4 bytes     | Int32   | vertex count | 85 
  4 bytes     | Int32   | triangle / face index count | 192
@@ -41,8 +41,9 @@ Size | Data type | Description | Example (3024.g)
  3 * 4 bytes | float   | Average normal "header" (X, Y, Z) | 83, 0.0, 0.0 (start offset: 1A00)
  3 * 4 bytes | float   | Average normal 1 | -0.57735, 0.57735, 0.57735
  3 * 4 bytes | float   | Average normal 2, 3, ... | 0.57735, 0.57735, 0.57735, ... 
- 4 bytes     | Int32   | Bone Id. References to the primitive xml FlexBone node. | n.a.
- 4 bytes     | float   | Weight | n.a.
+ 4 bytes     | Int32   | Bone Id. References to the primitive xml FlexBone node. | n.a. ?
+ 4 bytes     | float   | Weight | n.a. ?
+ n bytes     |         | Stud culling information | 
  
 ### File Header
 The file starts with the following four characters: 10GB.
