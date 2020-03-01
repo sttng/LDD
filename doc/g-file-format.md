@@ -32,7 +32,7 @@ Size | Data type | Description | Example (3024.g)
  3 * 4 bytes | Int32   | triangle / face 2,  3, ... | 1, 3, 2, ... , 84, 73, 72 (until offset B04)
  4 bytes     | Int32   | Num 1 ?? (if options 62 or 63) | n.a ?
  4 bytes     | Int32   | Num 2 ?? (if options 62 or 63) | n.a ?
- 4 bytes     | Int32   | bonelength ??
+ 4 bytes     | Int32   | bonelength ?? | n.a. ?
  4 bytes     | Int32   | Round edge shader total value count | 764 ?
  2 * 4 bytes | float   | Round edge shader data 2D vector 1 | -115.5, 0 ?
  2 * 4 bytes | float   | ... | -115.5, 0
