@@ -40,7 +40,7 @@ Size | Data type | Description | Example (3024.g)
  4 bytes     | Int32   | ... | 36, 48, ...
  3 * 4 bytes | float   | Average normal "header" (X, Y, Z) | 83, 0.0, 0.0 (start offset: 1A00)
  3 * 4 bytes | float   | Average normal 1 | -0.57735, 0.57735, 0.57735
- 3 * 4 bytes | float   | Average normal 2, 3, ... | 0.57735, 0.57735, 0.57735, ... , 
+ 3 * 4 bytes | float   | Average normal 2, 3, ... | 0.57735, 0.57735, 0.57735, ... 
  4 bytes     | Int32   | Bone Id. References to the primitive xml FlexBone node. | n.a.
  4 bytes     | float   | Weight | n.a.
  
