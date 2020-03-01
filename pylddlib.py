@@ -332,6 +332,9 @@ class Geometry:
 		primitive = Primitive(data = database.filelist[PRIMITIVEPATH + designID + '.xml'].read())
 		self.Partname = primitive.Designname
 		self.studsFields2D = primitive.Fields2D
+		self.minX = primitive.minX
+		self.minZ = primitive.minZ
+		
 		# preflex
 		for part in self.Parts:
 			# transform
@@ -413,6 +416,8 @@ class Field2D:
 class Primitive:
 	def __init__(self,data):
 		self.Designname = ''
+		self.minX = ''
+		self.minZ = ''
 		self.Bones = []
 		self.Fields2D = []
 		xml = minidom.parseString(data)
@@ -425,6 +430,12 @@ class Primitive:
 				for childnode in node.childNodes:
 					if childnode.nodeName == 'Annotation' and childnode.hasAttribute('designname'):
 						self.Designname = childnode.getAttribute('designname')
+			elif node.nodeName == 'Bounding':
+				for childnode in node.childNodes:
+					if childnode.nodeName == 'AABB' and childnode.hasAttribute('minX'):
+						self.minX = childnode.getAttribute('minX')
+					if childnode.nodeName == 'AABB' and childnode.hasAttribute('minZ'):
+						self.minZ = childnode.getAttribute('minZ')
 			elif node.nodeName == 'Connectivity':
 				for childnode in node.childNodes:
 					if childnode.nodeName == 'Custom2DField':
