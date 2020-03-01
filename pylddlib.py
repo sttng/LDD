@@ -319,6 +319,9 @@ class Geometry:
 	def __init__(self, designID, database):
 		self.designID = designID
 		self.Parts = {}
+		
+		self.studsFields2D = []
+		
 		GeometryLocation = '{0}{1}{2}'.format(GEOMETRIEPATH, designID,'.g')
 		GeometryCount = 0
 		while str(GeometryLocation) in database.filelist:
@@ -328,6 +331,7 @@ class Geometry:
 
 		primitive = Primitive(data = database.filelist[PRIMITIVEPATH + designID + '.xml'].read())
 		self.Partname = primitive.Designname
+		self.studsFields2D = primitive.Fields2D
 		# preflex
 		for part in self.Parts:
 			# transform
@@ -374,6 +378,7 @@ class Bone2:
 class Field2D:
 	def __init__(self, type=0, width=0, height=0, angle=0, ax=0, ay=0, az=0, tx=0, ty=0, tz=0, field2DRawData='none'):
 		self.type = type
+		self.ty = ty # need to place studs at correct height
 		self.field2DRawData = field2DRawData
 		rotationMatrix = Matrix3D()
 		rotationMatrix.rotate(angle = -angle * math.pi / 180.0,axis = Point3D(x=ax,y=ay,z=az))
@@ -424,7 +429,6 @@ class Primitive:
 				for childnode in node.childNodes:
 					if childnode.nodeName == 'Custom2DField':
 						self.Fields2D.append(Field2D(type=int(childnode.getAttribute('type')), width=int(childnode.getAttribute('width')), height=int(childnode.getAttribute('height')), angle=float(childnode.getAttribute('angle')), ax=float(childnode.getAttribute('ax')), ay=float(childnode.getAttribute('ay')), az=float(childnode.getAttribute('az')), tx=float(childnode.getAttribute('tx')), ty=float(childnode.getAttribute('ty')), tz=float(childnode.getAttribute('tz')), field2DRawData=str(childnode.firstChild.data)))
-						print(str(self.Fields2D[0]))
 
 class LOCReader:
 	def __init__(self, data):
