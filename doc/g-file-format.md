@@ -21,22 +21,28 @@ Size | Data type | Description | Example (3024.g)
  4 bytes     | Char[4] | 4CC (ASCII = '10GB') | 0x31 0x30 0x47 0x42
  4 bytes     | Int32   | vertex count | 85 
  4 bytes     | Int32   | triangle / face index count | 192
- 4 bytes     | Int32   | options / Meshtype (58 or 59 or 62 or 63) | Hex: 0x3A Dec: 58
+ 4 bytes     | Int32   | options / mesh type (58 or 59 or 62 or 63) | Hex: 0x3A Dec: 58
  3 * 4 bytes | float   | position 1 (X, Y, Z) | -0.4,  0.32, 0.4
- 3 * 4 bytes | float   | ... | 0.4, 0.32, 0.4, ... , -6.477
+ 3 * 4 bytes | float   | position 2, 3,  ... | 0.4, 0.32, 0.4, ... , -6.477
  3 * 4 bytes | float   | normal 1 (X, Y, Z) | 0.0, 1.0, 0.0
- 3 * 4 bytes | float   | ... |  0.0, 1.0, 0.0, ... , 0.0
+ 3 * 4 bytes | float   | normal 2, 3, ... |  0.0, 1.0, 0.0, ... , 0.0
  2 * 4 bytes | float   | texture UV 1 (X, Y) (if options 59 or 63) | n.a.
- 2 * 4 bytes | float   | ... | n.a.
+ 2 * 4 bytes | float   | texture UV 2, 3, ... | n.a.
  3 * 4 bytes | Int32   | triangle / face 1 (point a, b, c) - 3 points make 1 triangle | 0, 1, 2
- 3 * 4 bytes | Int32   | ... | 1, 3, 2, ... , 84, 73, 72 (until offeset B04)
+ 3 * 4 bytes | Int32   | triangle / face 2,  3, ... | 1, 3, 2, ... , 84, 73, 72 (until offset B04)
  4 bytes     | Int32   | Num 1 ?? (if options 62 or 63) | n.a ?
  4 bytes     | Int32   | Num 2 ?? (if options 62 or 63) | n.a ?
  4 bytes     | Int32   | bonelength ??
- n bytes     |         | Round edge shader data
- n bytes     |         | Average normals
- 4 bytes     | Int32   | Bone Id. References to the primitive xml FlexBone node.
- 4 bytes     | float   | Weight
+ 4 bytes     | Int32   | Round edge shader total value count | 764 ?
+ 2 * 4 bytes | float   | Round edge shader data 2D vector 1 | -115.5, 0 ?
+ 2 * 4 bytes | float   | ... | -115.5, 0
+ 4 bytes     | Int32   | Round edge shader offset 1 | 0, 12, 24 ?
+ 4 bytes     | Int32   | ... | 36, 48, ...
+ 3 * 4 bytes | float   | Average normal "header" (X, Y, Z) | 83, 0.0, 0.0 (start offset: 1A00)
+ 3 * 4 bytes | float   | Average normal 1 | -0.57735, 0.57735, 0.57735
+ 3 * 4 bytes | float   | Average normal 2, 3, ... | 0.57735, 0.57735, 0.57735, ... , 
+ 4 bytes     | Int32   | Bone Id. References to the primitive xml FlexBone node. | n.a.
+ 4 bytes     | float   | Weight | n.a.
  
 ### File Header
 The file starts with the following four characters: 10GB.
