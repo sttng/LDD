@@ -537,7 +537,8 @@ def Xform "geo{0}" (
 									dest = shutil.copy('logoonstuds.usda', assetsDir) 
 									op.write('\tdef "stud{0}_{1}" (\n'.format(i, j))
 									op.write('\t\tadd references = @./logoonstuds.usda@\n\t)\n\t{')
-									op.write('\n\t\tdouble3 xformOp:translate = ({0}, {1}, {2})'.format(studs.matrix.n41 + j * 0.4 - 0.02, studs.matrix.n42 + 0.14, studs.matrix.n43 + i * 0.4 - 0.02)) #minx of bounding = -0.4, 0.46 =ty of field + 0.14
+									op.write('\n\t\tdouble3 xformOp:translate = ({0}, {1}, {2})'.format(-1 * studs.matrix.n41 + j * 0.4 - 0.02, -1 * studs.matrix.n42 + 0.14, -1 * studs.matrix.n43 + i * 0.4 - 0.02)) #minx of bounding = -0.4, 0.46 =ty of field + 0.14
+									#op.write('\n\t\test({0}, {1}, {2})'.format(studs.matrix.n41, studs.matrix.n42, studs.matrix.n43 )) 
 									op.write('\n\t\tdouble3 xformOp:scale = ({0}, {0}, {0})'.format(0.82))
 									op.write('\n\t\tuniform token[] xformOpOrder = ["xformOp:translate","xformOp:scale"]\n')
 									op.write('\n\t\tcolor3f[] primvars:displayColor = [({0}, {1}, {2})]\n'.format(lddmatri.r, lddmatri.g, lddmatri.b))
