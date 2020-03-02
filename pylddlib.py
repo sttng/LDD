@@ -381,7 +381,9 @@ class Bone2:
 class Field2D:
 	def __init__(self, type=0, width=0, height=0, angle=0, ax=0, ay=0, az=0, tx=0, ty=0, tz=0, field2DRawData='none'):
 		self.type = type
+		self.tx = tx 
 		self.ty = ty # need to place studs at correct height
+		self.ty = tz
 		self.field2DRawData = field2DRawData
 		rotationMatrix = Matrix3D()
 		rotationMatrix.rotate(angle = -angle * math.pi / 180.0,axis = Point3D(x=ax,y=ay,z=az))
@@ -402,7 +404,7 @@ class Field2D:
 		self.custom2DField = [[0 for j in range(cols_count)] for i in range(rows_count)]
 		
 		custom2DFieldRow = field2DRawData.splitlines()
-		#Remove 1st and last element after split
+		#Remove 1st and last element after split (as the field starts with a newline and end with one, so creating 2 empty items)
 		custom2DFieldRow = custom2DFieldRow[1:-1]
 		
 		for i in range(rows_count):
