@@ -8,7 +8,7 @@
 # Usage: ./LegoToRHD.py /Users/username/Documents/LEGO\ Creations/Models/mylfxfile.lxf -np
 #
 # Updates:
-# 0.5 initial logo on studs supported
+# 0.5 initial logo on studs support
 # 0.4.7 added brick seams via scale factor of 0.99 for each brick (experimental)
 # 0.4.6 added nonormals switch (-nn), to ignore normals writing as some parts of LDD seem to have incorrect normals.
 # 0.4.5 remove parts writing of normals for the time being
