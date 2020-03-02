@@ -418,10 +418,9 @@ class Field2D:
 class Primitive:
 	def __init__(self,data):
 		self.Designname = ''
-		self.minX = ''
-		self.minZ = ''
 		self.Bones = []
 		self.Fields2D = []
+		self.Bounding = {}
 		xml = minidom.parseString(data)
 		for node in xml.firstChild.childNodes: 
 			if node.nodeName == 'Flex': 
@@ -435,9 +434,17 @@ class Primitive:
 			elif node.nodeName == 'Bounding':
 				for childnode in node.childNodes:
 					if childnode.nodeName == 'AABB' and childnode.hasAttribute('minX'):
-						self.minX = childnode.getAttribute('minX')
-					if childnode.nodeName == 'AABB' and childnode.hasAttribute('minZ'):
-						self.minZ = childnode.getAttribute('minZ')
+						self.Bounding = {"minX": childnode.getAttribute('minX')}
+					elif childnode.nodeName == 'AABB' and childnode.hasAttribute('minY'):
+						self.Bounding = {"minY": childnode.getAttribute('minY')}
+					elif childnode.nodeName == 'AABB' and childnode.hasAttribute('minZ'):
+						self.Bounding = {"minZ": childnode.getAttribute('minZ')}
+					eif childnode.nodeName == 'AABB' and childnode.hasAttribute('maxX'):
+						self.Bounding = {"maxX": childnode.getAttribute('maxX')}
+					elif childnode.nodeName == 'AABB' and childnode.hasAttribute('maxY'):
+						self.Bounding = {"maxY": childnode.getAttribute('maxY')}
+					elif childnode.nodeName == 'AABB' and childnode.hasAttribute('minZ'):
+						self.Bounding = {"maxZ": childnode.getAttribute('maxZ')}
 			elif node.nodeName == 'Connectivity':
 				for childnode in node.childNodes:
 					if childnode.nodeName == 'Custom2DField':
