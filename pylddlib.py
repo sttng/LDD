@@ -332,8 +332,6 @@ class Geometry:
 		primitive = Primitive(data = database.filelist[PRIMITIVEPATH + designID + '.xml'].read())
 		self.Partname = primitive.Designname
 		self.studsFields2D = primitive.Fields2D
-		self.minX = primitive.minX
-		self.minZ = primitive.minZ
 		
 		# preflex
 		for part in self.Parts:
@@ -416,11 +414,13 @@ class Field2D:
 		return '[type={0}, transform={1}, custom2DField={2}]'.format(self.type, self.matrix, self.custom2DField)
 
 class Primitive:
-	def __init__(self,data):
+	def __init__(self, data):
 		self.Designname = ''
 		self.Bones = []
 		self.Fields2D = []
+		self.PhysicsAttributes = {}
 		self.Bounding = {}
+		self.GeometryBounding = {}
 		xml = minidom.parseString(data)
 		for node in xml.firstChild.childNodes: 
 			if node.nodeName == 'Flex': 
@@ -431,20 +431,29 @@ class Primitive:
 				for childnode in node.childNodes:
 					if childnode.nodeName == 'Annotation' and childnode.hasAttribute('designname'):
 						self.Designname = childnode.getAttribute('designname')
+			elif node.nodeName == 'PhysicsAttributes':
+				self.PhysicsAttributes = {"inertiaTensor": node.getAttribute('inertiaTensor')}
+				self.PhysicsAttributes = {"centerOfMass": node.getAttribute('centerOfMass')}
+				self.PhysicsAttributes = {"mass": node.getAttribute('mass')}
+				self.PhysicsAttributes = {"frictionType": node.getAttribute('frictionType')}				
 			elif node.nodeName == 'Bounding':
 				for childnode in node.childNodes:
-					if childnode.nodeName == 'AABB' and childnode.hasAttribute('minX'):
+					if childnode.nodeName == 'AABB':
 						self.Bounding = {"minX": childnode.getAttribute('minX')}
-					elif childnode.nodeName == 'AABB' and childnode.hasAttribute('minY'):
 						self.Bounding = {"minY": childnode.getAttribute('minY')}
-					elif childnode.nodeName == 'AABB' and childnode.hasAttribute('minZ'):
 						self.Bounding = {"minZ": childnode.getAttribute('minZ')}
-					eif childnode.nodeName == 'AABB' and childnode.hasAttribute('maxX'):
 						self.Bounding = {"maxX": childnode.getAttribute('maxX')}
-					elif childnode.nodeName == 'AABB' and childnode.hasAttribute('maxY'):
 						self.Bounding = {"maxY": childnode.getAttribute('maxY')}
-					elif childnode.nodeName == 'AABB' and childnode.hasAttribute('minZ'):
 						self.Bounding = {"maxZ": childnode.getAttribute('maxZ')}
+			elif node.nodeName == 'GeometryBounding':
+				for childnode in node.childNodes:
+					if childnode.nodeName == 'AABB':
+						self.GeometryBounding = {"minX": childnode.getAttribute('minX')}
+						self.GeometryBounding = {"minY": childnode.getAttribute('minY')}
+						self.GeometryBounding = {"minZ": childnode.getAttribute('minZ')}
+						self.GeometryBounding = {"maxX": childnode.getAttribute('maxX')}
+						self.GeometryBounding = {"maxY": childnode.getAttribute('maxY')}
+						self.GeometryBounding = {"maxZ": childnode.getAttribute('maxZ')}
 			elif node.nodeName == 'Connectivity':
 				for childnode in node.childNodes:
 					if childnode.nodeName == 'Custom2DField':
