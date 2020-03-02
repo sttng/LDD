@@ -285,7 +285,7 @@ class Converter:
 			float verticalApertureOffset = 0
 			token projection = "perspective"
 		
-			matrix4d xformOp:transform = ( ({1}, {2}, {3}, {4}), ({5}, {6}, {7}, {8}), ({9}, {10}, {11}, {12}), ({13}, {14}, {15}, {16}) )	
+			matrix4d xformOp:transform = ( ({1}, {2}, {3}, {4}), ({5}, {6}, {7}, {8}), ({9}, {10}, {11}, {12}), ({13}, {14}, {15}, {16}) )
 			uniform token[] xformOpOrder = ["xformOp:transform"]
 		}}\n'''.format(cam.refID, cam.matrix.n11, cam.matrix.n12, cam.matrix.n13, cam.matrix.n14, cam.matrix.n21, cam.matrix.n22, cam.matrix.n23, cam.matrix.n24, cam.matrix.n31, cam.matrix.n32, cam.matrix.n33, cam.matrix.n34, cam.matrix.n41, cam.matrix.n42, cam.matrix.n43, cam.matrix.n44))
 
@@ -538,13 +538,14 @@ def Xform "geo{0}" (
 						if studs.type == 23:
 							for i in range(len(studs.custom2DField)):
 								for j in range(len(studs.custom2DField[0])):
-									if studs.custom2DField[i][j] in {"2:4:1", "0:4:1"}: #Valid Connection type which are "allowed" for logo on stud
+									if studs.custom2DField[i][j] in {"2:4:1", "0:4:1", "0:4:2"}: #Valid Connection type which are "allowed" for logo on stud
 										dest = shutil.copy('logoonstuds.usda', assetsDir) 
-										op.write('\tdef "stud{0}_{0}_{1}" (\n'.format(a, i, j))
+										op.write('\tdef "stud{0}_{1}_{2}" (\n'.format(a, i, j))
 										op.write('\t\tadd references = @./logoonstuds.usda@\n\t)\n\t{')
 										op.write('\n\t\tdouble3 xformOp:translate = ({0}, {1}, {2})'.format(-1 * studs.matrix.n41 + j * 0.4 - 0.02, -1 * studs.matrix.n42 + 0.14, -1 * studs.matrix.n43 + i * 0.4 - 0.02)) #minx of bounding = -0.4, 0.46 =ty of field + 0.14
+										op.write('\n\t\tmatrix4d xformOp:transform = ( ({0}, {1}, {2}, {3}), ({4}, {5}, {6}, {7}), ({8}, {9}, {10}, {11}), ({12}, {13}, {14}, {15}) )'.format(studs.matrix.n11, studs.matrix.n12, -1 * studs.matrix.n13, studs.matrix.n14, studs.matrix.n21, studs.matrix.n22, -1 * studs.matrix.n23, studs.matrix.n24, -1 * studs.matrix.n31, -1 * studs.matrix.n32, studs.matrix.n33, studs.matrix.n34, 0, 0, 0, studs.matrix.n44))
 										op.write('\n\t\tdouble3 xformOp:scale = ({0}, {0}, {0})'.format(0.82))
-										op.write('\n\t\tuniform token[] xformOpOrder = ["xformOp:translate","xformOp:scale"]\n')
+										op.write('\n\t\tuniform token[] xformOpOrder = ["xformOp:transform","xformOp:translate","xformOp:scale"]\n')
 										op.write('\n\t\tcolor3f[] primvars:displayColor = [({0}, {1}, {2})]\n'.format(lddmatri.r, lddmatri.g, lddmatri.b))
 										op.write('\t\trel material:binding = <Material{0}/material_{0}a>\n'.format(matname))
 										op.write('''\t\tdef "Material{0}" (
