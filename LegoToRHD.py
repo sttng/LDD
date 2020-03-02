@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 
 #
-# LegoToRHD Version 0.4.7 - Copyright (c) 2020 by m2m
+# LegoToRHD Version 0.5 - Copyright (c) 2020 by m2m
 # based on pyldd2obj Version 0.4.8 - Copyright (c) 2019 by jonnysp 
 # LegoToRHD parses LXF files and command line parameters to create USDA compliant files.
 # 
 # Usage: ./LegoToRHD.py /Users/username/Documents/LEGO\ Creations/Models/mylfxfile.lxf -np
 #
 # Updates:
-# 
+# 0.5 initial logo on studs supported
 # 0.4.7 added brick seams via scale factor of 0.99 for each brick (experimental)
 # 0.4.6 added nonormals switch (-nn), to ignore normals writing as some parts of LDD seem to have incorrect normals.
 # 0.4.5 remove parts writing of normals for the time being
@@ -35,7 +35,7 @@ import shutil
 import ParseCommandLine as cl
 import random
 
-__version__ = "0.4.7"
+__version__ = "0.5"
 
 compression = zipfile.ZIP_STORED #uncompressed archive for USDZ, otherwise would use ZIP_DEFLATED, the usual zip compression
 
@@ -244,8 +244,10 @@ class Converter:
 		
 		# miny used for floor plane later
 		miny = 1000
+		
 		useplane = cl.useplane
 		usenormal = cl.usenormal
+		uselogoonstuds = cl.uselogoonstuds
 		
 		out.write('''
 {
@@ -529,26 +531,26 @@ def Xform "geo{0}" (
 					gop.close()
 
 				#Logo on studs
-				for studs in geo.studsFields2D:
-					if studs.type == 23:
-						for i in range(len(studs.custom2DField)):
-							for j in range(len(studs.custom2DField[0])):
-								if studs.custom2DField[i][j] in {"2:4:1", "0:4:1"}: #Valid Connection type which are "allowed" for logo on stud
-									dest = shutil.copy('logoonstuds.usda', assetsDir) 
-									op.write('\tdef "stud{0}_{1}" (\n'.format(i, j))
-									op.write('\t\tadd references = @./logoonstuds.usda@\n\t)\n\t{')
-									op.write('\n\t\tdouble3 xformOp:translate = ({0}, {1}, {2})'.format(-1 * studs.matrix.n41 + j * 0.4 - 0.02, -1 * studs.matrix.n42 + 0.14, -1 * studs.matrix.n43 + i * 0.4 - 0.02)) #minx of bounding = -0.4, 0.46 =ty of field + 0.14
-									#op.write('\n\t\test({0}, {1}, {2})'.format(studs.matrix.n41, studs.matrix.n42, studs.matrix.n43 )) 
-									op.write('\n\t\tdouble3 xformOp:scale = ({0}, {0}, {0})'.format(0.82))
-									op.write('\n\t\tuniform token[] xformOpOrder = ["xformOp:translate","xformOp:scale"]\n')
-									op.write('\n\t\tcolor3f[] primvars:displayColor = [({0}, {1}, {2})]\n'.format(lddmatri.r, lddmatri.g, lddmatri.b))
-									op.write('\t\trel material:binding = <Material{0}/material_{0}a>\n'.format(matname))
-									op.write('''\t\tdef "Material{0}" (
-			add references = @./material_{0}.usda@
-		)
-		{{
-		}}
-	}}\n\n'''.format(matname))
+				if uselogoonstuds == True: # write logo on studs in case flag True
+					for studs in geo.studsFields2D:
+						if studs.type == 23:
+							for i in range(len(studs.custom2DField)):
+								for j in range(len(studs.custom2DField[0])):
+									if studs.custom2DField[i][j] in {"2:4:1", "0:4:1"}: #Valid Connection type which are "allowed" for logo on stud
+										dest = shutil.copy('logoonstuds.usda', assetsDir) 
+										op.write('\tdef "stud{0}_{1}" (\n'.format(i, j))
+										op.write('\t\tadd references = @./logoonstuds.usda@\n\t)\n\t{')
+										op.write('\n\t\tdouble3 xformOp:translate = ({0}, {1}, {2})'.format(-1 * studs.matrix.n41 + j * 0.4 - 0.02, -1 * studs.matrix.n42 + 0.14, -1 * studs.matrix.n43 + i * 0.4 - 0.02)) #minx of bounding = -0.4, 0.46 =ty of field + 0.14
+										op.write('\n\t\tdouble3 xformOp:scale = ({0}, {0}, {0})'.format(0.82))
+										op.write('\n\t\tuniform token[] xformOpOrder = ["xformOp:translate","xformOp:scale"]\n')
+										op.write('\n\t\tcolor3f[] primvars:displayColor = [({0}, {1}, {2})]\n'.format(lddmatri.r, lddmatri.g, lddmatri.b))
+										op.write('\t\trel material:binding = <Material{0}/material_{0}a>\n'.format(matname))
+										op.write('''\t\tdef "Material{0}" (
+				add references = @./material_{0}.usda@
+			)
+			{{
+			}}
+		}}\n\n'''.format(matname))
 
 				op.write('}\n')
 				# -----------------------------------------------------------------
@@ -606,7 +608,7 @@ def Xform "geo{0}" (
 		print("--- %s seconds ---" % (time.time() - start_time))
 
 
-def generate_rib_header(infile, srate, pixelvar, width, height, fov, fstop, searcharchive, searchtexture, integrator, integratorParams, useplane, usenormal):
+def generate_rib_header(infile, srate, pixelvar, width, height, fov, fstop, searcharchive, searchtexture, integrator, integratorParams, useplane, usenormal, uselogoonstuds):
 	cwd = os.getcwd()
 	infile = os.path.realpath(infile.name)
 	infile = os.path.splitext(os.path.basename(infile))[0]
@@ -640,7 +642,7 @@ def main():
 	cl.ParseCommandLine('')
 	lxf_filename = os.path.realpath(cl.args.infile.name)
 	obj_filename = os.path.splitext(os.path.basename(lxf_filename))[0]
-	generate_rib_header(cl.args.infile, cl.args.srate, cl.args.pixelvar, cl.args.width, cl.args.height, cl.args.fov, cl.args.fstop, cl.args.searcharchive, cl.args.searchtexture, cl.integrator, cl.integratorParams, cl.useplane, cl.usenormal)
+	generate_rib_header(cl.args.infile, cl.args.srate, cl.args.pixelvar, cl.args.width, cl.args.height, cl.args.fov, cl.args.fstop, cl.args.searcharchive, cl.args.searchtexture, cl.integrator, cl.integratorParams, cl.useplane, cl.usenormal, cl.uselogoonstuds)
 
 	converter = Converter()
 	print("LegoToRHD Version " + __version__)
