@@ -538,7 +538,7 @@ def Xform "geo{0}" (
 						if studs.type == 23:
 							for i in range(len(studs.custom2DField)):
 								for j in range(len(studs.custom2DField[0])):
-									if studs.custom2DField[i][j] in {"2:4:1", "0:4:1", "0:4:2"}: #Valid Connection type which are "allowed" for logo on stud
+									if studs.custom2DField[i][j] in {"2:4:1", "0:4", "0:4:1", "0:4:2"}: #Valid Connection type which are "allowed" for logo on stud
 										dest = shutil.copy('logoonstuds.usda', assetsDir) 
 										op.write('\tdef "stud{0}_{1}_{2}" (\n'.format(a, i, j))
 										op.write('\t\tadd references = @./logoonstuds.usda@\n\t)\n\t{')
