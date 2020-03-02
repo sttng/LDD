@@ -381,7 +381,7 @@ class Field2D:
 		self.type = type
 		self.field2DRawData = field2DRawData
 		rotationMatrix = Matrix3D()
-		rotationMatrix.rotate(angle = -angle * math.pi / 180.0,axis = Point3D(x=ax,y=ay,z=az))
+		rotationMatrix.rotate(angle = -angle * math.pi / 180.0, axis = Point3D(x=ax,y=ay,z=az))
 		p = Point3D(x=tx,y=ty,z=tz)
 		p.transformW(rotationMatrix)
 		rotationMatrix.n41 -= p.x
