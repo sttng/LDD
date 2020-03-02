@@ -379,9 +379,6 @@ class Bone2:
 class Field2D:
 	def __init__(self, type=0, width=0, height=0, angle=0, ax=0, ay=0, az=0, tx=0, ty=0, tz=0, field2DRawData='none'):
 		self.type = type
-		self.tx = tx 
-		self.ty = ty # needed to place studs at correct height
-		self.ty = tz
 		self.field2DRawData = field2DRawData
 		rotationMatrix = Matrix3D()
 		rotationMatrix.rotate(angle = -angle * math.pi / 180.0,axis = Point3D(x=ax,y=ay,z=az))
@@ -411,7 +408,7 @@ class Field2D:
 				self.custom2DField[i][j] = temp[j]
 				
 	def __str__(self):
-		return '[type="{0}" transform="{1}" custom2DField="{2}" tx="{3}" ty="{4}" tz="{5}"]'.format(self.type, self.matrix, self.custom2DField, self.tx, self.ty, self.tz)
+		return '[type="{0}" transform="{1}" custom2DField="{2}"]'.format(self.type, self.matrix, self.custom2DField)
 
 class Primitive:
 	def __init__(self, data):
