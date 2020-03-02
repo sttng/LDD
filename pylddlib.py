@@ -382,7 +382,7 @@ class Field2D:
 	def __init__(self, type=0, width=0, height=0, angle=0, ax=0, ay=0, az=0, tx=0, ty=0, tz=0, field2DRawData='none'):
 		self.type = type
 		self.tx = tx 
-		self.ty = ty # need to place studs at correct height
+		self.ty = ty # needed to place studs at correct height
 		self.ty = tz
 		self.field2DRawData = field2DRawData
 		rotationMatrix = Matrix3D()
