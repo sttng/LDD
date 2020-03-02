@@ -81,7 +81,6 @@ class MaterialRi:
 			ref_strg = '.connect'
 			matId_or_decId = '{0}_{1}'.format(self.materialId, decorationId)
 			
-			#texture_strg 
 			texture_strg = '''
 		def Shader "stAttrReader" 
 		{{
