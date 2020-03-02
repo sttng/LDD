@@ -532,13 +532,15 @@ def Xform "geo{0}" (
 
 				#Logo on studs
 				if uselogoonstuds == True: # write logo on studs in case flag True
+					a = 0
 					for studs in geo.studsFields2D:
+						a += 1
 						if studs.type == 23:
 							for i in range(len(studs.custom2DField)):
 								for j in range(len(studs.custom2DField[0])):
 									if studs.custom2DField[i][j] in {"2:4:1", "0:4:1"}: #Valid Connection type which are "allowed" for logo on stud
 										dest = shutil.copy('logoonstuds.usda', assetsDir) 
-										op.write('\tdef "stud{0}_{1}" (\n'.format(i, j))
+										op.write('\tdef "stud{0}_{0}_{1}" (\n'.format(a, i, j))
 										op.write('\t\tadd references = @./logoonstuds.usda@\n\t)\n\t{')
 										op.write('\n\t\tdouble3 xformOp:translate = ({0}, {1}, {2})'.format(-1 * studs.matrix.n41 + j * 0.4 - 0.02, -1 * studs.matrix.n42 + 0.14, -1 * studs.matrix.n43 + i * 0.4 - 0.02)) #minx of bounding = -0.4, 0.46 =ty of field + 0.14
 										op.write('\n\t\tdouble3 xformOp:scale = ({0}, {0}, {0})'.format(0.82))
@@ -550,7 +552,7 @@ def Xform "geo{0}" (
 			)
 			{{
 			}}
-		}}\n\n'''.format(matname))
+	}}\n\n'''.format(matname))
 
 				op.write('}\n')
 				# -----------------------------------------------------------------
