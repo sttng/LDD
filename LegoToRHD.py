@@ -68,9 +68,9 @@ class MaterialRi:
 		self.name = ''
 		self.materialType = materialType
 		self.materialId = materialId
-		self.r = round((float(r) / 255), 2)
-		self.g = round((float(g) / 255), 2)
-		self.b = round((float(b) / 255), 2)
+		self.r = round((float(r) / 255), 3)
+		self.g = round((float(g) / 255), 3)
+		self.b = round((float(b) / 255), 3)
 		
 	def string(self, decorationId):
 		texture_strg = ''
