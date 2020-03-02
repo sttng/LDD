@@ -36,6 +36,7 @@ args = []
 cwd = os.getcwd()
 useplane = True
 usenormal = True
+uselogoonstuds = True
 
 def ParseCommandLine(_filename) :
 	global filename
@@ -45,6 +46,7 @@ def ParseCommandLine(_filename) :
 	global cwd
 	global useplane
 	global usenormal
+	global uselogoonstuds
 	
 	parser = argparse.ArgumentParser(description = 'Modify LegoToR render parameters')
 	
@@ -102,6 +104,8 @@ def ParseCommandLine(_filename) :
 	
 	parser.add_argument('-np', '--noplane', action = 'count', help = 'disable ground plane. Useful for space ships!')
 	parser.add_argument('-nn', '--nonormals', action = 'count', help = 'disable writing of normals, as some normals in LDD may have problems')
+	parser.add_argument('-nl', '--nologo', action = 'count', help = 'disable logo on studs')
+
 	
 	args = parser.parse_args()
 		
@@ -187,3 +191,5 @@ def ParseCommandLine(_filename) :
 		useplane = False
 	if args.nonormals:
 		usenormal = False
+	if args.nologo:
+		uselogoonstuds = False
