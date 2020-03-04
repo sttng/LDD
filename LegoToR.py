@@ -66,9 +66,9 @@ class MaterialRi:
 		self.name = ''
 		self.materialType = materialType
 		self.materialId = materialId
-		self.r = round((float(r) / 255), 2)
-		self.g = round((float(g) / 255), 2)
-		self.b = round((float(b) / 255), 2)
+		self.r = round((float(r) / 255), 3)
+		self.g = round((float(g) / 255), 3)
+		self.b = round((float(b) / 255), 3)
 		
 	def string(self, decorationId):
 		texture_strg = ''
@@ -289,6 +289,7 @@ class Converter:
 		minx = 1000
 		useplane = cl.useplane
 		usenormal = cl.usenormal
+		uselogoonstuds = cl.uselogoonstuds
 		
 		out.write('''# Camera Minus One
 TransformBegin
@@ -511,7 +512,26 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 					op.write('AttributeEnd #end Brick {0}.{1}\n\n'.format(written_obj, part))
 
 					indexOffset += len(geo.Parts[part].outpositions)
-					textOffset += len(geo.Parts[part].textures) 
+					textOffset += len(geo.Parts[part].textures)
+					
+					#Logo on studs
+					if uselogoonstuds == True: # write logo on studs in case flag True
+						a = 0
+						for studs in geo.studsFields2D:
+							a += 1
+							if studs.type == 23:
+								for i in range(len(studs.custom2DField)):
+									for j in range(len(studs.custom2DField[0])):
+										if studs.custom2DField[i][j] in {"2:4:1", "0:4", "0:4:1", "0:4:2"}: #Valid Connection type which are "allowed" for logo on stud
+											if not "logoonstuds" in writtenribs:
+												writtenribs.append("logoonstuds")
+												zf.write('logoonstuds.rib', compress_type=compression)
+											op.write('AttributeBegin #begin Brick {0}.{1} stud{2}_{3}_{4}\nAttribute "identifier" "uniform string name" ["Brick {0}.{1} stud{2}_{3}_{4}"]\n'.format(written_obj, part, a, i, j))
+											op.write('\n\t\tdouble3 xformOp:translate = ({0}, {1}, {2})'.format(-1 * studs.matrix.n41 + j * 0.4 - 0.02, -1 * studs.matrix.n42 + 0.14, -1 * studs.matrix.n43 + i * 0.4 - 0.02)) 
+											op.write('\t\tConcatTransform [{0} {1} {2} {3} {4} {5} {6} {7} {8} {9} {10} {11} {12} {13} {14} {15}]\n'.format(studs.matrix.n11, studs.matrix.n12, -1 * studs.matrix.n13, studs.matrix.n14, studs.matrix.n21, studs.matrix.n22, -1 * studs.matrix.n23, studs.matrix.n24, -1 * studs.matrix.n31, -1 * studs.matrix.n32, studs.matrix.n33, studs.matrix.n34, 0, 0, 0, studs.matrix.n44))
+											op.write("\t\tScale {0} {0} {0}\n".format(0.82))
+											op.write('ReadArchive "' + filename + '_Bricks_Archive.zip!logoonstuds.rib"\n')
+											op.write('AttributeEnd #end Brick {0}.{1} stud{2}_{3}_{4}\n\n'.format(written_obj, part, a, i, j))
 				# -----------------------------------------------------------------
 				op.close()
 								
@@ -561,7 +581,7 @@ def FindRmtree():
 			exit()
 
 
-def generate_rib_header(infile, srate, pixelvar, width, height, fov, fstop, searcharchive, searchtexture, integrator, integratorParams, useplane, usenormal):
+def generate_rib_header(infile, srate, pixelvar, width, height, fov, fstop, searcharchive, searchtexture, integrator, integratorParams, useplane, usenormal, uselogoonstuds):
 	cwd = os.getcwd()
 	infile = os.path.realpath(infile.name)
 	infile = os.path.splitext(os.path.basename(infile))[0]
@@ -623,7 +643,7 @@ def main():
 	cl.ParseCommandLine('')
 	lxf_filename = os.path.realpath(cl.args.infile.name)
 	obj_filename = os.path.splitext(os.path.basename(lxf_filename))[0]
-	generate_rib_header(cl.args.infile, cl.args.srate, cl.args.pixelvar, cl.args.width, cl.args.height, cl.args.fov, cl.args.fstop, cl.args.searcharchive, cl.args.searchtexture, cl.integrator, cl.integratorParams, cl.useplane, cl.usenormal)
+	generate_rib_header(cl.args.infile, cl.args.srate, cl.args.pixelvar, cl.args.width, cl.args.height, cl.args.fov, cl.args.fstop, cl.args.searcharchive, cl.args.searchtexture, cl.integrator, cl.integratorParams, cl.useplane, cl.usenormal, cl.uselogoonstuds)
 
 	# Clean up before writing
 	if os.path.exists(obj_filename + "_Materials_Archive.zip"):
