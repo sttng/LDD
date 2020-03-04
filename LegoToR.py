@@ -9,7 +9,7 @@
 #
 # Updates:
 #
-# 0.5 initial logo on studs support
+# 0.5 Initial logo on studs support
 # 0.4.9 Fixed long outstanding bug of camera positioning similar to LXF file.
 # 0.4.8.3 Added brick seams via scale factor of 0.99 for each brick (experimental)
 # 0.4.8.2 Added nonormals switch, to ignore normals writing as some parts of LDD have incorrect normals.
