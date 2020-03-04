@@ -1,14 +1,15 @@
 #!/usr/bin/env python
 
 #
-# LegoToR Version 0.4.9 - Copyright (c) 2020 by m2m
+# LegoToR Version 0.5 - Copyright (c) 2020 by m2m
 # based on pyldd2obj Version 0.4.8 - Copyright (c) 2019 by jonnysp 
 # LegoToR parses LXF files and command line parameters to create a renderman compliant rib file.
 # 
 # Usage: ./LegoToR.py /Users/username/Documents/LEGO\ Creations/Models/mylfxfile.lxf -v -np
 #
 # Updates:
-# 
+#
+# 0.5 initial logo on studs support
 # 0.4.9 Fixed long outstanding bug of camera positioning similar to LXF file.
 # 0.4.8.3 Added brick seams via scale factor of 0.99 for each brick (experimental)
 # 0.4.8.2 Added nonormals switch, to ignore normals writing as some parts of LDD have incorrect normals.
@@ -33,7 +34,7 @@ import shutil
 import ParseCommandLine as cl
 import random
 
-__version__ = "0.4.9"
+__version__ = "0.5"
 
 compression = zipfile.ZIP_DEFLATED
 
