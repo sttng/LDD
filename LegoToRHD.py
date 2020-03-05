@@ -622,7 +622,7 @@ def generate_rib_header(infile, srate, pixelvar, width, height, fov, fstop, sear
 		string creator = "Generated with LegoToRHD {0} on {1}"
 	}}
 	defaultPrim = "LXF_file"
-	metersPerUnit = 0.001
+	metersPerUnit = 1
 	upAxis = "Y"
 )
 
