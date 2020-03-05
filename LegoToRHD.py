@@ -539,13 +539,16 @@ def Xform "geo{0}" (
 							for i in range(len(studs.custom2DField)):
 								for j in range(len(studs.custom2DField[0])):
 									if studs.custom2DField[i][j] in {"2:4:1", "0:4", "0:4:1", "0:4:2"}: #Valid Connection type which are "allowed" for logo on stud
-										dest = shutil.copy('logoonstuds.usda', assetsDir) 
+										if not "logoonstuds" in writtenribs:
+											writtenribs.append("logoonstuds")
+											dest = shutil.copy('logoonstuds.usdc', assetsDir) 
 										op.write('\tdef "stud{0}_{1}_{2}" (\n'.format(a, i, j))
-										op.write('\t\tadd references = @./logoonstuds.usda@\n\t)\n\t{')
-										op.write('\n\t\tdouble3 xformOp:translate = ({0}, {1}, {2})'.format(-1 * studs.matrix.n41 + j * 0.4 - 0.02, -1 * studs.matrix.n42 + 0.14, -1 * studs.matrix.n43 + i * 0.4 - 0.02)) #minx of bounding = -0.4, 0.46 =ty of field + 0.14
+										op.write('\t\tadd references = @./logoonstuds.usdc@\n\t)\n\t{')
+										op.write('\t\tfloat xformOp:rotateY = 180')
+										op.write('\n\t\tdouble3 xformOp:translate = ({0}, {1}, {2})'.format(-1 * studs.matrix.n41 + j * 0.4 + 0.015, -1 * studs.matrix.n42 + 0.14, -1 * studs.matrix.n43 + i * 0.4 - 0)) #Values from trial and error: minx of bounding = -0.4, 0.46 =ty of field + 0.14
 										op.write('\n\t\tmatrix4d xformOp:transform = ( ({0}, {1}, {2}, {3}), ({4}, {5}, {6}, {7}), ({8}, {9}, {10}, {11}), ({12}, {13}, {14}, {15}) )'.format(studs.matrix.n11, studs.matrix.n12, -1 * studs.matrix.n13, studs.matrix.n14, studs.matrix.n21, studs.matrix.n22, -1 * studs.matrix.n23, studs.matrix.n24, -1 * studs.matrix.n31, -1 * studs.matrix.n32, studs.matrix.n33, studs.matrix.n34, 0, 0, 0, studs.matrix.n44))
-										op.write('\n\t\tdouble3 xformOp:scale = ({0}, {0}, {0})'.format(0.82))
-										op.write('\n\t\tuniform token[] xformOpOrder = ["xformOp:transform","xformOp:translate","xformOp:scale"]\n')
+										op.write('\n\t\tdouble3 xformOp:scale = ({0}, {0}, {0})'.format(0.81))
+										op.write('\n\t\tuniform token[] xformOpOrder = ["xformOp:transform","xformOp:translate","xformOp:scale", "xformOp:rotateY"]\n')
 										op.write('\n\t\tcolor3f[] primvars:displayColor = [({0}, {1}, {2})]\n'.format(lddmatri.r, lddmatri.g, lddmatri.b))
 										op.write('\t\trel material:binding = <Material{0}/material_{0}a>\n'.format(matname))
 										op.write('''\t\tdef "Material{0}" (
