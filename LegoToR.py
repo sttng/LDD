@@ -9,6 +9,7 @@
 #
 # Updates:
 #
+# 0.5.0.1 Minor bugs (like fstop parameter) fixed
 # 0.5 Initial logo on studs support
 # 0.4.9 Fixed long outstanding bug of camera positioning similar to LXF file.
 # 0.4.8.3 Added brick seams via scale factor of 0.99 for each brick (experimental)
@@ -529,9 +530,9 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 												zf.write('logoonstuds.rib', compress_type=compression)
 											op.write('AttributeBegin #begin Brick {0}.{1} stud{2}_{3}_{4}\nAttribute "identifier" "uniform string name" ["Brick {0}.{1} stud{2}_{3}_{4}"]\n'.format(written_obj, part, a, i, j))
 											op.write('\t\tConcatTransform [{0} {1} {2} {3} {4} {5} {6} {7} {8} {9} {10} {11} {12} {13} {14} {15}]\n'.format(studs.matrix.n11, studs.matrix.n12, 1 * studs.matrix.n13, studs.matrix.n14, studs.matrix.n21, studs.matrix.n22, 1 * studs.matrix.n23, studs.matrix.n24, 1 * studs.matrix.n31, 1 * studs.matrix.n32, studs.matrix.n33, studs.matrix.n34, 0, 0, 0, studs.matrix.n44))
-											op.write('\t\tTranslate {0} {1} {2}\n'.format(-1 * studs.matrix.n41 + j * 0.4 + 0.02, -1 * studs.matrix.n42 + 0.14, 1 * studs.matrix.n43 + i * -0.4 - 0.02)) 
+											op.write('\t\tTranslate {0} {1} {2}\n'.format(-1 * studs.matrix.n41 + j * 0.4 + 0.015, -1 * studs.matrix.n42 + 0.14, 1 * studs.matrix.n43 + i * -0.4 - 0)) 
 											op.write('\t\tRotate 180 0 1 0\n')
-											op.write("\t\tScale {0} {0} {0}\n".format(0.82))
+											op.write("\t\tScale {0} {0} {0}\n".format(0.81))
 											op.write('ReadArchive "' + filename + '_Materials_Archive.zip!material_' + matname + '.rib"\n')
 											op.write('ReadArchive "' + filename + '_Bricks_Archive.zip!logoonstuds.rib"\n')
 											op.write('AttributeEnd #end Brick {0}.{1} stud{2}_{3}_{4}\n\n'.format(written_obj, part, a, i, j))
@@ -634,8 +635,8 @@ DisplayChannel "normal normal_var" "string source" "normal Nn" "string statistic
 DisplayChannel "vector forward" "string source" "vector motionFore"
 DisplayChannel "vector backward" "string source" "vector motionBack"
 
-Projection "PxrCamera" "float fov" [{11}] "float fStop" [3.5] "float focalLength" [0.8] "float focalDistance" [5] "point focus1" [0.0 0.0 -1] "point focus2" [1 0.0 -1] "point focus3" [1 1 -1]
-'''.format(__version__, datetime.datetime.now(), str(searcharchive) + os.sep, FindRmtree(), str(searchtexture) + os.sep, pixelvar, width, height, '.' + os.sep + str(infile), integrator, srate, fov)
+Projection "PxrCamera" "float fov" [{11}] "float fStop" [{12}] "float focalLength" [0.8] "float focalDistance" [5] "point focus1" [0.0 0.0 -1] "point focus2" [1 0.0 -1] "point focus3" [1 1 -1]
+'''.format(__version__, datetime.datetime.now(), str(searcharchive) + os.sep, FindRmtree(), str(searchtexture) + os.sep, pixelvar, width, height, '.' + os.sep + str(infile), integrator, srate, fov, fstop)
 
 	with open('rib_header.rib', 'w') as file_writer:
 		file_writer.write(rib_header)
