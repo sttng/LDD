@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 #
-# LegoToR Version 0.5 - Copyright (c) 2020 by m2m
+# LegoToR Version 0.5.0.2 - Copyright (c) 2020 by m2m
 # based on pyldd2obj Version 0.4.8 - Copyright (c) 2019 by jonnysp 
 # LegoToR parses LXF files and command line parameters to create a renderman compliant rib file.
 # 
@@ -9,6 +9,7 @@
 #
 # Updates:
 #
+# 0.5.0.2 Some material changes
 # 0.5.0.1 Minor bugs (like fstop parameter) fixed
 # 0.5 Initial logo on studs support
 # 0.4.9 Fixed long outstanding bug of camera positioning similar to LXF file.
@@ -35,7 +36,7 @@ import shutil
 import ParseCommandLine as cl
 import random
 
-__version__ = "0.5"
+__version__ = "0.5.0.2"
 
 compression = zipfile.ZIP_DEFLATED
 
@@ -141,8 +142,8 @@ Bxdf "PxrSurface" "Transparent {0}"
 	"float diffuseGain" [0.5]
 	"{1}color diffuseColor" [{2}]
 	"int diffuseDoubleSided" [1]
-	"color specularFaceColor" [0.2 0.2 0.2]
-	"color specularEdgeColor" [0.2 0.2 0.2]
+	#"color specularFaceColor" [0.2 0.2 0.2]
+	#"color specularEdgeColor" [0.2 0.2 0.2]
 	"color specularIor" [1.585 1.585 1.585] # Polycarbonate IOR = 1.584 - 1.586
 	"float specularRoughness" [0.25]
 	"int specularDoubleSided" [1]
@@ -159,16 +160,16 @@ Bxdf "PxrSurface" "Transparent {0}"
 	"float fuzzGain" [0.0]
 	"color fuzzColor" [1 1 1]
 	"float fuzzConeAngle" [8]
-	"float refractionGain" [1]
-	"float reflectionGain" [0.2]
+	"float refractionGain" [1.0]
+	"float reflectionGain" [1.0]
 	"{1}color refractionColor" [{2}]
 	"float glassRoughness" [0.05] 
 	"float glassIor" [1.585] # Polycarbonate IOR = 1.584 - 1.586
-	"int thinGlass" [1]
+	#"int thinGlass" [1]
 	"float glowGain" [0.0]
 	"color glowColor" [1 1 1]
 	"float presence" [1]\n
-	"reference normal bumpNormal" ["PxrNormalMap1:resultN"]'''.format(self.materialId, ref_strg, rgb_or_dec_str, round(random.random(), 3))
+	#"reference normal bumpNormal" ["PxrNormalMap1:resultN"]'''.format(self.materialId, ref_strg, rgb_or_dec_str, round(random.random(), 3))
 			
 		elif self.materialType == 'Metallic':
 			bxdf_mat_str = texture_strg + '''Pattern "PxrFractal" "Unevenness" 
@@ -210,7 +211,7 @@ Bxdf "PxrSurface" "Metallic {0}"
 	"float specularRoughness" [0.25]
 	"int specularDoubleSided" [0]
 	"float presence" [1]
-	"reference normal bumpNormal" ["PxrNormalMap1:resultN"]\n'''.format(self.materialId, ref_strg, rgb_or_dec_str, round(random.random(), 3))
+	#"reference normal bumpNormal" ["PxrNormalMap1:resultN"]\n'''.format(self.materialId, ref_strg, rgb_or_dec_str, round(random.random(), 3))
 		
 		else:
 			bxdf_mat_str = texture_strg + '''Pattern "PxrFractal" "Unevenness" 
@@ -252,7 +253,7 @@ Bxdf "PxrSurface" "Solid Material {0}"
 	"float specularRoughness" [0.25]
 	"int specularDoubleSided" [0]
 	"float presence" [1]
-	"reference normal bumpNormal" ["PxrNormalMap1:resultN"]\n'''.format(self.materialId, ref_strg, rgb_or_dec_str, round(random.random(), 3))
+	#"reference normal bumpNormal" ["PxrNormalMap1:resultN"]\n'''.format(self.materialId, ref_strg, rgb_or_dec_str, round(random.random(), 3))
 		
 		return bxdf_mat_str
 
@@ -477,7 +478,7 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 									os.system(txmake_cmd)
 									os.remove(extfile)
 								else:
-									print("RMANTREE environment variable not set correctly. Set with: export RMANTREE=/Applications/Pixar/RenderManProServer-23.1/")
+									print("RMANTREE environment variable not set correctly. Set with: export RMANTREE=/Applications/Pixar/RenderManProServer-23.2/")
 
 					if not matname in usedmaterials:
 						usedmaterials.append(matname)
@@ -574,14 +575,14 @@ def FindRmtree():
 		if rmtree is not None:
 			return str(rmtree)
 		else:
-			print("RMANTREE environment variable not set correctly. Set with: export RMANTREE=/Applications/Pixar/RenderManProServer-23.1/")
+			print("RMANTREE environment variable not set correctly. Set with: export RMANTREE=/Applications/Pixar/RenderManProServer-23.2/")
 			exit()
 	else:
 		rmtree = os.getenv('RMANTREE')
 		if rmtree is not None:
 			return str(rmtree)
 		else:
-			print('RMANTREE environment variable not set correctly. Set with: setx RMANTREE "C:\Program Files\Pixar\RenderManProServer-23.1\" /M')
+			print('RMANTREE environment variable not set correctly. Set with: setx RMANTREE "C:\Program Files\Pixar\RenderManProServer-23.2\" /M')
 			exit()
 
 
