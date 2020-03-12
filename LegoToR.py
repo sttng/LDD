@@ -5,11 +5,11 @@
 # based on pyldd2obj Version 0.4.8 - Copyright (c) 2019 by jonnysp 
 # LegoToR parses LXF files and command line parameters to create a renderman compliant rib file.
 # 
-# Usage: ./LegoToR.py /Users/username/Documents/LEGO\ Creations/Models/mylfxfile.lxf -v -np
+# Usage: ./LegoToR.py /Users/username/Documents/LEGO\ Creations/Models/mylxffile.lxf -v -np
 #
 # Updates:
 #
-# 0.5.0.2 Some material changes
+# 0.5.0.2 Some material changes. Fixed zfiltered RenderMan Warning.
 # 0.5.0.1 Minor bugs (like fstop parameter) fixed
 # 0.5 Initial logo on studs support
 # 0.4.9 Fixed long outstanding bug of camera positioning similar to LXF file.
@@ -629,8 +629,8 @@ DisplayChannel "color specular" "string source" "color lpe:CS[DS]*[LO]"
 DisplayChannel "color specular_mse" "string source" "color lpe:CS[DS]*[LO]" "string statistics" "mse"
 
 # Geometry
-DisplayChannel "float zfiltered" "string source" "float z" "string filter" "gaussian"
-DisplayChannel "float zfiltered_var" "string source" "float z" "string filter" "gaussian" "string statistics" "variance"
+DisplayChannel "varying float zfiltered" "string source" ["float zfiltered"]
+DisplayChannel "varying float zfiltered_var" "string source" ["float zfiltered"]
 DisplayChannel "normal normal" "string source" "normal Nn"
 DisplayChannel "normal normal_var" "string source" "normal Nn" "string statistics" "variance"
 DisplayChannel "vector forward" "string source" "vector motionFore"
