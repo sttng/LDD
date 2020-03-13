@@ -350,12 +350,29 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 		Rotate 50 0 1 0
 		Rotate -90 1 0 0
 		Light "PxrDomeLight" "PxrDomeLight1"
-			"float intensity" [1.0]
-			"float exposure" [0]
-			"color lightColor" [1 1 1]
-			"string lightColorMap" ["islandsun_small.tex"]
-			"int enableShadows" [1]
-			"color shadowColor" [0 0 0]
+			"string notes"  [''] 
+			"float intensity"  [1.0] 
+			"float exposure"  [0] 
+			"color lightColor"  [1 1 1] 
+			"string lightColorMap"  ['islandsun_small.tex'] #Luxo-Jr_4000x2000.tex
+			"vector colorMapGamma"  [1.0 1.0 1.0] 
+			"float colorMapSaturation"  [1.0] 
+			"int enableTemperature"  [0] 
+			"float temperature"  [6500] 
+			"float specular"  [1.0] 
+			"float diffuse"  [1.0] 
+			"int enableShadows"  [1] 
+			"color shadowColor"  [0 0 0] 
+			"float shadowDistance"  [-1.0] 
+			"float shadowFalloff"  [-1.0] 
+			"float shadowFalloffGamma"  [1.0] 
+			"string shadowSubset"  [''] 
+			"string shadowExcludeSubset"  [''] 
+			"int traceLightPaths"  [0] 
+			"int thinShadow"  [1] 
+			"int fixedSampleCount"  [0] 
+			"string lightGroup"  [''] 
+			"float importanceMultiplier"  [1.0]
 	AttributeEnd\n\n''')
 
 		for bri in self.scene.Bricks:
