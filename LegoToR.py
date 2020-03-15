@@ -9,7 +9,7 @@
 #
 # Updates:
 #
-# 0.5.0.2 Some material changes. Fixed zfiltered RenderMan Warning.
+# 0.5.0.2 Some material changes. Fixed zfiltered RenderMan Warning. More logo on studs supported
 # 0.5.0.1 Minor bugs (like fstop parameter) fixed
 # 0.5 Initial logo on studs support
 # 0.4.9 Fixed long outstanding bug of camera positioning similar to LXF file.
@@ -547,7 +547,7 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 							if studs.type == 23:
 								for i in range(len(studs.custom2DField)):
 									for j in range(len(studs.custom2DField[0])):
-										if studs.custom2DField[i][j] in {"2:4:1", "0:4", "0:4:1", "0:4:2"}: #Valid Connection type which are "allowed" for logo on stud
+										if studs.custom2DField[i][j] in {"2:4:1", "0:4", "0:4:1", "0:4:2", "0:4:33"}: #Valid connection type which are "allowed" for logo on stud
 											if not "logoonstuds" in writtenribs:
 												writtenribs.append("logoonstuds")
 												zf.write('logoonstuds.rib', compress_type=compression)
