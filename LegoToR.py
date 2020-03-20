@@ -547,7 +547,7 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 							if studs.type == 23:
 								for i in range(len(studs.custom2DField)):
 									for j in range(len(studs.custom2DField[0])):
-										if studs.custom2DField[i][j] in {"2:4:1", "0:4", "0:4:1", "0:4:2", "0:4:33"}: #Valid connection type which are "allowed" for logo on stud
+										if studs.custom2DField[i][j] in LOGOONSTUDSCONNTYPE: #Valid connection type which are "allowed" for logo on stud
 											if not "logoonstuds" in writtenribs:
 												writtenribs.append("logoonstuds")
 												zf.write('logoonstuds.rib', compress_type=compression)
