@@ -1,13 +1,14 @@
 #!/usr/bin/env python
 
 #
-# LegoToRHD Version 0.5 - Copyright (c) 2020 by m2m
+# LegoToRHD Version 0.5.0.1 - Copyright (c) 2020 by m2m
 # based on pyldd2obj Version 0.4.8 - Copyright (c) 2019 by jonnysp 
 # LegoToRHD parses LXF files and command line parameters to create USDA compliant files.
 # 
-# Usage: ./LegoToRHD.py /Users/username/Documents/LEGO\ Creations/Models/mylfxfile.lxf -np
+# Usage: ./LegoToRHD.py /Users/username/Documents/LEGO\ Creations/Models/mylxffile.lxf -np
 #
 # Updates:
+# 0.5.0.1 More logo on studs supported
 # 0.5 initial logo on studs support
 # 0.4.7 added brick seams via scale factor of 0.99 for each brick (experimental)
 # 0.4.6 added nonormals switch (-nn), to ignore normals writing as some parts of LDD seem to have incorrect normals.
@@ -35,7 +36,7 @@ import shutil
 import ParseCommandLine as cl
 import random
 
-__version__ = "0.5"
+__version__ = "0.5.0.1"
 
 compression = zipfile.ZIP_STORED #uncompressed archive for USDZ, otherwise would use ZIP_DEFLATED, the usual zip compression
 
@@ -538,7 +539,7 @@ def Xform "geo{0}" (
 						if studs.type == 23:
 							for i in range(len(studs.custom2DField)):
 								for j in range(len(studs.custom2DField[0])):
-									if studs.custom2DField[i][j] in {"2:4:1", "0:4", "0:4:1", "0:4:2"}: #Valid Connection type which are "allowed" for logo on stud
+									if studs.custom2DField[i][j] in LOGOONSTUDSCONNTYPE: #Valid Connection type which are "allowed" for logo on stud
 										if not "logoonstuds" in writtenribs:
 											writtenribs.append("logoonstuds")
 											dest = shutil.copy('logoonstuds.usdc', assetsDir) 
