@@ -1,10 +1,11 @@
 1) Download cmake, extract it, add cmake to path:
 ```
-#curl -L -o ~/Downloads/cmake-3.16.4-Darwin-x86_64.tar.gz https://github.com/Kitware/CMake/releases/download/v3.16.4/cmake-3.16.4-Darwin-x86_64.tar.gz
 curl -L -o ~/Downloads/cmake-3.17.0-Darwin-x86_64.tar.gz https://github.com/Kitware/CMake/releases/download/v3.17.0/cmake-3.17.0-Darwin-x86_64.tar.gz
 tar -xzvf  ~/Downloads/cmake-3.17.0-Darwin-x86_64.tar.gz -C ~/Downloads/
-#tar -xzvf  ~/Downloads/cmake-3.16.4-Darwin-x86_64.tar.gz -C ~/Downloads/
 mv ~/Downloads/cmake-3.17.0-Darwin-x86_64/CMake.app /Applications/
+
+#curl -L -o ~/Downloads/cmake-3.16.4-Darwin-x86_64.tar.gz https://github.com/Kitware/CMake/releases/download/v3.16.4/cmake-3.16.4-Darwin-x86_64.tar.gz
+#tar -xzvf  ~/Downloads/cmake-3.16.4-Darwin-x86_64.tar.gz -C ~/Downloads/
 #mv ~/Downloads/cmake-3.16.4-Darwin-x86_64/CMake.app /Applications/
 
 export PATH="$PATH:/Applications/CMake.app/Contents/bin"
@@ -63,7 +64,7 @@ See documentation at http://openusd.org/docs/RenderMan-USD-Imaging-Plugin.html f
 | ------------- | ------------ |
 | Xcode         | 10.311.3.1 (11C504) |
 | C++ Compiler  | AppleClang 10.0.1 |
-| CMake         | 3.16.14      |
+| CMake         | 3.17.0       |
 | Python        | 2.7.10       |
 | Boost         | 1.61.0       |
 | Intel TBB     |              |
@@ -73,11 +74,11 @@ See documentation at http://openusd.org/docs/RenderMan-USD-Imaging-Plugin.html f
 | OpenColorIO   |              |
 | OSL           |              |
 | Ptex          |              |
-| PySide2       | 5.14.1 https://download.qt.io/official_releases/QtForPython/pyside2/PySide2-5.14.1-5.14.1-cp27-cp27m-macosx_10_13_intel.whl (147.9 MB) |
-| Shiboken (as required by PySide2) | 5.14.1       |
+| PySide2       | 5.14.2       |
+| Shiboken (as required by PySide2) | 5.14.2       |
 | PyOpenGL      | 3.1.5        |
 | Embree        |              |
-| RenderMan     | 23.1         |
+| RenderMan     | 23.2         |
 | Alembic       |              |
 | OpenEXR       | 2.2.0        |
 | Katana        |              |
