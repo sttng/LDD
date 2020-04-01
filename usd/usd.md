@@ -29,7 +29,8 @@ git pull
 sudo easy_install pip ( sudo python -m easy_install pip )
 
 sudo pip install pyopengl
-sudo python -m pip install --index-url=https://download.qt.io/official_releases/QtForPython/ pyside2 --trusted-host download.qt.io
+#sudo python -m pip install --index-url=https://download.qt.io/official_releases/QtForPython/ pyside2 --trusted-host download.qt.io
+sudo pip install pyside2
 
 #sudo pip install pyopengl --prefix /opt/local
 #sudo python -m pip install --index-url=https://download.qt.io/official_releases/QtForPython/ pyside2 --trusted-host download.qt.io --prefix /opt/local
@@ -37,7 +38,7 @@ sudo python -m pip install --index-url=https://download.qt.io/official_releases/
 
 4) Set RenderMan environment variable: RMTREE. Start building.
 ```terminal
-export RMANTREE=/Applications/Pixar/RenderManProServer-23.1/
+export RMANTREE=/Applications/Pixar/RenderManProServer-23.2/
 #export PYTHONPATH="$PYTHONPATH:/opt/local/lib/python2.7/site-packages"
 
 python USD/build_scripts/build_usd.py --prman /opt/local/USD
@@ -76,7 +77,6 @@ See documentation at http://openusd.org/docs/RenderMan-USD-Imaging-Plugin.html f
 | RenderMan     | 23.1         |
 | Alembic       |              |
 | OpenEXR       | 2.2.0        |
-| Maya          |              |
 | Katana        |              |
 | Houdini       |              |
 | MaterialX     |              |
@@ -85,4 +85,3 @@ See documentation at http://openusd.org/docs/RenderMan-USD-Imaging-Plugin.html f
 | Bison         |              |
 | Doxygen       |              |
 | GraphViz      |              |
-
