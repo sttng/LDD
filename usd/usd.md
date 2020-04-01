@@ -4,10 +4,6 @@ curl -L -o ~/Downloads/cmake-3.17.0-Darwin-x86_64.tar.gz https://github.com/Kitw
 tar -xzvf  ~/Downloads/cmake-3.17.0-Darwin-x86_64.tar.gz -C ~/Downloads/
 mv ~/Downloads/cmake-3.17.0-Darwin-x86_64/CMake.app /Applications/
 
-#curl -L -o ~/Downloads/cmake-3.16.4-Darwin-x86_64.tar.gz https://github.com/Kitware/CMake/releases/download/v3.16.4/cmake-3.16.4-Darwin-x86_64.tar.gz
-#tar -xzvf  ~/Downloads/cmake-3.16.4-Darwin-x86_64.tar.gz -C ~/Downloads/
-#mv ~/Downloads/cmake-3.16.4-Darwin-x86_64/CMake.app /Applications/
-
 export PATH="$PATH:/Applications/CMake.app/Contents/bin"
 ```
 
