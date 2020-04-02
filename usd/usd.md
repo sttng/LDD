@@ -22,6 +22,7 @@ git clone https://github.com/PixarAnimationStudios/USD
 cd USD
 git checkout dev
 git pull
+cd ..
 ```
 
 3) Install pip and required packages (pyopengl, pyside2)
@@ -57,31 +58,31 @@ See documentation at http://openusd.org/docs/RenderMan-USD-Imaging-Plugin.html f
 ## Tested
 
 | Software      | macOS 10.14.6 |
-| ------------- | ------------ |
+| ------------- | ------------- |
 | Xcode         | 10.311.3.1 (11C504) |
 | C++ Compiler  | AppleClang 10.0.1 |
-| CMake         | 3.17.0       |
-| Python        | 2.7.10       |
-| Boost         | 1.61.0       |
-| Intel TBB     |              |
-| OpenSubdiv    | 3.1.1        |
-| GLEW          | 2.0.0        |
-| OpenImageIO   |              |
-| OpenColorIO   |              |
-| OSL           |              |
-| Ptex          |              |
-| PySide2       | 5.14.2       |
-| Shiboken (as required by PySide2) | 5.14.2       |
-| PyOpenGL      | 3.1.5        |
-| Embree        |              |
-| RenderMan     | 23.2         |
-| Alembic       |              |
-| OpenEXR       | 2.2.0        |
-| Katana        |              |
-| Houdini       |              |
-| MaterialX     |              |
-| Jinja2        |              |
-| Flex          |              |
-| Bison         |              |
-| Doxygen       |              |
-| GraphViz      |              |
+| CMake         | 3.17.0        |
+| Python        | 2.7.10        |
+| Boost         | 1.61.0        |
+| Intel TBB     |               |
+| OpenSubdiv    | 3.1.1         |
+| GLEW          | 2.0.0         |
+| OpenImageIO   |               |
+| OpenColorIO   |               |
+| OSL           |               |
+| Ptex          |               |
+| PySide2       | 5.14.2        |
+| Shiboken (as required by PySide2) | 5.14.2        |
+| PyOpenGL      | 3.1.5         |
+| Embree        |               |
+| RenderMan     | 23.2          |
+| Alembic       |               |
+| OpenEXR       | 2.2.0         |
+| Katana        |               |
+| Houdini       |               |
+| MaterialX     |               |
+| Jinja2        |               |
+| Flex          |               |
+| Bison         |               |
+| Doxygen       |               |
+| GraphViz      |               |
