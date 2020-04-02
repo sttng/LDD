@@ -30,10 +30,10 @@ cd ..
 sudo easy_install pip ( sudo python -m easy_install pip )
 
 sudo pip install pyopengl
-#sudo python -m pip install --index-url=https://download.qt.io/official_releases/QtForPython/ pyside2 --trusted-host download.qt.io
 sudo pip install pyside2
 
 #sudo pip install pyopengl --prefix /opt/local
+#sudo pip install pyside2 --prefix /opt/local
 #sudo python -m pip install --index-url=https://download.qt.io/official_releases/QtForPython/ pyside2 --trusted-host download.qt.io --prefix /opt/local
 ```
 
