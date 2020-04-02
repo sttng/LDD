@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 #
-# LegoToR Version 0.5.0.2 - Copyright (c) 2020 by m2m
+# LegoToR Version 0.5.0.3 - Copyright (c) 2020 by m2m
 # based on pyldd2obj Version 0.4.8 - Copyright (c) 2019 by jonnysp 
 # LegoToR parses LXF files and command line parameters to create a renderman compliant rib file.
 # 
@@ -9,6 +9,7 @@
 #
 # Updates:
 #
+# 0.5.0.3 Some transparent material changes.
 # 0.5.0.2 Some material changes. Fixed zfiltered RenderMan Warning. More logo on studs supported
 # 0.5.0.1 Minor bugs (like fstop parameter) fixed
 # 0.5 Initial logo on studs support
@@ -36,7 +37,7 @@ import shutil
 import ParseCommandLine as cl
 import random
 
-__version__ = "0.5.0.2"
+__version__ = "0.5.0.3"
 
 compression = zipfile.ZIP_DEFLATED
 
@@ -139,36 +140,152 @@ Pattern "PxrNormalMap" "PxrNormalMap1"
 	"int disable" [0]
 
 Bxdf "PxrSurface" "Transparent {0}"
-	"float diffuseGain" [0.5]
-	"{1}color diffuseColor" [{2}]
-	"int diffuseDoubleSided" [1]
-	#"color specularFaceColor" [0.2 0.2 0.2]
-	#"color specularEdgeColor" [0.2 0.2 0.2]
+	"float diffuseGain" [0]
+	"color diffuseColor" [0 0 0]
+	"float diffuseRoughness" [0]
+	"float diffuseExponent" [1]
+	"normal diffuseBumpNormal" [0 0 0]
+	"int diffuseDoubleSided" [0]
+	"int diffuseBackUseDiffuseColor" [1]
+	"color diffuseBackColor" [0.180000007 0.180000007 0.180000007]
+	"float diffuseTransmitGain" [0]
+	"color diffuseTransmitColor" [0.180000007 0.180000007 0.180000007]
+	"int specularFresnelMode" [0]
+	"color specularFaceColor" [0 0 0]
+	"color specularEdgeColor" [0 0 0]
+	"float specularFresnelShape" [5]
 	"color specularIor" [1.585 1.585 1.585] # Polycarbonate IOR = 1.584 - 1.586
-	"float specularRoughness" [0.25]
-	"int specularDoubleSided" [1]
+	"color specularExtinctionCoeff" [0 0 0]
+	"float specularRoughness" [0.200000003]
+	"int specularModelType" [0]
+	"float specularAnisotropy" [0]
+	"vector specularAnisotropyDirection" [0 0 0]
+	"normal specularBumpNormal" [0 0 0]
+	"int specularDoubleSided" [0] 
+	"int roughSpecularFresnelMode" [0]
+	"color roughSpecularFaceColor" [0 0 0]
+	"color roughSpecularEdgeColor" [0 0 0]
+	"float roughSpecularFresnelShape" [5]
+	"color roughSpecularIor" [1.585 1.585 1.585] # Polycarbonate IOR = 1.584 - 1.586
+	"color roughSpecularExtinctionCoeff" [0 0 0] 
+	"float roughSpecularRoughness" [0.600000024]
+	"int roughSpecularModelType" [0]
+	"float roughSpecularAnisotropy" [0]
+	"vector roughSpecularAnisotropyDirection" [0 0 0]
+	"normal roughSpecularBumpNormal" [0 0 0]
+	"int roughSpecularDoubleSided" [0]
+	"int clearcoatFresnelMode" [0]
 	"color clearcoatFaceColor" [0 0 0]
 	"color clearcoatEdgeColor" [0 0 0]
-	"color clearcoatIor" [1.5 1.5 1.5]
-	"color clearcoatExtinctionCoeff" [0.0 0.0 0.0]
-	"float clearcoatRoughness" [0.0]
+	"float clearcoatFresnelShape" [5]
+	"color clearcoatIor" [1.585 1.585 1.585] # Polycarbonate IOR = 1.584 - 1.586
+	"color clearcoatExtinctionCoeff" [0 0 0]
+	"float clearcoatThickness" [0]
+	"color clearcoatAbsorptionTint" [0 0 0] 
+	"float clearcoatRoughness" [0]
+	"int clearcoatModelType" [0]
+	"float clearcoatAnisotropy" [0]
+	"vector clearcoatAnisotropyDirection" [0 0 0]
+	"normal clearcoatBumpNormal" [0 0 0]
+	"int clearcoatDoubleSided" [0]
+	"float specularEnergyCompensation" [0]
+	"float clearcoatEnergyCompensation" [0]
 	"float iridescenceFaceGain" [0]
 	"float iridescenceEdgeGain" [0]
+	"float iridescenceFresnelShape" [5]
+	"int iridescenceMode" [1]
 	"color iridescencePrimaryColor" [1 0 0]
 	"color iridescenceSecondaryColor" [0 0 1]
-	"float iridescenceRoughness" [0.2]
-	"float fuzzGain" [0.0]
+	"float iridescenceRoughness" [0.200000003]
+	"float iridescenceAnisotropy" [0]
+	"vector iridescenceAnisotropyDirection" [0 0 0] 
+	"normal iridescenceBumpNormal" [0 0 0]
+	"float iridescenceCurve" [1]
+	"float iridescenceScale" [1]
+	"int iridescenceFlip" [0]
+	"float iridescenceThickness" [0]
+	"int iridescenceDoubleSided" [0]
+	"float fuzzGain" [0]
 	"color fuzzColor" [1 1 1]
 	"float fuzzConeAngle" [8]
-	"float refractionGain" [1.0]
-	"float reflectionGain" [1.0]
-	"{1}color refractionColor" [{2}]
-	"float glassRoughness" [0.05] 
+	"normal fuzzBumpNormal" [0 0 0]
+	"int fuzzDoubleSided" [0]
+	"int subsurfaceType" [0]
+	"float subsurfaceGain" [0]
+	"color subsurfaceColor" [0.829999983 0.791000009 0.753000021]
+	"float subsurfaceDmfp" [10]
+	"color subsurfaceDmfpColor" [0.851000011 0.556999981 0.395000011]
+	"float shortSubsurfaceGain" [0]
+	"color shortSubsurfaceColor" [0 0.800000012 0]
+	"float shortSubsurfaceDmfp" [1]
+	"float longSubsurfaceGain" [0]
+	"color longSubsurfaceColor" [0 0 0.800000012]
+	"float longSubsurfaceDmfp" [100]
+	"float subsurfaceDirectionality" [0]
+	"float subsurfaceBleed" [0] 
+	"float subsurfaceDiffuseBlend" [0]
+	"int subsurfaceResolveSelfIntersections" [0]
+	"float subsurfaceIor" [1.39999998]
+	"color subsurfacePostTint" [1 1 1]
+	"float subsurfaceDiffuseSwitch" [1]
+	"int subsurfaceDoubleSided" [0]
+	"float subsurfaceTransmitGain" [0]
+	"int considerBackside" [1]
+	"int continuationRayMode" [0]
+	"int maxContinuationHits" [2]
+	"float followTopology" [0]
+	"string subsurfaceSubset" [""]
+	"float singlescatterGain" [0]
+	"color singlescatterColor" [0.829999983 0.791000009 0.753000021]
+	"float singlescatterMfp" [10]
+	"color singlescatterMfpColor" [0.851000011 0.556999981 0.395000011]
+	"float singlescatterDirectionality" [0]
+	"float singlescatterIor" [1.29999995]
+	"float singlescatterBlur" [0]
+	"float singlescatterDirectGain" [0]
+	"color singlescatterDirectGainTint" [1 1 1] 
+	"int singlescatterDoubleSided" [0]
+	"int singlescatterConsiderBackside" [1]
+	"int singlescatterContinuationRayMode" [0]
+	"int singlescatterMaxContinuationHits" [2]
+	"int singlescatterDirectGainMode" [0]
+	"string singlescatterSubset" [""]
+	"color irradianceTint" [1 1 1]
+	"float irradianceRoughness" [0]
+	"float unitLength" [0.100000001]
+	"float refractionGain" [0.949999988]
+	"float reflectionGain" [0.949999988]
+	"{1}color refractionColor" [{2}] 
+	"float glassRoughness" [0.00100000005]
+	"float glassRefractionRoughness" [-1]
+	"float glassAnisotropy" [0]
+	"vector glassAnisotropyDirection" [0 0 0]
+	"normal glassBumpNormal" [0 0 0]
 	"float glassIor" [1.585] # Polycarbonate IOR = 1.584 - 1.586
-	#"int thinGlass" [1]
-	"float glowGain" [0.0]
-	"color glowColor" [1 1 1]
-	"float presence" [1]\n
+	"int mwWalkable" [0]
+	"float mwIor" [-1]
+	"int thinGlass" [0] 
+	"int ignoreFresnel" [0]
+	"int ignoreAccumOpacity" [0]
+	"int blocksVolumes" [0]
+	"color ssAlbedo" [0 0 0]
+	"color extinction" [0 0 0]
+	"float g" [0]
+	"int multiScatter" [0]
+	"int enableOverlappingVolumes" [0]
+	"float glowGain" [0]
+	"color glowColor" [0 0 0] 
+	"normal bumpNormal" [0 0 0]
+	"int shadowBumpTerminator" [0]
+	"color shadowColor" [0 0 0]
+	"int shadowMode" [0]
+	"float presence" [1]
+	"int presenceCached" [0]
+	"int mwStartable" [0]
+	"float roughnessMollificationClamp" [32]
+	"color userColor" [0 0 0] 
+	"int[1] utilityPattern" [0]
+	"string __materialid" ["TransparentSG{0}"]
 	#"reference normal bumpNormal" ["PxrNormalMap1:resultN"]'''.format(self.materialId, ref_strg, rgb_or_dec_str, round(random.random(), 3))
 			
 		elif self.materialType == 'Metallic':
@@ -500,7 +617,7 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 									os.system(txmake_cmd)
 									os.remove(extfile)
 								else:
-									print("RMANTREE environment variable not set correctly. Set with: export RMANTREE=/Applications/Pixar/RenderManProServer-23.2/")
+									print('RMANTREE environment variable not set correctly. Set with: \nexport RMANTREE=/Applications/Pixar/RenderManProServer-23.2/\nexport PATH="$PATH:$RMANTREE/bin"')
 
 					if not matname in usedmaterials:
 						usedmaterials.append(matname)
@@ -597,7 +714,7 @@ def FindRmtree():
 		if rmtree is not None:
 			return str(rmtree)
 		else:
-			print("RMANTREE environment variable not set correctly. Set with: export RMANTREE=/Applications/Pixar/RenderManProServer-23.2/")
+			print('RMANTREE environment variable not set correctly. Set with: \n\nexport RMANTREE=/Applications/Pixar/RenderManProServer-23.2/\nexport PATH="$PATH:$RMANTREE/bin"\n')
 			exit()
 	else:
 		rmtree = os.getenv('RMANTREE')
