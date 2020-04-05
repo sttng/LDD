@@ -29,11 +29,10 @@ compression = zipfile.ZIP_STORED #uncompressed archive for USDZ, otherwise would
 class Bone:
 	def __init__(self, node):
 		self.refID = 'refID'
-		node = node.split(' ', 12)
-		node = ', '.join(node[:-1])
-		print node
+		node = node[2:14]
+		coords  = ','.join(node)
 		#node = node.rsplit(' ', 1)[0] #drop. off filename.dat at the end
-		(a, b, c, d, e, f, g, h, i, x, y, z) = map(float, node.split(','))
+		(a, b, c, d, e, f, g, h, i, x, y, z) = map(float, coords.split(','))
 		self.matrix = Matrix3D(n11=a,n12=b,n13=c,n14=0,n21=d,n22=e,n23=f,n24=0,n31=g,n32=h,n33=i,n34=0,n41=x,n42=y,n43=z,n44=1)
 		#print self.matrix
 
@@ -43,9 +42,8 @@ class Part:
 		self.GroupIDX = 0
 		self.Bones = []
 		self.refID = 'refID'
-		self.designID = 'designID'
-		node = node.split(' ', 1)
-		self.materials = list(map(str, node[0]))
+		self.designID = str(node[-1])
+		self.materials = list(map(str, node[1]))
 		
 		lastm = '0'
 		for i, m in enumerate(self.materials):
@@ -53,16 +51,15 @@ class Part:
 				self.materials[i] = lastm
 			else:
 				lastm = m
-		self.Bones.append(Bone(node=node[1]))
+		self.Bones.append(Bone(node=node))
 
 class Brick:
 	def __init__(self, node):
-		self.refID = 'refID'
-		self.designID = str(node.rsplit(' ', 1)[1])
+		self.refID = int(node[0])
+		self.designID = str(node[-1])
 		print self.designID
 		self.Parts = []
-		node = node.split(' ', 1)
-		self.Parts.append(Part(node=node[1]))
+		self.Parts.append(Part(node=node))
 
 class Scene:
 	def __init__(self, file):
@@ -77,7 +74,7 @@ class Scene:
 		else:
 			return
 		
-		for line in data.splitlines():
+		for i, line in enumerate(data.splitlines()):
 		# we assume that our tokens are always the first element of the line (which IIRC the ldr specifies)
 		# so we split each line and look at the first element
 			tokens = line.split()
@@ -87,7 +84,10 @@ class Scene:
 					if(tokens[1] == 'Name:'):
 						self.Name = tokens[2]
 				elif(tokens[0] == '1'):
-					self.Bricks.append(Brick(node=line))
+					node = line.split(' ', 14)
+					node.pop(0)
+					node.insert(0, i)
+					self.Bricks.append(Brick(node=node))
 					
 					
 				# Line type 1 is a sub-file reference. The generic format is:
