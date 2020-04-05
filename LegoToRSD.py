@@ -84,16 +84,13 @@ class Scene:
 					if(tokens[1] == 'Name:'):
 						self.Name = tokens[2]
 				elif(tokens[0] == '1'):
+					# Line type 1 is a sub-file reference. The generic format is:
+					#1 <colour> x y z a b c d e f g h i <file>
 					node = line.split(' ', 14)
-					node.pop(0)
+					node.pop(0) #. remove the token (its 1)
 					node.insert(0, i)
 					self.Bricks.append(Brick(node=node))
 					
-					
-				# Line type 1 is a sub-file reference. The generic format is:
-				#1 <colour> x y z a b c d e f g h i <file>
-				
-
 
 				
 		for node in xml.firstChild.childNodes: 
