@@ -28,7 +28,7 @@ compression = zipfile.ZIP_STORED #uncompressed archive for USDZ, otherwise would
 
 class Bone:
 	def __init__(self, node):
-		self.refID = 'refID'
+		self.refID = int(node[0])
 		node = node[2:14]
 		coords  = ','.join(node)
 		#node = node.rsplit(' ', 1)[0] #drop. off filename.dat at the end
@@ -41,7 +41,7 @@ class Part:
 		self.isGrouped = False
 		self.GroupIDX = 0
 		self.Bones = []
-		self.refID = 'refID'
+		self.refID = int(node[0])
 		self.designID = str(node[-1])
 		self.materials = list(map(str, node[1]))
 		
@@ -57,7 +57,6 @@ class Brick:
 	def __init__(self, node):
 		self.refID = int(node[0])
 		self.designID = str(node[-1])
-		print self.designID
 		self.Parts = []
 		self.Parts.append(Part(node=node))
 
@@ -69,7 +68,7 @@ class Scene:
 
 		if file.endswith('.io'):
 			zf = zipfile.ZipFile(file, 'r')
-			zf.setpassword('soho0909')
+			zf.setpassword('soho0909') #Stud.io password for saved zip files. Wondering why these are password protected myself.
 			data = zf.read('model.ldr')
 		else:
 			return
@@ -91,35 +90,7 @@ class Scene:
 					node.insert(0, i)
 					self.Bricks.append(Brick(node=node))
 					
-
-				
-		for node in xml.firstChild.childNodes: 
-			if node.nodeName == 'Meta':
-				for childnode in node.childNodes:
-					if childnode.nodeName == 'BrickSet':
-						self.Version = str(childnode.getAttribute('version'))
-			elif node.nodeName == 'Cameras':
-				for childnode in node.childNodes:
-					if childnode.nodeName == 'Camera':
-						self.Scenecamera.append(SceneCamera(node=childnode))
-			elif node.nodeName == 'Bricks':
-				for childnode in node.childNodes:
-					if childnode.nodeName == 'Brick':
-						self.Bricks.append(Brick(node=childnode))
-			elif node.nodeName == 'GroupSystems':
-				for childnode in node.childNodes:
-					if childnode.nodeName == 'GroupSystem':
-						for childnode in childnode.childNodes:
-							if childnode.nodeName == 'Group':
-								self.Groups.append(Group(node=childnode))
-
-		for i in range(len(self.Groups)):
-			for brick in self.Bricks:
-				for part in brick.Parts:
-					if part.refID in self.Groups[i].partRefs:
-						part.isGrouped = True
-						part.GroupIDX = i
-
+		self.Version = 'Stud.io'
 		print('Scene "'+ self.Name + '" Brickversion: ' + str(self.Version))
 
 
@@ -288,9 +259,51 @@ def Xform "material_{0}" (
 		
 		return bxdf_mat_str
 
+
+class DBinfo:
+	def __init__(self, data):
+		self.Version = data.splitlines()[3].split(' ', 3)[3]
+		print('DB Version: ' + str(self.Version))
+
+class LDrawLibReader:
+	def __init__(self, file):
+		self.packedFilesOffset = 84
+		self.filelist = {}
+		self.initok = False
+		self.location = file
+		self.dbinfo = None
+
+		try:
+			self.filehandle = open(self.location, "rb")
+			self.filehandle.seek(0, 0)
+		except Exception as e:
+			self.initok = False
+			print("Database FAIL")
+			return
+		else:
+			if file.endswith('.zip'):
+				zf = zipfile.ZipFile(file, 'r')
+				#self.filelist = {item:item.split('/')[-1] for item in zf.namelist()}
+				self.filelist = {item:1 for item in zf.namelist()}
+				
+				if self.fileexist('ldraw/Readme.txt') and self.fileexist('ldraw/LDConfig.ldr'):
+					#print self.filelist['ldraw/LDConfig.ldr']
+					self.dbinfo = DBinfo(data=zf.read('ldraw/LDConfig.ldr'))
+					print("Database OK.")
+					self.initok = True
+				else:
+					print("Database ERROR")
+			else:
+				print("Database FAIL")
+				self.initok = False
+
+	def fileexist(self,filename):
+		return filename in self.filelist
+
+
 class Converter:
 	def LoadDatabase(self,databaselocation):
-		self.database = LIFReader(file=databaselocation)
+		self.database = LDrawLibReader(file=databaselocation)
 
 		if self.database.initok and self.database.fileexist('/Materials.xml') and self.database.fileexist(MATERIALNAMESPATH + 'EN/localizedStrings.loc'):
 			self.allMaterials = Materials(data=self.database.filelist['/Materials.xml'].read());
@@ -383,6 +396,7 @@ class Converter:
 				currentpart += 1
 
 				if pa.designID not in geometriecache:
+					print pa.designID
 					geo = Geometry(designID=pa.designID, database=self.database)
 					progress(current ,total , "(" + geo.designID + ") " + geo.Partname, ' ')
 					geometriecache[pa.designID] = geo
@@ -731,6 +745,12 @@ def Xform "LXF_file" (
 	file_writer.close()
 	return True
 
+def FindDatabase():
+	if os.name =='posix':
+		return str(os.path.join(str(os.getenv('USERPROFILE') or os.getenv('HOME')),'Downloads','complete.zip'))
+	else:
+		return str(os.path.join(str(os.getenv('USERPROFILE') or os.getenv('HOME')),'Downloads','complete.zip'))
+
 def main():
 	cl.ParseCommandLine('')
 	lxf_filename = os.path.realpath(cl.args.infile.name)
@@ -738,7 +758,7 @@ def main():
 	generate_rib_header(cl.args.infile, cl.args.srate, cl.args.pixelvar, cl.args.width, cl.args.height, cl.args.fov, cl.args.fstop, cl.args.searcharchive, cl.args.searchtexture, cl.integrator, cl.integratorParams, cl.useplane, cl.usenormal, cl.uselogoonstuds)
 
 	converter = Converter()
-	print("LegoToRHD Version " + __version__)
+	print("LegoToRSD Version " + __version__)
 	if os.path.exists(FindDatabase()):
 		converter.LoadDatabase(databaselocation = FindDatabase())
 		converter.LoadScene(filename=lxf_filename)
