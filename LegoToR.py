@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 #
-# LegoToR Version 0.5.0.3 - Copyright (c) 2020 by m2m
+# LegoToR Version 0.5.0.4 - Copyright (c) 2020 by m2m
 # based on pyldd2obj Version 0.4.8 - Copyright (c) 2019 by jonnysp 
 # LegoToR parses LXF files and command line parameters to create a renderman compliant rib file.
 # 
@@ -9,6 +9,7 @@
 #
 # Updates:
 #
+# 0.5.0.4 Implemented metallic material and updated all other materials. Added top and back light). Fix bug of placmenet of groundplane. Chnaged groundplane to be more photostudio-like.
 # 0.5.0.3 Some transparent material changes.
 # 0.5.0.2 Some material changes. Fixed zfiltered RenderMan Warning. More logo on studs supported
 # 0.5.0.1 Minor bugs (like fstop parameter) fixed
@@ -37,7 +38,7 @@ import shutil
 import ParseCommandLine as cl
 import random
 
-__version__ = "0.5.0.3"
+__version__ = "0.5.0.4"
 
 compression = zipfile.ZIP_DEFLATED
 
@@ -141,22 +142,22 @@ Pattern "PxrNormalMap" "PxrNormalMap1"
 
 Bxdf "PxrSurface" "Transparent {0}"
 	"float diffuseGain" [0]
-	"color diffuseColor" [0 0 0]
+	"{1}color diffuseColor" [{2}]
 	"float diffuseRoughness" [0]
 	"float diffuseExponent" [1]
 	"normal diffuseBumpNormal" [0 0 0]
 	"int diffuseDoubleSided" [0]
 	"int diffuseBackUseDiffuseColor" [1]
-	"color diffuseBackColor" [0.180000007 0.180000007 0.180000007]
+	"color diffuseBackColor" [0.18 0.18 0.18]
 	"float diffuseTransmitGain" [0]
-	"color diffuseTransmitColor" [0.180000007 0.180000007 0.180000007]
+	"color diffuseTransmitColor" [0.18 0.18 0.18]
 	"int specularFresnelMode" [0]
 	"color specularFaceColor" [0 0 0]
 	"color specularEdgeColor" [0 0 0]
 	"float specularFresnelShape" [5]
 	"color specularIor" [1.585 1.585 1.585] # Polycarbonate IOR = 1.584 - 1.586
 	"color specularExtinctionCoeff" [0 0 0]
-	"float specularRoughness" [0.200000003]
+	"float specularRoughness" [0.2]
 	"int specularModelType" [0]
 	"float specularAnisotropy" [0]
 	"vector specularAnisotropyDirection" [0 0 0]
@@ -168,7 +169,7 @@ Bxdf "PxrSurface" "Transparent {0}"
 	"float roughSpecularFresnelShape" [5]
 	"color roughSpecularIor" [1.585 1.585 1.585] # Polycarbonate IOR = 1.584 - 1.586
 	"color roughSpecularExtinctionCoeff" [0 0 0] 
-	"float roughSpecularRoughness" [0.600000024]
+	"float roughSpecularRoughness" [0.6]
 	"int roughSpecularModelType" [0]
 	"float roughSpecularAnisotropy" [0]
 	"vector roughSpecularAnisotropyDirection" [0 0 0]
@@ -196,7 +197,7 @@ Bxdf "PxrSurface" "Transparent {0}"
 	"int iridescenceMode" [1]
 	"color iridescencePrimaryColor" [1 0 0]
 	"color iridescenceSecondaryColor" [0 0 1]
-	"float iridescenceRoughness" [0.200000003]
+	"float iridescenceRoughness" [0.2]
 	"float iridescenceAnisotropy" [0]
 	"vector iridescenceAnisotropyDirection" [0 0 0] 
 	"normal iridescenceBumpNormal" [0 0 0]
@@ -216,10 +217,10 @@ Bxdf "PxrSurface" "Transparent {0}"
 	"float subsurfaceDmfp" [10]
 	"color subsurfaceDmfpColor" [0.851000011 0.556999981 0.395000011]
 	"float shortSubsurfaceGain" [0]
-	"color shortSubsurfaceColor" [0 0.800000012 0]
+	"color shortSubsurfaceColor" [0 0.8 0]
 	"float shortSubsurfaceDmfp" [1]
 	"float longSubsurfaceGain" [0]
-	"color longSubsurfaceColor" [0 0 0.800000012]
+	"color longSubsurfaceColor" [0 0 0.8]
 	"float longSubsurfaceDmfp" [100]
 	"float subsurfaceDirectionality" [0]
 	"float subsurfaceBleed" [0] 
@@ -252,11 +253,11 @@ Bxdf "PxrSurface" "Transparent {0}"
 	"string singlescatterSubset" [""]
 	"color irradianceTint" [1 1 1]
 	"float irradianceRoughness" [0]
-	"float unitLength" [0.100000001]
-	"float refractionGain" [0.949999988]
-	"float reflectionGain" [0.949999988]
-	"{1}color refractionColor" [{2}] 
-	"float glassRoughness" [0.00100000005]
+	"float unitLength" [0.1]
+	"float refractionGain" [0.95]
+	"float reflectionGain" [0.95]
+	"{1}color refractionColor" [{2}]
+	"float glassRoughness" [0.001]
 	"float glassRefractionRoughness" [-1]
 	"float glassAnisotropy" [0]
 	"vector glassAnisotropyDirection" [0 0 0]
@@ -288,89 +289,164 @@ Bxdf "PxrSurface" "Transparent {0}"
 	"string __materialid" ["TransparentSG{0}"]
 	#"reference normal bumpNormal" ["PxrNormalMap1:resultN"]'''.format(self.materialId, ref_strg, rgb_or_dec_str, round(random.random(), 3))
 			
-		elif self.materialType == 'Metallic':
-			bxdf_mat_str = texture_strg + '''Pattern "PxrFractal" "Unevenness" 
-	"int surfacePosition" [0]
-	"int layers" [1]
-	"float frequency" [0.8]
-	"float lacunarity" [16.0]
-	"float dimension" [5]
-	"float erosion" [0.0]
-	"float variation" [{3}]
-	"int turbulent" [0]
+		elif (self.materialType == 'Metallic') or (self.materialType == 'Chrome') or (self.materialType == 'Pearl'):
+			bxdf_mat_str = texture_strg + '''Pattern "PxrExposure" "Metallic_BaseColor{0}" 
+	"{1}color inputRGB" [{2}] 
+	"float stops" [-0.5]
 
-Pattern "PxrNormalMap" "PxrNormalMap1"
-	"float bumpScale" [-0.07]
-	"reference color inputRGB" ["Unevenness:resultRGB"]
-	#"string filename" ["Body_Normal.tex"]
-	"normal bumpOverlay" [0 0 0]
-	"int invertBump" [0]
-	"int orientation" [2]
-	"int flipX" [0]
-	"int flipY" [0]
-	"int firstChannel" [0]
-	"int atlasStyle" [0]
-	"int invertT" [1]
-	"float blur" [0.0]
-	"int lerp" [1]
-	"int filter" [1]
-	"int reverse" [0]
-	"float adjustAmount" [0.0]
-	"float surfaceNormalMix" [0.0]
-	"int disable" [0]
+Pattern "PxrInvert" "Metallic_PxrInvert{0}" 
+	"reference color inputRGB" ["Metallic_BaseColor{0}:resultRGB"] 
+	"int colorModel" [0] 
+	"int invertChannel0" [1] 
+	"int invertChannel1" [1] 
+	"int invertChannel2" [1]
 
 Bxdf "PxrSurface" "Metallic {0}"
-	"float diffuseGain" [0.5]
-	"{1}color diffuseColor" [{2}] 
-	"int diffuseDoubleSided" [1]
-	"color specularFaceColor" [0.8 0.8 0.8]
-	"color specularIor"  [1.54 1.54 1.54] # ABS Refractive Index, Average value: 1.54
-	"float specularRoughness" [0.25]
-	"int specularDoubleSided" [0]
-	"float presence" [1]
-	#"reference normal bumpNormal" ["PxrNormalMap1:resultN"]\n'''.format(self.materialId, ref_strg, rgb_or_dec_str, round(random.random(), 3))
+	"reference color specularIor" ["Metallic_PxrInvert{0}:resultRGB"] 
+	"float diffuseGain" [0] 
+	"color diffuseColor" [0 0 0] 
+	"float diffuseRoughness" [0] 
+	"float diffuseExponent" [1] 
+	"normal diffuseBumpNormal" [0 0 0] 
+	"int diffuseDoubleSided" [0] 
+	"int diffuseBackUseDiffuseColor" [1] 
+	"color diffuseBackColor" [0.180000007 0.180000007 0.180000007] 
+	"float diffuseTransmitGain" [0] 
+	"color diffuseTransmitColor" [0.180000007 0.180000007 0.180000007] 
+	"int specularFresnelMode" [1] 
+	"color specularFaceColor" [0 0 0] 
+	"color specularEdgeColor" [0.899999976 0.899999976 0.899999976] 
+	"float specularFresnelShape" [5] 
+	"color specularExtinctionCoeff" [3.98300004 2.38599992 1.60300004] 
+	"float specularRoughness" [0.200000003] 
+	"int specularModelType" [1] 
+	"float specularAnisotropy" [0] 
+	"vector specularAnisotropyDirection" [0 0 0] 
+	"normal specularBumpNormal" [0 0 0] 
+	"int specularDoubleSided" [0] 
+	"int roughSpecularFresnelMode" [0] 
+	"color roughSpecularFaceColor" [0 0 0] 
+	"color roughSpecularEdgeColor" [0 0 0] 
+	"float roughSpecularFresnelShape" [5] 
+	"color roughSpecularIor" [1.5 1.5 1.5] 
+	"color roughSpecularExtinctionCoeff" [0 0 0] 
+	"float roughSpecularRoughness" [0.600000024] 
+	"int roughSpecularModelType" [0] 
+	"float roughSpecularAnisotropy" [0] 
+	"vector roughSpecularAnisotropyDirection" [0 0 0] 
+	"normal roughSpecularBumpNormal" [0 0 0] 
+	"int roughSpecularDoubleSided" [0] 
+	"int clearcoatFresnelMode" [0] 
+	"color clearcoatFaceColor" [0 0 0] 
+	"color clearcoatEdgeColor" [0 0 0] 
+	"float clearcoatFresnelShape" [5] 
+	"color clearcoatIor" [1.5 1.5 1.5] 
+	"color clearcoatExtinctionCoeff" [0 0 0] 
+	"float clearcoatThickness" [0] 
+	"color clearcoatAbsorptionTint" [0 0 0] 
+	"float clearcoatRoughness" [0] 
+	"int clearcoatModelType" [0] 
+	"float clearcoatAnisotropy" [0] 
+	"vector clearcoatAnisotropyDirection" [0 0 0] 
+	"normal clearcoatBumpNormal" [0 0 0] 
+	"int clearcoatDoubleSided" [0] 
+	"float specularEnergyCompensation" [0] 
+	"float clearcoatEnergyCompensation" [0] 
+	"float iridescenceFaceGain" [0] 
+	"float iridescenceEdgeGain" [0] 
+	"float iridescenceFresnelShape" [5] 
+	"int iridescenceMode" [0] 
+	"color iridescencePrimaryColor" [1 0 0] 
+	"color iridescenceSecondaryColor" [0 0 1] 
+	"float iridescenceRoughness" [0.200000003] 
+	"float iridescenceAnisotropy" [0] 
+	"vector iridescenceAnisotropyDirection" [0 0 0] 
+	"normal iridescenceBumpNormal" [0 0 0] 
+	"float iridescenceCurve" [1] 
+	"float iridescenceScale" [1] 
+	"int iridescenceFlip" [0] 
+	"float iridescenceThickness" [800] 
+	"int iridescenceDoubleSided" [0] 
+	"float fuzzGain" [0] 
+	"color fuzzColor" [1 1 1] 
+	"float fuzzConeAngle" [8] 
+	"normal fuzzBumpNormal" [0 0 0] 
+	"int fuzzDoubleSided" [0] 
+	"int subsurfaceType" [0] 
+	"float subsurfaceGain" [0] 
+	"color subsurfaceColor" [0.829999983 0.791000009 0.753000021] 
+	"float subsurfaceDmfp" [10] 
+	"color subsurfaceDmfpColor" [0.851000011 0.556999981 0.395000011] 
+	"float shortSubsurfaceGain" [0] 
+	"color shortSubsurfaceColor" [0.899999976 0.899999976 0.899999976] "float shortSubsurfaceDmfp" [5] "float longSubsurfaceGain" [0] "color longSubsurfaceColor" [0.800000012 0 0] "float longSubsurfaceDmfp" [20] "float subsurfaceDirectionality" [0] "float subsurfaceBleed" [0] 
+			"float subsurfaceDiffuseBlend" [0] "int subsurfaceResolveSelfIntersections" [0] "float subsurfaceIor" [1.39999998] "color subsurfacePostTint" [1 1 1] "float subsurfaceDiffuseSwitch" [1] "int subsurfaceDoubleSided" [0] "float subsurfaceTransmitGain" [0] "int considerBackside" [1] "int continuationRayMode" [0] "int maxContinuationHits" [2] "float followTopology" [0] "string subsurfaceSubset" [""] "float singlescatterGain" [0] 
+			"color singlescatterColor" [0.829999983 0.791000009 0.753000021] "float singlescatterMfp" [10] "color singlescatterMfpColor" [0.851000011 0.556999981 0.395000011] "float singlescatterDirectionality" [0] "float singlescatterIor" [1.29999995] "float singlescatterBlur" [0] "float singlescatterDirectGain" [0] "color singlescatterDirectGainTint" [1 1 1] 
+			"int singlescatterDoubleSided" [0] "int singlescatterConsiderBackside" [1] "int singlescatterContinuationRayMode" [0] "int singlescatterMaxContinuationHits" [2] "int singlescatterDirectGainMode" [0] "string singlescatterSubset" [""] "color irradianceTint" [1 1 1] "float irradianceRoughness" [0] "float unitLength" [0.100000001] "float refractionGain" [0] "float reflectionGain" [0] "color refractionColor" [1 1 1] 
+			"float glassRoughness" [0.100000001] "float glassRefractionRoughness" [-1] "float glassAnisotropy" [0] "vector glassAnisotropyDirection" [0 0 0] "normal glassBumpNormal" [0 0 0] "float glassIor" [1.5] "int mwWalkable" [0] "float mwIor" [-1] "int thinGlass" [0] 
+			"int ignoreFresnel" [0] "int ignoreAccumOpacity" [0] "int blocksVolumes" [0] "color ssAlbedo" [0 0 0] "color extinction" [0 0 0] "float g" [0] "int multiScatter" [0] "int enableOverlappingVolumes" [0] "float glowGain" [0] "color glowColor" [0 0 0] 
+			"normal bumpNormal" [0 0 0] "int shadowBumpTerminator" [0] "color shadowColor" [0 0 0] "int shadowMode" [0] "float presence" [1] "int presenceCached" [1] "int mwStartable" [0] "float roughnessMollificationClamp" [32] "color userColor" [0 0 0] 
+			"int[1] utilityPattern" [0] "string __materialid" ["Gold_SG1"]'''.format(self.materialId, ref_strg, rgb_or_dec_str, round(random.random(), 3))
 		
 		else:
-			bxdf_mat_str = texture_strg + '''Pattern "PxrFractal" "Unevenness" 
+			bxdf_mat_str = texture_strg + '''Pattern "PxrFractal" "PxrFractal_SpecRough{0}" 
 	"int surfacePosition" [0]
-	"int layers" [1]
-	"float frequency" [0.8]
-	"float lacunarity" [16.0]
-	"float dimension" [5]
-	"float erosion" [0.0]
-	"float variation" [{3}]
-	"int turbulent" [0]
+	"int layers" [6]
+	"float frequency" [8]
+	"float lacunarity" [2.5]
+	"float dimension" [0.2] 
+	"float erosion" [0] 
+	"float variation" [0.35] 
+	"int turbulent" [0] 
+	"color colorScale" [0.5 0.5 0.5] 
+	"color colorOffset" [0.23 0.23 0.23] 
+	"float floatScale" [1] 
+	"float floatOffset" [0]
 
-Pattern "PxrNormalMap" "PxrNormalMap1"
-	"float bumpScale" [-0.07]
-	"reference color inputRGB" ["Unevenness:resultRGB"]
-	#"string filename" ["Body_Normal.tex"]
-	"normal bumpOverlay" [0 0 0]
-	"int invertBump" [0]
-	"int orientation" [2]
-	"int flipX" [0]
-	"int flipY" [0]
-	"int firstChannel" [0]
-	"int atlasStyle" [0]
-	"int invertT" [1]
-	"float blur" [0.0]
-	"int lerp" [1]
-	"int filter" [1]
-	"int reverse" [0]
-	"float adjustAmount" [0.0]
-	"float surfaceNormalMix" [0.0]
-	"int disable" [0]
+Pattern "PxrExposure" "Pxr_BaseColor{0}" 
+	"{1}color inputRGB" [{2}] 
+	"float stops" [{3}] 
 
-Bxdf "PxrSurface" "Solid Material {0}" 
-	"float diffuseGain" [0.5] 
-	"{1}color diffuseColor" [{2}] 
+Pattern "PxrColorCorrect" "PxrColorCorrect_SpecRough{0}" 
+	"reference color inputRGB" ["PxrFractal_SpecRough{0}:resultRGB"] 
+	"float inputMask" [1] 
+	"int invertMask" [0] 
+	"float mixMask" [1] 
+	"vector inputMin" [0 0 0] 
+	"vector inputMax" [1 1 1] 
+	"vector gamma" [1 1 1] 
+	"vector contrast" [0.08 0.08 0.08] 
+	"vector contrastPivot" [0.08 0.08 0.08] 
+	"color rgbGain" [1 1 1] 
+	"vector hsv" [0 1 1] 
+	"float exposure" [2.585] 
+	"vector outputMin" [0 0 0] 
+	"vector outputMax" [1 1 1] 
+	"int clampOutput" [0] 
+	"vector clampMin" [0 0 0] 
+	"vector clampMax" [1 1 1]
+
+Pattern "PxrExposure" "PxrExposure_SSS_Color{0}" 
+	"reference color inputRGB" ["Pxr_BaseColor{0}:resultRGB"] 
+	"float stops" [-2.5]
+		
+Pattern "PxrToFloat" "PxrToFloat_SpecRough{0}" 
+	"reference color input" ["PxrColorCorrect_SpecRough{0}:resultRGB"] 
+	"int mode" [0]
+
+Bxdf "PxrSurface" "Solid Material {0}"
+	"reference color diffuseColor" ["Pxr_BaseColor{0}:resultRGB"] 
+	"reference float specularRoughness" ["PxrToFloat_SpecRough{0}:resultF"] 
+	"reference color subsurfaceColor" ["PxrExposure_SSS_Color{0}:resultRGB"] 
+	"reference color clearcoatFaceColor" ["PxrExposure_SSS_Color{0}:resultRGB"] 
+	"reference color clearcoatEdgeColor" ["PxrExposure_SSS_Color{0}:resultRGB"] 
+	"float diffuseGain" [1] 
 	"int diffuseDoubleSided" [1]
 	"color specularFaceColor" [0.1 0.1 0.15]
 	"color specularIor" [1.54 1.54 1.54] # ABS Refractive Index, Average value: 1.54
 	"float specularRoughness" [0.25]
 	"int specularDoubleSided" [0]
 	"float presence" [1]
-	#"reference normal bumpNormal" ["PxrNormalMap1:resultN"]\n'''.format(self.materialId, ref_strg, rgb_or_dec_str, round(random.random(), 3))
+	#"reference normal bumpNormal" ["PxrNormalMap1:resultN"]\n'''.format(self.materialId, ref_strg, rgb_or_dec_str, round(random.uniform(-0.8, -0.6), 3))
 		
 		return bxdf_mat_str
 
@@ -405,8 +481,8 @@ class Converter:
 		total = len(self.scene.Bricks)
 		current = 0
 		
-		# minx used for floor plane later
-		minx = 1000
+		# miny used for floor plane later
+		miny = 1000
 		useplane = cl.useplane
 		usenormal = cl.usenormal
 		uselogoonstuds = cl.uselogoonstuds
@@ -559,9 +635,9 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 					# Random Scale for brick seams
 					out.write("\t\tScale {0} {0} {0}\n".format(random.uniform(0.9925, 1.000)))
 					
-					# minx used for floor plane later
-					if minx > float(n43):
-						minx = n43
+					# miny used for floor plane later
+					if miny > float(n42):
+						miny = n42
 				
 				op = open(written_obj + ".rib", "w+")
 				op.write("##RenderMan RIB-Structure 1.1 Entity\n")
@@ -692,15 +768,65 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 						zf.write(written_obj + '.rib', compress_type=compression)
 				
 				os.remove(written_obj + '.rib')
+		
+		out.write('''\tObjectBegin "PxrRectLight_Back" 
+		Transform [ -1 0 -0 0  -0 -1 -0 0  0 0 -1 0  0 0 0 1 ]
+		Light "PxrRectLight" "PxrRectLight_Back" "float intensity" [2] "float exposure" [1] "color lightColor" [1 1 1] "string lightColorMap" [""] "vector colorMapGamma" [1 1 1] "float colorMapSaturation" [1] "int enableTemperature" [0] "float temperature" [6500] "float emissionFocus" [0] 
+			"int emissionFocusNormalize" [0] "color emissionFocusTint" [0 0 0] "float specular" [1] "float diffuse" [1] "float intensityNearDist" [0] "float coneAngle" [90] "float coneSoftness" [0] "string iesProfile" [""] "float iesProfileScale" [0] "int iesProfileNormalize" [0] "int enableShadows" [1] "color shadowColor" [0 0 0] 
+			"float shadowDistance" [-1] "float shadowFalloff" [-1] "float shadowFalloffGamma" [1] "string shadowSubset" [""] "string shadowExcludeSubset" [""] "int areaNormalize" [0] "int traceLightPaths" [0] "int thinShadow" [1] "int visibleInRefractionPath" [1] "int cheapCaustics" [0] "string cheapCausticsExcludeGroup" [""] "int fixedSampleCount" [0] "string lightGroup" [""] "float importanceMultiplier" [1]
+	ObjectEnd 
+	AttributeBegin
+		Transform [0 0 -38 0  0 38 0 0  38 0 0 0  45.7109375 1.27847862 -7.51713943 1]
+		Scale 1 1 1
+		Translate 0 {0} 0
+		Rotate 0 0 1 0
+		ObjectInstance "PxrRectLight_Back"
+	AttributeEnd 
+	
+	ObjectBegin "PxrRectLight_Top" 
+		Transform [ -1 0 -0 0  -0 -1 -0 0  0 0 -1 0  0 0 0 1 ]
+		Light "PxrRectLight" "PxrRectLight_Top" "float intensity" [2] "float exposure" [1] "color lightColor" [1 1 1] "string lightColorMap" [""] "vector colorMapGamma" [1 1 1] "float colorMapSaturation" [1] "int enableTemperature" [0] "float temperature" [6500] "float emissionFocus" [0] 
+			"int emissionFocusNormalize" [0] "color emissionFocusTint" [0 0 0] "float specular" [1] "float diffuse" [1] "float intensityNearDist" [0] "float coneAngle" [90] "float coneSoftness" [0] "string iesProfile" [""] "float iesProfileScale" [0] "int iesProfileNormalize" [0] "int enableShadows" [1] "color shadowColor" [0 0 0] 
+			"float shadowDistance" [-1] "float shadowFalloff" [-1] "float shadowFalloffGamma" [1] "string shadowSubset" [""] "string shadowExcludeSubset" [""] "int areaNormalize" [0] "int traceLightPaths" [0] "int thinShadow" [1] "int visibleInRefractionPath" [1] "int cheapCaustics" [0] "string cheapCausticsExcludeGroup" [""] "int fixedSampleCount" [0] "string lightGroup" [""] "float importanceMultiplier" [1]
+	ObjectEnd 
+	AttributeBegin
+	Transform [38 0 0 0  0 0 -38 0  0 38 0 0  5.7109375 27.2784786 -6.51713943 1]
+	Scale 1 1 1
+	Translate 0 0 {0}
+	ObjectInstance "PxrRectLight_Top" 
+	AttributeEnd\n\n'''.format(miny + 0.4))
 						
 		if useplane == True: # write the floor plane in case True
 			out.write('''\tAttributeBegin
+		Attribute "Ri" "string Orientation" ["outside"]
+		Attribute "dice" "float micropolygonlength" [1] "string strategy" ["instanceprojection"] "int rasterorient" [1] "float worlddistancelength" [-1] "string referencecamera" [""] "int watertight" [0]
 		Attribute "identifier" "string name" ["groundplane"]
-		Translate {0} 0 10
-		Scale 200 1 200
-		Polygon "P" [-0.5 0 -0.5  -0.5 0 0.5  0.5 0 0.5  0.5 0 -0.5]
-		"st" [0 0  0 1  1 1  1 0]
-	AttributeEnd\n\n'''.format(minx))
+		Attribute "displacementbound" "float sphere" [0.1] "string CoordinateSystem" ["object"]
+		Attribute "polygon" "int smoothdisplacement" [0]
+		Attribute "trace" "int displacements" [1] "int autobias" [1] "float bias" [0.01]
+		Scale 5 5 5
+		Translate 50 {0} 0
+		Rotate 180 0 1 0
+		PointsGeneralPolygons [1 1 1 1 1 1 1 1 1] [4 4 4 4 4 4 4 4 4] [3 2 11 12 4 0 1 19 11 10 13 12 10
+			9 14 13 9 8 15 14 8 7 16 15 7 6 17 16 6 5 18 17 5 4 19 18] "vertex point P" [8.59928894 -0.400000095 21.9762402 88.9460297 -0.400000095 21.9762402 8.59928894 37.6801605 -22.4129314 88.9460297 37.6801605 -22.4129314
+			8.59928894 -0.400000095 -15.6306095 8.59928894 -0.22995311 -17.139822 8.59928894 0.271660656 -18.5733528 8.59928894 1.07968819 -19.859314
+			8.59928894 2.15361214 -20.9332409 8.59928894 3.43958116 -21.7412701 8.59928894 4.87311029 -22.2428875 8.59928894 6.38231945 -22.4129314
+			88.9460297 6.38231945 -22.4129314 88.9460297 4.87311029 -22.2428875 88.9460297 3.43958116 -21.7412701 88.9460297 2.15361214 -20.9332409
+			88.9460297 1.07968819 -19.859314 88.9460297 0.271660656 -18.5733528 88.9460297 -0.22995311 -17.139822 88.9460297 -0.400000095 -15.6306095] "facevarying normal N" [0 0 0.99999994 0 0 0.99999994 0 0.00518308301 0.999986589 0 0.00518308301 0.999986589
+			0 0.999990642 0.00434720051 0 1 0 0 1 0 0 0.999990642 0.00434720051
+			0 0.00518308301 0.999986589 0 0.222521096 0.974927902 0 0.222521096 0.974927902 0 0.00518308301 0.999986589
+			0 0.222521096 0.974927902 0 0.433885127 0.900968194 0 0.433885127 0.900968194 0 0.222521096 0.974927902
+			0 0.433885127 0.900968194 0 0.623490691 0.781830728 0 0.623490691 0.781830728 0 0.433885127 0.900968194
+			0 0.623490691 0.781830728 0 0.781830966 0.623490512 0 0.781830966 0.623490512 0 0.623490691 0.781830728
+			0 0.781830966 0.623490512 0 0.900968492 0.433884531 0 0.900968492 0.433884531 0 0.781830966 0.623490512
+			0 0.900968492 0.433884531 0 0.974928081 0.22252056 0 0.974928081 0.22252056 0 0.900968492 0.433884531
+			0 0.974928081 0.22252056 0 0.999990642 0.00434720051 0 0.999990642 0.00434720051 0 0.974928081 0.22252056] "facevarying float[2] st" [1 2 -1.34540343e-08 2 0 2.83601618 1 2.83601642 1.49011612e-08 3.15279222 0 4
+			1 4 1 3.15279222 0 2.83601618 0 2.88286877 1 2.88127017 1 2.83601642
+			0 2.88286877 0 2.92972112 1 2.92652369 1 2.88127017 0 2.92972112 0 2.97657371
+			1 2.97177744 1 2.92652369 0 2.97657371 3.72528719e-09 3.02062845 1 3.01703119 1 2.97177744
+			3.72528719e-09 3.02062845 7.45057083e-09 3.06468296 1 3.06228471 1 3.01703119 7.45057083e-09 3.06468296 1.11758638e-08 3.10873747
+			1 3.10753846 1 3.06228471 1.11758638e-08 3.10873747 1.49011612e-08 3.15279222 1 3.15279222 1 3.10753846]
+	AttributeEnd\n\n'''.format(miny + 0.4))
 		
 		zf.close()
 		zfmat.close()
