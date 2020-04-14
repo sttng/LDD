@@ -76,17 +76,16 @@ class MaterialRi:
 		self.g = self.sRGBtoLinear(g)
 		self.b = self.sRGBtoLinear(b)
 	
-	# decode from sRGB luma to linear light
-	# https://entropymine.com/imageworsener/srgbformula/
+	# convert from sRGB luma to linear light: https://entropymine.com/imageworsener/srgbformula/
 	def sRGBtoLinear(self, rgb):
 		rgb = float(rgb) / 255
 		if (rgb <= 0.0404482362771082): 
 			lin = float(rgb / 12.92)
 		else:
 			lin = float(pow((rgb + 0.055) / 1.055, 2.4))
-		return round(lin, 5)
-
-	# encode from linear light to sRGB luma
+		return round(lin, 9)
+	
+	# convert from linear light to sRGB luma
 	def lineartosRGB(self, linear):
 		if (linear <= 0.00313066844250063):
 			rgb = float(linear * 12.92)
@@ -763,7 +762,7 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 						if decoCount <= len(pa.decoration):
 							deco = pa.decoration[decoCount]
 						decoCount += 1
-	
+
 					extfile = ''
 					if not deco == '0':
 						extfile = deco + '.png'
