@@ -67,31 +67,32 @@ class Materials:
 	def getMaterialRibyId(self, mid):
 		return self.MaterialsRi[mid]
 
-# decode from sRGB luma to linear light
-def sRGB_decode_f(rgb):
-	if (rgb <= 0.03928): 
-		lin = float(rgb/12.92)
-	else:
-		lin = float(pow((rgb + 0.055) / 1.055, 2.4))
-	return round(lin, 5)
-
-# encode from linear light to sRGB luma
-def sRGB_encode_f(linear):
-	if (linear <= 0.00304):
-		rgb = float(linear * 12.92)
-	else:
-		rgb = float((1.055 * pow(linear, (1.0/2.4)) - 0.055))
-	return round(rgb, 5)
-
 class MaterialRi:
 	def __init__(self, materialId, r, g, b, materialType):
 		self.name = ''
 		self.materialType = materialType
 		self.materialId = materialId
 		#self.r = round((float(r) / 255), 3)
-		self.r = sRGB_decode_f((float(r) / 255))
-		self.g = sRGB_decode_f((float(g) / 255))
-		self.b = sRGB_decode_f((float(b) / 255))
+		self.r = self.sRGB_decode_f((float(r) / 255))
+		self.g = self.sRGB_decode_f((float(g) / 255))
+		self.b = self.sRGB_decode_f((float(b) / 255))
+	
+	# decode from sRGB luma to linear light
+	# https://entropymine.com/imageworsener/srgbformula/
+	def sRGB_decode_f(self, rgb):
+		if (rgb <= 0.0404482362771082): 
+			lin = float(rgb / 12.92)
+		else:
+			lin = float(pow((rgb + 0.055) / 1.055, 2.4))
+		return round(lin, 5)
+
+	# encode from linear light to sRGB luma
+	def sRGB_encode_f(self, linear):
+		if (linear <= 0.00313066844250063):
+			rgb = float(linear * 12.92)
+		else:
+			rgb = float((1.055 * pow(linear, (1.0 / 2.4)) - 0.055))
+		return round(rgb, 5)
 	
 	def string(self, decorationId):
 		texture_strg = ''
