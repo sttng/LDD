@@ -72,14 +72,14 @@ class MaterialRi:
 		self.name = ''
 		self.materialType = materialType
 		self.materialId = materialId
-		#self.r = round((float(r) / 255), 3)
-		self.r = self.sRGBtoLinear((float(r) / 255))
-		self.g = self.sRGBtoLinear((float(g) / 255))
-		self.b = self.sRGBtoLinear((float(b) / 255))
+		self.r = self.sRGBtoLinear(r)
+		self.g = self.sRGBtoLinear(g)
+		self.b = self.sRGBtoLinear(b)
 	
 	# decode from sRGB luma to linear light
 	# https://entropymine.com/imageworsener/srgbformula/
 	def sRGBtoLinear(self, rgb):
+		rgb = float(rgb) / 255
 		if (rgb <= 0.0404482362771082): 
 			lin = float(rgb / 12.92)
 		else:
