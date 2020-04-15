@@ -9,23 +9,23 @@
 #
 # Updates:
 #
-# 0.5.0.5 Added color linearization (Thanks to earlywill !). Corrected metal (chrome) materials. Corrected transparency with added maxspeculardepth
+# 0.5.0.5 Added color linearization (Thanks to earlywill !). Corrected metal (chrome) materials. Corrected transparency with added maxspeculardepth.
 # 0.5.0.4 Implemented metallic material and updated all other materials. Added top and back light. Fixed bug of placement of groundplane. Changed groundplane mesh to be more photostudio-like.
 # 0.5.0.3 Some transparent material changes.
-# 0.5.0.2 Some material changes. Fixed zfiltered RenderMan Warning. More logo on studs supported
-# 0.5.0.1 Minor bugs (like fstop parameter) fixed
-# 0.5 Initial logo on studs support
+# 0.5.0.2 Some material changes. Fixed zfiltered RenderMan Warning. More logo on studs supported.
+# 0.5.0.1 Minor bugs (like fstop parameter) fixed.
+# 0.5 Initial logo on studs support.
 # 0.4.9 Fixed long outstanding bug of camera positioning similar to LXF file.
-# 0.4.8.3 Added brick seams via scale factor of 0.99 for each brick (experimental)
+# 0.4.8.3 Added brick seams via scale factor of 0.99 for each brick (experimental).
 # 0.4.8.2 Added nonormals switch, to ignore normals writing as some parts of LDD have incorrect normals.
 # 0.4.8.1 Streamlined logic for flex parts handling. Corrected spelling mistakes.
 # 0.4.8 Upgraded pyldd2obj to Version 0.4.8. Added uneveness to materials.
-# 0.4.7.1 Changes in transparent materials
-# 0.4.7 Import pyldd2obj by jonnysp - overwrite Materials, Converter class, add other functions
-# 0.4.5 Added changes based on pyldd2obj Version 0.4.7
+# 0.4.7.1 Changes in transparent materials.
+# 0.4.7 Import pyldd2obj by jonnysp - overwrite Materials, Converter class, add other functions.
+# 0.4.5 Added changes based on pyldd2obj Version 0.4.7.
 # 0.4.4 Complete rewrite based on the great work from jonnysp and pyldd2obj Version 0.4.3. Brings flex parts support.
-# 0.3 Support for all parts (except flex parts) and textures
-# 0.2 Support for basic parts without textures
+# 0.3 Support for all parts (except flex parts) and textures.
+# 0.2 Support for basic parts without textures.
 # 
 # License: MIT License
 #
