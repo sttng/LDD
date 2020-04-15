@@ -9,7 +9,7 @@
 #
 # Updates:
 #
-# 0.5.0.5 Added color linearization (Thanks to earlywill). Corrected metal (chrome) materials.
+# 0.5.0.5 Added color linearization (Thanks to earlywill !). Corrected metal (chrome) materials. Corrected transparency with added maxspeculardepth
 # 0.5.0.4 Implemented metallic material and updated all other materials. Added top and back light. Fixed bug of placement of groundplane. Changed groundplane mesh to be more photostudio-like.
 # 0.5.0.3 Some transparent material changes.
 # 0.5.0.2 Some material changes. Fixed zfiltered RenderMan Warning. More logo on studs supported
@@ -164,7 +164,7 @@ Bxdf "PxrSurface" "Transparent {0}"
 	"float diffuseRoughness" [0]
 	"float diffuseExponent" [1]
 	"normal diffuseBumpNormal" [0 0 0]
-	"int diffuseDoubleSided" [0]
+	"int diffuseDoubleSided" [1]
 	"int diffuseBackUseDiffuseColor" [1]
 	"color diffuseBackColor" [0.18 0.18 0.18]
 	"float diffuseTransmitGain" [0]
@@ -180,7 +180,7 @@ Bxdf "PxrSurface" "Transparent {0}"
 	"float specularAnisotropy" [0]
 	"vector specularAnisotropyDirection" [0 0 0]
 	"normal specularBumpNormal" [0 0 0]
-	"int specularDoubleSided" [0]
+	"int specularDoubleSided" [1]
 	"int roughSpecularFresnelMode" [0]
 	"color roughSpecularFaceColor" [0 0 0]
 	"color roughSpecularEdgeColor" [0 0 0]
@@ -192,7 +192,7 @@ Bxdf "PxrSurface" "Transparent {0}"
 	"float roughSpecularAnisotropy" [0]
 	"vector roughSpecularAnisotropyDirection" [0 0 0]
 	"normal roughSpecularBumpNormal" [0 0 0]
-	"int roughSpecularDoubleSided" [0]
+	"int roughSpecularDoubleSided" [1]
 	"int clearcoatFresnelMode" [0]
 	"color clearcoatFaceColor" [0 0 0]
 	"color clearcoatEdgeColor" [0 0 0]
@@ -206,7 +206,7 @@ Bxdf "PxrSurface" "Transparent {0}"
 	"float clearcoatAnisotropy" [0]
 	"vector clearcoatAnisotropyDirection" [0 0 0]
 	"normal clearcoatBumpNormal" [0 0 0]
-	"int clearcoatDoubleSided" [0]
+	"int clearcoatDoubleSided" [1]
 	"float specularEnergyCompensation" [0]
 	"float clearcoatEnergyCompensation" [0]
 	"float iridescenceFaceGain" [0]
@@ -223,12 +223,12 @@ Bxdf "PxrSurface" "Transparent {0}"
 	"float iridescenceScale" [1]
 	"int iridescenceFlip" [0]
 	"float iridescenceThickness" [0]
-	"int iridescenceDoubleSided" [0]
+	"int iridescenceDoubleSided" [1]
 	"float fuzzGain" [0]
 	"color fuzzColor" [1 1 1]
 	"float fuzzConeAngle" [8]
 	"normal fuzzBumpNormal" [0 0 0]
-	"int fuzzDoubleSided" [0]
+	"int fuzzDoubleSided" [1]
 	"int subsurfaceType" [0]
 	"float subsurfaceGain" [0]
 	"color subsurfaceColor" [0.823 0.791 0.753]
@@ -247,7 +247,7 @@ Bxdf "PxrSurface" "Transparent {0}"
 	"float subsurfaceIor" [1.4]
 	"color subsurfacePostTint" [1 1 1]
 	"float subsurfaceDiffuseSwitch" [1]
-	"int subsurfaceDoubleSided" [0]
+	"int subsurfaceDoubleSided" [1]
 	"float subsurfaceTransmitGain" [0]
 	"int considerBackside" [1]
 	"int continuationRayMode" [0]
@@ -263,7 +263,7 @@ Bxdf "PxrSurface" "Transparent {0}"
 	"float singlescatterBlur" [0]
 	"float singlescatterDirectGain" [0]
 	"color singlescatterDirectGainTint" [1 1 1] 
-	"int singlescatterDoubleSided" [0]
+	"int singlescatterDoubleSided" [1]
 	"int singlescatterConsiderBackside" [1]
 	"int singlescatterContinuationRayMode" [0]
 	"int singlescatterMaxContinuationHits" [2]
@@ -282,7 +282,7 @@ Bxdf "PxrSurface" "Transparent {0}"
 	"normal glassBumpNormal" [0 0 0]
 	"float glassIor" [1.585] # Polycarbonate IOR = 1.584 - 1.586
 	"int mwWalkable" [0]
-	"float mwIor" [-1]
+	"float mwIor" [1]
 	"int thinGlass" [0] 
 	"int ignoreFresnel" [0]
 	"int ignoreAccumOpacity" [0]
@@ -796,7 +796,7 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 						
 					#out.write("usemtl " + matname + '\n')
 					
-					op.write('AttributeBegin #begin Brick {0}.{1}\nAttribute "identifier" "uniform string name" ["Brick {0}.{1}"]\n'.format(written_obj, part))
+					op.write('AttributeBegin #begin Brick {0}.{1}\nAttribute "identifier" "uniform string name" ["Brick {0}.{1}"]\nAttribute "trace" "int maxspeculardepth" [8] "int maxdiffusedepth" [8]\n'.format(written_obj, part))
 					op.write('ReadArchive "{0}_Materials_Archive.zip!material_{1}.rib"\n'.format(filename, matname))
 					
 					for face in geo.Parts[part].faces:
