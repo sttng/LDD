@@ -22,7 +22,7 @@ GEOMETRIEPATH = PRIMITIVEPATH + 'LOD0/'
 DECORATIONPATH = '/Decorations/'
 MATERIALNAMESPATH = '/MaterialNames/'
 
-LOGOONSTUDSCONNTYPE = {"2:4:1", "0:4", "0:4:1", "0:4:2", "0:4:33"}
+LOGOONSTUDSCONNTYPE = {"0:4", "0:4:1", "0:4:2", "0:4:33", "2:4:1", "2:4:34"}
 
 class Matrix3D:
 	def __init__(self, n11=1,n12=0,n13=0,n14=0,n21=0,n22=1,n23=0,n24=0,n31=0,n32=0,n33=1,n34=0,n41=0,n42=0,n43=0,n44=1):
@@ -268,7 +268,7 @@ class GeometryReader:
 			self.faceCount = int(self.indexCount / 3)
 			options = self.readInt()
 
-			for i in range(0, self.valueCount):			
+			for i in range(0, self.valueCount):
 				self.positions.append(Point3D(x=self.readFloat(),y= self.readFloat(),z=self.readFloat()))
 
 			for i in range(0, self.valueCount):
