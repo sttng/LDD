@@ -9,7 +9,7 @@
 #
 # Updates:
 #
-# 0.5.0.6 Seperated chrome and metallic materials
+# 0.5.0.6 Seperated chrome and metallic materials. Fixed textures on chrome, metallic, transparent materials
 # 0.5.0.5 Added color linearization (Thanks to earlywill !). Corrected metal (chrome) materials. Corrected transparency with added maxspeculardepth.
 # 0.5.0.4 Implemented metallic material and updated all other materials. Added top and back light. Fixed bug of placement of groundplane. Changed groundplane mesh to be more photostudio-like.
 # 0.5.0.3 Some transparent material changes.
@@ -305,7 +305,7 @@ Bxdf "PxrSurface" "Transparent {0}"
 	"float roughnessMollificationClamp" [32]
 	"color userColor" [0 0 0] 
 	"int[1] utilityPattern" [0]
-	"string __materialid" ["TransparentSG{0}"]
+	#"string __materialid" ["TransparentSG{0}"]
 	#"reference normal bumpNormal" ["PxrNormalMap1:resultN"]'''.format(self.materialId, ref_strg, rgb_or_dec_str, round(random.random(), 3))
 			
 		elif (self.materialType == 'Metallic') or (self.materialType == 'Pearl'):
@@ -329,7 +329,7 @@ Bxdf "PxrSurface" "Metallic {0}" "reference color specularFaceColor" ["Metallic_
 			"float irradianceRoughness" [0] "float unitLength" [0.100000001] "float refractionGain" [0] "float reflectionGain" [0] "color refractionColor" [1 1 1] "float glassRoughness" [0.100000001] "float glassRefractionRoughness" [-1] "float glassAnisotropy" [0] "vector glassAnisotropyDirection" [0 0 0] 
 			"normal glassBumpNormal" [0 0 0] "float glassIor" [1.5] "int mwWalkable" [0] "float mwIor" [-1] "int thinGlass" [0] "int ignoreFresnel" [0] "int ignoreAccumOpacity" [0] "int blocksVolumes" [0] "color ssAlbedo" [0 0 0] "color extinction" [0 0 0] 
 			"float g" [0] "int multiScatter" [0] "int enableOverlappingVolumes" [0] "float glowGain" [0] "color glowColor" [1 1 1] "int shadowBumpTerminator" [0] "color shadowColor" [0 0 0] "int shadowMode" [0] "float presence" [1] "int presenceCached" [1] "int mwStartable" [0] 
-			"float roughnessMollificationClamp" [32] "color userColor" [0 0 0] "int[1] utilityPattern" [0] "string __materialid" ["MetallicSG{0}"]'''.format(self.materialId, ref_strg, rgb_or_dec_str, round(random.random(), 3))
+			"float roughnessMollificationClamp" [32] "color userColor" [0 0 0] "int[1] utilityPattern" [0] #"string __materialid" ["MetallicSG{0}"]'''.format(self.materialId, ref_strg, rgb_or_dec_str, round(random.random(), 3))
 
 		elif (self.materialType == 'Chrome'):
 			bxdf_mat_str = texture_strg + '''Pattern "PxrExposure" "Chrome_BaseColor{0}"
@@ -494,7 +494,7 @@ Bxdf "PxrSurface" "Chrome {0}"
 	"float roughnessMollificationClamp" [32] 
 	"color userColor" [0 0 0] 
 	"int[1] utilityPattern" [0] 
-	"string __materialid" ["ChromeSG{0}"]'''.format(self.materialId, ref_strg, rgb_or_dec_str, round(random.random(), 3))
+	#"string __materialid" ["ChromeSG{0}"]'''.format(self.materialId, ref_strg, rgb_or_dec_str, round(random.random(), 3))
 		
 		else:
 			bxdf_mat_str = texture_strg + '''Pattern "PxrFractal" "PxrFractal_SpecRough{0}" 
