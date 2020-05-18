@@ -13,7 +13,11 @@ DeveloperMode=1
 * 3 cyan shapes 
 * Q remove all but holes 
 * R Random color coding pieces 
-* T post processing options 
+* T post processing options
+  * SSAO : Screen Space Ambient Occlusion.
+  * SSDO : Screen Space Directional Occlusion.
+  * None
+  * Scene normals
 * O makes everything glow white 
 * P Black outlines G Hide all 
 * H color coding connected pieces 
@@ -34,6 +38,11 @@ DeveloperMode=1
 * S shows statistics 
 * G hides grid 
 * ALT GR + I shows all the bricks in 
+
+## Ctrl
+
+* Ctrl+T or menu "Developer / Create model of all bricks":  Opens an exploded model with all the parts of the library.
+* Ctrl + Alt + T or AltGr + T or the "Developer / Create model of filtered bricks" menu: Opens an exploded model with all the filtered parts (see chapter Selection filters).
 
 ## LUA console
 
