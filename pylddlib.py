@@ -747,6 +747,12 @@ class Converter:
 		print("--- %s seconds ---" % (time.time() - start_time))
 
 
+def FindDBFolder():
+	if os.name =='posix':
+		return str(os.path.join(str(os.getenv('USERPROFILE') or os.getenv('HOME')),'Library','Application Support','LEGO Company','LEGO Digital Designer','db'))
+	else:
+		return str(os.path.join(str(os.getenv('USERPROFILE') or os.getenv('HOME')),'AppData','Roaming','LEGO Company','LEGO Digital Designer','db'))
+
 def FindDatabase():
 	if os.name =='posix':
 		return str(os.path.join(str(os.getenv('USERPROFILE') or os.getenv('HOME')),'Library','Application Support','LEGO Company','LEGO Digital Designer','db.lif'))

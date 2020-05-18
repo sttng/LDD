@@ -560,6 +560,8 @@ Bxdf "PxrSurface" "Solid Material {0}"
 		return bxdf_mat_str
 
 class Converter:
+	def LoadDBFolder(self,dbfolderlocation):
+	
 	def LoadDatabase(self,databaselocation):
 		self.database = LIFReader(file=databaselocation)
 
@@ -1083,24 +1085,27 @@ def main():
 
 	converter = Converter()
 	print("LegoToR Version " + __version__)
-	if os.path.exists(FindDatabase()):
-		converter.LoadDatabase(databaselocation = FindDatabase())
-		converter.LoadScene(filename=lxf_filename)
-		converter.Export(filename=obj_filename)
-		
-		with open(obj_filename + '_Scene.rib','wb') as wfd:
-			for f in ['rib_header.rib', obj_filename + '.rib']:
-				with open(f,'rb') as fd:
-					shutil.copyfileobj(fd, wfd, 1024*1024*10)
-		os.remove(obj_filename + '.rib')
-		os.remove('rib_header.rib')
-		
-		print "\nNow start Renderman with (for preview):\n./prman -d it -t:-2 {0}{1}_Scene.rib".format(cl.args.searcharchive, os.sep + obj_filename)
-		print "Or start Renderman with (for final mode without preview):\n./prman -t:-2 -checkpoint 1m {0}{1}_Scene.rib".format(cl.args.searcharchive, os.sep + obj_filename)
-		print "\nFinally denoise the final output with:./denoise {0}{1}.beauty.001.exr\n".format(cl.args.searcharchive, os.sep + obj_filename)
-		
+	if os.path.isdir(FindDBFolder()):
+		print "Found it !!"
 	else:
-		print("No LDD database found. Please install LEGO Digital-Designer.")
+		if os.path.exists(FindDatabase()):
+			converter.LoadDatabase(databaselocation = FindDatabase())
+			converter.LoadScene(filename=lxf_filename)
+			converter.Export(filename=obj_filename)
+			
+			with open(obj_filename + '_Scene.rib','wb') as wfd:
+				for f in ['rib_header.rib', obj_filename + '.rib']:
+					with open(f,'rb') as fd:
+						shutil.copyfileobj(fd, wfd, 1024*1024*10)
+			os.remove(obj_filename + '.rib')
+			os.remove('rib_header.rib')
+			
+			print "\nNow start Renderman with (for preview):\n./prman -d it -t:-2 {0}{1}_Scene.rib".format(cl.args.searcharchive, os.sep + obj_filename)
+			print "Or start Renderman with (for final mode without preview):\n./prman -t:-2 -checkpoint 1m {0}{1}_Scene.rib".format(cl.args.searcharchive, os.sep + obj_filename)
+			print "\nFinally denoise the final output with:./denoise {0}{1}.beauty.001.exr\n".format(cl.args.searcharchive, os.sep + obj_filename)
+			
+		else:
+			print("No LDD database found. Please install LEGO Digital-Designer.")
 
 if __name__ == "__main__":
 	main()
