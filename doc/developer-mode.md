@@ -44,8 +44,20 @@ DeveloperMode=1
 * Ctrl+T or menu "Developer / Create model of all bricks":  Opens an exploded model with all the parts of the library.
 * Ctrl + Alt + T or AltGr + T or the "Developer / Create model of filtered bricks" menu: Opens an exploded model with all the filtered parts (see chapter Selection filters).
 
-## LUA console
+# Developer Menu
+* Create model of all bricks: Create a model of all parts of the library.
+* Create model of filtered bricks: Creates a model of all current filtered parts.
+* Save current Palettes: Saves the current palettes.
+* Toggle Physics Test: Turn off brick collision test mode.
+* Select alternative LDD web server: Select another LDD server:
+ * DKAPER:.
+ * 3rd party:.
+ * LEGO.com:.
+ * Web Dev:.
+ * Web QA:.
+* Lua console: Opens a Lua console window.
 
+# LUA console features
 Details here: https://www.rockraidersunited.com/topic/7912-ldd-lua-console/
 
 
