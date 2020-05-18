@@ -50,14 +50,18 @@ DeveloperMode=1
 * Save current Palettes: Saves the current palettes.
 * Toggle Physics Test: Turn off brick collision test mode.
 * Select alternative LDD web server: Select another LDD server:
- * DKAPER:.
- * 3rd party:.
- * LEGO.com:.
- * Web Dev:.
- * Web QA:.
+ * DKAPER: (no longer available - unknown)
+ * 3rd party: -> initialiseDesignerURL=http://ldd.3rd.corp.lego.com/service/integration.asmx/initialiseDesigner
+ * LEGO.com: -> initialiseDesignerURL=http://ldd.lego.com/service/integration.asmx/initialiseDesigner
+ * Web Dev: -> initialiseDesignerURL=http://ldd.dev.corp.lego.com/service/integration.asmx/initialiseDesigner
+ * Web QA: -> initialiseDesignerURL=http://ldd.webqa.lego.com/service/integration.asmx/initialiseDesigner
 * Lua console: Opens a Lua console window.
 
 ## LUA console features
 Details here: https://www.rockraidersunited.com/topic/7912-ldd-lua-console/
+
+
+
+
 
 
