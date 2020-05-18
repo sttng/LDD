@@ -35,6 +35,8 @@ DeveloperMode=1
 * G hides grid 
 * ALT GR + I shows all the bricks in 
 
+## LUA console
 
+Details here: https://www.rockraidersunited.com/topic/7912-ldd-lua-console/
 
 
