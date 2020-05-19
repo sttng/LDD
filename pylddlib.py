@@ -533,6 +533,20 @@ class DBinfo:
 		self.Version = xml.getElementsByTagName('Bricks')[0].attributes['version'].value
 		print('DB Version: ' + str(self.Version))
 
+class DBFolderFile:
+	def __init__(self, name, handle):
+		self.handle = handle
+		self.name = name
+
+	def read(self):
+		reader = open("demofile.txt", "r")
+		try:
+			filecontent = reader.read()
+			reader.close()
+			return filecontent 
+		finally:
+			reader.close()
+		
 class LIFFile:
 	def __init__(self, name, offset, size, handle):
 		self.handle = handle
@@ -574,7 +588,7 @@ class DBFolderReader:
 		    for name in files:
 			print os.path.join(path, name)
 			entryName = os.path.join(path, name)
-			self.filelist[entryName] = open(entryName, 'r')
+			self.filelist[entryName] = DBFolderFile(name=entryName, handle=entryName)
 	
 	
 class LIFReader:
