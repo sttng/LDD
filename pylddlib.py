@@ -552,8 +552,7 @@ class DBFolderReader:
 		self.dbinfo = None
 
 		try:
-			self.filehandle = open(self.location, "rb")
-			self.filehandle.seek(0, 0)
+			os.path.isdir(self.location)
 		except Exception as e:
 			self.initok = False
 			print("db folder read FAIL")
