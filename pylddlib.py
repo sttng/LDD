@@ -559,6 +559,7 @@ class DBFolderReader:
 			print("db folder read FAIL")
 			return
 		else:
+			self.parse()
 			if self.fileexist('/Materials.xml') and self.fileexist('/info.xml'):
 				self.dbinfo = DBinfo(data=self.filelist['/info.xml'].read())
 				print("db folder OK.")
