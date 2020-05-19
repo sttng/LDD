@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 #
-# LegoToR Version 0.5.0.6 - Copyright (c) 2020 by m2m
+# LegoToR Version 0.5.0.7 - Copyright (c) 2020 by m2m
 # based on pyldd2obj Version 0.4.8 - Copyright (c) 2019 by jonnysp 
 # LegoToR parses LXF files and command line parameters to create a renderman compliant rib file.
 # 
@@ -9,6 +9,7 @@
 #
 # Updates:
 #
+# 0.5.0.7 db folder support for modified bricks in addition to db.lif support
 # 0.5.0.6 Seperated chrome and metallic materials. Fixed textures on chrome, metallic, transparent materials
 # 0.5.0.5 Added color linearization (Thanks to earlywill !). Corrected metal (chrome) materials. Corrected transparency with added maxspeculardepth.
 # 0.5.0.4 Implemented metallic material and updated all other materials. Added top and back light. Fixed bug of placement of groundplane. Changed groundplane mesh to be more photostudio-like.
@@ -40,7 +41,7 @@ import shutil
 import ParseCommandLine as cl
 import random
 
-__version__ = "0.5.0.6"
+__version__ = "0.5.0.7"
 
 compression = zipfile.ZIP_DEFLATED
 
@@ -561,6 +562,7 @@ Bxdf "PxrSurface" "Solid Material {0}"
 
 class Converter:
 	def LoadDBFolder(self,dbfolderlocation):
+		self.database = DBFolderReader(folder=dbfolderlocation)
 	
 	def LoadDatabase(self,databaselocation):
 		self.database = LIFReader(file=databaselocation)
