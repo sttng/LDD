@@ -544,6 +544,39 @@ class LIFFile:
 		self.handle.seek(self.offset, 0)
 		return self.handle.read(self.size)
 
+class DBFolderReader:
+	def __init__(self, folder):
+		self.filelist = {}
+		self.initok = False
+		self.location = folder
+		self.dbinfo = None
+
+		try:
+			self.filehandle = open(self.location, "rb")
+			self.filehandle.seek(0, 0)
+		except Exception as e:
+			self.initok = False
+			print("db folder read FAIL")
+			return
+		else:
+			if self.fileexist('/Materials.xml') and self.fileexist('/info.xml'):
+				self.dbinfo = DBinfo(data=self.filelist['/info.xml'].read())
+				print("db folder OK.")
+				self.initok = True
+			else:
+				print("db folder ERROR")
+				
+	def fileexist(self, filename):
+		return filename in self.filelist
+
+	def parse(self):
+		for path, subdirs, files in os.walk(self.location):
+		    for name in files:
+			print os.path.join(path, name)
+			entryName = os.path.join(path, name)
+			self.filelist[entryName] = open(entryName, 'r')
+	
+	
 class LIFReader:
 	def __init__(self, file):
 		self.packedFilesOffset = 84
