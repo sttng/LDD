@@ -807,6 +807,16 @@ def FindDBFolder():
 	else:
 		return str(os.path.join(str(os.getenv('USERPROFILE') or os.getenv('HOME')),'AppData','Roaming','LEGO Company','LEGO Digital Designer','db'))
 
+def setDBFolderVars(dbfolderlocation):
+	global PRIMITIVEPATH
+	global GEOMETRIEPATH
+	global DECORATIONPATH
+	global MATERIALNAMESPATH
+	PRIMITIVEPATH = dbfolderlocation + '/Primitives/'
+	GEOMETRIEPATH = dbfolderlocation + '/Primitives/LOD0/'
+	DECORATIONPATH = dbfolderlocation + '/Decorations/'
+	MATERIALNAMESPATH = dbfolderlocation + '/MaterialNames/'
+
 def FindDatabase():
 	if os.name =='posix':
 		return str(os.path.join(str(os.getenv('USERPROFILE') or os.getenv('HOME')),'Library','Application Support','LEGO Company','LEGO Digital Designer','db.lif'))
@@ -841,17 +851,9 @@ def main():
 
 	converter = Converter()
 	if os.path.isdir(FindDBFolder()):
-		print "Found db folder. Will use this inestead of db.lif!"
+		print "Found db folder. Will use this instead of db.lif!"
 		dbfolderlocation = FindDBFolder()
-		global PRIMITIVEPATH
-		global GEOMETRIEPATH
-		global DECORATIONPATH
-		global MATERIALNAMESPATH
-		
-		PRIMITIVEPATH = dbfolderlocation + '/Primitives/'
-		GEOMETRIEPATH = dbfolderlocation + '/Primitives/LOD0/'
-		DECORATIONPATH = dbfolderlocation + '/Decorations/'
-		MATERIALNAMESPATH = dbfolderlocation + '/MaterialNames/'
+		setDBFolderVars(dbfolderlocation)
 		
 		converter.LoadDBFolder(dbfolderlocation = FindDBFolder())
 		converter.LoadScene(filename=lxf_filename)
