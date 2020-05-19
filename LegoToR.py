@@ -31,8 +31,10 @@
 # 
 # License: MIT License
 #
-
+to_exclude = ['PRIMITIVEPATH']
 from pylddlib import *
+for name in to_exclude:
+	del globals()[name]
 import numpy as np
 import uuid
 import csv
@@ -42,7 +44,6 @@ import ParseCommandLine as cl
 import random
 
 __version__ = "0.5.0.7"
-
 compression = zipfile.ZIP_DEFLATED
 
 class Materials:
@@ -561,8 +562,11 @@ Bxdf "PxrSurface" "Solid Material {0}"
 		return bxdf_mat_str
 
 class Converter:
-	def LoadDBFolder(self,dbfolderlocation):
+	def LoadDBFolder(self, dbfolderlocation):
 		self.database = DBFolderReader(folder=dbfolderlocation)
+		if self.database.initok and self.database.fileexist(os.path.join(dbfolderlocation,'Materials.xml')) and self.database.fileexist(MATERIALNAMESPATH + 'EN/localizedStrings.loc'):
+			self.allMaterials = Materials(data=self.database.filelist[os.path.join(dbfolderlocation,'Materials.xml')].read());
+			self.allMaterials.setLOC(loc=LOCReader(data=self.database.filelist[MATERIALNAMESPATH + 'EN/localizedStrings.loc'].read()))
 	
 	def LoadDatabase(self,databaselocation):
 		self.database = LIFReader(file=databaselocation)
@@ -1088,7 +1092,16 @@ def main():
 	converter = Converter()
 	print("LegoToR Version " + __version__)
 	if os.path.isdir(FindDBFolder()):
-		print "Found it !!"
+		print "Found db folder. Will use this instead of db.lif!"
+		dbfolderlocation = FindDBFolder()
+		setDBFolderVars(dbfolderlocation)
+		global PRIMITIVEPATH
+		print PRIMITIVEPATH
+		
+		converter.LoadDBFolder(dbfolderlocation = FindDBFolder())
+		converter.LoadScene(filename=lxf_filename)
+		converter.Export(filename=obj_filename)
+		
 	else:
 		if os.path.exists(FindDatabase()):
 			converter.LoadDatabase(databaselocation = FindDatabase())
