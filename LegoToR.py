@@ -31,10 +31,7 @@
 # 
 # License: MIT License
 #
-to_exclude = ['PRIMITIVEPATH']
 from pylddlib import *
-for name in to_exclude:
-	del globals()[name]
 import numpy as np
 import uuid
 import csv
@@ -564,6 +561,7 @@ Bxdf "PxrSurface" "Solid Material {0}"
 class Converter:
 	def LoadDBFolder(self, dbfolderlocation):
 		self.database = DBFolderReader(folder=dbfolderlocation)
+
 		if self.database.initok and self.database.fileexist(os.path.join(dbfolderlocation,'Materials.xml')) and self.database.fileexist(MATERIALNAMESPATH + 'EN/localizedStrings.loc'):
 			self.allMaterials = Materials(data=self.database.filelist[os.path.join(dbfolderlocation,'Materials.xml')].read());
 			self.allMaterials.setLOC(loc=LOCReader(data=self.database.filelist[MATERIALNAMESPATH + 'EN/localizedStrings.loc'].read()))
@@ -1093,34 +1091,48 @@ def main():
 	print("LegoToR Version " + __version__)
 	if os.path.isdir(FindDBFolder()):
 		print "Found db folder. Will use this instead of db.lif!"
-		dbfolderlocation = FindDBFolder()
-		setDBFolderVars(dbfolderlocation)
 		global PRIMITIVEPATH
-		print PRIMITIVEPATH
-		
+		global GEOMETRIEPATH
+		global DECORATIONPATH
+		global MATERIALNAMESPATH
+		setDBFolderVars(dbfolderlocation = FindDBFolder()) #Required to set in pylddlib... dirty !
+		PRIMITIVEPATH = FindDBFolder() + '/Primitives/'
+		GEOMETRIEPATH = FindDBFolder() + '/Primitives/LOD0/'
+		DECORATIONPATH = FindDBFolder() + '/Decorations/'
+		MATERIALNAMESPATH = FindDBFolder() + '/MaterialNames/'
 		converter.LoadDBFolder(dbfolderlocation = FindDBFolder())
 		converter.LoadScene(filename=lxf_filename)
 		converter.Export(filename=obj_filename)
 		
+		with open(obj_filename + '_Scene.rib','wb') as wfd:
+			for f in ['rib_header.rib', obj_filename + '.rib']:
+				with open(f,'rb') as fd:
+					shutil.copyfileobj(fd, wfd, 1024*1024*10)
+		os.remove(obj_filename + '.rib')
+		os.remove('rib_header.rib')
+		
+		print "\nNow start Renderman with (for preview):\n./prman -d it -t:-2 {0}{1}_Scene.rib".format(cl.args.searcharchive, os.sep + obj_filename)
+		print "Or start Renderman with (for final mode without preview):\n./prman -t:-2 -checkpoint 1m {0}{1}_Scene.rib".format(cl.args.searcharchive, os.sep + obj_filename)
+		print "\nFinally denoise the final output with:./denoise {0}{1}.beauty.001.exr\n".format(cl.args.searcharchive, os.sep + obj_filename)
+		
+	elif os.path.exists(FindDatabase()):
+		converter.LoadDatabase(databaselocation = FindDatabase())
+		converter.LoadScene(filename=lxf_filename)
+		converter.Export(filename=obj_filename)
+		
+		with open(obj_filename + '_Scene.rib','wb') as wfd:
+			for f in ['rib_header.rib', obj_filename + '.rib']:
+				with open(f,'rb') as fd:
+					shutil.copyfileobj(fd, wfd, 1024*1024*10)
+		os.remove(obj_filename + '.rib')
+		os.remove('rib_header.rib')
+		
+		print "\nNow start Renderman with (for preview):\n./prman -d it -t:-2 {0}{1}_Scene.rib".format(cl.args.searcharchive, os.sep + obj_filename)
+		print "Or start Renderman with (for final mode without preview):\n./prman -t:-2 -checkpoint 1m {0}{1}_Scene.rib".format(cl.args.searcharchive, os.sep + obj_filename)
+		print "\nFinally denoise the final output with:./denoise {0}{1}.beauty.001.exr\n".format(cl.args.searcharchive, os.sep + obj_filename)
+		
 	else:
-		if os.path.exists(FindDatabase()):
-			converter.LoadDatabase(databaselocation = FindDatabase())
-			converter.LoadScene(filename=lxf_filename)
-			converter.Export(filename=obj_filename)
-			
-			with open(obj_filename + '_Scene.rib','wb') as wfd:
-				for f in ['rib_header.rib', obj_filename + '.rib']:
-					with open(f,'rb') as fd:
-						shutil.copyfileobj(fd, wfd, 1024*1024*10)
-			os.remove(obj_filename + '.rib')
-			os.remove('rib_header.rib')
-			
-			print "\nNow start Renderman with (for preview):\n./prman -d it -t:-2 {0}{1}_Scene.rib".format(cl.args.searcharchive, os.sep + obj_filename)
-			print "Or start Renderman with (for final mode without preview):\n./prman -t:-2 -checkpoint 1m {0}{1}_Scene.rib".format(cl.args.searcharchive, os.sep + obj_filename)
-			print "\nFinally denoise the final output with:./denoise {0}{1}.beauty.001.exr\n".format(cl.args.searcharchive, os.sep + obj_filename)
-			
-		else:
-			print("No LDD database found. Please install LEGO Digital-Designer.")
+		print("No LDD database found. Please install LEGO Digital-Designer.")
 
 if __name__ == "__main__":
 	main()
