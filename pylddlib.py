@@ -851,10 +851,8 @@ def main():
 
 	converter = Converter()
 	if os.path.isdir(FindDBFolder()):
-		print "Found db folder. Will use this instead of db.lif!"
-		dbfolderlocation = FindDBFolder()
-		setDBFolderVars(dbfolderlocation)
-		
+		print "Found DB folder. Will use this instead of db.lif!"
+		setDBFolderVars(dbfolderlocation = FindDBFolder())
 		converter.LoadDBFolder(dbfolderlocation = FindDBFolder())
 		converter.LoadScene(filename=lxf_filename)
 		converter.Export(filename=obj_filename)
