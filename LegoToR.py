@@ -9,7 +9,7 @@
 #
 # Updates:
 #
-# 0.5.0.7 db folder support for modified bricks in addition to db.lif support
+# 0.5.0.7 DB folder support for modifications (such as added bricks) in addition to db.lif support
 # 0.5.0.6 Seperated chrome and metallic materials. Fixed textures on chrome, metallic, transparent materials
 # 0.5.0.5 Added color linearization (Thanks to earlywill !). Corrected metal (chrome) materials. Corrected transparency with added maxspeculardepth.
 # 0.5.0.4 Implemented metallic material and updated all other materials. Added top and back light. Fixed bug of placement of groundplane. Changed groundplane mesh to be more photostudio-like.
@@ -1090,7 +1090,7 @@ def main():
 	converter = Converter()
 	print("LegoToR Version " + __version__)
 	if os.path.isdir(FindDBFolder()):
-		print "Found db folder. Will use this instead of db.lif!"
+		print "Found DB folder. Will use DB folder instead of db.lif!"
 		global PRIMITIVEPATH
 		global GEOMETRIEPATH
 		global DECORATIONPATH
@@ -1104,35 +1104,26 @@ def main():
 		converter.LoadScene(filename=lxf_filename)
 		converter.Export(filename=obj_filename)
 		
-		with open(obj_filename + '_Scene.rib','wb') as wfd:
-			for f in ['rib_header.rib', obj_filename + '.rib']:
-				with open(f,'rb') as fd:
-					shutil.copyfileobj(fd, wfd, 1024*1024*10)
-		os.remove(obj_filename + '.rib')
-		os.remove('rib_header.rib')
-		
-		print "\nNow start Renderman with (for preview):\n./prman -d it -t:-2 {0}{1}_Scene.rib".format(cl.args.searcharchive, os.sep + obj_filename)
-		print "Or start Renderman with (for final mode without preview):\n./prman -t:-2 -checkpoint 1m {0}{1}_Scene.rib".format(cl.args.searcharchive, os.sep + obj_filename)
-		print "\nFinally denoise the final output with:./denoise {0}{1}.beauty.001.exr\n".format(cl.args.searcharchive, os.sep + obj_filename)
-		
 	elif os.path.exists(FindDatabase()):
 		converter.LoadDatabase(databaselocation = FindDatabase())
 		converter.LoadScene(filename=lxf_filename)
 		converter.Export(filename=obj_filename)
 		
-		with open(obj_filename + '_Scene.rib','wb') as wfd:
-			for f in ['rib_header.rib', obj_filename + '.rib']:
-				with open(f,'rb') as fd:
-					shutil.copyfileobj(fd, wfd, 1024*1024*10)
-		os.remove(obj_filename + '.rib')
-		os.remove('rib_header.rib')
-		
-		print "\nNow start Renderman with (for preview):\n./prman -d it -t:-2 {0}{1}_Scene.rib".format(cl.args.searcharchive, os.sep + obj_filename)
-		print "Or start Renderman with (for final mode without preview):\n./prman -t:-2 -checkpoint 1m {0}{1}_Scene.rib".format(cl.args.searcharchive, os.sep + obj_filename)
-		print "\nFinally denoise the final output with:./denoise {0}{1}.beauty.001.exr\n".format(cl.args.searcharchive, os.sep + obj_filename)
-		
 	else:
 		print("No LDD database found. Please install LEGO Digital-Designer.")
+		os._exit()
+	
+	with open(obj_filename + '_Scene.rib','wb') as wfd:
+		for f in ['rib_header.rib', obj_filename + '.rib']:
+			with open(f,'rb') as fd:
+				shutil.copyfileobj(fd, wfd, 1024*1024*10)
+	os.remove(obj_filename + '.rib')
+	os.remove('rib_header.rib')
+		
+	print "\nNow start Renderman with (for preview):\n./prman -d it -t:-2 {0}{1}_Scene.rib".format(cl.args.searcharchive, os.sep + obj_filename)
+	print "Or start Renderman with (for final mode without preview):\n./prman -t:-2 -checkpoint 1m {0}{1}_Scene.rib".format(cl.args.searcharchive, os.sep + obj_filename)
+	print "\nFinally denoise the final output with:./denoise {0}{1}.beauty.001.exr\n".format(cl.args.searcharchive, os.sep + obj_filename)
+
 
 if __name__ == "__main__":
 	main()
