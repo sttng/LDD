@@ -1,14 +1,15 @@
 #!/usr/bin/env python
 
 #
-# LegoToRHD Version 0.5.0.1 - Copyright (c) 2020 by m2m
+# LegoToRHD Version 0.5.0.2 - Copyright (c) 2020 by m2m
 # based on pyldd2obj Version 0.4.8 - Copyright (c) 2019 by jonnysp 
 # LegoToRHD parses LXF files and command line parameters to create USDA compliant files.
 # 
 # Usage: ./LegoToRHD.py /Users/username/Documents/LEGO\ Creations/Models/mylxffile.lxf -np
 #
 # Updates:
-# 0.5.0.1 More logo on studs supported
+# 0.5.0.2 DB folder support for modifications (such as added bricks) in addition to db.lif support
+# 0.5.0.1 more logo on studs supported
 # 0.5 initial logo on studs support
 # 0.4.7 added brick seams via scale factor of 0.99 for each brick (experimental)
 # 0.4.6 added nonormals switch (-nn), to ignore normals writing as some parts of LDD seem to have incorrect normals.
@@ -36,7 +37,7 @@ import shutil
 import ParseCommandLine as cl
 import random
 
-__version__ = "0.5.0.1"
+__version__ = "0.5.0.2"
 
 compression = zipfile.ZIP_STORED #uncompressed archive for USDZ, otherwise would use ZIP_DEFLATED, the usual zip compression
 
@@ -203,6 +204,13 @@ def Xform "material_{0}" (
 		return bxdf_mat_str
 
 class Converter:
+	def LoadDBFolder(self, dbfolderlocation):
+		self.database = DBFolderReader(folder=dbfolderlocation)
+
+		if self.database.initok and self.database.fileexist(os.path.join(dbfolderlocation,'Materials.xml')) and self.database.fileexist(MATERIALNAMESPATH + 'EN/localizedStrings.loc'):
+			self.allMaterials = Materials(data=self.database.filelist[os.path.join(dbfolderlocation,'Materials.xml')].read());
+			self.allMaterials.setLOC(loc=LOCReader(data=self.database.filelist[MATERIALNAMESPATH + 'EN/localizedStrings.loc'].read()))
+	
 	def LoadDatabase(self,databaselocation):
 		self.database = LIFReader(file=databaselocation)
 
@@ -653,23 +661,39 @@ def main():
 
 	converter = Converter()
 	print("LegoToRHD Version " + __version__)
-	if os.path.exists(FindDatabase()):
+	if os.path.isdir(FindDBFolder()):
+		print "Found DB folder. Will use DB folder instead of db.lif!"
+		global PRIMITIVEPATH
+		global GEOMETRIEPATH
+		global DECORATIONPATH
+		global MATERIALNAMESPATH
+		setDBFolderVars(dbfolderlocation = FindDBFolder()) #Required to set in pylddlib... dirty !
+		PRIMITIVEPATH = FindDBFolder() + '/Primitives/'
+		GEOMETRIEPATH = FindDBFolder() + '/Primitives/LOD0/'
+		DECORATIONPATH = FindDBFolder() + '/Decorations/'
+		MATERIALNAMESPATH = FindDBFolder() + '/MaterialNames/'
+		converter.LoadDBFolder(dbfolderlocation = FindDBFolder())
+		converter.LoadScene(filename=lxf_filename)
+		converter.Export(filename=obj_filename)
+	
+	elif os.path.exists(FindDatabase()):
 		converter.LoadDatabase(databaselocation = FindDatabase())
 		converter.LoadScene(filename=lxf_filename)
 		converter.Export(filename=obj_filename)
 		
-		with open(obj_filename + '_Scene.usda','wb') as wfd:
-			for f in ['rib_header.rib', obj_filename + '.usda']:
-				with open(f,'rb') as fd:
-					shutil.copyfileobj(fd, wfd, 1024*1024*10)
-		os.remove(obj_filename + '.usda')
-		os.remove('rib_header.rib')
-		
-		print "\nNow start usdcat to convert from usda to usdc with :\n./usdcat -f -o {0}{1}_Scene.usdc {0}{1}_Scene.usda".format(cl.args.searcharchive, os.sep + obj_filename)
-		print "\nFinally put the file into an usdz archive with:./usdzconvert {0}{1}_Scene.usdc\n".format(cl.args.searcharchive, os.sep + obj_filename)
-		
 	else:
 		print("No LDD database found. Please install LEGO Digital-Designer.")
+		os._exit()
+		
+	with open(obj_filename + '_Scene.usda','wb') as wfd:
+		for f in ['rib_header.rib', obj_filename + '.usda']:
+			with open(f,'rb') as fd:
+				shutil.copyfileobj(fd, wfd, 1024*1024*10)
+	os.remove(obj_filename + '.usda')
+	os.remove('rib_header.rib')
+		
+	print "\nNow start usdcat to convert from usda to usdc with :\n./usdcat -f -o {0}{1}_Scene.usdc {0}{1}_Scene.usda".format(cl.args.searcharchive, os.sep + obj_filename)
+	print "\nFinally put the file into an usdz archive with:./usdzconvert {0}{1}_Scene.usdc\n".format(cl.args.searcharchive, os.sep + obj_filename)
 
 if __name__ == "__main__":
 	main()
