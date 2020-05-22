@@ -857,13 +857,12 @@ def main():
 		converter.LoadScene(filename=lxf_filename)
 		converter.Export(filename=obj_filename)
 		
+	elif os.path.exists(FindDatabase()):
+		converter.LoadDatabase(databaselocation = FindDatabase())
+		converter.LoadScene(filename=lxf_filename)
+		converter.Export(filename=obj_filename)
 	else:
-		if os.path.exists(FindDatabase()):
-			converter.LoadDatabase(databaselocation = FindDatabase())
-			converter.LoadScene(filename=lxf_filename)
-			converter.Export(filename=obj_filename)
-		else:
-			print("no LDD database found please install LEGO-Digital-Designer")
+		print("no LDD database found please install LEGO-Digital-Designer")
 
 if __name__ == "__main__":
 	main()
