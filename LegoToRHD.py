@@ -1,14 +1,15 @@
 #!/usr/bin/env python
 
 #
-# LegoToRHD Version 0.5.0.2 - Copyright (c) 2020 by m2m
+# LegoToRHD Version 0.5.0.3 - Copyright (c) 2020 by m2m
 # based on pyldd2obj Version 0.4.8 - Copyright (c) 2019 by jonnysp 
 # LegoToRHD parses LXF files and command line parameters to create USDA compliant files.
 # 
 # Usage: ./LegoToRHD.py /Users/username/Documents/LEGO\ Creations/Models/mylxffile.lxf -np
 #
 # Updates:
-# 0.5.0.2 DB folder support for modifications (such as added bricks) in addition to db.lif support
+# 0.5.0.3 improved custom2DField handling, adjusted logoonstuds height to accomodate new custom bricks better
+# 0.5.0.2 db folder support for modifications (such as custom bricks) in addition to db.lif support
 # 0.5.0.1 more logo on studs supported
 # 0.5 initial logo on studs support
 # 0.4.7 added brick seams via scale factor of 0.99 for each brick (experimental)
@@ -37,7 +38,7 @@ import shutil
 import ParseCommandLine as cl
 import random
 
-__version__ = "0.5.0.2"
+__version__ = "0.5.0.3"
 
 compression = zipfile.ZIP_STORED #uncompressed archive for USDZ, otherwise would use ZIP_DEFLATED, the usual zip compression
 
@@ -554,7 +555,7 @@ def Xform "geo{0}" (
 										op.write('\tdef "stud{0}_{1}_{2}" (\n'.format(a, i, j))
 										op.write('\t\tadd references = @./logoonstuds.usdc@\n\t)\n\t{')
 										op.write('\t\tfloat xformOp:rotateY = 180')
-										op.write('\n\t\tdouble3 xformOp:translate = ({0}, {1}, {2})'.format(-1 * studs.matrix.n41 + j * 0.4 + 0.015, -1 * studs.matrix.n42 + 0.14, -1 * studs.matrix.n43 + i * 0.4 - 0)) #Values from trial and error: minx of bounding = -0.4, 0.46 =ty of field + 0.14
+										op.write('\n\t\tdouble3 xformOp:translate = ({0}, {1}, {2})'.format(-1 * studs.matrix.n41 + j * 0.4 + 0.0145, -1 * studs.matrix.n42 + 0.14, -1 * studs.matrix.n43 + i * 0.4 - 0)) #Values from trial and error: minx of bounding = -0.4, 0.46 =ty of field + 0.14
 										op.write('\n\t\tmatrix4d xformOp:transform = ( ({0}, {1}, {2}, {3}), ({4}, {5}, {6}, {7}), ({8}, {9}, {10}, {11}), ({12}, {13}, {14}, {15}) )'.format(studs.matrix.n11, studs.matrix.n12, -1 * studs.matrix.n13, studs.matrix.n14, studs.matrix.n21, studs.matrix.n22, -1 * studs.matrix.n23, studs.matrix.n24, -1 * studs.matrix.n31, -1 * studs.matrix.n32, studs.matrix.n33, studs.matrix.n34, 0, 0, 0, studs.matrix.n44))
 										op.write('\n\t\tdouble3 xformOp:scale = ({0}, {0}, {0})'.format(0.81))
 										op.write('\n\t\tuniform token[] xformOpOrder = ["xformOp:transform","xformOp:translate","xformOp:scale", "xformOp:rotateY"]\n')
