@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 #
-# LegoToR Version 0.5.0.7 - Copyright (c) 2020 by m2m
+# LegoToR Version 0.5.0.8 - Copyright (c) 2020 by m2m
 # based on pyldd2obj Version 0.4.8 - Copyright (c) 2019 by jonnysp 
 # LegoToR parses LXF files and command line parameters to create a renderman compliant rib file.
 # 
@@ -9,7 +9,8 @@
 #
 # Updates:
 #
-# 0.5.0.7 DB folder support for modifications (such as added bricks) in addition to db.lif support
+# 0.5.0.8 Improved custom2DField handling, adjusted logoonstuds height to accomodate new custom bricks better
+# 0.5.0.7 DB folder support for modifications (such as custom bricks) in addition to db.lif support
 # 0.5.0.6 Seperated chrome and metallic materials. Fixed textures on chrome, metallic, transparent materials
 # 0.5.0.5 Added color linearization (Thanks to earlywill !). Corrected metal (chrome) materials. Corrected transparency with added maxspeculardepth.
 # 0.5.0.4 Implemented metallic material and updated all other materials. Added top and back light. Fixed bug of placement of groundplane. Changed groundplane mesh to be more photostudio-like.
@@ -40,7 +41,7 @@ import shutil
 import ParseCommandLine as cl
 import random
 
-__version__ = "0.5.0.7"
+__version__ = "0.5.0.8"
 compression = zipfile.ZIP_DEFLATED
 
 class Materials:
@@ -861,7 +862,7 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 												zf.write('logoonstuds.rib', compress_type=compression)
 											op.write('AttributeBegin #begin Brick {0}.{1} stud{2}_{3}_{4}\nAttribute "identifier" "uniform string name" ["Brick {0}.{1} stud{2}_{3}_{4}"]\n'.format(written_obj, part, a, i, j))
 											op.write('\t\tConcatTransform [{0} {1} {2} {3} {4} {5} {6} {7} {8} {9} {10} {11} {12} {13} {14} {15}]\n'.format(studs.matrix.n11, studs.matrix.n12, 1 * studs.matrix.n13, studs.matrix.n14, studs.matrix.n21, studs.matrix.n22, 1 * studs.matrix.n23, studs.matrix.n24, 1 * studs.matrix.n31, 1 * studs.matrix.n32, studs.matrix.n33, studs.matrix.n34, 0, 0, 0, studs.matrix.n44))
-											op.write('\t\tTranslate {0} {1} {2}\n'.format(-1 * studs.matrix.n41 + j * 0.4 + 0.015, -1 * studs.matrix.n42 + 0.14, 1 * studs.matrix.n43 + i * -0.4 - 0)) 
+											op.write('\t\tTranslate {0} {1} {2}\n'.format(-1 * studs.matrix.n41 + j * 0.4 + 0.015, -1 * studs.matrix.n42 + 0.135, 1 * studs.matrix.n43 + i * -0.4 - 0)) 
 											op.write('\t\tRotate 180 0 1 0\n')
 											op.write("\t\tScale {0} {0} {0}\n".format(0.81))
 											op.write('ReadArchive "{0}_Materials_Archive.zip!material_{1}.rib"\n'.format(filename, matname))
