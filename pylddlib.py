@@ -3,6 +3,7 @@
 # based on pyldd2obj version 0.4.8 - Copyright (c) 2019 by jonnysp
 #
 # Updates:
+# 0.4.9.1 improved custom2DField handling
 # 0.4.9 updates to support reading extracted db.lif from db folder
 #
 # License: MIT License
@@ -402,16 +403,16 @@ class Field2D:
 		# create an array of "cols_count" cols, for each of the "rows_count" rows
 		#	all elements are initialized to 0
 		self.custom2DField = [[0 for j in range(cols_count)] for i in range(rows_count)]
+		custom2DFieldString = field2DRawData.replace('\r', '').replace('\n', '').replace(' ', '')
+		custom2DFieldArr = custom2DFieldString.strip().split(',')
+		#custom2DFieldArr = [item.strip() for item in custom2DFieldArr]
 		
-		custom2DFieldRow = field2DRawData.splitlines()
-		#Remove 1st and last element after split (as the field starts with a newline and end with one, so creating 2 empty items)
-		custom2DFieldRow = custom2DFieldRow[1:-1]
-		
+		k = 0
 		for i in range(rows_count):
-			temp = custom2DFieldRow[i].strip().split(',')
 			for j in range(cols_count):
-				self.custom2DField[i][j] = temp[j]
-				
+				self.custom2DField[i][j] = custom2DFieldArr[k]
+				k += 1
+		
 	def __str__(self):
 		return '[type="{0}" transform="{1}" custom2DField="{2}"]'.format(self.type, self.matrix, self.custom2DField)
 
