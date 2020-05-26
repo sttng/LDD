@@ -9,7 +9,7 @@
 #
 # Updates:
 #
-# 0.5.0.8 Improved custom2DField handling, adjusted logoonstuds height to accomodate new custom bricks better
+# 0.5.0.8 Improved custom2DField handling, adjusted logoonstuds height to better accommodate new custom bricks, fixed decorations bug, improved material assignments handling
 # 0.5.0.7 DB folder support for modifications (such as custom bricks) in addition to db.lif support
 # 0.5.0.6 Seperated chrome and metallic materials. Fixed textures on chrome, metallic, transparent materials
 # 0.5.0.5 Added color linearization (Thanks to earlywill !). Corrected metal (chrome) materials. Corrected transparency with added maxspeculardepth.
@@ -785,12 +785,20 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 									#transform with inverted values (to undo the transformation)
 									#geo.Parts[part].outnormals[k].transformW(undoTransformMatrix)
 					
-					lddmatri = self.allMaterials.getMaterialRibyId(pa.materials[part])
-					matname = pa.materials[part]
+					#try catch here for possible problems in materials assignment of various g, g1, g2, .. files in lxf file
+					try:
+						materialCurrentPart = pa.materials[part]
+					except IndexError:
+						print 'WARNING: {0}.g{1} has NO material assignment in lxf. Replaced with color 9. Fix {0}.xml faces values.'.format(pa.designID, part)
+						materialCurrentPart = '9'
+					
+					lddmatri = self.allMaterials.getMaterialRibyId(materialCurrentPart)
+					matname = materialCurrentPart
 
 					deco = '0'
 					if hasattr(pa, 'decoration') and len(geo.Parts[part].textures) > 0:
-						if decoCount <= len(pa.decoration):
+						#if decoCount <= len(pa.decoration):
+						if decoCount < len(pa.decoration):
 							deco = pa.decoration[decoCount]
 						decoCount += 1
 

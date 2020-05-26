@@ -3,7 +3,7 @@
 # based on pyldd2obj version 0.4.8 - Copyright (c) 2019 by jonnysp
 #
 # Updates:
-# 0.4.9.1 improved custom2DField handling
+# 0.4.9.1 improved custom2DField handling, fixed decorations bug, improved material assignments handling
 # 0.4.9 updates to support reading extracted db.lif from db folder
 #
 # License: MIT License
@@ -760,12 +760,21 @@ class Converter:
 				out.write("g " + "(" + geo.designID + ") " + geo.Partname + '\n')
 				for part in geo.Parts:
 
-					lddmat = self.allMaterials.getMaterialbyId(pa.materials[part])
+					
+					#try catch here for possible problems in materials assignment of various g, g1, g2, .. files in lxf file
+					try:
+						materialCurrentPart = pa.materials[part]
+					except IndexError:
+						print 'WARNING: {0}.g{1} has NO material assignment in lxf. Replaced with color 9. Fix {0}.xml faces values.'.format(pa.designID, part)
+						materialCurrentPart = '9'
+					
+					lddmat = self.allMaterials.getMaterialbyId(materialCurrentPart)
 					matname = lddmat.name
 
 					deco = '0'
 					if hasattr(pa, 'decoration') and len(geo.Parts[part].textures) > 0:
-						if decoCount <= len(pa.decoration):
+						#if decoCount <= len(pa.decoration):
+						if decoCount < len(pa.decoration):
 							deco = pa.decoration[decoCount]
 						decoCount += 1
 	

@@ -8,7 +8,7 @@
 # Usage: ./LegoToRHD.py /Users/username/Documents/LEGO\ Creations/Models/mylxffile.lxf -np
 #
 # Updates:
-# 0.5.0.3 improved custom2DField handling, adjusted logoonstuds height to accomodate new custom bricks better
+# 0.5.0.3 improved custom2DField handling, adjusted logoonstuds height to better accommodate new custom bricks, fixed decorations bug, improved material assignments handling
 # 0.5.0.2 db folder support for modifications (such as custom bricks) in addition to db.lif support
 # 0.5.0.1 more logo on studs supported
 # 0.5 initial logo on studs support
@@ -460,12 +460,20 @@ def Xform "geo{0}" (
 						gop.write('\t\t\tinterpolation = "vertex"\n')
 						gop.write('\t\t)\n')
 
-					lddmatri = self.allMaterials.getMaterialRibyId(pa.materials[part])
-					matname = pa.materials[part]
+					#try catch here for possible problems in materials assignment of various g, g1, g2, .. files in lxf file
+					try:
+						materialCurrentPart = pa.materials[part]
+					except IndexError:
+						print 'WARNING: {0}.g{1} has NO material assignment in lxf. Replaced with color 9. Fix {0}.xml faces values.'.format(pa.designID, part)
+						materialCurrentPart = '9'
+					
+					lddmatri = self.allMaterials.getMaterialRibyId(materialCurrentPart)
+					matname = materialCurrentPart
 
 					deco = '0'
 					if hasattr(pa, 'decoration') and len(geo.Parts[part].textures) > 0:
-						if decoCount <= len(pa.decoration):
+						#if decoCount <= len(pa.decoration):
+						if decoCount < len(pa.decoration):
 							deco = pa.decoration[decoCount]
 						decoCount += 1
 
