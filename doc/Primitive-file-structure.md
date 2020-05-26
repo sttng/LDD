@@ -64,3 +64,9 @@ Element = LEGOPrimitive
     Element = Path
       Possible Attributes = type, points
 ```
+
+## Decoration
+It seems this is only used to synchronize the color of multi surfaces part.
+Let's say we have XXXX.g, XXXX.g1 and XXXX.g2. If the subMaterialRedirectLookupTable is "0,1,0", then when applying the paint bucket on the main surface (mesh from the XXXX.g file) the third surface (XXXX.g2) will have the same color applied.
+I think it's main purpose is to prevent changing a surface color when you only want to allow decals.
+That is why you often see "0,0".
