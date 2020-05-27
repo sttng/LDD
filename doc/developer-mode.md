@@ -60,8 +60,26 @@ DeveloperMode=1
 ## LUA console features
 Details here: https://www.rockraidersunited.com/topic/7912-ldd-lua-console/
 
+## Others
 
+Regarding the preference.ini file, there is one in the Program Files folder and one in the AppData folder. Some flags works in both but some are specific to one or the other.
 
+An usefull one was "DoServerCall" (setted in the Program Files ini). 
+By setting it to "0" (false), it prevents LDD from making calls to the Lego servers.
+It "was" because it seems like the servers are no longer online.
+You could used this flag because whenever one extracted a palette (e.g. LDD base palette) it would delete that folder and redownload the LIF when you started LDD. But recently it no longer will redownload the LIFs.
 
+There is a "Verbose" flag, when set to "1" (true) it creates a log file (%AppData%\LEGO Company\DCLTrace.txt)
+It does not provide a lot of usefull information, but can pinpoint why some bricks won't load.
+This flag can be in both files it seems (but have to check), because in some documentation it says in Program File but currently it seems it's in the AppData one.
 
+Regarding brick loading, by looking at the logs, there is a bunch of bricks that are not found in the default LDD palette.
+Turns out most of them actually exist, but in the palette the part alias is used. Replacing it with the correct part ID solve the issue.
+So it looks like the Alias property of the primitive XML is an unfinished feature, wich seems to be planned to use later.
 
+There is a flag nammed "LoadAssemblies" that can be set to "0" (false) and the assemblies will not be loaded and the contained parts will appear in the palette. This flag must be set in the Program File ini.
+
+This flag revealed that any part that is contained in an assembly won't be loaded in the palette, even if you add it in the LDD palette file.
+But ther is a hack... You can create a new assembly with only one part. So for exemple you may create an assemblies for the shock absorber parts so you can adjust them properly.
+
+Finally there are two flags which are unknown: "QAMode" (AppData) and "LoadMostRecentModel" (Program Files).
