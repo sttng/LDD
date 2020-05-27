@@ -7,14 +7,16 @@
     * Normals: List of Vector3
     * UVs (if mesh is textured): List of Vector2
   * Triangles indices
-* Round edge shader data (used by shader for outlines on brick)
+* Round edge shader data (brick outlines)
+  * Packed UV data
   * Mapping for each **index** (offsets to the data)
 * Average normals (used by shader)
-  * Mapping for each **index** (index
+  * Header + Data
+  * Mapping for each **index**
 * Flex bone weights
+  * Bone mapping and weights 
   * Mapping for each **vertex**
-* Stud culling information
-
+* Culling information 
 
 Size | Data type | Description | Example (3024.g)
 :----------- | :-----: | :---: | :--- 
