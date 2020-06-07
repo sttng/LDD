@@ -41,8 +41,9 @@ import shutil
 import ParseCommandLine as cl
 import random
 
-__version__ = "0.5.0.8"
+__version__ = '0.5.0.8'
 compression = zipfile.ZIP_DEFLATED
+PRMANPATH = '/Applications/Pixar/RenderManProServer-23.3/'
 
 class Materials:
 	def __init__(self, data):
@@ -797,9 +798,16 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 
 					deco = '0'
 					if hasattr(pa, 'decoration') and len(geo.Parts[part].textures) > 0:
-						#if decoCount <= len(pa.decoration):
-						if decoCount < len(pa.decoration):
-							deco = pa.decoration[decoCount]
+						if decoCount <= len(pa.decoration):
+						#if decoCount < len(pa.decoration):
+							try:
+								deco = pa.decoration[decoCount]
+								#print 'Good DecoCount' + str(decoCount)
+								#print 'Good len' + str(len(pa.decoration))
+							except IndexError:
+								print 'Error here'
+								print decoCount
+								print pa.decoration
 						decoCount += 1
 
 					extfile = ''
@@ -817,7 +825,7 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 									os.system(txmake_cmd)
 									os.remove(extfile)
 								else:
-									print('RMANTREE environment variable not set correctly. Set with: \nexport RMANTREE=/Applications/Pixar/RenderManProServer-23.2/\nexport PATH="$PATH:$RMANTREE/bin"')
+									print('RMANTREE environment variable not set correctly. Set with: \nexport RMANTREE={0}\nexport PATH="$PATH:$RMANTREE/bin"'.format(PRMANPATH))
 
 					if not matname in usedmaterials:
 						usedmaterials.append(matname)
@@ -1015,14 +1023,14 @@ def FindRmtree():
 		if rmtree is not None:
 			return str(rmtree)
 		else:
-			print('RMANTREE environment variable not set correctly. Set with: \n\nexport RMANTREE=/Applications/Pixar/RenderManProServer-23.2/\nexport PATH="$PATH:$RMANTREE/bin"\n')
+			print('RMANTREE environment variable not set correctly. Set with: \n\nexport RMANTREE={0}\nexport PATH="$PATH:$RMANTREE/bin"\n'.format(PRMANPATH))
 			exit()
 	else:
 		rmtree = os.getenv('RMANTREE')
 		if rmtree is not None:
 			return str(rmtree)
 		else:
-			print('RMANTREE environment variable not set correctly. Set with: setx RMANTREE "C:\Program Files\Pixar\RenderManProServer-23.2\" /M')
+			print('RMANTREE environment variable not set correctly. Set with: setx RMANTREE "C:\Program Files\Pixar\RenderManProServer-23.3\" /M')
 			exit()
 
 
