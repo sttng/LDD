@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 #
-# LegoToR Version 0.5.0.8 - Copyright (c) 2020 by m2m
+# LegoToR Version 0.5.0.9 - Copyright (c) 2020 by m2m
 # based on pyldd2obj Version 0.4.8 - Copyright (c) 2019 by jonnysp 
 # LegoToR parses LXF files and command line parameters to create a renderman compliant rib file.
 # 
@@ -9,6 +9,7 @@
 #
 # Updates:
 #
+# 0.5.0.9 Fixed decorations bug, improved material assignments handling
 # 0.5.0.8 Improved custom2DField handling, adjusted logoonstuds height to better accommodate new custom bricks, fixed decorations bug, improved material assignments handling
 # 0.5.0.7 DB folder support for modifications (such as custom bricks) in addition to db.lif support
 # 0.5.0.6 Seperated chrome and metallic materials. Fixed textures on chrome, metallic, transparent materials
@@ -41,7 +42,7 @@ import shutil
 import ParseCommandLine as cl
 import random
 
-__version__ = '0.5.0.8'
+__version__ = '0.5.0.9'
 compression = zipfile.ZIP_DEFLATED
 PRMANPATH = '/Applications/Pixar/RenderManProServer-23.3/'
 
