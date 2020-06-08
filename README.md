@@ -70,3 +70,10 @@ https://rmanwiki.pixar.com/display/REN22/Checkpointing+and+Recovery
 * Virtually all plastic used by LEGO is a proprietary version of Lanxess’ Novodur acrylonitrile butadiene styrene (ABS), Makrolon polycarbonate (PC) is used for transparent elements and Macrolex dyes for coloring. Delrin or nylon variants are used to make cloth and string elements. http://www.craftechind.com/which-plastic-material-is-used-in-lego-sets/
 * Tyres and elastic materials are made from a slightly different polymer to ABS, styrene butadiene styrene (SBS). https://www.compoundchem.com/2018/04/09/lego/
 * Green leaves, bushes, and trees in their products will be made from polyethene derived from sustainable sugar cane sources. https://www.compoundchem.com/2018/04/09/lego/
+
+## LDD Links
+
+* http://www.jespermosegaard.dk/portfolio/lego-digital-designer/
+* https://tcrf.net/LEGO_Digital_Designer
+* http://trierlab.com/
+
