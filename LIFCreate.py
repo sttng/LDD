@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import os
 import sys
+import time
 
 def create(path):
 	# Set the directory you want to start from
@@ -23,6 +24,10 @@ def create(path):
 			for fname in fileList:
 				print('\t%s' % fname)
 				file_size = os.path.getsize(fname)
+				
+				print("Last modified: %s" % time.ctime(os.path.getmtime(fname)))
+				print("Created: %s" % time.ctime(os.path.getctime(fname)))
+				
 				binary_file.write(b'\x00\x10') #Entry type (equals 2)
 				binary_file.write(b'\x00\x00\x00\x00') #Spacing/unknown value (0 or 7)
 				binary_file.write(fname.encode('utf8')) #File name. (Unicode null-terminated text)
