@@ -7,8 +7,26 @@ def create(path):
 	rootDir = '.'
 	for dirName, subdirList, fileList in os.walk(rootDir):
 		print('Found directory: %s' % dirName)
+		binary_file.write(b'\x00\x01') #Entry type (equals 1)
+		binary_file.write(b'\x00\x00\x00\x00') #Unknown value (equals 0 or 7) The value 0 seems to be used for the root folder
+		binary_file.write(dirName.encode('utf8')) #File name. (Unicode null-terminated text)
+		binary_file.write(b'\x00\x00\x00\x00') #Spacing (Always equals 0)
+		binary_file.write(b'\x00\x00\x00\x00') #Block size (Always equals 20 so it equals the block header size)
+		binary_file.write(b'\x00\x00\x00\x00') #The number of sub-entries (files and folders)
+		
 			for fname in fileList:
 				print('\t%s' % fname)
+				binary_file.write(b'\x00\x10') #Entry type (equals 2)
+				binary_file.write(b'\x00\x00\x00\x00') #Spacing/unknown value (0 or 7)
+				binary_file.write(fname.encode('utf8')) #File name. (Unicode null-terminated text)
+				binary_file.write(b'\x00\x00\x00\x00') #Spacing (Always equals 0)
+				binary_file.write(b'\x00\x00\x00\x00') #File size (it is actually the block size because it includes the block header size (20))
+				binary_file.write(b'\x00\x00\x00\x00\x00\x00\x00\x00') #Created, modified or accessed date
+				binary_file.write(b'\x00\x00\x00\x00\x00\x00\x00\x00') #Created, modified or accessed date
+				binary_file.write(b'\x00\x00\x00\x00\x00\x00\x00\x00') #Created, modified or accessed date
+				
+				
+				
 
 #Detect if executable or not.
 fileName = sys.argv[0].split(os.sep).pop()
