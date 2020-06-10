@@ -7,12 +7,18 @@ def create(path):
 	rootDir = '.'
 	for dirName, subdirList, fileList in os.walk(rootDir):
 		print('Found directory: %s' % dirName)
+		number_dirs = len(subdirList)
+		number_files = len(fileList)
+		number_entries = number_dirs + number_files
+		print number_entries
+		# Create four bytes from the integer
+		four_bytes = number_entries.to_bytes(4, byteorder='big', signed=True)
 		binary_file.write(b'\x00\x01') #Entry type (equals 1)
 		binary_file.write(b'\x00\x00\x00\x00') #Unknown value (equals 0 or 7) The value 0 seems to be used for the root folder
 		binary_file.write(dirName.encode('utf8')) #File name. (Unicode null-terminated text)
 		binary_file.write(b'\x00\x00\x00\x00') #Spacing (Always equals 0)
 		binary_file.write(b'\x00\x00\x00\x00') #Block size (Always equals 20 so it equals the block header size)
-		binary_file.write(b'\x00\x00\x00\x00') #The number of sub-entries (files and folders)
+		binary_file.write(four_bytes) #The number of sub-entries (files and folders)
 		
 			for fname in fileList:
 				print('\t%s' % fname)
