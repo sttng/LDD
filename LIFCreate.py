@@ -42,6 +42,8 @@ def create(path):
 	binary_file.write(b"LIFF")
 	binary_file.write(b'\x00\x00\x00\x00') #Spacing (Always equals 0)
 	binary_file.write(b'\xff\xff\xff\xff') #Total file size (Int32 big endian)
+	binary_file.write(struct.pack('>H', 1)) #Value "1" (Int16 big endian)
+	binary_file.write(b'\x00\x00\x00\x00') #Spacing (Always equals 0)
 	
 	# Set the directory you want to start from
 	rootDir = path
