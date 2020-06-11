@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-    LIF Creator - LEGO Digital Designer LIF extractor.
+    LIF Creator - LEGO Digital Designer LIF creator.
 
     Copyright (C) 202 sttng
 
@@ -67,8 +67,11 @@ Note: The block header's is 20 bytes total. The data size is equal to the specif
 
 
 def create(path):
+	i = 0
 	filename = os.path.basename(os.path.normpath(path))
 	binary_file = open((filename + '.lif'), "wb")
+	
+	lifblocks = []
 	'''
 	LIF Header (18 bytes total):	
 	4 bytes	Char[4]	Header (ASCI = 'LIFF')
@@ -93,6 +96,8 @@ def create(path):
 	4 bytes		Spacing (Always equals 0)
 	X bytes		The block content/data.
 	'''
+	lifblocks[i] = LIFBlock(typ=1, size=123, data='')
+	i+=1
 	binary_file.write(struct.pack('>H', 1)) #Block start/header (always 1)
 	binary_file.write(struct.pack('>H', 1)) #Block type (1 to 5). 1 for Root Block
 	binary_file.write(b'\x00\x00\x00\x00') #Spacing (Always equals 0)
@@ -104,6 +109,8 @@ def create(path):
 	File content Block (Block Type 2)
 	The block content seems hard-coded and it is always 1 (Int16) and 0 (Int32).
 	'''
+	lifblocks[i] = LIFBlock(typ=2, size=123, data='')
+	i+=1
 	binary_file.write(struct.pack('>H', 1)) #Block start/header (always 1)
 	binary_file.write(struct.pack('>H', 2)) #Block type (1 to 5). 2 for File content Block
 	binary_file.write(b'\x00\x00\x00\x00') #Spacing (Always equals 0)
@@ -116,6 +123,8 @@ def create(path):
 	'''
 	Root directory block (Block Type 3)
 	'''
+	lifblocks[i] = LIFBlock(typ=3, size=123, data='')
+	i+=1
 	binary_file.write(struct.pack('>H', 1)) #Block start/header (always 1)
 	binary_file.write(struct.pack('>H', 3)) #Block type (1 to 5). 3 for Root directory block 
 	binary_file.write(b'\x00\x00\x00\x00') #Spacing (Always equals 0)
@@ -131,8 +140,6 @@ def create(path):
 		number_files = len(fileList)
 		number_entries = number_dirs + number_files
 		print number_entries
-		# Create four bytes from the integer
-		#four_bytes = number_entries.to_bytes(4, byteorder='big', signed=True)
 		
 		'''
 		Folder Block (Block Type 3)
