@@ -37,12 +37,51 @@ def create(path):
 	4 bytes	Int32	Total file size (Int32 big endian)
 	2 bytes	Int16	Value "1" (Int16 big endian)
 	4 bytes		Spacing (Always equals 0)
-	'''	
-		
+	'''		
 	binary_file.write(b"LIFF")
 	binary_file.write(b'\x00\x00\x00\x00') #Spacing (Always equals 0)
 	binary_file.write(b'\xff\xff\xff\xff') #Total file size (Int32 big endian)
 	binary_file.write(struct.pack('>H', 1)) #Value "1" (Int16 big endian)
+	binary_file.write(b'\x00\x00\x00\x00') #Spacing (Always equals 0)
+	
+	'''
+	Root Block (Block Type 1)
+	2 bytes	Int16	Block start/header (always 1)
+	2 bytes	Int16	Block type (1 to 5)
+	4 bytes		Spacing (Always equals 0)
+	4 bytes	Int32	Block size in bytes (includes header and data)
+	4 bytes		Spacing (Equals 1 for block types 2,4 and 5)
+	4 bytes		Spacing (Always equals 0)
+	X bytes		The block content/data.
+	'''
+	binary_file.write(struct.pack('>H', 1)) #Block start/header (always 1)
+	binary_file.write(struct.pack('>H', 1)) #Block type (1 to 5). 1 for Root Block
+	binary_file.write(b'\x00\x00\x00\x00') #Spacing (Always equals 0)
+	binary_file.write(b'\xff\xff\xff\xff') #Block size in bytes (includes header and data)
+	binary_file.write(b'\x00\x00\x00\x00') #Spacing (Equals 1 for block types 2,4 and 5)
+	binary_file.write(b'\x00\x00\x00\x00') #Spacing (Always equals 0)
+	
+	'''
+	File content Block (Block Type 2)
+	The block content seems hard-coded and it is always 1 (Int16) and 0 (Int32).
+	'''
+	binary_file.write(struct.pack('>H', 1)) #Block start/header (always 1)
+	binary_file.write(struct.pack('>H', 2)) #Block type (1 to 5). 2 for File content Block
+	binary_file.write(b'\x00\x00\x00\x00') #Spacing (Always equals 0)
+	binary_file.write(b'\xff\xff\xff\xff') #Block size in bytes (includes header and data)
+	binary_file.write(struct.pack('>I', 1)) #Spacing (Equals 1 for block types 2,4 and 5)
+	binary_file.write(b'\x00\x00\x00\x00') #Spacing (Always equals 0)
+	binary_file.write(struct.pack('>H', 1)) #The block content seems hard-coded and it is always 1 (Int16) and 0 (Int32).
+	binary_file.write(struct.pack('>I', 0))
+	
+	'''
+	Root directory block (Block Type 3)
+	'''
+	binary_file.write(struct.pack('>H', 1)) #Block start/header (always 1)
+	binary_file.write(struct.pack('>H', 3)) #Block type (1 to 5). 3 for Root directory block 
+	binary_file.write(b'\x00\x00\x00\x00') #Spacing (Always equals 0)
+	binary_file.write(b'\xff\xff\xff\xff') #Block size in bytes (includes header and data)
+	binary_file.write(struct.pack('>I', 0)) #Spacing (Equals 1 for block types 2,4 and 5)
 	binary_file.write(b'\x00\x00\x00\x00') #Spacing (Always equals 0)
 	
 	# Set the directory you want to start from
@@ -55,6 +94,18 @@ def create(path):
 		print number_entries
 		# Create four bytes from the integer
 		#four_bytes = number_entries.to_bytes(4, byteorder='big', signed=True)
+		
+		'''
+		Folder Block (Block Type 3)
+		'''
+		binary_file.write(struct.pack('>H', 1)) #Block start/header (always 1)
+		binary_file.write(struct.pack('>H', 3)) #Block type (1 to 5). 3 for folder Block
+		binary_file.write(b'\x00\x00\x00\x00') #Spacing (Always equals 0)
+		binary_file.write(b'\xff\xff\xff\xff') #Block size in bytes (includes header and data)
+		binary_file.write(struct.pack('>I', 0)) #Spacing (Equals 1 for block types 2,4 and 5)
+		binary_file.write(b'\x00\x00\x00\x00') #Spacing (Always equals 0)
+		
+		# This one need to be written later in fact (concaneted to the file
 		binary_file.write(b'\x00\x01') #Entry type (equals 1)
 		binary_file.write(b'\x00\x00\x00\x00') #Unknown value (equals 0 or 7) The value 0 seems to be used for the root folder
 		binary_file.write(dirName.encode('utf8')) #File name. (Unicode null-terminated text)
@@ -69,7 +120,24 @@ def create(path):
 			print("Last modified: %s" % time.ctime(os.path.getmtime(fname)))
 			#created = time.ctime(os.path.getctime(fname))
 			#print os.stat(fname)[9]
-				
+			
+			
+			'''
+			File block (Block Type 4)
+			'''
+			binary_file.write(struct.pack('>H', 1)) #Block start/header (always 1)
+			binary_file.write(struct.pack('>H', 4)) #Block type (1 to 5). 4 for File Block
+			binary_file.write(b'\x00\x00\x00\x00') #Spacing (Always equals 0)
+			binary_file.write(b'\xff\xff\xff\xff') #Block size in bytes (includes header and data)
+			binary_file.write(struct.pack('>I', 1)) #Spacing (Equals 1 for block types 2,4 and 5)
+			binary_file.write(b'\x00\x00\x00\x00') #Spacing (Always equals 0)
+			
+			f = open(fname, "rb")
+			file_data = list(f.read())
+			binary_file.write(file_data)
+			f.close()
+						
+			# This one need to be written later in fact (concaneted to the file)	
 			binary_file.write(b'\x00\x10') #Entry type (equals 2)
 			binary_file.write(b'\x00\x00\x00\x00') #Spacing/unknown value (0 or 7)
 			binary_file.write(fname.encode('utf8')) #File name. (Unicode null-terminated text)
