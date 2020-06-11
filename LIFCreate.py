@@ -27,6 +27,42 @@ import sys
 import struct
 import time
 
+class LIFBlock:
+	
+'''
+LIF Block
+2 bytes	Int16	Block start/header (always 1)
+2 bytes	Int16	Block type (1 to 5)
+4 bytes		Spacing (Always equals 0)
+4 bytes	Int32	Block size in bytes (includes header and data)
+4 bytes		Spacing (Equals 1 for block types 2,4 and 5)
+4 bytes		Spacing (Always equals 0)
+X bytes		The block content/data.
+The block type 1 is the "root block" and its size includes the remainder of the LIF file.
+The block type 2 contains the files content/data. The block content seems hard-coded and it is always 1 (Int16) and 0 (Int32).
+The block type 3 represents a folder. The block content is a hierarchy of type 3 and 4 blocks.
+The block type 4 represents a file. The block data is the file content/data.
+The block type 5 contains the files and folders names and some more information. The block content is a hierarchy of LIF entries.
+Note: The block header's is 20 bytes total. The data size is equal to the specified size - 20 bytes.
+'''
+	
+	def __init__(self, typ, size, data):
+		self.header = 1
+		self.typ = typ
+		self.spacing1 = 0
+		self.size = len(data)
+		if typ == 2 or typ == 4 or typ == 5:
+			self.spacing2 = 1
+		else:
+			self.spacing2 = 0
+		self.spacing3 = 0
+		self.data = data
+
+	def string(self):
+		out = 'Kd {0} {1} {2}\nKa 1.600000 1.600000 1.600000\nKs 0.400000 0.400000 0.400000\nNs 3.482202\nTf 1 1 1\n'.format( self.r / 255, self.g / 255,self.b / 255) 
+		return out
+
+
 def create(path):
 	filename = os.path.basename(os.path.normpath(path))
 	binary_file = open((filename + '.lif'), "wb")
