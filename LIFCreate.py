@@ -30,7 +30,18 @@ import time
 def create(path):
 	filename = os.path.basename(os.path.normpath(path))
 	binary_file = open((filename + '.lif'), "wb")
+	'''
+	LIF Header (18 bytes total):	
+	4 bytes	Char[4]	Header (ASCI = 'LIFF')
+	4 bytes		Spacing (Always equals 0)
+	4 bytes	Int32	Total file size (Int32 big endian)
+	2 bytes	Int16	Value "1" (Int16 big endian)
+	4 bytes		Spacing (Always equals 0)
+	'''	
+		
 	binary_file.write(b"LIFF")
+	binary_file.write(b'\x00\x00\x00\x00') #Spacing (Always equals 0)
+	binary_file.write(b'\xff\xff\xff\xff') #Total file size (Int32 big endian)
 	
 	# Set the directory you want to start from
 	rootDir = path
