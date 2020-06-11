@@ -151,10 +151,11 @@ def create(path):
 		binary_file.write(struct.pack('>I', 0)) #Spacing (Equals 1 for block types 2,4 and 5)
 		binary_file.write(b'\x00\x00\x00\x00') #Spacing (Always equals 0)
 		
+				
 		# This one need to be written later in fact (concaneted to the file
 		binary_file.write(b'\x00\x01') #Entry type (equals 1)
 		binary_file.write(b'\x00\x00\x00\x00') #Unknown value (equals 0 or 7) The value 0 seems to be used for the root folder
-		binary_file.write(dirName.encode('utf8')) #File name. (Unicode null-terminated text)
+		binary_file.write(dirName.encode('utf-16')) #File name. (Unicode null-terminated text)
 		binary_file.write(b'\x00\x00\x00\x00') #Spacing (Always equals 0)
 		binary_file.write(b'\x00\x00\x00\x00') #Block size (Always equals 20 so it equals the block header size)
 		binary_file.write(struct.pack('>I', number_entries)) #The number of sub-entries (files and folders)
@@ -186,7 +187,7 @@ def create(path):
 			# This one need to be written later in fact (concaneted to the file)	
 			binary_file.write(b'\x00\x10') #Entry type (equals 2)
 			binary_file.write(b'\x00\x00\x00\x00') #Spacing/unknown value (0 or 7)
-			binary_file.write(fname.encode('utf8')) #File name. (Unicode null-terminated text)
+			binary_file.write(fname.encode('utf-16')) #File name. (Unicode null-terminated text)
 			binary_file.write(b'\x00\x00\x00\x00') #Spacing (Always equals 0)
 			binary_file.write(struct.pack('>I', file_size + 20)) #File size (it is actually the block size because it includes the block header size (20))
 			binary_file.write(struct.pack('>Q', os.stat(fname)[9])) #Created, modified or accessed date
