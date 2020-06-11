@@ -56,10 +56,13 @@ Note: The block header's is 20 bytes total. The data size is equal to the specif
 		else:
 			self.spacing2 = 0
 		self.spacing3 = 0
-		self.data = data
+		if typ == 2:
+			self.data = (struct.pack('>H', 1)) + (struct.pack('>I', 0))
+		else:
+			self.data = data
 
 	def string(self):
-		out = 'Kd {0} {1} {2}\nKa 1.600000 1.600000 1.600000\nKs 0.400000 0.400000 0.400000\nNs 3.482202\nTf 1 1 1\n'.format( self.r / 255, self.g / 255,self.b / 255) 
+		out = '{0} {1} {2}.format(self.header, self.typ, self.spacing1, self.size, self.spacing2, self.spacing3, self.data) 
 		return out
 
 
