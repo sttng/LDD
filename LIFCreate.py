@@ -29,22 +29,22 @@ import time
 
 class LIFBlock:
 	
-'''
-LIF Block
-2 bytes	Int16	Block start/header (always 1)
-2 bytes	Int16	Block type (1 to 5)
-4 bytes		Spacing (Always equals 0)
-4 bytes	Int32	Block size in bytes (includes header and data)
-4 bytes		Spacing (Equals 1 for block types 2,4 and 5)
-4 bytes		Spacing (Always equals 0)
-X bytes		The block content/data.
-The block type 1 is the "root block" and its size includes the remainder of the LIF file.
-The block type 2 contains the files content/data. The block content seems hard-coded and it is always 1 (Int16) and 0 (Int32).
-The block type 3 represents a folder. The block content is a hierarchy of type 3 and 4 blocks.
-The block type 4 represents a file. The block data is the file content/data.
-The block type 5 contains the files and folders names and some more information. The block content is a hierarchy of LIF entries.
-Note: The block header's is 20 bytes total. The data size is equal to the specified size - 20 bytes.
-'''
+	'''
+	LIF Block
+	2 bytes	Int16	Block start/header (always 1)
+	2 bytes	Int16	Block type (1 to 5)
+	4 bytes		Spacing (Always equals 0)
+	4 bytes	Int32	Block size in bytes (includes header and data)
+	4 bytes		Spacing (Equals 1 for block types 2,4 and 5)
+	4 bytes		Spacing (Always equals 0)
+	X bytes		The block content/data.
+	The block type 1 is the "root block" and its size includes the remainder of the LIF file.
+	The block type 2 contains the files content/data. The block content seems hard-coded and it is always 1 (Int16) and 0 (Int32).
+	The block type 3 represents a folder. The block content is a hierarchy of type 3 and 4 blocks.
+	The block type 4 represents a file. The block data is the file content/data.
+	The block type 5 contains the files and folders names and some more information. The block content is a hierarchy of LIF entries.
+	Note: The block header's is 20 bytes total. The data size is equal to the specified size - 20 bytes.
+	'''
 	
 	def __init__(self, typ, size, data):
 		self.header = 1
@@ -62,7 +62,7 @@ Note: The block header's is 20 bytes total. The data size is equal to the specif
 			self.data = data
 
 	def string(self):
-		out = '{0} {1} {2}.format(self.header, self.typ, self.spacing1, self.size, self.spacing2, self.spacing3, self.data) 
+		out = '{0} {1} {2}'.format(self.header, self.typ, self.spacing1, self.size, self.spacing2, self.spacing3, self.data) 
 		return out
 
 
@@ -96,7 +96,8 @@ def create(path):
 	4 bytes		Spacing (Always equals 0)
 	X bytes		The block content/data.
 	'''
-	lifblocks[i] = LIFBlock(typ=1, size=123, data='')
+
+	lifblocks.append(LIFBlock(typ=1, size=123, data=''))
 	i+=1
 	binary_file.write(struct.pack('>H', 1)) #Block start/header (always 1)
 	binary_file.write(struct.pack('>H', 1)) #Block type (1 to 5). 1 for Root Block
@@ -109,7 +110,7 @@ def create(path):
 	File content Block (Block Type 2)
 	The block content seems hard-coded and it is always 1 (Int16) and 0 (Int32).
 	'''
-	lifblocks[i] = LIFBlock(typ=2, size=123, data='')
+	lifblocks.append(LIFBlock(typ=2, size=123, data=''))
 	i+=1
 	binary_file.write(struct.pack('>H', 1)) #Block start/header (always 1)
 	binary_file.write(struct.pack('>H', 2)) #Block type (1 to 5). 2 for File content Block
@@ -123,7 +124,7 @@ def create(path):
 	'''
 	Root directory block (Block Type 3)
 	'''
-	lifblocks[i] = LIFBlock(typ=3, size=123, data='')
+	lifblocks.append(LIFBlock(typ=3, size=123, data=''))
 	i+=1
 	binary_file.write(struct.pack('>H', 1)) #Block start/header (always 1)
 	binary_file.write(struct.pack('>H', 3)) #Block type (1 to 5). 3 for Root directory block 
@@ -181,7 +182,7 @@ def create(path):
 			
 			f = open(fname, "rb")
 			file_data = list(f.read())
-			binary_file.write(file_data)
+			binary_file.write(str(file_data))
 			f.close()
 						
 			# This one need to be written later in fact (concaneted to the file)	
