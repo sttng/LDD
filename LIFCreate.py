@@ -78,7 +78,25 @@ def getFolderSize(folder):
     return total_size
 
 #print "Size: " + str(getFolderSize("."))	
-	
+
+
+def get_dir_size(path=os.getcwd()):
+
+    total_size = 0
+    for dirpath, dirnames, filenames in os.walk(path):
+
+        dirsize = 0
+        for f in filenames:
+            fp = os.path.join(dirpath, f)
+            size = os.path.getsize(fp)
+            #print('\t',size, f)
+            #print(dirpath, dirnames, filenames,size)
+            dirsize += size
+            total_size += size
+        print('\t',dirsize, dirpath)
+    print(" {0:.2f} Kb".format(total_size/1024))
+
+
 def create(path):
 	i = 0
 	blocksize = 0 #Used to calculate and add up the sizes of blocks later
