@@ -69,7 +69,8 @@ class LIFBlock:
 def create(path):
 	i = 0
 	filename = os.path.basename(os.path.normpath(path))
-	binary_file = open((filename + '.lif'), "wb")
+	binary_file = open((filename + '_tmp.lif'), "wb")
+	fh_file = open((filename + '_fh.lif'), "wb") #the file_hierarchy_file will be appended to the main file later.
 	
 	lifblocks = []
 	'''
@@ -153,13 +154,13 @@ def create(path):
 		binary_file.write(b'\x00\x00\x00\x00') #Spacing (Always equals 0)
 		
 				
-		# This one need to be written later in fact (concaneted to the file
-		binary_file.write(b'\x00\x01') #Entry type (equals 1)
-		binary_file.write(b'\x00\x00\x00\x00') #Unknown value (equals 0 or 7) The value 0 seems to be used for the root folder
-		binary_file.write(dirName.encode('utf-16')) #File name. (Unicode null-terminated text)
-		binary_file.write(b'\x00\x00\x00\x00') #Spacing (Always equals 0)
-		binary_file.write(b'\x00\x00\x00\x00') #Block size (Always equals 20 so it equals the block header size)
-		binary_file.write(struct.pack('>I', number_entries)) #The number of sub-entries (files and folders)
+		# write to file_hierarchy_file. This will be appended later 
+		fh_file.write(b'\x00\x01') #Entry type (equals 1)
+		fh_file.write(b'\x00\x00\x00\x00') #Unknown value (equals 0 or 7) The value 0 seems to be used for the root folder
+		fh_file.write(dirName.encode('utf-8')) #File name. (Unicode null-terminated text)
+		fh_file.write(b'\x00\x00\x00\x00') #Spacing (Always equals 0)
+		fh_file.write(b'\x00\x00\x00\x00') #Block size (Always equals 20 so it equals the block header size)
+		fh_file.write(struct.pack('>I', number_entries)) #The number of sub-entries (files and folders)
 		
 		for fname in fileList:
 			print('\t%s' % fname)
@@ -185,23 +186,28 @@ def create(path):
 			binary_file.write(str(file_data))
 			f.close()
 						
-			# This one need to be written later in fact (concaneted to the file)	
-			binary_file.write(b'\x00\x10') #Entry type (equals 2)
-			binary_file.write(b'\x00\x00\x00\x00') #Spacing/unknown value (0 or 7)
-			binary_file.write(fname.encode('utf-16')) #File name. (Unicode null-terminated text)
-			binary_file.write(b'\x00\x00\x00\x00') #Spacing (Always equals 0)
-			binary_file.write(struct.pack('>I', file_size + 20)) #File size (it is actually the block size because it includes the block header size (20))
-			binary_file.write(struct.pack('>Q', os.stat(fname)[9])) #Created, modified or accessed date
-			binary_file.write(b'\x00\x00\x00\x00\x00\x00\x00\x00') #Created, modified or accessed date
-			binary_file.write(b'\x00\x00\x00\x00\x00\x00\x00\x00') #Created, modified or accessed date
+			# write to file_hierarchy_file. This will be appended later 	
+			fh_file.write(b'\x00\x10') #Entry type (equals 2)
+			fh_file.write(b'\x00\x00\x00\x00') #Spacing/unknown value (0 or 7)
+			fh_file.write(fname.encode('utf-8')) #File name. (Unicode null-terminated text)
+			fh_file.write(b'\x00\x00\x00\x00') #Spacing (Always equals 0)
+			fh_file.write(struct.pack('>I', file_size + 20)) #File size (it is actually the block size because it includes the block header size (20))
+			fh_file.write(struct.pack('>Q', os.stat(fname)[9])) #Created, modified or accessed date
+			fh_file.write(b'\x00\x00\x00\x00\x00\x00\x00\x00') #Created, modified or accessed date
+			fh_file.write(b'\x00\x00\x00\x00\x00\x00\x00\x00') #Created, modified or accessed date
 			print('\t%s' % fname)
 	
-	
-	
-	
-	
-
 	binary_file.close()
+	fh_file.close()
+	
+	#Concat files into final file
+	with open(filename + '.lif','wb') as wfd:
+		for f in [filename + '_tmp.lif', filename + '_fh.lif']:
+			with open(f,'rb') as fd:
+				shutil.copyfileobj(fd, wfd, 1024*1024*10)
+	os.remove(filename + '_tmp.lif')
+	os.remove(filename + '_fh.lif')
+	
 
 def extract(path):
     
