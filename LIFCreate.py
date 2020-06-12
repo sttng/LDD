@@ -67,7 +67,18 @@ class LIFBlock:
 		out = '{0} {1} {2}'.format(self.header, self.typ, self.spacing1, self.size, self.spacing2, self.spacing3, self.data) 
 		return out
 
+def getFolderSize(folder):
+    total_size = os.path.getsize(folder)
+    for item in os.listdir(folder):
+        itempath = os.path.join(folder, item)
+        if os.path.isfile(itempath):
+            total_size += os.path.getsize(itempath)
+        elif os.path.isdir(itempath):
+            total_size += getFolderSize(itempath)
+    return total_size
 
+#print "Size: " + str(getFolderSize("."))	
+	
 def create(path):
 	i = 0
 	blocksize = 0 #Used to calculate and add up the sizes of blocks later
