@@ -68,6 +68,7 @@ class LIFBlock:
 
 def create(path):
 	i = 0
+	blocksize = 0 #Used to calculate and add up the sizes of blocks later
 	filename = os.path.basename(os.path.normpath(path))
 	binary_file = open((filename + '_tmp.lif'), "wb")
 	fh_file = open((filename + '_fh.lif'), "wb") #the file_hierarchy_file will be appended to the main file later.
@@ -146,6 +147,8 @@ def create(path):
 		'''
 		Folder Block (Block Type 3)
 		'''
+		lifblocks.append(LIFBlock(typ=3, size=123, data=''))
+		i+=1
 		binary_file.write(struct.pack('>H', 1)) #Block start/header (always 1)
 		binary_file.write(struct.pack('>H', 3)) #Block type (1 to 5). 3 for folder Block
 		binary_file.write(b'\x00\x00\x00\x00') #Spacing (Always equals 0)
@@ -153,7 +156,7 @@ def create(path):
 		binary_file.write(struct.pack('>I', 0)) #Spacing (Equals 1 for block types 2,4 and 5)
 		binary_file.write(b'\x00\x00\x00\x00') #Spacing (Always equals 0)
 		
-				
+	
 		# write to file_hierarchy_file. This will be appended later 
 		fh_file.write(b'\x00\x01') #Entry type (equals 1)
 		fh_file.write(b'\x00\x00\x00\x00') #Unknown value (equals 0 or 7) The value 0 seems to be used for the root folder
@@ -170,14 +173,13 @@ def create(path):
 			#created = time.ctime(os.path.getctime(fname))
 			#print os.stat(fname)[9]
 			
-			
 			'''
 			File block (Block Type 4)
 			'''
 			binary_file.write(struct.pack('>H', 1)) #Block start/header (always 1)
 			binary_file.write(struct.pack('>H', 4)) #Block type (1 to 5). 4 for File Block
 			binary_file.write(b'\x00\x00\x00\x00') #Spacing (Always equals 0)
-			binary_file.write(b'\xff\xff\xff\xff') #Block size in bytes (includes header and data)
+			binary_file.write(struct.pack('>I', file_size + 20)) #Block size in bytes (includes header and data)
 			binary_file.write(struct.pack('>I', 1)) #Spacing (Equals 1 for block types 2,4 and 5)
 			binary_file.write(b'\x00\x00\x00\x00') #Spacing (Always equals 0)
 			
@@ -185,7 +187,10 @@ def create(path):
 			file_data = list(f.read())
 			binary_file.write(str(file_data))
 			f.close()
-						
+			
+			lifblocks.append(LIFBlock(typ=4, size=file_size + 20, data=file_data))
+			i+=1
+			
 			# write to file_hierarchy_file. This will be appended later 	
 			fh_file.write(b'\x00\x10') #Entry type (equals 2)
 			fh_file.write(b'\x00\x00\x00\x00') #Spacing/unknown value (0 or 7)
