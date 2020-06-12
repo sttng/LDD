@@ -19,6 +19,8 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    
+    https://stackoverflow.com/questions/1392413/calculating-a-directorys-size-using-python
 """
 
 
@@ -148,6 +150,7 @@ def create(path):
 		Folder Block (Block Type 3)
 		'''
 		lifblocks.append(LIFBlock(typ=3, size=123, data=''))
+		current_block_index = i #save the index to later adjust the size
 		i+=1
 		binary_file.write(struct.pack('>H', 1)) #Block start/header (always 1)
 		binary_file.write(struct.pack('>H', 3)) #Block type (1 to 5). 3 for folder Block
@@ -201,6 +204,9 @@ def create(path):
 			fh_file.write(b'\x00\x00\x00\x00\x00\x00\x00\x00') #Created, modified or accessed date
 			fh_file.write(b'\x00\x00\x00\x00\x00\x00\x00\x00') #Created, modified or accessed date
 			print('\t%s' % fname)
+			blocksize = blocksize + file_size + 20
+		
+		lifblocks[current_block].size = blocksize
 	
 	binary_file.close()
 	fh_file.close()
