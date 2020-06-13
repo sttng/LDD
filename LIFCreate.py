@@ -1,26 +1,24 @@
 #!/usr/bin/env python
 
 """
-    LIF Creator - LEGO Digital Designer LIF creator.
+	LIF Creator - LEGO Digital Designer LIF Creator.
 
-    Copyright (C) 2020 sttng
+	Copyright (C) 2020 sttng
 
-    You accept full responsibility for how you use this program.
+	You accept full responsibility for how you use this program.
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-    
-    https://stackoverflow.com/questions/1392413/calculating-a-directorys-size-using-python
+	You should have received a copy of the GNU General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 
@@ -29,49 +27,6 @@ import sys
 import struct
 import time
 import shutil
-
-class LIFBlock:
-	
-	'''
-	LIF Block
-	2 bytes	Int16	Block start/header (always 1)
-	2 bytes	Int16	Block type (1 to 5)
-	4 bytes			Spacing1 (Always equals 0)
-	4 bytes	Int32	Block size in bytes (includes header and data)
-	4 bytes			Spacing2 (Equals 1 for block types 2,4 and 5)
-	4 bytes			Spacing3 (Always equals 0)
-	X bytes			The block content/data.
-	The block type 1 is the "root block" and its size includes the remainder of the LIF file.
-	The block type 2 contains the files content/data. The block content seems hard-coded and it is always 1 (Int16) and 0 (Int32).
-	The block type 3 represents a folder. The block content is a hierarchy of type 3 and 4 blocks.
-	The block type 4 represents a file. The block data is the file content/data.
-	The block type 5 contains the files and folders names and some more information. The block content is a hierarchy of LIF entries.
-	Note: The block header's is 20 bytes total. The data size is equal to the specified size - 20 bytes.
-	'''
-	
-	def __init__(self, blocktype, data):
-		self.blockheader = struct.pack('>H', 1)			#Block start/header (always 1)
-		self.blocktype = struct.pack('>H', blocktype)	#Block type (1 to 5)
-		self.spacing1 = struct.pack('>I', 0)			#Spacing (Always equals 0)
-														#Block size in bytes (includes header and data) <- calculated later
-		if blocktype == 2 or blocktype == 4 or blocktype == 5:
-			self.spacing2 = struct.pack('>I', 1)		#Spacing (Equals 1 for block types 2,4 and 5)
-		else:
-			self.spacing2 = struct.pack('>I', 0)
-		self.spacing3 = struct.pack('>I', 0)			#Spacing (Always equals 0)
-		if blocktype == 2:
-			self.data = (b'\x00\x01\x00\x00\x00\x00')	 #The block content seems hard-coded for blocktype 2 and is always 1 (Int16) and 0 (Int32)
-		else:
-			self.data = data
-		
-		self.size = struct.pack('>I', len(self.data) + 20)	#Block size in bytes (includes header and data)
-
-	def setSize(self, size):
-		self.size = struct.pack('>I', size)
-	
-	def string(self):
-		out = '{0}{1}{2}{3}{4}{5}{6}'.format(self.blockheader, self.blocktype, self.spacing1, self.size, self.spacing2, self.spacing3, self.data)
-		return out
 
 class LIFHeader:
 
@@ -97,6 +52,50 @@ class LIFHeader:
 	def string(self):
 		out = '{0}{1}{2}{3}{4}'.format(self.magic, self.spacing1, self.size, self.spacing2, self.spacing3)
 		return out
+
+class LIFBlock:
+	
+	'''
+	LIF Block (20 bytes + data):
+	2 bytes	Int16	Block start/header (always 1)
+	2 bytes	Int16	Block type (1 to 5)
+	4 bytes			Spacing1 (Always equals 0)
+	4 bytes	Int32	Block size in bytes (includes header and data)
+	4 bytes			Spacing2 (Equals 1 for block types 2,4 and 5)
+	4 bytes			Spacing3 (Always equals 0)
+	X bytes			The block content/data.
+	The block type 1 is the "root block" and its size includes the remainder of the LIF file.
+	The block type 2 contains the files content/data. The block content seems hard-coded and it is always 1 (Int16) and 0 (Int32).
+	The block type 3 represents a folder. The block content is a hierarchy of type 3 and 4 blocks.
+	The block type 4 represents a file. The block data is the file content/data.
+	The block type 5 contains the files and folders names and some more information. The block content is a hierarchy of LIF entries.
+	Note: The block header's is 20 bytes total. The data size is equal to the specified size - 20 bytes.
+	'''
+	
+	def __init__(self, blocktype, data):
+		self.blockheader = struct.pack('>H', 1)			#Block start/header (always 1)
+		self.blocktype = struct.pack('>H', blocktype)	#Block type (1 to 5)
+		self.spacing1 = struct.pack('>I', 0)			#Spacing (Always equals 0)
+														#Block size in bytes (includes header and data) <- calculated later
+		if blocktype == 1 or blocktype == 3:
+			self.spacing2 = struct.pack('>I', 0)
+		else:
+			self.spacing2 = struct.pack('>I', 1)		#Spacing (Equals 1 for block types 2,4 and 5)
+		self.spacing3 = struct.pack('>I', 0)			#Spacing (Always equals 0)
+		if blocktype == 2:
+			self.data = (b'\x00\x01\x00\x00\x00\x00')	 #The block content seems hard-coded for blocktype 2 and is always 1 (Int16) and 0 (Int32)
+		else:
+			self.data = data
+		
+		self.size = struct.pack('>I', len(self.data) + 20)	#Block size in bytes (includes header and data)
+
+	def setSize(self, size):
+		self.size = struct.pack('>I', size)
+	
+	def string(self):
+		out = '{0}{1}{2}{3}{4}{5}{6}'.format(self.blockheader, self.blocktype, self.spacing1, self.size, self.spacing2, self.spacing3, self.data)
+		return out
+
 
 
 def getFolderSize(folder):
@@ -146,42 +145,24 @@ def create(path):
 	
 	'''
 	Root Block (Block Type 1)
-	2 bytes	Int16	Block start/header (always 1)
-	2 bytes	Int16	Block type (1 to 5)
-	4 bytes		Spacing (Always equals 0)
-	4 bytes	Int32	Block size in bytes (includes header and data)
-	4 bytes		Spacing (Equals 1 for block types 2,4 and 5)
-	4 bytes		Spacing (Always equals 0)
-	X bytes		The block content/data.
 	'''
 
 	lifblocks.append(LIFBlock(blocktype=1, data=''))
+	test_file.write(lifblocks[i].string())
 	i+=1
-	print 'heerrere'
+
 	#lifblocks[0].setSize(123)
-	test_file.write(lifblocks[0].string())
-	
-	binary_file.write(struct.pack('>H', 1)) #Block start/header (always 1)
-	binary_file.write(struct.pack('>H', 1)) #Block type (1 to 5). 1 for Root Block
-	binary_file.write(b'\x00\x00\x00\x00') #Spacing (Always equals 0)
-	binary_file.write(b'\xff\xff\xff\xff') #Block size in bytes (includes header and data)
-	binary_file.write(b'\x00\x00\x00\x00') #Spacing (Equals 1 for block types 2,4 and 5)
-	binary_file.write(b'\x00\x00\x00\x00') #Spacing (Always equals 0)
+	binary_file.write(LIFBlock(blocktype=1, data='').string())
 	
 	'''
 	File content Block (Block Type 2)
-	The block content seems hard-coded and it is always 1 (Int16) and 0 (Int32).
 	'''
+	
 	lifblocks.append(LIFBlock(blocktype=2, data=''))
+	test_file.write(lifblocks[i].string())
 	i+=1
-	binary_file.write(struct.pack('>H', 1)) #Block start/header (always 1)
-	binary_file.write(struct.pack('>H', 2)) #Block type (1 to 5). 2 for File content Block
-	binary_file.write(b'\x00\x00\x00\x00') #Spacing (Always equals 0)
-	binary_file.write(b'\xff\xff\xff\xff') #Block size in bytes (includes header and data)
-	binary_file.write(struct.pack('>I', 1)) #Spacing (Equals 1 for block types 2,4 and 5)
-	binary_file.write(b'\x00\x00\x00\x00') #Spacing (Always equals 0)
-	binary_file.write(struct.pack('>H', 1)) #The block content seems hard-coded and it is always 1 (Int16) and 0 (Int32).
-	binary_file.write(struct.pack('>I', 0))
+	
+	binary_file.write(LIFBlock(blocktype=2, data='').string())
 	
 	'''
 	Root directory block (Block Type 3)
@@ -236,20 +217,18 @@ def create(path):
 			'''
 			File block (Block Type 4)
 			'''
-			binary_file.write(struct.pack('>H', 1)) #Block start/header (always 1)
-			binary_file.write(struct.pack('>H', 4)) #Block type (1 to 5). 4 for File Block
-			binary_file.write(b'\x00\x00\x00\x00') #Spacing (Always equals 0)
-			binary_file.write(struct.pack('>I', file_size + 20)) #Block size in bytes (includes header and data)
-			binary_file.write(struct.pack('>I', 1)) #Spacing (Equals 1 for block types 2,4 and 5)
-			binary_file.write(b'\x00\x00\x00\x00') #Spacing (Always equals 0)
-			
+			# Read the file 
 			f = open(fp, "rb")
 			file_data = list(f.read())
-			newFileByteArray = bytearray(file_data)
-			binary_file.write(newFileByteArray)
+			file_data_array = bytearray(file_data)
 			f.close()
 			
-			lifblocks.append(LIFBlock(blocktype=4, data=file_data))
+			fileblock = LIFBlock(blocktype=4, data=file_data_array)
+			#fileblock.setSize = file_size + 20
+			
+			binary_file.write(fileblock.string())
+			
+			lifblocks.append(fileblock)
 			i+=1
 			
 			# write to file_hierarchy_file. This will be appended later 	
@@ -388,12 +367,12 @@ def extract(path):
 #Detect if executable or not.
 fileName = sys.argv[0].split(os.sep).pop()
 if(fileName[-3:] == ".py" or fileName[-4:] == ".pyw"):
-    runCommand = "python " + fileName
+	runCommand = "python " + fileName
 else:
-    runCommand = fileName
+	runCommand = fileName
 
 if(len(sys.argv) > 1):
-    for i in range(1, len(sys.argv)):
-        create(sys.argv[i])
+	for i in range(1, len(sys.argv)):
+		create(sys.argv[i])
 else:
-    print("LIF Creator 1.0\n\nThis program will create LIF archives from an adjacent folder.\n\nCOPYRIGHT:\n\t(C) 2020 sttng\n\nLICENSE:\n\tGNU GPLv3\n\tYou accept full responsibility for how you use this program.\n\nUSEAGE:\n\t" + runCommand + " <FILE_PATHS>")
+	print("LIF Creator 1.0\n\nThis program will create LIF archives from an adjacent folder.\n\nCOPYRIGHT:\n\t(C) 2020 sttng\n\nLICENSE:\n\tGNU GPLv3\n\tYou accept full responsibility for how you use this program.\n\nUSEAGE:\n\t" + runCommand + " <FILE_PATHS>")
