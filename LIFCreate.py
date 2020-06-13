@@ -83,102 +83,202 @@ class LIFBlock:
 			self.spacing2 = struct.pack('>I', 1)		#Spacing (Equals 1 for block types 2,4 and 5)
 		self.spacing3 = struct.pack('>I', 0)			#Spacing (Always equals 0)
 		if blocktype == 2:
-			self.data = (b'\x00\x01\x00\x00\x00\x00')	 #The block content seems hard-coded for blocktype 2 and is always 1 (Int16) and 0 (Int32)
+			self.data = (b'\x00\x01\x00\x00\x00\x00')	#The block content seems hard-coded for blocktype 2 and is always 1 (Int16) and 0 (Int32)
 		else:
 			self.data = data
 		
-		self.size = struct.pack('>I', len(self.data) + 20)	#Block size in bytes (includes header and data)
+		self.size = struct.pack('>I',len(self.data)+20)	#Block size in bytes (includes header and data)
 
 	def setSize(self, size):
 		self.size = struct.pack('>I', size)
-	
+
+	def getSize(self,):
+		return struct.unpack('>I', self.size)[0]
+
 	def string(self):
 		out = '{0}{1}{2}{3}{4}{5}{6}'.format(self.blockheader, self.blocktype, self.spacing1, self.size, self.spacing2, self.spacing3, self.data)
 		return out
 
 
-
-def getFolderSize(folder):
-	total_size = os.path.getsize(folder)
-	for item in os.listdir(folder):
-		itempath = os.path.join(folder, item)
-		if os.path.isfile(itempath):
-			total_size += os.path.getsize(itempath)
-		elif os.path.isdir(itempath):
-			total_size += getFolderSize(itempath)
-	return total_size
-
-#print "Size: " + str(getFolderSize("."))	
-
-
-def get_dir_size(path=os.getcwd()):
-
+def create(path):
+	filename = os.path.basename(os.path.normpath(path))
+	test_file = open((filename + '_test.lif'), "wb")
+	fh_file = open((filename + '_fh.lif'), "wb") #the file_hierarchy_file will be appended to the main file later.
+	lifblocks = [] #Array to hold all blocks (including the LIFF header at [0])
+	i = 0
+	
 	total_size = 0
+	
+	'''
+	Header
+	'''
+	lifblocks.append(LIFHeader())
+	lifblocks[i].setSize(3405691582) #0xCAFEBABE - Just to test and also to verify that header size is set correct later
+	i+=1
+
+	'''
+	Root Block (Block Type 1)
+	'''
+	lifblocks.append(LIFBlock(blocktype=1, data=''))
+	lifblocks[i].setSize(3405697037) #0xCAFED00D - Just to test and also to verify that file content block size is set correct later
+	i+=1
+
+	'''
+	File content Block (Block Type 2)
+	'''
+	lifblocks.append(LIFBlock(blocktype=2, data=''))
+	#lifblocks[i].setSize(26) #Fixed size to 26
+	i+=1
+
+	'''
+	Root directory block (Block Type 3)
+	'''
+	root_dir_block = LIFBlock(blocktype=3, data='')
+	root_dir_block.setSize(3735928559) #0xDEADBEEF - Just to test and also to verify that block size is set correct later
+	lifblocks.append(root_dir_block)
+	i+=1
+	
+	#Root directory (Entry type 1) 
+	# write to file_hierarchy_file. This will be appended later 
+	fh_file.write(b'\x00\x01') #Entry type (equals 1)
+	fh_file.write(b'\x00\x00\x00\x00') #Unknown value (equals 0 or 7) The value 0 seems to be used for the root folder
+	fh_file.write(b'\x00') #(add 0 terminator)
+	#fh_file.write(f.encode('utf-16')[2:]) #File name. (Unicode null-terminated text)
+	fh_file.write(b'\x00') #(add 0 terminator)
+	fh_file.write(b'\x00\x00\x00\x00') #Spacing (Always equals 0)
+	fh_file.write(struct.pack('>I', 20)) #Block size (Always equals 20 so it equals the block header size)
+	fh_file.write(struct.pack('>I', 3)) #The number of sub-entries (files and folders)
+
 	for dirpath, dirnames, filenames in os.walk(path):
+	
+		#ignore hidden files and folders (starting with a dot .)
+		filenames = [f for f in filenames if not f[0] == '.']
+		dirnames[:] = [d for d in dirnames if not d[0] == '.']
+		
+		number_entries = len(filenames) + len(dirnames)
+		print number_entries
 
 		dirsize = 0
+		
+				
 		for f in filenames:
 			fp = os.path.join(dirpath, f)
 			size = os.path.getsize(fp)
-			#print('\t',size, f)
-			#print(dirpath, dirnames, filenames,size)
+			size = size + 20 #Add header size
+			
+			'''
+			File block (Block Type 4)
+			'''
+			
+			fa = open(fp, "rb")
+			file_data = list(fa.read())
+			file_data_array = bytearray(file_data)
+			fa.close()
+			
+			file_block = LIFBlock(blocktype=4, data=file_data_array)
+			lifblocks.append(file_block)
+			i+=1
+			
+			# write to file_hierarchy_file. This will be appended later
+			fh_file.write(b'\x00\x02') #Entry type (equals 2)
+			fh_file.write(b'\x00\x00\x00\x05') #Spacing/unknown value (0 or 7)
+			fh_file.write(b'\x00') #(add 0 terminator)
+			fh_file.write(f.encode('utf-16')[2:]) #File name. (Unicode null-terminated text)
+			fh_file.write(b'\x00') #(add 0 terminator)
+			fh_file.write(b'\x00\x00\x00\x00') #Spacing (Always equals 0)
+			fh_file.write(struct.pack('>I', size)) #File size (it is actually the block size because it includes the block header size (20))
+			fh_file.write(struct.pack('>Q', os.stat(fp)[9])) #Created, modified or accessed date
+			fh_file.write(struct.pack('>Q', 18369614221190020847)) #Created, modified or accessed date. Set to 0xFEEDFACECAFEBEEF for testing
+			fh_file.write(b'\x01\xce\xec\xee\x85\x3b\x50\xdb') #Created, modified or accessed date
+			
 			dirsize += size
 			total_size += size
-		print('\t',dirsize, dirpath)
-	print(" {0:.2f} Kb".format(total_size/1024))
+		
+		dirsize = dirsize + 20 #Add header size
+		#lifblocks[current_block_index].setSize(dirsize)
+		
+		
+		print("\t",dirsize, dirpath)
+	print(" {0} Kb".format(total_size))
+	
+	
+	fh_file.close()
+	
+	
+	'''
+	File hierarchy (Block Type 5) 
+	'''
+	fa = open(filename + '_fh.lif', "rb")
+	file_data = list(fa.read())
+	file_data_array = bytearray(file_data)
+	fa.close()
+	fh_file_size = os.path.getsize(filename + '_fh.lif')
+	fh_file_size
+	fh_block = LIFBlock(blocktype=5, data=file_data_array)
+	lifblocks.append(fh_block)
+	i+=1
+	
+	#Headersize
+	lifblocks[0].setSize(total_size + 20 + fh_file_size + 20 + 26 + 18)
+	lifblocks[1].setSize(total_size + 20 + fh_file_size + 20 + 26)
+	lifblocks[3].setSize(total_size + 20)
+	
+	
+	for item in lifblocks:
+		test_file.write(item.string())
+		#item.string()
+	test_file.close()
 
 
-def create(path):
+def create_old(path):
 	i = 0
 	blocksize = 0 #Used to calculate and add up the sizes of blocks later
+	cur_foldersize = 0 #Used to calculate and add up the sizes per folder block later
 	filename = os.path.basename(os.path.normpath(path))
 	binary_file = open((filename + '_tmp.lif'), "wb")
 	test_file = open((filename + '_test.lif'), "wb")
 	fh_file = open((filename + '_fh.lif'), "wb") #the file_hierarchy_file will be appended to the main file later.
 	lifblocks = [] #Array to hold all blocks (including the LIFF header at [0])
 	
-	
+	'''
+	Header
+	'''
 	lifblocks.append(LIFHeader())
+	lifblocks[i].setSize(3405691582) #0xCAFEBABE - Just to test and also to verify that header size is set correct later
 	i+=1
-	
-	binary_file.write(LIFHeader().string())
-	
+
 	'''
 	Root Block (Block Type 1)
 	'''
-
 	lifblocks.append(LIFBlock(blocktype=1, data=''))
-	test_file.write(lifblocks[i].string())
+	lifblocks[i].setSize(3669732608) #0xDABBAD00 - Just to test and also to verify that root block size is set correct later
 	i+=1
 
-	#lifblocks[0].setSize(123)
-	binary_file.write(LIFBlock(blocktype=1, data='').string())
-	
 	'''
 	File content Block (Block Type 2)
 	'''
-	
 	lifblocks.append(LIFBlock(blocktype=2, data=''))
-	test_file.write(lifblocks[i].string())
+	lifblocks[i].setSize(3405697037) #0xCAFED00D - Just to test and also to verify that file content block size is set correct later
 	i+=1
-	
-	binary_file.write(LIFBlock(blocktype=2, data='').string())
-	
+
 	'''
 	Root directory block (Block Type 3)
 	'''
-	lifblocks.append(LIFBlock(blocktype=3, data=''))
+	root_dir_block = LIFBlock(blocktype=3, data='')
+	root_dir_block.setSize(3735928559) #0xDEADBEEF - Just to test and also to verify that block size is set correct later
+	lifblocks.append(root_dir_block)
 	i+=1
-	binary_file.write(struct.pack('>H', 1)) #Block start/header (always 1)
-	binary_file.write(struct.pack('>H', 3)) #Block type (1 to 5). 3 for Root directory block 
-	binary_file.write(b'\x00\x00\x00\x00') #Spacing (Always equals 0)
-	binary_file.write(b'\xff\xff\xff\xff') #Block size in bytes (includes header and data)
-	binary_file.write(struct.pack('>I', 0)) #Spacing (Equals 1 for block types 2,4 and 5)
-	binary_file.write(b'\x00\x00\x00\x00') #Spacing (Always equals 0)
+	
+	binary_file.write(root_dir_block.string())
 	
 	# Set the directory you want to start from
 	rootDir = path
 	for dirName, subdirList, fileList in os.walk(rootDir):
+	
+		#ignore hidden files and folders (starting with a dot .)
+		fileList = [f for f in fileList if not f[0] == '.']
+		subdirList[:] = [d for d in subdirList if not d[0] == '.']
+	
 		print('Found directory: %s' % dirName)
 		number_dirs = len(subdirList)
 		number_files = len(fileList)
@@ -187,48 +287,45 @@ def create(path):
 		'''
 		Folder Block (Block Type 3)
 		'''
-		lifblocks.append(LIFBlock(blocktype=3, data=''))
+		folder_block = LIFBlock(blocktype=3, data='')
+		folder_block.setSize(3735929054) #0xDEADC0DE - Just to test and also to verify that folder size is set correct later
+		lifblocks.append(folder_block)
 		current_block_index = i #save the index to later adjust the size
 		i+=1
-		binary_file.write(struct.pack('>H', 1)) #Block start/header (always 1)
-		binary_file.write(struct.pack('>H', 3)) #Block type (1 to 5). 3 for folder Block
-		binary_file.write(b'\x00\x00\x00\x00') #Spacing (Always equals 0)
-		binary_file.write(b'\xff\xff\xff\xff') #Block size in bytes (includes header and data)
-		binary_file.write(struct.pack('>I', 0)) #Spacing (Equals 1 for block types 2,4 and 5)
-		binary_file.write(b'\x00\x00\x00\x00') #Spacing (Always equals 0)
+		
+		binary_file.write(folder_block.string())
 		
 		# write to file_hierarchy_file. This will be appended later 
 		fh_file.write(b'\x00\x01') #Entry type (equals 1)
 		fh_file.write(b'\x00\x00\x00\x00') #Unknown value (equals 0 or 7) The value 0 seems to be used for the root folder
 		fh_file.write(dirName.encode('utf-16')) #File name. (Unicode null-terminated text)
 		fh_file.write(b'\x00\x00\x00\x00') #Spacing (Always equals 0)
-		fh_file.write(b'\x00\x00\x00\x00') #Block size (Always equals 20 so it equals the block header size)
+		fh_file.write(struct.pack('>I', 20)) #Block size (Always equals 20 so it equals the block header size)
 		fh_file.write(struct.pack('>I', number_entries)) #The number of sub-entries (files and folders)
 		
 		for fname in fileList:
 			fp = os.path.join(dirName, fname)
-			print('\t%s' % fp)
 			file_size = os.path.getsize(fp)
-				
-			print("Last modified: %s" % time.ctime(os.path.getmtime(fp)))
+
 			#created = time.ctime(os.path.getctime(fname))
 			#print os.stat(fname)[9]
 			
 			'''
 			File block (Block Type 4)
 			'''
-			# Read the file 
+			# Read the file to be added to the lif archive
 			f = open(fp, "rb")
 			file_data = list(f.read())
 			file_data_array = bytearray(file_data)
 			f.close()
 			
-			fileblock = LIFBlock(blocktype=4, data=file_data_array)
+			# Create lifblock with data of file just read
+			file_block = LIFBlock(blocktype=4, data=file_data_array)
 			#fileblock.setSize = file_size + 20
 			
-			binary_file.write(fileblock.string())
+			binary_file.write(file_block.string())
 			
-			lifblocks.append(fileblock)
+			lifblocks.append(file_block)
 			i+=1
 			
 			# write to file_hierarchy_file. This will be appended later 	
@@ -238,23 +335,38 @@ def create(path):
 			fh_file.write(b'\x00\x00\x00\x00') #Spacing (Always equals 0)
 			fh_file.write(struct.pack('>I', file_size + 20)) #File size (it is actually the block size because it includes the block header size (20))
 			fh_file.write(struct.pack('>Q', os.stat(fp)[9])) #Created, modified or accessed date
-			fh_file.write(b'\x00\x00\x00\x00\x00\x00\x00\x00') #Created, modified or accessed date
+			fh_file.write(struct.pack('>Q', 18369614221190020847)) #Created, modified or accessed date. Set to 0xFEEDFACECAFEBEEF for testing
 			fh_file.write(b'\x00\x00\x00\x00\x00\x00\x00\x00') #Created, modified or accessed date
 			print('\t%s' % fname)
 			blocksize = blocksize + file_size + 20
+			cur_foldersize = cur_foldersize + file_size + 20
 		
-		lifblocks[current_block_index].size = blocksize
+		lifblocks[current_block_index].setSize(cur_foldersize)
+		cur_foldersize = 0
 	
 	binary_file.close()
 	fh_file.close()
+	fh_file_size = os.path.getsize(filename + '_fh.lif')
+	
+	#lifblocks[0].setSize(blocksize + 18 + fh_file_size)# Size of file in header, which is all blocks + size of the file_hirarchy_file
+	lifblocks[3].setSize(blocksize) # Size of file in 1st block
+	lifblocks[2].setSize(lifblocks[3].getSize() + 20)
+	lifblocks[1].setSize(lifblocks[2].getSize() + 20)
+	lifblocks[0].setSize(lifblocks[1].getSize() + 18 + fh_file_size)
+	
+	
+	for item in lifblocks:
+		test_file.write(item.string())
+		#item.string()
+	test_file.close()
 	
 	#Concat files into final file
 	with open(filename + '.lif','wb') as wfd:
-		for f in [filename + '_tmp.lif', filename + '_fh.lif']:
+		for f in [filename + '_test.lif', filename + '_fh.lif']:
 			with open(f,'rb') as fd:
 				shutil.copyfileobj(fd, wfd, 1024*1024*10)
 	os.remove(filename + '_tmp.lif')
-	os.remove(filename + '_fh.lif')
+	#os.remove(filename + '_fh.lif')
 	
 
 def extract(path):
