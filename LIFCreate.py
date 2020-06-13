@@ -3,7 +3,7 @@
 """
     LIF Creator - LEGO Digital Designer LIF creator.
 
-    Copyright (C) 202 sttng
+    Copyright (C) 2020 sttng
 
     You accept full responsibility for how you use this program.
 
@@ -28,6 +28,7 @@ import os
 import sys
 import struct
 import time
+import shutil
 
 class LIFBlock:
 	
@@ -35,11 +36,11 @@ class LIFBlock:
 	LIF Block
 	2 bytes	Int16	Block start/header (always 1)
 	2 bytes	Int16	Block type (1 to 5)
-	4 bytes		Spacing (Always equals 0)
+	4 bytes			Spacing1 (Always equals 0)
 	4 bytes	Int32	Block size in bytes (includes header and data)
-	4 bytes		Spacing (Equals 1 for block types 2,4 and 5)
-	4 bytes		Spacing (Always equals 0)
-	X bytes		The block content/data.
+	4 bytes			Spacing2 (Equals 1 for block types 2,4 and 5)
+	4 bytes			Spacing3 (Always equals 0)
+	X bytes			The block content/data.
 	The block type 1 is the "root block" and its size includes the remainder of the LIF file.
 	The block type 2 contains the files content/data. The block content seems hard-coded and it is always 1 (Int16) and 0 (Int32).
 	The block type 3 represents a folder. The block content is a hierarchy of type 3 and 4 blocks.
@@ -48,53 +49,84 @@ class LIFBlock:
 	Note: The block header's is 20 bytes total. The data size is equal to the specified size - 20 bytes.
 	'''
 	
-	def __init__(self, typ, size, data):
-		self.header = 1
-		self.typ = typ
-		self.spacing1 = 0
-		self.size = len(data)
-		if typ == 2 or typ == 4 or typ == 5:
-			self.spacing2 = 1
+	def __init__(self, blocktype, data):
+		self.blockheader = struct.pack('>H', 1)			#Block start/header (always 1)
+		self.blocktype = struct.pack('>H', blocktype)	#Block type (1 to 5)
+		self.spacing1 = struct.pack('>I', 0)			#Spacing (Always equals 0)
+														#Block size in bytes (includes header and data) <- calculated later
+		if blocktype == 2 or blocktype == 4 or blocktype == 5:
+			self.spacing2 = struct.pack('>I', 1)		#Spacing (Equals 1 for block types 2,4 and 5)
 		else:
-			self.spacing2 = 0
-		self.spacing3 = 0
-		if typ == 2:
-			self.data = (struct.pack('>H', 1)) + (struct.pack('>I', 0))
+			self.spacing2 = struct.pack('>I', 0)
+		self.spacing3 = struct.pack('>I', 0)			#Spacing (Always equals 0)
+		if blocktype == 2:
+			self.data = (b'\x00\x01\x00\x00\x00\x00')	 #The block content seems hard-coded for blocktype 2 and is always 1 (Int16) and 0 (Int32)
 		else:
 			self.data = data
+		
+		self.size = struct.pack('>I', len(self.data) + 20)	#Block size in bytes (includes header and data)
 
+	def setSize(self, size):
+		self.size = struct.pack('>I', size)
+	
 	def string(self):
-		out = '{0} {1} {2}'.format(self.header, self.typ, self.spacing1, self.size, self.spacing2, self.spacing3, self.data) 
+		out = '{0}{1}{2}{3}{4}{5}{6}'.format(self.blockheader, self.blocktype, self.spacing1, self.size, self.spacing2, self.spacing3, self.data)
 		return out
 
+class LIFHeader:
+
+	'''
+	LIF Header (18 bytes total):	
+	4 bytes	Char[4]	Header (ASCI = 'LIFF')
+	4 bytes			Spacing (Always equals 0)
+	4 bytes	Int32	Total file size (Int32 big endian)
+	2 bytes	Int16	Value "1" (Int16 big endian)
+	4 bytes			Spacing (Always equals 0)
+	'''
+	
+	def __init__(self):
+		self.magic = 'LIFF'						#Magic Word (ASCI = 'LIFF')
+		self.spacing1 = struct.pack('>I', 0)	#Spacing (Always equals 0)
+		self.size = struct.pack('>I', 255)		#Total file size (Int32 big endian)
+		self.spacing2 = struct.pack('>H', 1)	#Value "1" (Int16 big endian)
+		self.spacing3 = struct.pack('>I', 0)	#Spacing (Always equals 0)
+
+	def setSize(self, size):
+		self.size = struct.pack('>I', size)
+	
+	def string(self):
+		out = '{0}{1}{2}{3}{4}'.format(self.magic, self.spacing1, self.size, self.spacing2, self.spacing3)
+		return out
+
+
 def getFolderSize(folder):
-    total_size = os.path.getsize(folder)
-    for item in os.listdir(folder):
-        itempath = os.path.join(folder, item)
-        if os.path.isfile(itempath):
-            total_size += os.path.getsize(itempath)
-        elif os.path.isdir(itempath):
-            total_size += getFolderSize(itempath)
-    return total_size
+	total_size = os.path.getsize(folder)
+	for item in os.listdir(folder):
+		itempath = os.path.join(folder, item)
+		if os.path.isfile(itempath):
+			total_size += os.path.getsize(itempath)
+		elif os.path.isdir(itempath):
+			total_size += getFolderSize(itempath)
+	return total_size
 
 #print "Size: " + str(getFolderSize("."))	
 
 
 def get_dir_size(path=os.getcwd()):
 
-    total_size = 0
-    for dirpath, dirnames, filenames in os.walk(path):
+	total_size = 0
+	for dirpath, dirnames, filenames in os.walk(path):
 
-        dirsize = 0
-        for f in filenames:
-            fp = os.path.join(dirpath, f)
-            size = os.path.getsize(fp)
-            #print('\t',size, f)
-            #print(dirpath, dirnames, filenames,size)
-            dirsize += size
-            total_size += size
-        print('\t',dirsize, dirpath)
-    print(" {0:.2f} Kb".format(total_size/1024))
+		dirsize = 0
+		for f in filenames:
+			fp = os.path.join(dirpath, f)
+			size = os.path.getsize(fp)
+			#print('\t',size, f)
+			#print(dirpath, dirnames, filenames,size)
+			dirsize += size
+			total_size += size
+		print('\t',dirsize, dirpath)
+	print(" {0:.2f} Kb".format(total_size/1024))
 
 
 def create(path):
@@ -102,22 +134,15 @@ def create(path):
 	blocksize = 0 #Used to calculate and add up the sizes of blocks later
 	filename = os.path.basename(os.path.normpath(path))
 	binary_file = open((filename + '_tmp.lif'), "wb")
+	test_file = open((filename + '_test.lif'), "wb")
 	fh_file = open((filename + '_fh.lif'), "wb") #the file_hierarchy_file will be appended to the main file later.
+	lifblocks = [] #Array to hold all blocks (including the LIFF header at [0])
 	
-	lifblocks = []
-	'''
-	LIF Header (18 bytes total):	
-	4 bytes	Char[4]	Header (ASCI = 'LIFF')
-	4 bytes		Spacing (Always equals 0)
-	4 bytes	Int32	Total file size (Int32 big endian)
-	2 bytes	Int16	Value "1" (Int16 big endian)
-	4 bytes		Spacing (Always equals 0)
-	'''		
-	binary_file.write(b"LIFF")
-	binary_file.write(b'\x00\x00\x00\x00') #Spacing (Always equals 0)
-	binary_file.write(b'\xff\xff\xff\xff') #Total file size (Int32 big endian)
-	binary_file.write(struct.pack('>H', 1)) #Value "1" (Int16 big endian)
-	binary_file.write(b'\x00\x00\x00\x00') #Spacing (Always equals 0)
+	
+	lifblocks.append(LIFHeader())
+	i+=1
+	
+	binary_file.write(LIFHeader().string())
 	
 	'''
 	Root Block (Block Type 1)
@@ -130,8 +155,12 @@ def create(path):
 	X bytes		The block content/data.
 	'''
 
-	lifblocks.append(LIFBlock(typ=1, size=123, data=''))
+	lifblocks.append(LIFBlock(blocktype=1, data=''))
 	i+=1
+	print 'heerrere'
+	#lifblocks[0].setSize(123)
+	test_file.write(lifblocks[0].string())
+	
 	binary_file.write(struct.pack('>H', 1)) #Block start/header (always 1)
 	binary_file.write(struct.pack('>H', 1)) #Block type (1 to 5). 1 for Root Block
 	binary_file.write(b'\x00\x00\x00\x00') #Spacing (Always equals 0)
@@ -143,7 +172,7 @@ def create(path):
 	File content Block (Block Type 2)
 	The block content seems hard-coded and it is always 1 (Int16) and 0 (Int32).
 	'''
-	lifblocks.append(LIFBlock(typ=2, size=123, data=''))
+	lifblocks.append(LIFBlock(blocktype=2, data=''))
 	i+=1
 	binary_file.write(struct.pack('>H', 1)) #Block start/header (always 1)
 	binary_file.write(struct.pack('>H', 2)) #Block type (1 to 5). 2 for File content Block
@@ -157,7 +186,7 @@ def create(path):
 	'''
 	Root directory block (Block Type 3)
 	'''
-	lifblocks.append(LIFBlock(typ=3, size=123, data=''))
+	lifblocks.append(LIFBlock(blocktype=3, data=''))
 	i+=1
 	binary_file.write(struct.pack('>H', 1)) #Block start/header (always 1)
 	binary_file.write(struct.pack('>H', 3)) #Block type (1 to 5). 3 for Root directory block 
@@ -173,12 +202,11 @@ def create(path):
 		number_dirs = len(subdirList)
 		number_files = len(fileList)
 		number_entries = number_dirs + number_files
-		print number_entries
 		
 		'''
 		Folder Block (Block Type 3)
 		'''
-		lifblocks.append(LIFBlock(typ=3, size=123, data=''))
+		lifblocks.append(LIFBlock(blocktype=3, data=''))
 		current_block_index = i #save the index to later adjust the size
 		i+=1
 		binary_file.write(struct.pack('>H', 1)) #Block start/header (always 1)
@@ -188,20 +216,20 @@ def create(path):
 		binary_file.write(struct.pack('>I', 0)) #Spacing (Equals 1 for block types 2,4 and 5)
 		binary_file.write(b'\x00\x00\x00\x00') #Spacing (Always equals 0)
 		
-	
 		# write to file_hierarchy_file. This will be appended later 
 		fh_file.write(b'\x00\x01') #Entry type (equals 1)
 		fh_file.write(b'\x00\x00\x00\x00') #Unknown value (equals 0 or 7) The value 0 seems to be used for the root folder
-		fh_file.write(dirName.encode('utf-8')) #File name. (Unicode null-terminated text)
+		fh_file.write(dirName.encode('utf-16')) #File name. (Unicode null-terminated text)
 		fh_file.write(b'\x00\x00\x00\x00') #Spacing (Always equals 0)
 		fh_file.write(b'\x00\x00\x00\x00') #Block size (Always equals 20 so it equals the block header size)
 		fh_file.write(struct.pack('>I', number_entries)) #The number of sub-entries (files and folders)
 		
 		for fname in fileList:
-			print('\t%s' % fname)
-			file_size = os.path.getsize(fname)
+			fp = os.path.join(dirName, fname)
+			print('\t%s' % fp)
+			file_size = os.path.getsize(fp)
 				
-			print("Last modified: %s" % time.ctime(os.path.getmtime(fname)))
+			print("Last modified: %s" % time.ctime(os.path.getmtime(fp)))
 			#created = time.ctime(os.path.getctime(fname))
 			#print os.stat(fname)[9]
 			
@@ -215,27 +243,28 @@ def create(path):
 			binary_file.write(struct.pack('>I', 1)) #Spacing (Equals 1 for block types 2,4 and 5)
 			binary_file.write(b'\x00\x00\x00\x00') #Spacing (Always equals 0)
 			
-			f = open(fname, "rb")
+			f = open(fp, "rb")
 			file_data = list(f.read())
-			binary_file.write(str(file_data))
+			newFileByteArray = bytearray(file_data)
+			binary_file.write(newFileByteArray)
 			f.close()
 			
-			lifblocks.append(LIFBlock(typ=4, size=file_size + 20, data=file_data))
+			lifblocks.append(LIFBlock(blocktype=4, data=file_data))
 			i+=1
 			
 			# write to file_hierarchy_file. This will be appended later 	
 			fh_file.write(b'\x00\x10') #Entry type (equals 2)
 			fh_file.write(b'\x00\x00\x00\x00') #Spacing/unknown value (0 or 7)
-			fh_file.write(fname.encode('utf-8')) #File name. (Unicode null-terminated text)
+			fh_file.write(fname.encode('utf-16')) #File name. (Unicode null-terminated text)
 			fh_file.write(b'\x00\x00\x00\x00') #Spacing (Always equals 0)
 			fh_file.write(struct.pack('>I', file_size + 20)) #File size (it is actually the block size because it includes the block header size (20))
-			fh_file.write(struct.pack('>Q', os.stat(fname)[9])) #Created, modified or accessed date
+			fh_file.write(struct.pack('>Q', os.stat(fp)[9])) #Created, modified or accessed date
 			fh_file.write(b'\x00\x00\x00\x00\x00\x00\x00\x00') #Created, modified or accessed date
 			fh_file.write(b'\x00\x00\x00\x00\x00\x00\x00\x00') #Created, modified or accessed date
 			print('\t%s' % fname)
 			blocksize = blocksize + file_size + 20
 		
-		lifblocks[current_block].size = blocksize
+		lifblocks[current_block_index].size = blocksize
 	
 	binary_file.close()
 	fh_file.close()
