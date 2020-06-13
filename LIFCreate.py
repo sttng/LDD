@@ -33,10 +33,10 @@ class LIFHeader:
 	'''
 LIF Header (18 bytes total):
 4 bytes	Char[4]	Header (ASCI = 'LIFF')
-4 bytes			Spacing (Always equals 0)
+4 bytes	Int32	Spacing (Always equals 0)
 4 bytes	Int32	Total file size (Int32 big endian)
 2 bytes	Int16	Value "1" (Int16 big endian)
-4 bytes			Spacing (Always equals 0)
+4 bytes	Int32	Spacing (Always equals 0)
 	'''
 	
 	def __init__(self):
@@ -48,6 +48,9 @@ LIF Header (18 bytes total):
 
 	def setSize(self, size):
 		self.size = struct.pack('>I', size)
+
+	def getSize(self):
+		return struct.unpack('>I', self.size)[0]
 	
 	def string(self):
 		out = '{0}{1}{2}{3}{4}'.format(self.magic, self.spacing1, self.size, self.spacing2, self.spacing3)
@@ -92,7 +95,7 @@ class LIFBlock:
 	def setSize(self, size):
 		self.size = struct.pack('>I', size)
 
-	def getSize(self,):
+	def getSize(self):
 		return struct.unpack('>I', self.size)[0]
 
 	def string(self):
@@ -109,32 +112,23 @@ def create(path):
 	
 	total_size = 0
 	
-	'''
-	Header
-	'''
+	'''Header'''
 	lifblocks.append(LIFHeader())
 	lifblocks[i].setSize(3405691582) #0xCAFEBABE - Just to test and also to verify that header size is set correct later
 	i+=1
 
-	'''
-	Root Block (Block Type 1)
-	'''
+	'''Root Block (Block Type 1)'''
 	lifblocks.append(LIFBlock(blocktype=1, data=''))
 	lifblocks[i].setSize(3405697037) #0xCAFED00D - Just to test and also to verify that file content block size is set correct later
 	i+=1
 
-	'''
-	File Content Block (Block Type 2)
-	'''
+	'''File Content Block (Block Type 2)'''
 	lifblocks.append(LIFBlock(blocktype=2, data=''))
 	i+=1
 
-	'''
-	Root Directory Block (Block Type 3)
-	'''
-	root_dir_block = LIFBlock(blocktype=3, data='')
-	root_dir_block.setSize(3735928559) #0xDEADBEEF - Just to test and also to verify that block size is set correct later
-	lifblocks.append(root_dir_block)
+	'''Root Directory Block (Block Type 3)'''
+	lifblocks.append(LIFBlock(blocktype=3, data=''))
+	lifblocks[i].setSize(3735928559) #0xDEADBEEF - Just to test and also to verify that block size is set correct later
 	i+=1
 	
 	#Root directory (Entry type 1) 
@@ -159,22 +153,18 @@ def create(path):
 
 		dirsize = 0
 		
-		
 		for f in filenames:
 			fp = os.path.join(dirpath, f)
 			size = os.path.getsize(fp)
 			size = size + 20 #Add header size
 			
-			'''
-			File block (Block Type 4)
-			'''
+			'''File Block (Block Type 4)'''
 			fa = open(fp, "rb")
 			file_data = list(fa.read())
 			file_data_array = bytearray(file_data)
 			fa.close()
 			
-			file_block = LIFBlock(blocktype=4, data=file_data_array)
-			lifblocks.append(file_block)
+			lifblocks.append(LIFBlock(blocktype=4, data=file_data_array))
 			i+=1
 			
 			# write to file_hierarchy_file. This will be appended later
