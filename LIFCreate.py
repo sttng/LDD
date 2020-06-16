@@ -111,6 +111,8 @@ def walkDir(walk_dir):
 	# be an absolute path as well. Example:
 	# walk_dir = os.path.abspath(walk_dir)
 	print('walk_dir (absolute) = ' + os.path.abspath(walk_dir))
+	fi_content_str = ''
+	files_content_str = ''
 
 	for root, subdirs, files in os.walk(walk_dir):
 		print('--\nroot = ' + root)
@@ -130,10 +132,15 @@ def walkDir(walk_dir):
 
 				with open(file_path, 'rb') as f:
 					f_content = f.read()
+					fi_content_str = 'Fi-Header Size:{0}|Fi-Name:{1}|Fi-Content:{2}'.format(file_header_size, filename, f_content) #Content of single file
 					list_file.write(('File Header Size: %s \n' % file_header_size).encode('utf-8'))
 					list_file.write(('File %s contents:\n' % filename).encode('utf-8'))
 					list_file.write(f_content)
 					list_file.write(b'\n')
+				
+				files_content_str = files_content_str + content_str #Content of all files
+			
+			fo_content_str = 
 
 
 
