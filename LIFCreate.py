@@ -140,7 +140,9 @@ def walkDir(walk_dir):
 				
 				files_content_str = files_content_str + content_str #Content of all files
 			
-			fo_content_str = 
+			#fo_content_str = 
+			#path = os.path.normpath(path)
+			#path.split(os.sep)
 
 
 
