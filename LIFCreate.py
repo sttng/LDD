@@ -19,7 +19,6 @@
 
 	You should have received a copy of the GNU General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
-	https://stackoverflow.com/questions/2212643/python-recursive-folder-read
 """
 
 
@@ -43,7 +42,7 @@ LIF Header (18 bytes total):
 	def __init__(self):
 		self.magic = 'LIFF'						#Magic Word (ASCI = 'LIFF')
 		self.spacing1 = struct.pack('>I', 0)	#Spacing (Always equals 0)
-		self.size = struct.pack('>I', 255)		#Total file size (Int32 big endian)
+		self.size = struct.pack('>I',3405691582)#0xCAFEBABE - Just to test and also to verify that header size is set correct later
 		self.spacing2 = struct.pack('>H', 1)	#Value "1" (Int16 big endian)
 		self.spacing3 = struct.pack('>I', 0)	#Spacing (Always equals 0)
 
@@ -103,8 +102,6 @@ class LIFBlock:
 		out = '{0}{1}{2}{3}{4}{5}{6}'.format(self.blockheader, self.blocktype, self.spacing1, self.size, self.spacing2, self.spacing3, self.data)
 		return out
 
-
-
 def walkDir(walk_dir):
 	# If your current working directory may change during script execution, it's recommended to
 	# immediately convert program arguments to an absolute path. Then the variable root below will
@@ -113,40 +110,100 @@ def walkDir(walk_dir):
 	print('walk_dir (absolute) = ' + os.path.abspath(walk_dir))
 	fi_content_str = ''
 	files_content_str = ''
-
-	for root, subdirs, files in os.walk(walk_dir):
+	folders_content_str =''
+	fo_dict = {}
+	
+	for root, subdirs, files in os.walk(walk_dir, topdown=False):
+	
+		#ignore hidden files and folders (starting with a dot .)
+		files = [f for f in files if not f[0] == '.']
+		subdirs[:] = [d for d in subdirs if not d[0] == '.']
+	
 		print('--\nroot = ' + root)
-		list_file_path = os.path.join(root, 'my-directory-list.txt')
-		print('list_file_path = ' + list_file_path)
 
-		with open(list_file_path, 'wb') as list_file:
-			for subdir in subdirs:
-				print('\t- subdirectory ' + subdir)
+		for subdir in subdirs:
+			print('\t- subdirectory ' + subdir)
 
-			for filename in files:
-				file_path = os.path.join(root, filename)
-				file_size = os.path.getsize(file_path)
-				file_header_size = file_size + 20
+		for filename in files:
+			file_path = os.path.join(root, filename)
+			file_size = os.path.getsize(file_path)
+			file_header_size = file_size + 20
 
-				print('\t- file %s (full path: %s)' % (filename, file_path))
+			print('\t- file %s (full path: %s)' % (filename, file_path))
 
-				with open(file_path, 'rb') as f:
-					f_content = f.read()
-					fi_content_str = 'Fi-Header Size:{0}|Fi-Name:{1}|Fi-Content:{2}'.format(file_header_size, filename, f_content) #Content of single file
-					list_file.write(('File Header Size: %s \n' % file_header_size).encode('utf-8'))
-					list_file.write(('File %s contents:\n' % filename).encode('utf-8'))
-					list_file.write(f_content)
-					list_file.write(b'\n')
+			with open(file_path, 'rb') as f:
+				f_content = f.read()
+				fi_content_str = 'Fi-Header Size:{0}|Fi-Name:{1}|Fi-Content:{2}'.format(file_header_size, filename, f_content) #Content of single file
 				
-				files_content_str = files_content_str + content_str #Content of all files
-			
-			#fo_content_str = 
-			#path = os.path.normpath(path)
-			#path.split(os.sep)
+			files_content_str = files_content_str + fi_content_str #Content of all files
+			fi_content_str =''
+		
+		rootpath = os.path.normpath(root)
+		fo_dict[root] = fo_content_str = 'Fo-Header Size:{0}|Fo-Name:{1}|Fo-Content:{2}'.format(len(files_content_str) + 20 , rootpath.split(os.sep)[-1], files_content_str) #Content of single file
+		print 'FOC: ' + fo_content_str +'\n\n'
+		
+		for subdir in subdirs:
+			print('\t- subdirectory ' + subdir)
+			folders_content_str = 'Fo-Header Size:{0}|Fo-Name:{1}|Fo-Content:{2}'.format(len(fo_dict[os.path.join(root, subdir)]) + 20 , rootpath.split(os.sep)[-1], fo_dict[os.path.join(root, subdir)])
+		folders_content_str = folders_content_str + fo_content_str
+		
+		print 'FOCS: ' + folders_content_str +'\n\n'
+
+	print folders_content_str 
 
 
+def createa(path):
+	rootDir = path
+	for dirName, subdirList, fileList in os.walk(rootDir, topdown=False):
+		print('Found directory: %s' % dirName)
+		for fname in fileList:
+			print('\t%s' % fname)
 
 def create(path):
+	rootDir = path
+	test_file = open('_test.lif', "wb")
+	lifblocks = [] #Array to hold all blocks (including the LIFF header at [0])
+	fileblocks = []
+	dict = {}
+	tagged = False
+	for dirName, subdirList, fileList in os.walk(rootDir, topdown=False):
+	
+		#ignore hidden files and folders (starting with a dot .)
+		fileList = [f for f in fileList if not f[0] == '.']
+		subdirList[:] = [d for d in subdirList if not d[0] == '.']
+		
+		for fname in fileList:
+			fp = os.path.join(dirName, fname)
+			print('\t%s' % fp)
+			'''File Block (Block Type 4)'''
+			fa = open(fp, "rb")
+			file_data = list(fa.read())
+			file_data_array = bytearray(file_data)
+			fa.close()
+			fileblocks.append(LIFBlock(blocktype=4, data=file_data_array))
+			tagged = True
+		data = ''
+		
+		for item in fileblocks:
+			data = data + item.string()
+		lifblocks.append(LIFBlock(blocktype=3, data=data))
+		fileblocks = []
+		if tagged:
+			dict[dirName] = LIFBlock(blocktype=3, data=data)
+		print('Found directory: %s' % dirName)
+		if subdirList:
+			print('Has sub directory: %s' % subdirList)
+		else:
+			print('Has no sub directory: %s' % subdirList)
+			print dict[dirName]
+
+	for item in lifblocks:
+		test_file.write(item.string())
+		#item.string()
+	test_file.close()
+
+
+def create1(path):
 	filename = os.path.basename(os.path.normpath(path))
 	test_file = open((filename + '.lif'), "wb")
 	fh_file = open((filename + '_fh.lif'), "wb") #the file_hierarchy_file will be appended to the main file later.
@@ -157,7 +214,6 @@ def create(path):
 	
 	'''Header'''
 	lifblocks.append(LIFHeader())
-	lifblocks[i].setSize(3405691582) #0xCAFEBABE - Just to test and also to verify that header size is set correct later
 	i+=1
 
 	'''Root Block (Block Type 1)'''
@@ -398,113 +454,6 @@ def create_old(path):
 	#os.remove(filename + '_fh.lif')
 	
 
-def extract(path):
-    
-    def uint32(offset):
-        if(bytesAre == "str"):
-            return (ord(fileData[offset]) * 16777216) + (ord(fileData[offset+1]) * 65536) + (ord(fileData[offset+2]) * 256) + ord(fileData[offset+3])
-        else:
-            return (fileData[offset] * 16777216) + (fileData[offset+1] * 65536) + (fileData[offset+2] * 256) + fileData[offset+3]
-    
-    def uint16(offset):
-        if(bytesAre == "str"):
-            return (ord(fileData[offset]) * 256) + ord(fileData[offset+1])
-        else:
-            return (fileData[offset] * 256) + fileData[offset+1]
-    
-    def recurse(prefix, offset):
-        if(prefix == ""):
-            offset += 36
-        else:
-            folderList.extend([prefix])
-            offset += 4
-            
-        for i in range(uint32(offset)):
-            offset += 4
-            entryType = uint16(offset)#1 = directory, 2 = file
-            offset += 6
-            #Build the name.
-            entryName = os.sep
-            #Check both integer and byte for different versions of Python.
-            while(fileData[offset+1] != 0 and fileData[offset+1] != b"\x00"):
-                if(bytesAre == "str"):
-                    entryName += fileData[offset+1]
-                else:
-                    entryName += chr(fileData[offset+1])
-                offset += 2
-            offset += 6
-            
-            if(entryType == 1):
-                #Recurse through the director, and update the offset.
-                packedFilesOffset[0] += 20
-                offset = recurse(prefix + entryName, offset)
-            elif(entryType == 2):
-                #File offset.
-                packedFilesOffset[0] += 20
-                fileOffset = packedFilesOffset[0]
-                #File size.
-                fileSize = uint32(offset) - 20
-                offset += 24
-                packedFilesOffset[0] += fileSize
-                fileList.extend([[prefix + entryName, fileOffset, fileSize]])
-        #Return the offset at the end of this run to update parent runnings.
-        return offset
-    
-    print("PROCESSING: " + path)
-    #Open the file if valid.
-    try:
-        with open(path, "rb") as f:
-            fileData = f.read()
-    except IOError as e:
-        print("\tERROR: Failed to read file.")
-        return False
-    
-    if(len(fileData) < 4 or fileData[0:4] != b"LIFF"):
-        print("\tERROR: Not a LIF file.")
-        return False
-    
-    print("\tEXTRACTING: Please wait.")
-    
-    #Recurse through, creating a list of all the files.
-    packedFilesOffset = [84]#Array for non-global function-modifiable variable.
-    folderList = []
-    fileList = []
-    #Check if this version of Python treats bytes as int or str
-    bytesAre = type(b'a'[0]).__name__    
-    #Recuse through the archive.
-    recurse("", (uint32(72)+64))
-    
-    #Create output path from input path.
-    if(path[-4:].lower() == ".lif"):
-        outFolder = path[:-4]
-    else:
-        outFolder = path
-    #Create the first non-existant folder to extract to.
-    if os.path.exists(outFolder):
-        i = 1
-        while(os.path.exists(outFolder + "_" + str(i))):
-            i += 1            
-        outFolder = outFolder + "_" + str(i)
-    
-    #Make the output folder.
-    os.makedirs(outFolder)
-    
-    #Create all the folders we need to extract to.
-    for a in folderList:
-        if(a[0] == ""):
-            continue
-        if not os.path.exists(outFolder + a):
-            os.makedirs(outFolder + a)
-    
-    #Loop through the list of files, saving them.
-    for a in fileList:
-        f = open((outFolder + a[0]), "wb")
-        f.write(fileData[a[1]:a[1]+a[2]])
-        f.close()
-    
-    print("\tCOMPLETE: " + str(len(fileList)) + " files in " + str(len(folderList)) + " folders extracted.")
-    return True
-
 #Detect if executable or not.
 fileName = sys.argv[0].split(os.sep).pop()
 if(fileName[-3:] == ".py" or fileName[-4:] == ".pyw"):
@@ -514,6 +463,6 @@ else:
 
 if(len(sys.argv) > 1):
 	for i in range(1, len(sys.argv)):
-		create(sys.argv[i])
+		walkDir(sys.argv[i])
 else:
 	print("LIF Creator 1.0\n\nThis program will create LIF archives from an adjacent folder.\n\nCOPYRIGHT:\n\t(C) 2020 sttng\n\nLICENSE:\n\tGNU GPLv3\n\tYou accept full responsibility for how you use this program.\n\nUSEAGE:\n\t" + runCommand + " <FILE_PATHS>")
