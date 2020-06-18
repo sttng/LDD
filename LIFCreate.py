@@ -139,11 +139,11 @@ def walkDir(walk_dir):
 				fi_content_str = 'FS:{0:3d}FN:{1:8.8}FC:{2}'.format(file_header_size, filename, f.read()) #Content of single file
 				
 			files_content_str = files_content_str + fi_content_str #Content of all files in current folder
-
 		
-		rootpath = os.path.normpath(root)
+		current_dir = os.path.normpath(root).split(os.sep)[-1] #Get the name of the current dir
 		#DS: = Dir Size, DN = Dir Name, DC = Dir Content (either subdirs or files)
-		fo_dict[root] = fo_content_str = 'DS:{0}DN:{1}DC:{2}'.format(len(files_content_str) + 20 , rootpath.split(os.sep)[-1], files_content_str) #Content of files in current folder
+		fo_content_str = 'DS:{0}DN:{1}DC:{2}'.format(len(files_content_str) + 20 , current_dir, files_content_str) #Content of files in current folder
+		fo_dict[root] = fo_content_str
 		print 'FOC: ' + fo_content_str +'\n\n'
 		
 		for subdir in subdirs:
