@@ -133,9 +133,9 @@ def walkDir(walk_dir):
 			print('\t- file %s (full path: %s)' % (filename, file_path))
 
 			with open(file_path, 'rb') as f:
-				#FS: = Filesize (fixed to 3 digits), FN = Filename (fixed to 8 chars), FC = File content | Header Size = 20 
-				#FS:020FN:abc.txt FC:the file content.... 
-				# 3  3  3    8	  3 : 20
+				#FS: = Filesize (fixed to 3 digits) including 20 for header, FN = Filename (fixed to 8 chars), FC = File content | Header Size = 20 
+				#FS:041FN:abc.txt FC:the file content..... 
+				# 3  3  3    8	  3 = 20
 				fi_content_str = 'FS:{0:3d}FN:{1:8.8}FC:{2}'.format(file_header_size, filename, f.read()) #Content of single file
 				
 			files_content_str = files_content_str + fi_content_str #Content of all files in current folder
