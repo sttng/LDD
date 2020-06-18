@@ -133,14 +133,13 @@ def walkDir(walk_dir):
 			print('\t- file %s (full path: %s)' % (filename, file_path))
 
 			with open(file_path, 'rb') as f:
-				f_content = f.read()
-				fi_content_str = 'Fi-Header Size:{0}|Fi-Name:{1}|Fi-Content:{2}'.format(file_header_size, filename, f_content) #Content of single file
+				fi_content_str = 'FiH-Size:{0}|Fi-Name:{1}|Fi-Content:{2}'.format(file_header_size, filename, f.read()) #Content of single file
 				
 			files_content_str = files_content_str + fi_content_str #Content of all files in current folder
 
 		
 		rootpath = os.path.normpath(root)
-		fo_dict[root] = fo_content_str = 'Fo-Header Size:{0}|Fo-Name:{1}|Fo-Content:{2}'.format(len(files_content_str) + 20 , rootpath.split(os.sep)[-1], files_content_str) #Content of files in current folder
+		fo_dict[root] = fo_content_str = 'FoH-Size:{0}|Fo-Name:{1}|Fo-Content:{2}'.format(len(files_content_str) + 20 , rootpath.split(os.sep)[-1], files_content_str) #Content of files in current folder
 		print 'FOC: ' + fo_content_str +'\n\n'
 		
 		for subdir in subdirs:
