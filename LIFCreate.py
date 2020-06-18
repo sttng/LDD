@@ -123,7 +123,8 @@ def walkDir(walk_dir):
 
 		for subdir in subdirs:
 			print('\t- subdirectory ' + subdir)
-
+		
+		files_content_str = ''
 		for filename in files:
 			file_path = os.path.join(root, filename)
 			file_size = os.path.getsize(file_path)
@@ -135,11 +136,11 @@ def walkDir(walk_dir):
 				f_content = f.read()
 				fi_content_str = 'Fi-Header Size:{0}|Fi-Name:{1}|Fi-Content:{2}'.format(file_header_size, filename, f_content) #Content of single file
 				
-			files_content_str = files_content_str + fi_content_str #Content of all files
-			fi_content_str =''
+			files_content_str = files_content_str + fi_content_str #Content of all files in current folder
+
 		
 		rootpath = os.path.normpath(root)
-		fo_dict[root] = fo_content_str = 'Fo-Header Size:{0}|Fo-Name:{1}|Fo-Content:{2}'.format(len(files_content_str) + 20 , rootpath.split(os.sep)[-1], files_content_str) #Content of single file
+		fo_dict[root] = fo_content_str = 'Fo-Header Size:{0}|Fo-Name:{1}|Fo-Content:{2}'.format(len(files_content_str) + 20 , rootpath.split(os.sep)[-1], files_content_str) #Content of files in current folder
 		print 'FOC: ' + fo_content_str +'\n\n'
 		
 		for subdir in subdirs:
