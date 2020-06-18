@@ -120,9 +120,6 @@ def walkDir(walk_dir):
 		subdirs[:] = [d for d in subdirs if not d[0] == '.']
 	
 		print('--\nroot = ' + root)
-
-		for subdir in subdirs:
-			print('\t- subdirectory ' + subdir)
 		
 		files_content_str = ''
 		for filename in files:
@@ -136,19 +133,25 @@ def walkDir(walk_dir):
 				#FS: = Filesize (fixed to 3 digits) including 20 for header, FN = Filename (fixed to 8 chars), FC = File content | Header Size = 20 
 				#FS:041FN:abc.txt FC:the file content..... 
 				# 3  3  3    8	  3 = 20
-				fi_content_str = 'FS:{0:3d}FN:{1:8.8}FC:{2}'.format(file_header_size, filename, f.read()) #Content of single file
+				fi_content_str = 'FS:{0:0=3d}FN:{1:8.8}FC:{2}'.format(file_header_size, filename, f.read()) #Content of single file
 				
 			files_content_str = files_content_str + fi_content_str #Content of all files in current folder
 		
 		current_dir = os.path.normpath(root).split(os.sep)[-1] #Get the name of the current dir
 		#DS: = Dir Size, DN = Dir Name, DC = Dir Content (either subdirs or files)
-		fo_content_str = 'DS:{0}DN:{1}DC:{2}'.format(len(files_content_str) + 20 , current_dir, files_content_str) #Content of files in current folder
-		fo_dict[root] = fo_content_str
-		print 'FOC: ' + fo_content_str +'\n\n'
+		if files_content_str != '': #Found at least one file
+			fo_content_str = 'DS:{0:0=3d}DN:{1:8.8}DC:{2}'.format(len(files_content_str) + 20 , current_dir, files_content_str) #Content of files in current folder
+			fo_dict[root] = fo_content_str
+			print 'FOC: ' + fo_content_str +'\n\n'
 		
+		else: # Found a folder without files
+			fo_content_str = 'DS:{0:0=3d}DN:{1:8.8}DC:{2}'.format(20 , current_dir, '') #Fixed size of 20, no files
+			fo_dict[root] = fo_content_str
+			print 'FOC (no File): ' + fo_content_str +'\n\n'
+			
 		for subdir in subdirs:
 			print('\t- subdirectory ' + subdir)
-			folders_content_str = 'DS:{0}DN:{1}DC:{2}'.format(len(fo_dict[os.path.join(root, subdir)]) + 20 , rootpath.split(os.sep)[-1], fo_dict[os.path.join(root, subdir)])
+			folders_content_str = 'DS:{0:0=3d}DN:{1:8.8}DC:{2}'.format(len(fo_dict[os.path.join(root, subdir)]) + 20 , current_dir, fo_dict[os.path.join(root, subdir)])
 		folders_content_str = folders_content_str + fo_content_str
 		
 		print 'FOCS: ' + folders_content_str +'\n\n'
