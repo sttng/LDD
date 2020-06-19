@@ -111,6 +111,7 @@ def walkDir(walk_dir):
 	fi_content_str = ''
 	files_content_str = ''
 	folders_content_str =''
+	subfolders_content_str =''
 	fo_dict = {}
 	
 	for root, subdirs, files in os.walk(walk_dir, topdown=False):
@@ -147,17 +148,17 @@ def walkDir(walk_dir):
 		else: # Found a folder without files
 			fo_content_str = 'DS:{0:0=3d}DN:{1:8.8}DC:{2}'.format(20 , current_dir, '') #Fixed size of 20, no files
 			fo_dict[root] = fo_content_str
-			print 'FOC (no File): ' + fo_content_str +'\n\n'
+			#print 'FOC (no File): ' + fo_content_str +'\n\n'
 		
-		fo_content_str = ''
+		subfolders_content_str = ''
 		for subdir in subdirs:
 			print('\t- subdirectory ' + os.path.join(root, subdir))
-			fo_content_str =  fo_content_str + fo_dict[os.path.join(root, subdir)]
-			print('\t- subdirectory ' + fo_content_str )
+			subfolders_content_str =  subfolders_content_str + fo_dict[os.path.join(root, subdir)]
+			print('\t- subdirectory ' + subfolders_content_str)
 			#folders_content_str = 'DS:{0:0=3d}DN:{1:8.8}DC:{2}'.format(len(fo_dict[os.path.join(root, subdir)]) + 20 , current_dir, fo_dict[os.path.join(root, subdir)])
 			
 		#folders_content_str = folders_content_str + fo_content_str
-		folders_content_str = 'DS:{0:0=3d}DN:{1:8.8}DC:{2}'.format(len(fo_content_str) + 20 , current_dir, fo_content_str)
+		folders_content_str = 'DS:{0:0=3d}DN:{1:8.8}DC:{2}'.format(len(files_content_str) + len(subfolders_content_str) + 20 , current_dir, files_content_str + subfolders_content_str)
 		fo_dict[root] = fo_content_str + folders_content_str
 		
 		print 'FOCS: ' + fo_dict[root] +'\n\n'
