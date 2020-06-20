@@ -103,19 +103,13 @@ class LIFBlock:
 		return out
 
 def walkDir(walk_dir):
-	# If your current working directory may change during script execution, it's recommended to
-	# immediately convert program arguments to an absolute path. Then the variable root below will
-	# be an absolute path as well. Example:
-	# walk_dir = os.path.abspath(walk_dir)
-	print('walk_dir (absolute) = ' + os.path.abspath(walk_dir))
+	#print('walk_dir (absolute) = ' + os.path.abspath(walk_dir))
 	fi_content_str = ''
 	files_content_str = ''
-	folders_content_str =''
 	subfolders_content_str =''
 	fo_dict = {}
 	
 	for root, subdirs, files in os.walk(walk_dir, topdown=False):
-	
 		#ignore hidden files and folders (starting with a dot .)
 		files = [f for f in files if not f[0] == '.']
 		subdirs[:] = [d for d in subdirs if not d[0] == '.']
@@ -127,7 +121,6 @@ def walkDir(walk_dir):
 			file_path = os.path.join(root, filename)
 			file_size = os.path.getsize(file_path)
 			file_header_size = file_size + 20
-
 			print('\t- file %s (full path: %s)' % (filename, file_path))
 
 			with open(file_path, 'rb') as f:
@@ -137,33 +130,25 @@ def walkDir(walk_dir):
 				fi_content_str = 'FS:{0:0=3d}FN:{1:8.8}FC:{2}'.format(file_header_size, filename, f.read()) #Content of single file
 				
 			files_content_str = files_content_str + fi_content_str #Content of all files in current folder
-		
+
 		current_dir = os.path.normpath(root).split(os.sep)[-1] #Get the name of the current dir
-		#DS: = Dir Size, DN = Dir Name, DC = Dir Content (either subdirs or files)
+		
 		if files_content_str != '': #Found at least one file
-			fo_content_str = 'DS:{0:0=3d}DN:{1:8.8}DC:{2}'.format(len(files_content_str) + 20 , current_dir, files_content_str) #Content of files in current folder
-			fo_dict[root] = fo_content_str
-			print 'FOC: ' + fo_content_str +'\n\n'
+			print '\tFound files: ' + files_content_str
 		
 		else: # Found a folder without files
-			fo_content_str = 'DS:{0:0=3d}DN:{1:8.8}DC:{2}'.format(20 , current_dir, '') #Fixed size of 20, no files
-			fo_dict[root] = fo_content_str
-			#print 'FOC (no File): ' + fo_content_str +'\n\n'
+			print '\tempty directory (without Files)'
 		
 		subfolders_content_str = ''
 		for subdir in subdirs:
-			print('\t- subdirectory ' + os.path.join(root, subdir))
-			subfolders_content_str =  subfolders_content_str + fo_dict[os.path.join(root, subdir)]
-			print('\t- subdirectory ' + subfolders_content_str)
-			#folders_content_str = 'DS:{0:0=3d}DN:{1:8.8}DC:{2}'.format(len(fo_dict[os.path.join(root, subdir)]) + 20 , current_dir, fo_dict[os.path.join(root, subdir)])
+			subfolders_content_str = subfolders_content_str + fo_dict[os.path.join(root, subdir)]
+			print('\t- subdirectory '+ os.path.join(root, subdir) +'\t' + subfolders_content_str)
 			
-		#folders_content_str = folders_content_str + fo_content_str
-		folders_content_str = 'DS:{0:0=3d}DN:{1:8.8}DC:{2}'.format(len(files_content_str) + len(subfolders_content_str) + 20 , current_dir, files_content_str + subfolders_content_str)
-		fo_dict[root] = fo_content_str + folders_content_str
-		
-		print 'FOCS: ' + fo_dict[root] +'\n\n'
+		#DS: = Dir Size, DN = Dir Name, DC = Dir Content (either subdirs or files)
+		fo_dict[root] = 'DS:{0:0=3d}DN:{1:8.8}DC:{2}'.format(len(files_content_str) + len(subfolders_content_str) + 20 , current_dir, files_content_str + subfolders_content_str)
+		#print '\nFOCS: ' + fo_dict[root] +'\n'
 
-	print folders_content_str 
+	print '\nResult:\n{0}'.format(fo_dict[root])
 
 
 def createa(path):
