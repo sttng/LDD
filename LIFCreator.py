@@ -169,7 +169,7 @@ def createLif(walk_dir):
 	subfolders_content_str =''
 	fo_dict = {}
 	fh_dict = {}
-	
+	print '\n'
 	for root, subdirs, files in os.walk(walk_dir, topdown=False):
 		#ignore hidden files and folders (starting with a dot .)
 		files = [f for f in files if not f[0] == '.']
@@ -179,6 +179,8 @@ def createLif(walk_dir):
 		files_fh_str = ''
 		for filename in files:
 			file_path = os.path.join(root, filename)
+			sys.stdout.write('\tPROCESSING: {0}{1}{2}          \r'.format(os.path.basename(root), os.sep, filename))
+			sys.stdout.flush()
 			#print 'Adding: {0}'.format(filename)
 			
 			with open(file_path, 'rb') as f:
@@ -190,8 +192,6 @@ def createLif(walk_dir):
 				
 			files_content_str = files_content_str + fi_content_str #Content of all files in current folder
 			files_fh_str = files_fh_str + fh_content_str
-			
-		current_dir = os.path.normpath(root).split(os.sep)[-1] #Get the name of the current dir
 		
 		subfolders_content_str = ''
 		subfolders_fh_str = ''
@@ -241,4 +241,4 @@ if(len(sys.argv) > 1):
 	for i in range(1, len(sys.argv)):
 		createLif(sys.argv[i])
 else:
-	print("LIF Creator 1.0\n\nThis program will create LIF archives from an adjacent folder.\n\nCOPYRIGHT:\n\t(C) 2020 sttng\n\nLICENSE:\n\tGNU GPLv3\n\tYou accept full responsibility for how you use this program.\n\nUSEAGE:\n\t" + runCommand + " <FILE_PATHS>")
+	print("LIF Creator 1.01\n\nThis program will create LIF archives from an adjacent folder.\n\nCOPYRIGHT:\n\t(C) 2020 sttng\n\nLICENSE:\n\tGNU GPLv3\n\tYou accept full responsibility for how you use this program.\n\nUSEAGE:\n\t" + runCommand + " <FILE_PATHS>")
