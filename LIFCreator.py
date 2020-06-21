@@ -176,7 +176,7 @@ def createLif(walk_dir):
 	fo_dict = {}
 	fh_dict = {}
 	print '\n'
-	for root, subdirs, files in os.walk(walk_dir, topdown=False):
+	for root, subdirs, files in os.walk(os.path.normpath(walk_dir), topdown=False):
 		#ignore hidden files and folders (starting with a dot .)
 		files = [f for f in files if not f[0] == '.']
 		subdirs[:] = [d for d in subdirs if not d[0] == '.']
