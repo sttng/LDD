@@ -101,7 +101,61 @@ class LIFBlock:
 	def string(self):
 		out = '{0}{1}{2}{3}{4}{5}{6}'.format(self.blockheader, self.blocktype, self.spacing1, self.size, self.spacing2, self.spacing3, self.data)
 		return out
+		
+class LIFDirEntry:
 
+	'''
+	SIZE 	TYPE 	DESCRIPTION
+	2 bytes 	Int16 	Entry type (equals 1)
+	4 bytes 	Int32 	Unknown value (equals 0 or 7) The value 0 seems to be used for the root folder.
+	N bytes 	Char[] 	Folder name. (Unicode null-terminated text)
+	4 bytes 	Spacing (Always equals 0)
+	4 bytes 	Int32? 	Block size (Always equals 20 so it equals the block header size)
+	4 bytes 	Int32 	The number of sub-entries (files and folders)
+	'''
+
+	def __init__(self, rootind, name, entries):
+		self.entrytype = struct.pack('>H', 1) #Entry type (equals 1)
+		self.rootind = struct.pack('>I', rootind) #Unknown value (equals 0 or 7) The value 0 seems to be used for the root folder.
+		self.name = b'\x00' + name.encode('utf-16')[2:] + b'\x00'
+		self.spacing1 = struct.pack('>I', 0)#Spacing (Always equals 0)
+		self.size = struct.pack('>I', 20)	#Block size (Always equals 20 so it equals the block header size)
+		self.entries = struct.pack('>I',entries)	#The number of sub-entries (files and folders)
+
+	def string(self):
+		out = '{0}{1}{2}{3}{4}{5}'.format(self.entrytype, self.rootind, self.name, self.spacing1, self.size, self.entries)
+		return out
+
+
+class LIFFileEntry:
+
+	'''
+	SIZE 	TYPE 	DESCRIPTION
+	2 bytes 	Int16 	Entry type (equals 2)
+	4 bytes 	Int32 	Spacing/unknown value (0 or 7)
+	N bytes 	Char[] 	File name. (Unicode null-terminated text)
+	4 bytes 		Spacing (Always equals 0)
+	4 bytes 	Int32 	File size (it is actually the block size because it includes the block header size (20))
+	8 bytes 	Long (Filetime) 	Created, modified or accessed date
+	8 bytes 	Long (Filetime) 	Created, modified or accessed date
+	8 bytes 	Long (Filetime) 	Created, modified or accessed date
+	'''
+
+	def __init__(self, name, size):
+		self.entrytype = struct.pack('>H', 2) #Entry type (equals 2)
+		self.unknwown = struct.pack('>I', 7) #Spacing/unknown value (0 or 7).
+		self.name = b'\x00' + name.encode('utf-16')[2:] + b'\x00'
+		self.spacing1 = struct.pack('>I', 0)#Spacing (Always equals 0)
+		self.size = struct.pack('>I', size)	#File size (it is actually the block size because it includes the block header size (20))
+		self.created = struct.pack('>Q', 18369614221190020847)	#Created, modified or accessed date
+		self.modified = struct.pack('>Q', 18369614221190020847)#Created, modified or accessed date. Set to 0xFEEDFACECAFEBEEF for testing
+		self.accessed = b'\x01\xce\xec\xee\x85\x3b\x50\xdb' #Created, modified or accessed date
+
+	def string(self):
+		out = '{0}{1}{2}{3}{4}{5}{6}{7}'.format(self.entrytype, self.unknwown, self.name, self.spacing1, self.size, self.created, self.modified, self.accessed)
+		return out
+
+	
 def walkDir(walk_dir):
 	#print('walk_dir (absolute) = ' + os.path.abspath(walk_dir))
 	fi_content_str = ''
@@ -151,55 +205,84 @@ def walkDir(walk_dir):
 	print '\nResult:\n{0}'.format(fo_dict[root])
 
 
-def createa(path):
-	rootDir = path
-	for dirName, subdirList, fileList in os.walk(rootDir, topdown=False):
-		print('Found directory: %s' % dirName)
-		for fname in fileList:
-			print('\t%s' % fname)
 
-def create(path):
-	rootDir = path
-	test_file = open('_test.lif', "wb")
-	lifblocks = [] #Array to hold all blocks (including the LIFF header at [0])
-	fileblocks = []
-	dict = {}
-	tagged = False
-	for dirName, subdirList, fileList in os.walk(rootDir, topdown=False):
+
+
+
+
+def createLif(walk_dir):
+	filename = os.path.basename(os.path.normpath(walk_dir))
+	test_file = open((filename + '.lif'), "wb")
+	test_file2 = open((filename + '_file.lif'), "wb")
+	fi_content_str = ''
+	files_content_str = ''
+	subfolders_content_str =''
+	fo_dict = {}
+	fh_dict = {}
 	
+	for root, subdirs, files in os.walk(walk_dir, topdown=False):
 		#ignore hidden files and folders (starting with a dot .)
-		fileList = [f for f in fileList if not f[0] == '.']
-		subdirList[:] = [d for d in subdirList if not d[0] == '.']
+		files = [f for f in files if not f[0] == '.']
+		subdirs[:] = [d for d in subdirs if not d[0] == '.']
+	
+		print('--\nroot = ' + root)
+		#print os.path.basename(root) 
 		
-		for fname in fileList:
-			fp = os.path.join(dirName, fname)
-			print('\t%s' % fp)
-			'''File Block (Block Type 4)'''
-			fa = open(fp, "rb")
-			file_data = list(fa.read())
-			file_data_array = bytearray(file_data)
-			fa.close()
-			fileblocks.append(LIFBlock(blocktype=4, data=file_data_array))
-			tagged = True
-		data = ''
-		
-		for item in fileblocks:
-			data = data + item.string()
-		lifblocks.append(LIFBlock(blocktype=3, data=data))
-		fileblocks = []
-		if tagged:
-			dict[dirName] = LIFBlock(blocktype=3, data=data)
-		print('Found directory: %s' % dirName)
-		if subdirList:
-			print('Has sub directory: %s' % subdirList)
-		else:
-			print('Has no sub directory: %s' % subdirList)
-			print dict[dirName]
+		files_content_str = ''
+		files_fh_str = ''
+		for filename in files:
+			file_path = os.path.join(root, filename)
+			print('\t- file %s (full path: %s)' % (filename, file_path))
+			
+			
+			with open(file_path, 'rb') as f:
+				current_data = f.read()
+				currenFileBlock = LIFBlock(blocktype=4, data=current_data) #Content of single file: Block Type 4
+				currenFileEntry = LIFFileEntry(name=filename, size=currenFileBlock.getSize())
+				fi_content_str = currenFileBlock.string()
+				fh_content_str = currenFileEntry.string()
+				
+			files_content_str = files_content_str + fi_content_str #Content of all files in current folder
+			files_fh_str = files_fh_str + fh_content_str
+			test_file2.write(files_fh_str)
 
-	for item in lifblocks:
-		test_file.write(item.string())
-		#item.string()
-	test_file.close()
+		current_dir = os.path.normpath(root).split(os.sep)[-1] #Get the name of the current dir
+		
+		subfolders_content_str = ''
+		subfolders_fh_str = ''
+		for subdir in subdirs:
+			subfolders_content_str = subfolders_content_str + fo_dict[os.path.join(root, subdir)]
+			subfolders_fh_str = subfolders_fh_str + fh_dict[os.path.join(root, subdir)]
+			
+		currenBlock = LIFBlock(blocktype=3, data=files_content_str + subfolders_content_str) #Block Type 3
+		number_entries = len(files) + len(subdirs)
+		currenDirEntry = LIFDirEntry(rootind=7, name=os.path.basename(root) , entries=number_entries)
+		fo_dict[root] = currenBlock.string()
+		fh_dict[root] = currenDirEntry.string() + files_fh_str + subfolders_fh_str
+
+	
+	'''Root directory block (Block Type 3)'''
+	rootDirBlock = LIFBlock(blocktype=3, data=fo_dict[root])
+
+	'''File Content Block (Block Type 2)'''
+	fileContentBlock = LIFBlock(blocktype=2, data='')
+	
+	'''File hierarchy (Block Type 5)'''
+	rooDirEntry = LIFDirEntry(rootind=0, name='', entries=1)
+	fhBlock = LIFBlock(blocktype=5, data=rooDirEntry.string() + fh_dict[root])
+	
+	'''Root Block (Block Type 1)'''
+	rootBlock = LIFBlock(blocktype=1, data=fileContentBlock.string() + rootDirBlock.string() + fhBlock.string())
+
+
+	'''Header'''
+	headerBlock = LIFHeader()
+	headerBlock.setSize(len(rootBlock.string()) + 18)
+	test_file.write(headerBlock.string())
+	test_file.write(rootBlock.string())
+
+
+
 
 
 def create1(path):
@@ -462,6 +545,6 @@ else:
 
 if(len(sys.argv) > 1):
 	for i in range(1, len(sys.argv)):
-		walkDir(sys.argv[i])
+		createLif(sys.argv[i])
 else:
 	print("LIF Creator 1.0\n\nThis program will create LIF archives from an adjacent folder.\n\nCOPYRIGHT:\n\t(C) 2020 sttng\n\nLICENSE:\n\tGNU GPLv3\n\tYou accept full responsibility for how you use this program.\n\nUSEAGE:\n\t" + runCommand + " <FILE_PATHS>")
