@@ -205,15 +205,9 @@ def walkDir(walk_dir):
 	print '\nResult:\n{0}'.format(fo_dict[root])
 
 
-
-
-
-
-
 def createLif(walk_dir):
 	filename = os.path.basename(os.path.normpath(walk_dir))
 	test_file = open((filename + '.lif'), "wb")
-	test_file2 = open((filename + '_file.lif'), "wb")
 	fi_content_str = ''
 	files_content_str = ''
 	subfolders_content_str =''
@@ -225,15 +219,13 @@ def createLif(walk_dir):
 		files = [f for f in files if not f[0] == '.']
 		subdirs[:] = [d for d in subdirs if not d[0] == '.']
 	
-		print('--\nroot = ' + root)
-		#print os.path.basename(root) 
+		#print('--\nroot = ' + root)
 		
 		files_content_str = ''
 		files_fh_str = ''
 		for filename in files:
 			file_path = os.path.join(root, filename)
-			print('\t- file %s (full path: %s)' % (filename, file_path))
-			
+			print 'Adding: {0}'.format(file_path)
 			
 			with open(file_path, 'rb') as f:
 				current_data = f.read()
@@ -244,8 +236,7 @@ def createLif(walk_dir):
 				
 			files_content_str = files_content_str + fi_content_str #Content of all files in current folder
 			files_fh_str = files_fh_str + fh_content_str
-			test_file2.write(files_fh_str)
-
+			
 		current_dir = os.path.normpath(root).split(os.sep)[-1] #Get the name of the current dir
 		
 		subfolders_content_str = ''
@@ -262,17 +253,18 @@ def createLif(walk_dir):
 
 	
 	'''Root directory block (Block Type 3)'''
-	rootDirBlock = LIFBlock(blocktype=3, data=fo_dict[root])
+	#rootDirBlock = LIFBlock(blocktype=3, data=fo_dict[root])
+	rootDirBlock= fo_dict[root]
 
 	'''File Content Block (Block Type 2)'''
 	fileContentBlock = LIFBlock(blocktype=2, data='')
 	
 	'''File hierarchy (Block Type 5)'''
-	rooDirEntry = LIFDirEntry(rootind=0, name='', entries=1)
-	fhBlock = LIFBlock(blocktype=5, data=rooDirEntry.string() + fh_dict[root])
+	#rooDirEntry = LIFDirEntry(rootind=0, name='', entries=1)
+	fhBlock = LIFBlock(blocktype=5, data=fh_dict[root])
 	
 	'''Root Block (Block Type 1)'''
-	rootBlock = LIFBlock(blocktype=1, data=fileContentBlock.string() + rootDirBlock.string() + fhBlock.string())
+	rootBlock = LIFBlock(blocktype=1, data=fileContentBlock.string() + rootDirBlock + fhBlock.string())
 
 
 	'''Header'''
@@ -281,7 +273,7 @@ def createLif(walk_dir):
 	test_file.write(headerBlock.string())
 	test_file.write(rootBlock.string())
 
-
+	test_file.close()
 
 
 
