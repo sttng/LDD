@@ -155,6 +155,7 @@ class LIFFileEntry:
 def createLif(walk_dir):
 	outfile = os.path.basename(os.path.normpath(walk_dir))
 	number_of_files = 0
+	print 'LIF Creator 1.02'
 	print 'Choosen directory: {0}'.format(os.path.normpath(walk_dir))
 	sys.stdin.readline()
 	
@@ -186,7 +187,7 @@ def createLif(walk_dir):
 			file_path = os.path.join(root, filename)
 			#sys.stdout.write('\tPROCESSING: {0}{1}{2}          \r'.format(os.path.basename(root), os.sep, filename))
 			#sys.stdout.flush()
-			print 'Adding: {0}{1}'.format(root, filename)
+			print 'Adding: {0}'.format(file_path)
 			
 			with open(file_path, 'rb') as f:
 				current_data = f.read()
@@ -246,4 +247,4 @@ if(len(sys.argv) > 1):
 	for i in range(1, len(sys.argv)):
 		createLif(sys.argv[i])
 else:
-	print("LIF Creator 1.01\n\nThis program will create LIF archives from an adjacent folder.\n\nCOPYRIGHT:\n\t(C) 2020 sttng\n\nLICENSE:\n\tGNU GPLv3\n\tYou accept full responsibility for how you use this program.\n\nUSEAGE:\n\t" + runCommand + " <FILE_PATHS>")
+	print("LIF Creator 1.02\n\nThis program will create LIF archives from an adjacent folder.\n\nCOPYRIGHT:\n\t(C) 2020 sttng\n\nLICENSE:\n\tGNU GPLv3\n\tYou accept full responsibility for how you use this program.\n\nUSEAGE:\n\t" + runCommand + " <FILE_PATHS>")
