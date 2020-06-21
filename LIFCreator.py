@@ -27,7 +27,6 @@ import sys
 import struct
 import time
 import shutil
-import re
 
 class LIFHeader:
 	'''
@@ -169,6 +168,7 @@ def createLif(walk_dir):
 	
 	print 'Will create: {0}.lif'.format(outfile)
 	sys.stdin.readline()
+	start_time = time.time()
 	
 	fi_content_str = ''
 	files_content_str = ''
@@ -238,6 +238,7 @@ def createLif(walk_dir):
 	lif_file.close()
 	
 	print '\n\tCOMPLETED: {0} files processed and added to {1}.lif.\n'.format(str(number_of_files), outfile)
+	print("--- %s seconds ---" % (time.time() - start_time))
 
 if(len(sys.argv) > 1):
 	for i in range(1, len(sys.argv)):
