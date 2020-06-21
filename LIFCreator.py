@@ -27,6 +27,7 @@ import sys
 import struct
 import time
 import shutil
+import re
 
 class LIFHeader:
 	'''
@@ -155,7 +156,7 @@ class LIFFileEntry:
 def createLif(walk_dir):
 	outfile = os.path.basename(os.path.normpath(walk_dir))
 	number_of_files = 0
-	print 'LIF Creator 1.02'
+	print 'LIF Creator 1.021'
 	print 'Choosen directory: {0}'.format(os.path.normpath(walk_dir))
 	sys.stdin.readline()
 	
@@ -169,7 +170,6 @@ def createLif(walk_dir):
 	print 'Will create: {0}.lif'.format(outfile)
 	sys.stdin.readline()
 	
-	lif_file = open((outfile + '.lif'), "wb")
 	fi_content_str = ''
 	files_content_str = ''
 	subfolders_content_str =''
@@ -185,12 +185,14 @@ def createLif(walk_dir):
 		files_fh_str = ''
 		for filename in files:
 			file_path = os.path.join(root, filename)
+			
 			#sys.stdout.write('\tPROCESSING: {0}{1}{2}          \r'.format(os.path.basename(root), os.sep, filename))
 			#sys.stdout.flush()
 			print 'Adding: {0}'.format(file_path)
 			
 			with open(file_path, 'rb') as f:
 				current_data = f.read()
+				print 'Size: {0}'.format(len(current_data))
 				currenFileBlock = LIFBlock(blocktype=4, data=current_data) #Content of single file: Block Type 4
 				currenFileEntry = LIFFileEntry(name=filename, size=currenFileBlock.getSize())
 				fi_content_str = currenFileBlock.string()
@@ -230,21 +232,15 @@ def createLif(walk_dir):
 	'''Header'''
 	headerBlock = LIFHeader()
 	headerBlock.setSize(len(rootBlock.string()) + 18)
+	lif_file = open((outfile + '.lif'), "wb")
 	lif_file.write(headerBlock.string())
 	lif_file.write(rootBlock.string())
 	lif_file.close()
 	
 	print '\n\tCOMPLETED: {0} files processed and added to {1}.lif.\n'.format(str(number_of_files), outfile)
 
-#Detect if executable or not.
-fileName = sys.argv[0].split(os.sep).pop()
-if(fileName[-3:] == ".py" or fileName[-4:] == ".pyw"):
-	runCommand = "python " + fileName
-else:
-	runCommand = fileName
-
 if(len(sys.argv) > 1):
 	for i in range(1, len(sys.argv)):
 		createLif(sys.argv[i])
 else:
-	print("LIF Creator 1.02\n\nThis program will create LIF archives from an adjacent folder.\n\nCOPYRIGHT:\n\t(C) 2020 sttng\n\nLICENSE:\n\tGNU GPLv3\n\tYou accept full responsibility for how you use this program.\n\nUSEAGE:\n\t" + runCommand + " <FILE_PATHS>")
+	print("LIF Creator 1.021\n\nThis program will create LIF archives from an adjacent folder.\n\nCOPYRIGHT:\n\t(C) 2020 sttng\n\nLICENSE:\n\tGNU GPLv3\n\tYou accept full responsibility for how you use this program.\n\nUSEAGE:\n\t" + runCommand + " <FILE_PATHS>")
