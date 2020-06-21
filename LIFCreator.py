@@ -188,7 +188,7 @@ def createLif(walk_dir):
 			
 			#sys.stdout.write('\tPROCESSING: {0}{1}{2}          \r'.format(os.path.basename(root), os.sep, filename))
 			#sys.stdout.flush()
-			print 'Adding: {0}'.format(file_path)
+			print 'Processing: {0}'.format(file_path)
 			
 			with open(file_path, 'rb') as f:
 				current_data = f.read()
@@ -232,12 +232,14 @@ def createLif(walk_dir):
 	'''Header'''
 	headerBlock = LIFHeader()
 	headerBlock.setSize(len(rootBlock.string()) + 18)
+	print '\n\tCOMPLETED: {0} files processed. Ready to write {1}.lif.\n\tPRESS ENTER.'.format(str(number_of_files), outfile)
+	sys.stdin.readline()
+	
 	lif_file = open((outfile + '.lif'), "wb")
 	lif_file.write(headerBlock.string())
 	lif_file.write(rootBlock.string())
 	lif_file.close()
 	
-	print '\n\tCOMPLETED: {0} files processed and added to {1}.lif.\n'.format(str(number_of_files), outfile)
 	print("--- %s seconds ---" % (time.time() - start_time))
 
 if(len(sys.argv) > 1):
