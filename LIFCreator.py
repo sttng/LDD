@@ -28,6 +28,10 @@ import struct
 import time
 import shutil
 
+if sys.version_info < (3, 0):
+	reload(sys)
+	sys.setdefaultencoding('utf-8')
+
 class LIFHeader:
 	'''
 LIF Header (18 bytes total):
@@ -148,15 +152,15 @@ class LIFFileEntry:
 		self.accessed = b'\x01\xce\xec\xee\x85\x3b\x50\xdb' #Created, modified or accessed date
 
 	def string(self):
-		out = '{0}{1}{2}{3}{4}{5}{6}{7}'.format(self.entrytype, self.unknwown, self.name, self.spacing1, self.size, self.created, self.modified, self.accessed)
+		out = b'{0}{1}{2}{3}{4}{5}{6}{7}'.format(self.entrytype, self.unknwown, self.name, self.spacing1, self.size, self.created, self.modified, self.accessed)
 		return out
 
 
 def createLif(walk_dir):
 	outfile = os.path.basename(os.path.normpath(walk_dir))
 	number_of_files = 0
-	print 'LIF Creator 1.021'
-	print 'Choosen directory: {0}'.format(os.path.normpath(walk_dir))
+	print('LIF Creator 1.022')
+	print('Choosen directory: {0}'.format(os.path.normpath(walk_dir)))
 	sys.stdin.readline()
 	
 	#Create the first non-existant file to create to.
@@ -166,7 +170,7 @@ def createLif(walk_dir):
 			i += 1
 		outfile = outfile + "_" + str(i)
 	
-	print 'Will create: {0}.lif'.format(outfile)
+	print('Will create: {0}.lif'.format(outfile))
 	sys.stdin.readline()
 	start_time = time.time()
 	
@@ -175,7 +179,7 @@ def createLif(walk_dir):
 	subfolders_content_str =''
 	fo_dict = {}
 	fh_dict = {}
-	print '\n'
+	print('\n')
 	for root, subdirs, files in os.walk(os.path.normpath(walk_dir), topdown=False):
 		#ignore hidden files and folders (starting with a dot .)
 		files = [f for f in files if not f[0] == '.']
@@ -188,11 +192,11 @@ def createLif(walk_dir):
 			
 			#sys.stdout.write('\tPROCESSING: {0}{1}{2}          \r'.format(os.path.basename(root), os.sep, filename))
 			#sys.stdout.flush()
-			print 'Processing: {0}'.format(file_path)
+			print('Processing: {0}'.format(file_path))
 			
 			with open(file_path, 'rb') as f:
 				current_data = f.read()
-				print 'Size: {0}'.format(len(current_data))
+				print('Size: {0}'.format(len(current_data)))
 				currenFileBlock = LIFBlock(blocktype=4, data=current_data) #Content of single file: Block Type 4
 				currenFileEntry = LIFFileEntry(name=filename, size=currenFileBlock.getSize())
 				fi_content_str = currenFileBlock.string()
@@ -232,7 +236,7 @@ def createLif(walk_dir):
 	'''Header'''
 	headerBlock = LIFHeader()
 	headerBlock.setSize(len(rootBlock.string()) + 18)
-	print '\n\tCOMPLETED: {0} files processed. Ready to write {1}.lif.\n\tPRESS ENTER.'.format(str(number_of_files), outfile)
+	print('\n\tCOMPLETED: {0} files processed. Ready to write {1}.lif.\n\tPRESS ENTER.'.format(str(number_of_files), outfile))
 	sys.stdin.readline()
 	
 	lif_file = open((outfile + '.lif'), "wb")
@@ -246,4 +250,4 @@ if(len(sys.argv) > 1):
 	for i in range(1, len(sys.argv)):
 		createLif(sys.argv[i])
 else:
-	print("LIF Creator 1.021\n\nThis program will create LIF archives from an adjacent folder.\n\nCOPYRIGHT:\n\t(C) 2020 sttng\n\nLICENSE:\n\tGNU GPLv3\n\tYou accept full responsibility for how you use this program.\n\nUSEAGE:\n\t" + runCommand + " <FILE_PATHS>")
+	print("LIF Creator 1.022\n\nThis program will create LIF archives from an adjacent folder.\n\nCOPYRIGHT:\n\t(C) 2020 sttng\n\nLICENSE:\n\tGNU GPLv3\n\tYou accept full responsibility for how you use this program.\n\nUSEAGE:\n\t" + runCommand + " <FILE_PATHS>")
