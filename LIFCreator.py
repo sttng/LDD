@@ -43,20 +43,20 @@ LIF Header (18 bytes total):
 	'''
 	
 	def __init__(self):
-		self.magic = 'LIFF'						#Magic Word (ASCI = 'LIFF')
+		self.magic = b'LIFF'					#Magic Word (ASCI = 'LIFF')
 		self.spacing1 = struct.pack('>I', 0)	#Spacing (Always equals 0)
 		self.size = struct.pack('>I',3405691582)#0xCAFEBABE - Just to test and also to verify that header size is set correct later
 		self.spacing2 = struct.pack('>H', 1)	#Value "1" (Int16 big endian)
 		self.spacing3 = struct.pack('>I', 0)	#Spacing (Always equals 0)
 
 	def setSize(self, size):
-		self.size = struct.pack('>I', size)
+		self.size = bytearray(struct.pack('>I', size))
 
 	def getSize(self):
 		return struct.unpack('>I', self.size)[0]
 	
 	def string(self):
-		out = '{0}{1}{2}{3}{4}'.format(self.magic, self.spacing1, self.size, self.spacing2, self.spacing3)
+		out = self.magic + self.spacing1 + self.size + self.spacing2 + self.spacing3
 		return out
 
 class LIFBlock:	
@@ -101,7 +101,7 @@ class LIFBlock:
 		return struct.unpack('>I', self.size)[0]
 
 	def string(self):
-		out = '{0}{1}{2}{3}{4}{5}{6}'.format(self.blockheader, self.blocktype, self.spacing1, self.size, self.spacing2, self.spacing3, self.data)
+		out = self.blockheader + self.blocktype + self.spacing1 + self.size + self.spacing2 + self.spacing3 + self.data
 		return out
 		
 class LIFDirEntry:
@@ -124,7 +124,7 @@ class LIFDirEntry:
 		self.entries = struct.pack('>I',entries)	#The number of sub-entries (files and folders)
 
 	def string(self):
-		out = '{0}{1}{2}{3}{4}{5}'.format(self.entrytype, self.rootind, self.name, self.spacing1, self.size, self.entries)
+		out = self.entrytype + self.rootind + self.name + self.spacing1 + self.size + self.entries
 		return out
 
 
@@ -152,7 +152,7 @@ class LIFFileEntry:
 		self.accessed = b'\x01\xce\xec\xee\x85\x3b\x50\xdb' #Created, modified or accessed date
 
 	def string(self):
-		out = b'{0}{1}{2}{3}{4}{5}{6}{7}'.format(self.entrytype, self.unknwown, self.name, self.spacing1, self.size, self.created, self.modified, self.accessed)
+		out = self.entrytype + self.unknwown + self.name + self.spacing1 + self.size +self.created + self.modified + self.accessed
 		return out
 
 
@@ -174,9 +174,7 @@ def createLif(walk_dir):
 	sys.stdin.readline()
 	start_time = time.time()
 	
-	fi_content_str = ''
-	files_content_str = ''
-	subfolders_content_str =''
+	fi_content_str = b''
 	fo_dict = {}
 	fh_dict = {}
 	print('\n')
@@ -185,8 +183,8 @@ def createLif(walk_dir):
 		files = [f for f in files if not f[0] == '.']
 		subdirs[:] = [d for d in subdirs if not d[0] == '.']
 		
-		files_content_str = ''
-		files_fh_str = ''
+		files_content_str = b''
+		files_fh_str = b''
 		for filename in files:
 			file_path = os.path.join(root, filename)
 			
@@ -205,8 +203,8 @@ def createLif(walk_dir):
 			files_content_str = files_content_str + fi_content_str #Content of all files in current folder
 			files_fh_str = files_fh_str + fh_content_str
 		
-		subfolders_content_str = ''
-		subfolders_fh_str = ''
+		subfolders_content_str = b''
+		subfolders_fh_str = b''
 		for subdir in subdirs:
 			subfolders_content_str = subfolders_content_str + fo_dict[os.path.join(root, subdir)]
 			subfolders_fh_str = subfolders_fh_str + fh_dict[os.path.join(root, subdir)]
@@ -236,8 +234,7 @@ def createLif(walk_dir):
 	'''Header'''
 	headerBlock = LIFHeader()
 	headerBlock.setSize(len(rootBlock.string()) + 18)
-	print('\n\tCOMPLETED: {0} files processed. Ready to write {1}.lif.\n\tPRESS ENTER.'.format(str(number_of_files), outfile))
-	sys.stdin.readline()
+	print('\n\tCOMPLETED: {0} files processed. Will now write {1}.lif.'.format(str(number_of_files), outfile))
 	
 	lif_file = open((outfile + '.lif'), "wb")
 	lif_file.write(headerBlock.string())
