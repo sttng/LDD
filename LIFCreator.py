@@ -161,7 +161,7 @@ class LIFFileEntry:
 def createLif(walk_dir):
 	outfile = os.path.basename(os.path.normpath(walk_dir))
 	number_of_files = 0
-	print('LIF Creator 1.022')
+	print('LIF Creator 1.1')
 	print('Choosen directory: {0}'.format(os.path.normpath(walk_dir)))
 	
 	#Create the first non-existant file to write to.
@@ -171,14 +171,11 @@ def createLif(walk_dir):
 			i += 1
 		outfile = outfile + "_" + str(i)
 	
-	print('Will create: {0}.lif'.format(outfile))
-	sys.stdin.readline()
 	start_time = time.time()
 	
 	fi_content_str = b''
 	fo_dict = {}
 	fh_dict = {}
-	print('\n')
 	for root, subdirs, files in os.walk(walk_dir, topdown=False):
 		#ignore hidden files and folders (starting with a dot .)
 		files = [f for f in files if not f[0] == '.']
@@ -189,9 +186,9 @@ def createLif(walk_dir):
 		for filename in files:
 			file_path = os.path.join(root, filename)
 			
-			#sys.stdout.write('\tPROCESSING: {0}{1}{2}          \r'.format(os.path.basename(root), os.sep, filename))
-			#sys.stdout.flush()
-			print('Processing: {0}'.format(file_path))
+			sys.stdout.write('\tPROCESSING: {0}          \r'.format(filename))
+			sys.stdout.flush()
+			#print('Processing: {0}'.format(file_path))
 			
 			with open(file_path, 'rb') as f:
 				current_data = f.read()
@@ -247,4 +244,4 @@ if(len(sys.argv) > 1):
 	for i in range(1, len(sys.argv)):
 		createLif(sys.argv[i])
 else:
-	print("LIF Creator 1.023\n\nThis program will create LIF archives from an adjacent folder.\n\nCOPYRIGHT:\n\t(C) 2020 sttng\n\nLICENSE:\n\tGNU GPLv3\n\tYou accept full responsibility for how you use this program.\n\nUSEAGE:\n\t" + runCommand + " <FILE_PATHS>")
+	print("LIF Creator 1.1\n\nThis program will create LIF archives from an adjacent folder.\n\nCOPYRIGHT:\n\t(C) 2020 sttng\n\nLICENSE:\n\tGNU GPLv3\n\tYou accept full responsibility for how you use this program.\n\nUSEAGE:\n\t" + runCommand + " <FILE_PATHS>")
