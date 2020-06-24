@@ -56,7 +56,7 @@ class LIFHeader:
 		return struct.unpack('>I', self.size)[0]
 	
 	def string(self):
-		out = self.magic + self.spacing1 + self.size + self.spacing2 + self.spacing3
+		out =  b''.join(self.magic, self.spacing1, self.size, self.spacing2, self.spacing3)
 		return out
 
 class LIFBlock:	
@@ -103,7 +103,7 @@ class LIFBlock:
 		return struct.unpack('>I', self.size)[0]
 
 	def string(self):
-		out = self.blockheader + self.blocktype + self.spacing1 + self.size + self.spacing2 + self.spacing3 + self.data
+		out = b''.join(self.blockheader, self.blocktype, self.spacing1, self.size, self.spacing2, self.spacing3, self.data)
 		return out
 		
 class LIFDirEntry:
@@ -126,7 +126,7 @@ class LIFDirEntry:
 		self.entries = struct.pack('>I',entries)	#The number of sub-entries (files and folders)
 
 	def string(self):
-		out = self.entrytype + self.rootind + self.name + self.spacing1 + self.size + self.entries
+		out = b''.join(self.entrytype, self.rootind, self.name, self.spacing1, self.size, self.entries)
 		return out
 
 
@@ -154,7 +154,7 @@ class LIFFileEntry:
 		self.accessed = b'\x01\xce\xec\xee\x85\x3b\x50\xdb' 	#Created, modified or accessed date
 
 	def string(self):
-		out = self.entrytype + self.unknwown + self.name + self.spacing1 + self.size +self.created + self.modified + self.accessed
+		out = b''.join(self.entrytype, self.unknwown, self.name, self.spacing1, self.size, self.created, self.modified, self.accessed)
 		return out
 
 
@@ -197,14 +197,14 @@ def createLif(walk_dir):
 				fi_content_str = currenFileBlock.string()
 				fh_content_str = currenFileEntry.string()
 				
-			files_content_str = files_content_str + fi_content_str #Content of all files in current folder
-			files_fh_str = files_fh_str + fh_content_str
+			files_content_str = b''.join(files_content_str, fi_content_str) #Content of all files in current folder
+			files_fh_str = b''.join(files_fh_str, fh_content_str)
 		
 		subfolders_content_str = b''
 		subfolders_fh_str = b''
 		for subdir in subdirs:
-			subfolders_content_str = subfolders_content_str + fo_dict[os.path.join(root, subdir)]
-			subfolders_fh_str = subfolders_fh_str + fh_dict[os.path.join(root, subdir)]
+			subfolders_content_str = b''.join(subfolders_content_str, fo_dict[os.path.join(root, subdir)])
+			subfolders_fh_str = b''.join(subfolders_fh_str, fh_dict[os.path.join(root, subdir)])
 			fo_dict.pop(os.path.join(root, subdir), None) #Drop item from fo dict, its no longer needed
 			fh_dict.pop(os.path.join(root, subdir), None) #Drop item from fh dict, its no longer needed
 			
@@ -212,7 +212,7 @@ def createLif(walk_dir):
 		number_entries = len(files) + len(subdirs)
 		currenDirEntry = LIFDirEntry(rootind=7, name=os.path.basename(root) , entries=number_entries)
 		fo_dict[root] = currenBlock.string()
-		fh_dict[root] = currenDirEntry.string() + files_fh_str + subfolders_fh_str
+		fh_dict[root] = b''.join(currenDirEntry.string(), files_fh_str, subfolders_fh_str)
 		
 		number_of_files = number_of_files + len(files)
 	
@@ -227,7 +227,7 @@ def createLif(walk_dir):
 	fhBlock = LIFBlock(blocktype=5, data=fh_dict[root])
 	
 	'''Root Block (Block Type 1)'''
-	rootBlock = LIFBlock(blocktype=1, data=fileContentBlock.string() + rootDirBlock + fhBlock.string())
+	rootBlock = LIFBlock(blocktype=1, data=b''.join(fileContentBlock.string() + rootDirBlock + fhBlock.string()))
 	
 	'''Header'''
 	headerBlock = LIFHeader()
