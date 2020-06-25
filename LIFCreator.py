@@ -56,7 +56,7 @@ class LIFHeader:
 		return struct.unpack('>I', self.size)[0]
 	
 	def string(self):
-		out = b''.join([self.magic, self.spacing1, self.size, self.spacing2 + self.spacing3])
+		out = b''.join([self.magic, self.spacing1, self.size, self.spacing2, self.spacing3])
 		return out
 
 class LIFBlock:	
@@ -161,6 +161,7 @@ class LIFFileEntry:
 def createLif(walk_dir):
 	outfile = os.path.basename(os.path.normpath(walk_dir))
 	number_of_files = 0
+	number_of_subdirs = 0
 	print('LIF Creator 1.1')
 	print('Choosen directory: {0}'.format(os.path.normpath(walk_dir)))
 	
@@ -186,7 +187,7 @@ def createLif(walk_dir):
 		for filename in files:
 			file_path = os.path.join(root, filename)
 			
-			sys.stdout.write('\tPROCESSING: {0}          \r'.format(filename))
+			sys.stdout.write('\tPROCESSING: {0}            \r'.format(filename))
 			sys.stdout.flush()
 			#print('Processing: {0}'.format(file_path))
 			
@@ -196,6 +197,7 @@ def createLif(walk_dir):
 				currenFileEntry = LIFFileEntry(name=filename, size=currenFileBlock.getSize())
 				fi_content_str = currenFileBlock.string()
 				fh_content_str = currenFileEntry.string()
+				currenFileBlock, currenFileEntry = None, None
 				
 			files_content_str = files_content_str + fi_content_str #Content of all files in current folder
 			files_fh_str = files_fh_str + fh_content_str
@@ -215,6 +217,7 @@ def createLif(walk_dir):
 		fh_dict[root] = currenDirEntry.string() + files_fh_str + subfolders_fh_str
 		
 		number_of_files = number_of_files + len(files)
+		number_of_subdirs = number_of_subdirs + len(subdirs)
 	
 	'''Root directory block (Block Type 3)'''
 	#rootDirBlock = LIFBlock(blocktype=3, data=fo_dict[root])
@@ -233,7 +236,7 @@ def createLif(walk_dir):
 	headerBlock = LIFHeader()
 	headerBlock.setSize(len(rootBlock.string()) + 18)
 	
-	print('\n\tCOMPLETED: {0} files processed. Will now write {1}.lif.'.format(str(number_of_files), outfile))
+	print('\n\tCOMPLETED: {0} files in {1} directories processed. Writing {2}.lif now.'.format(str(number_of_files), str(number_of_subdirs), outfile))
 	lif_file = open((outfile + '.lif'), "wb")
 	lif_file.write(headerBlock.string())
 	lif_file.write(rootBlock.string())
