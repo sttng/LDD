@@ -26,7 +26,6 @@ import os
 import sys
 import struct
 import time
-import shutil
 
 if sys.version_info < (3, 0):
 	reload(sys)
