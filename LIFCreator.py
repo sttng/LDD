@@ -161,7 +161,7 @@ def createLif(walk_dir):
 	outfile = os.path.basename(os.path.normpath(walk_dir))
 	number_of_files = 0
 	number_of_subdirs = 0
-	print('LIF Creator 1.1')
+	print('LIF Creator 1.1a')
 	print('Choosen directory: {0}'.format(os.path.normpath(walk_dir)))
 	
 	#Create the first non-existant file to write to.
@@ -198,22 +198,22 @@ def createLif(walk_dir):
 				fh_content_str = currenFileEntry.string()
 				currenFileBlock, currenFileEntry = None, None
 				
-			files_content_str = files_content_str + fi_content_str #Content of all files in current folder
-			files_fh_str = files_fh_str + fh_content_str
+			files_content_str = b''.join([files_content_str, fi_content_str])            #Content of all files in current folder
+			files_fh_str = b''.join([files_fh_str, fh_content_str])
 		
 		subfolders_content_str = b''
 		subfolders_fh_str = b''
 		for subdir in subdirs:
-			subfolders_content_str = subfolders_content_str + fo_dict[os.path.join(root, subdir)]
-			subfolders_fh_str = subfolders_fh_str + fh_dict[os.path.join(root, subdir)]
+			subfolders_content_str = b''.join([subfolders_content_str, fo_dict[os.path.join(root, subdir)]])
+			subfolders_fh_str = b''.join([subfolders_fh_str, fh_dict[os.path.join(root, subdir)]])
 			fo_dict.pop(os.path.join(root, subdir), None) #Drop item from fo dict, its no longer needed
 			fh_dict.pop(os.path.join(root, subdir), None) #Drop item from fh dict, its no longer needed
 			
-		currenBlock = LIFBlock(blocktype=3, data=files_content_str + subfolders_content_str) #Block Type 3
+		currenBlock = LIFBlock(blocktype=3, data=b''.join([files_content_str, subfolders_content_str]) ) #Block Type 3
 		number_entries = len(files) + len(subdirs)
 		currenDirEntry = LIFDirEntry(rootind=7, name=os.path.basename(root) , entries=number_entries)
 		fo_dict[root] = currenBlock.string()
-		fh_dict[root] = currenDirEntry.string() + files_fh_str + subfolders_fh_str
+		fh_dict[root] = b''.join([currenDirEntry.string(), files_fh_str, subfolders_fh_str])
 		
 		number_of_files = number_of_files + len(files)
 		number_of_subdirs = number_of_subdirs + len(subdirs)
@@ -229,7 +229,7 @@ def createLif(walk_dir):
 	fhBlock = LIFBlock(blocktype=5, data=fh_dict[root])
 	
 	'''Root Block (Block Type 1)'''
-	rootBlock = LIFBlock(blocktype=1, data=fileContentBlock.string() + rootDirBlock + fhBlock.string())
+	rootBlock = LIFBlock(blocktype=1, data=b''.join([fileContentBlock.string(), rootDirBlock, fhBlock.string()]))
 	
 	'''Header'''
 	headerBlock = LIFHeader()
@@ -246,4 +246,4 @@ if(len(sys.argv) > 1):
 	for i in range(1, len(sys.argv)):
 		createLif(sys.argv[i])
 else:
-	print("LIF Creator 1.1\n\nThis program will create LIF archives from an adjacent folder.\n\nCOPYRIGHT:\n\t(C) 2020 sttng\n\nLICENSE:\n\tGNU GPLv3\n\tYou accept full responsibility for how you use this program.\n\nUSEAGE:\n\t" + runCommand + " <FILE_PATHS>")
+	print("LIF Creator 1.1a\n\nThis program will create LIF archives from an adjacent folder.\n\nCOPYRIGHT:\n\t(C) 2020 sttng\n\nLICENSE:\n\tGNU GPLv3\n\tYou accept full responsibility for how you use this program.\n\nUSEAGE:\n\t" + runCommand + " <FILE_PATHS>")
