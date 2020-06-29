@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 #
-# LegoToR Version 0.5.0.9 - Copyright (c) 2020 by m2m
+# LegoToR Version 0.5.1 - Copyright (c) 2020 by m2m
 # based on pyldd2obj Version 0.4.8 - Copyright (c) 2019 by jonnysp 
 # LegoToR parses LXF files and command line parameters to create a renderman compliant rib file.
 # 
@@ -9,6 +9,7 @@
 #
 # Updates:
 #
+# 0.5.1   Added correct focus distance
 # 0.5.0.9 Fixed decorations bug, improved material assignments handling
 # 0.5.0.8 Improved custom2DField handling, adjusted logoonstuds height to better accommodate new custom bricks, fixed decorations bug, improved material assignments handling
 # 0.5.0.7 DB folder support for modifications (such as custom bricks) in addition to db.lif support
@@ -42,7 +43,7 @@ import shutil
 import ParseCommandLine as cl
 import random
 
-__version__ = '0.5.0.9'
+__version__ = '0.5.1'
 compression = zipfile.ZIP_DEFLATED
 PRMANPATH = '/Applications/Pixar/RenderManProServer-23.3/'
 
@@ -607,6 +608,8 @@ class Converter:
 		
 		out.write('''# Camera Minus One
 TransformBegin
+	Projection "PxrCamera" "float fov" [25] "float fStop" [9.99999968e+37] "float focalLength" [1.3] "float focalDistance" [5.0]
+	
 	Translate 0 -2 80
 	Rotate -25 1 0 0
 	Rotate 45 0 1 0
@@ -633,6 +636,8 @@ TransformEnd\n\n''')
 			
 			out.write('''# Camera {0}
 TransformBegin
+	Projection "PxrCamera" "float fov" [25.0] "float fStop" [4.0] "float focalLength" [1.3] "float focalDistance" [{18}]
+	
 	ConcatTransform [{1} {2} {3} {4} {5} {6} {7} {8} {9} {10} {11} {12} {13} {14} {15} {16}]
 	Camera "Cam-{0}"
 		"float shutterOpenTime" [0]
@@ -644,7 +649,10 @@ TransformBegin
 		"float dofaspect" [1]
 		"float nearClip" [0.1]
 		"float farClip" [10000]
-TransformEnd\n'''.format(cam.refID, undoTransformMatrix.n11, undoTransformMatrix.n21, -1 * undoTransformMatrix.n31, undoTransformMatrix.n41, undoTransformMatrix.n12, undoTransformMatrix.n22,  -1 * undoTransformMatrix.n32, undoTransformMatrix.n42, -1 * undoTransformMatrix.n13, -1 * undoTransformMatrix.n23, undoTransformMatrix.n33, undoTransformMatrix.n43, undoTransformMatrix.n14, undoTransformMatrix.n24, -1 * undoTransformMatrix.n34, undoTransformMatrix.n44))
+		#"float fStop" [2.4]
+		#"float fov" [{17}] 
+		#"float focalDistance" [{18}]
+TransformEnd\n'''.format(cam.refID, undoTransformMatrix.n11, undoTransformMatrix.n21, -1 * undoTransformMatrix.n31, undoTransformMatrix.n41, undoTransformMatrix.n12, undoTransformMatrix.n22,  -1 * undoTransformMatrix.n32, undoTransformMatrix.n42, -1 * undoTransformMatrix.n13, -1 * undoTransformMatrix.n23, undoTransformMatrix.n33, undoTransformMatrix.n43, undoTransformMatrix.n14, undoTransformMatrix.n24, -1 * undoTransformMatrix.n34, undoTransformMatrix.n44, cam.fieldOfView, cam.distance))
 		
 		out.write('''
 Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse,diffuse_mse,specular,specular_mse,zfiltered,zfiltered_var,normal,normal_var,forward,backward" "int asrgba" 1
@@ -1085,7 +1093,7 @@ DisplayChannel "normal normal_var" "string source" "normal Nn" "string statistic
 DisplayChannel "vector forward" "string source" "vector motionFore"
 DisplayChannel "vector backward" "string source" "vector motionBack"
 
-Projection "PxrCamera" "float fov" [{11}] "float fStop" [{12}] "float focalLength" [0.8] "float focalDistance" [5] "point focus1" [0.0 0.0 -1] "point focus2" [1 0.0 -1] "point focus3" [1 1 -1]
+#Projection "PxrCamera" "float fov" [{11}] "float fStop" [{12}] "float focalLength" [1.3] "float focalDistance" [5.0]
 '''.format(__version__, datetime.datetime.now(), str(searcharchive) + os.sep, FindRmtree(), str(searchtexture) + os.sep, pixelvar, width, height, '.' + os.sep + str(infile), integrator, srate, fov, fstop)
 
 	with open('rib_header.rib', 'w') as file_writer:
@@ -1108,7 +1116,7 @@ def main():
 	converter = Converter()
 	print("LegoToR Version " + __version__)
 	if os.path.isdir(FindDBFolder()):
-		print "Found DB folder. Will use DB folder instead of db.lif!"
+		print "Found DB folder. Will use DB folder instead of db.lif file!"
 		global PRIMITIVEPATH
 		global GEOMETRIEPATH
 		global DECORATIONPATH
