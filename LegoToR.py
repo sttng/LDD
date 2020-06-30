@@ -605,6 +605,7 @@ class Converter:
 		useplane = cl.useplane
 		usenormal = cl.usenormal
 		uselogoonstuds = cl.uselogoonstuds
+		fstop = cl.args.fstop
 		
 		out.write('''# Camera Minus One
 TransformBegin
@@ -636,7 +637,7 @@ TransformEnd\n\n''')
 			
 			out.write('''# Camera {0}
 TransformBegin
-	Projection "PxrCamera" "float fov" [25.0] "float fStop" [4.0] "float focalLength" [1.3] "float focalDistance" [{18}]
+	Projection "PxrCamera" "float fov" [25.0] "float fStop" [{19}] "float focalLength" [1.3] "float focalDistance" [{18}]
 	
 	ConcatTransform [{1} {2} {3} {4} {5} {6} {7} {8} {9} {10} {11} {12} {13} {14} {15} {16}]
 	Camera "Cam-{0}"
@@ -652,7 +653,7 @@ TransformBegin
 		#"float fStop" [2.4]
 		#"float fov" [{17}] 
 		#"float focalDistance" [{18}]
-TransformEnd\n'''.format(cam.refID, undoTransformMatrix.n11, undoTransformMatrix.n21, -1 * undoTransformMatrix.n31, undoTransformMatrix.n41, undoTransformMatrix.n12, undoTransformMatrix.n22,  -1 * undoTransformMatrix.n32, undoTransformMatrix.n42, -1 * undoTransformMatrix.n13, -1 * undoTransformMatrix.n23, undoTransformMatrix.n33, undoTransformMatrix.n43, undoTransformMatrix.n14, undoTransformMatrix.n24, -1 * undoTransformMatrix.n34, undoTransformMatrix.n44, cam.fieldOfView, cam.distance))
+TransformEnd\n'''.format(cam.refID, undoTransformMatrix.n11, undoTransformMatrix.n21, -1 * undoTransformMatrix.n31, undoTransformMatrix.n41, undoTransformMatrix.n12, undoTransformMatrix.n22,  -1 * undoTransformMatrix.n32, undoTransformMatrix.n42, -1 * undoTransformMatrix.n13, -1 * undoTransformMatrix.n23, undoTransformMatrix.n33, undoTransformMatrix.n43, undoTransformMatrix.n14, undoTransformMatrix.n24, -1 * undoTransformMatrix.n34, undoTransformMatrix.n44, cam.fieldOfView, cam.distance, fstop))
 		
 		out.write('''
 Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse,diffuse_mse,specular,specular_mse,zfiltered,zfiltered_var,normal,normal_var,forward,backward" "int asrgba" 1
@@ -1127,17 +1128,16 @@ def main():
 		DECORATIONPATH = FindDBFolder() + '/Decorations/'
 		MATERIALNAMESPATH = FindDBFolder() + '/MaterialNames/'
 		converter.LoadDBFolder(dbfolderlocation = FindDBFolder())
-		converter.LoadScene(filename=lxf_filename)
-		converter.Export(filename=obj_filename)
 		
 	elif os.path.exists(FindDatabase()):
 		converter.LoadDatabase(databaselocation = FindDatabase())
-		converter.LoadScene(filename=lxf_filename)
-		converter.Export(filename=obj_filename)
 		
 	else:
 		print("No LDD database found. Please install LEGO Digital-Designer.")
 		os._exit()
+	
+	converter.LoadScene(filename=lxf_filename)
+	converter.Export(filename=obj_filename)
 	
 	with open(obj_filename + '_Scene.rib','wb') as wfd:
 		for f in ['rib_header.rib', obj_filename + '.rib']:
