@@ -9,7 +9,7 @@
 #
 # Updates:
 #
-# 0.5.1   Added reading correct focus distance from lxf file camera, allowing for correct depth-of-field rendering. 
+# 0.5.1   Added reading correct focus distance from lxf file camera, allowing for correct depth-of-field rendering.
 # 0.5.0.9 Fixed decorations bug, improved material assignments handling
 # 0.5.0.8 Improved custom2DField handling, adjusted logoonstuds height to better accommodate new custom bricks, fixed decorations bug, improved material assignments handling
 # 0.5.0.7 DB folder support for modifications (such as custom bricks) in addition to db.lif support
@@ -1117,7 +1117,7 @@ def main():
 		os.remove(obj_filename + "_Bricks_Archive.zip")
 
 	converter = Converter()
-	print("LegoToR Version " + __version__)
+	print('LegoToR Version ' + __version__)
 	if os.path.isdir(FindDBFolder()):
 		print('Found DB folder. Will use DB folder instead of db.lif file!')
 		global PRIMITIVEPATH

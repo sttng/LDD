@@ -1,13 +1,14 @@
 #!/usr/bin/env python
 
 #
-# LegoToRHD Version 0.5.0.3 - Copyright (c) 2020 by m2m
+# LegoToRHD Version 0.5.1 - Copyright (c) 2020 by m2m
 # based on pyldd2obj Version 0.4.8 - Copyright (c) 2019 by jonnysp 
 # LegoToRHD parses LXF files and command line parameters to create USDA compliant files.
 # 
 # Usage: ./LegoToRHD.py /Users/username/Documents/LEGO\ Creations/Models/mylxffile.lxf -np
 #
 # Updates:
+# 0.5.1   added reading correct focus distance from lxf file camera
 # 0.5.0.3 improved custom2DField handling, adjusted logoonstuds height to better accommodate new custom bricks, fixed decorations bug, improved material assignments handling
 # 0.5.0.2 db folder support for modifications (such as custom bricks) in addition to db.lif support
 # 0.5.0.1 more logo on studs supported
@@ -38,7 +39,7 @@ import shutil
 import ParseCommandLine as cl
 import random
 
-__version__ = "0.5.0.3"
+__version__ = "0.5.1"
 
 compression = zipfile.ZIP_STORED #uncompressed archive for USDZ, otherwise would use ZIP_DEFLATED, the usual zip compression
 
@@ -246,7 +247,7 @@ class Converter:
 			os.mkdir(assetsDir)
 			#print("Directory " , assetsDir ,  " Created ")
 		else:
-			print("Directory " , assetsDir ,  " already exists")
+			print('Directory {0} already exists'.format(assetsDir))
 		
 		total = len(self.scene.Bricks)
 		current = 0
@@ -258,6 +259,8 @@ class Converter:
 		useplane = cl.useplane
 		usenormal = cl.usenormal
 		uselogoonstuds = cl.uselogoonstuds
+		fstop = cl.args.fstop
+		fov =  cl.args.fov
 		
 		out.write('''
 {
@@ -286,9 +289,9 @@ class Converter:
 		{{
 			float4[] clippingPlanes = []
 			float2 clippingRange = (0.15815565, 6045.622)
-			float focalLength = 50
-			float focusDistance = 5
-			float fStop = 5.6
+			float focalLength = 80
+			float focusDistance = {18}
+			float fStop = {20}
 			float horizontalAperture = 41.4214
 			float horizontalApertureOffset = 0
 			float verticalAperture = 23.299536
@@ -297,7 +300,7 @@ class Converter:
 		
 			matrix4d xformOp:transform = ( ({1}, {2}, {3}, {4}), ({5}, {6}, {7}, {8}), ({9}, {10}, {11}, {12}), ({13}, {14}, {15}, {16}) )
 			uniform token[] xformOpOrder = ["xformOp:transform"]
-		}}\n'''.format(cam.refID, cam.matrix.n11, cam.matrix.n12, cam.matrix.n13, cam.matrix.n14, cam.matrix.n21, cam.matrix.n22, cam.matrix.n23, cam.matrix.n24, cam.matrix.n31, cam.matrix.n32, cam.matrix.n33, cam.matrix.n34, cam.matrix.n41, cam.matrix.n42, cam.matrix.n43, cam.matrix.n44))
+		}}\n'''.format(cam.refID, cam.matrix.n11, cam.matrix.n12, cam.matrix.n13, cam.matrix.n14, cam.matrix.n21, cam.matrix.n22, cam.matrix.n23, cam.matrix.n24, cam.matrix.n31, cam.matrix.n32, cam.matrix.n33, cam.matrix.n34, cam.matrix.n41, cam.matrix.n42, cam.matrix.n43, cam.matrix.n44, cam.fieldOfView, cam.distance, fov, fstop))
 
 		for bri in self.scene.Bricks:
 			current += 1
@@ -464,7 +467,7 @@ def Xform "geo{0}" (
 					try:
 						materialCurrentPart = pa.materials[part]
 					except IndexError:
-						print 'WARNING: {0}.g{1} has NO material assignment in lxf. Replaced with color 9. Fix {0}.xml faces values.'.format(pa.designID, part)
+						print('WARNING: {0}.g{1} has NO material assignment in lxf. Replaced with color 9. Fix {0}.xml faces values.'.format(pa.designID, part))
 						materialCurrentPart = '9'
 					
 					lddmatri = self.allMaterials.getMaterialRibyId(materialCurrentPart)
@@ -669,9 +672,9 @@ def main():
 	generate_rib_header(cl.args.infile, cl.args.srate, cl.args.pixelvar, cl.args.width, cl.args.height, cl.args.fov, cl.args.fstop, cl.args.searcharchive, cl.args.searchtexture, cl.integrator, cl.integratorParams, cl.useplane, cl.usenormal, cl.uselogoonstuds)
 
 	converter = Converter()
-	print("LegoToRHD Version " + __version__)
+	print('LegoToRHD Version ' + __version__)
 	if os.path.isdir(FindDBFolder()):
-		print "Found DB folder. Will use DB folder instead of db.lif!"
+		print('Found DB folder. Will use DB folder instead of db.lif!')
 		global PRIMITIVEPATH
 		global GEOMETRIEPATH
 		global DECORATIONPATH
@@ -682,18 +685,17 @@ def main():
 		DECORATIONPATH = FindDBFolder() + '/Decorations/'
 		MATERIALNAMESPATH = FindDBFolder() + '/MaterialNames/'
 		converter.LoadDBFolder(dbfolderlocation = FindDBFolder())
-		converter.LoadScene(filename=lxf_filename)
-		converter.Export(filename=obj_filename)
 	
 	elif os.path.exists(FindDatabase()):
 		converter.LoadDatabase(databaselocation = FindDatabase())
-		converter.LoadScene(filename=lxf_filename)
-		converter.Export(filename=obj_filename)
 		
 	else:
-		print("No LDD database found. Please install LEGO Digital-Designer.")
+		print('No LDD database found. Please install LEGO Digital-Designer.')
 		os._exit()
-		
+	
+	converter.LoadScene(filename=lxf_filename)
+	converter.Export(filename=obj_filename)
+	
 	with open(obj_filename + '_Scene.usda','wb') as wfd:
 		for f in ['rib_header.rib', obj_filename + '.usda']:
 			with open(f,'rb') as fd:
@@ -701,8 +703,8 @@ def main():
 	os.remove(obj_filename + '.usda')
 	os.remove('rib_header.rib')
 		
-	print "\nNow start usdcat to convert from usda to usdc with :\n./usdcat -f -o {0}{1}_Scene.usdc {0}{1}_Scene.usda".format(cl.args.searcharchive, os.sep + obj_filename)
-	print "\nFinally put the file into an usdz archive with:./usdzconvert {0}{1}_Scene.usdc\n".format(cl.args.searcharchive, os.sep + obj_filename)
+	print("\nNow start usdcat to convert from usda to usdc with :\n./usdcat -f -o {0}{1}_Scene.usdc {0}{1}_Scene.usda".format(cl.args.searcharchive, os.sep + obj_filename))
+	print("\nFinally put the file into an usdz archive with:./usdzconvert {0}{1}_Scene.usdc\n".format(cl.args.searcharchive, os.sep + obj_filename))
 
 if __name__ == "__main__":
 	main()
