@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>JavaScript Functions</h2>
+
+<p>This example calls a function which performs a calculation and returns the result:</p>
+
+<p id="demo"></p>
+
+<script>
+var filelist = {};
+//var y = parse2('https://api.github.com/repos/sttng/LDD-DB/contents/')
+//console.log(filelist);
+//document.getElementById("demo").innerHTML = y;
+
+//const mu = await FindDBURL();
+
+
+class Converter {
+	
+	LoadDBURL(dbURLlocation){
+		var dbreader = new DBURLReader(dbURLlocation)
+		//this.database = dbreader
+		alert('Here' + dbURLlocation)
+		
+	}
+	
+}
+
+
+function FindDBURL(){
+	var dburl = 'https://api.github.com/repos/sttng/LDD-DB/contents/'
+	let xhr = new XMLHttpRequest();
+	xhr.open('GET', dburl);
+	
+	// request state change event
+	xhr.onreadystatechange = function() {
+		
+		// request completed?
+		if (xhr.readyState !== 4) return;
+	
+		if (xhr.status === 200) {
+			// request successful - show response
+			//console.log(xhr.responseText);
+		}
+		else {
+			// request error
+			console.log('HTTP error', xhr.status, xhr.statusText);
+			dburl = false;
+		}
+	};
+	
+	// start request
+	xhr.send();
+	return dburl
+}
+
+
+class DBURLReader {
+	
+	constructor(dburl) {
+		this.filelist = {};
+		this.initok = false;
+		this.location = dburl;
+		this.dbinfo = '';
+		this.parse(this.location);
+		if(this.fileexist('Materials.xml') && this.fileexist('info.xml')){
+			alert('mumu')
+		}
+	}
+	
+	fileexist(filename) {
+		return this.filelist[filename];
+	}
+	
+	parse(dburl){
+		alert('mama '+ dburl)
+		let xhr = new XMLHttpRequest();
+		xhr.open('GET', dburl);
+		
+		// request state change event
+		xhr.onreadystatechange = function() {
+			
+			// request completed?
+			if (xhr.readyState !== 4) return;
+		
+			if (xhr.status === 200) {
+				// request successful - show response
+				//console.log(xhr.responseText);
+				var data = JSON.parse(xhr.responseText)
+				alert(data)
+				for(var i = 0; i < data.length; i++) {
+						var obj = data[i];
+						if(obj.type=="dir") { //for a dir with call the function again with the URL of the dir.
+							alert('dir')
+							parse(obj.url)
+						}
+						else if (obj.type=="file") { //for a file we add its name and url to our filelist dict.
+							this.filelist[obj.name] = obj.download_url;
+						}
+						else { //we have objects whose type is neither file nor dir. This should be strange but we ignore
+							console.log('strange obj');
+						}
+					}
+			}
+			else {
+				// request error
+				console.log('HTTP error', xhr.status, xhr.statusText);
+			}
+		};
+		
+		// start request
+		xhr.send();
+		return dburl
+	}
+}
+
+
+
+//Start
+converter = new Converter()
+//dvbu= new DBURLReader('https://api.github.com/repos/sttng/LDD-DB/contents/')
+if (FindDBURL()) {
+	converter.LoadDBURL(dbURLlocation = FindDBURL())
+	
+}
+else {
+	alert("no LDD database found please install LEGO-Digital-Designer")
+}
+
+
+
+
+
+
+function parse2(dburl){
+	let xhr = new XMLHttpRequest();
+	xhr.open('GET', dburl);
+	
+	// request state change event
+	xhr.onreadystatechange = function() {
+		
+		// request completed?
+		if (xhr.readyState !== 4) return;
+	
+		if (xhr.status === 200) {
+			// request successful - show response
+			//console.log(xhr.responseText);
+			var data = JSON.parse(xhr.responseText)
+			for(var i = 0; i < data.length; i++) {
+					var obj = data[i];
+					if(obj.type=="dir") { //for a dir with call the function again with the URL of the dir.
+						//alert(obj.url)
+						parse2(obj.url)
+					}
+					else if (obj.type=="file") { //for a file we add its name and url to our filelist dict.
+						filelist[obj.name] = obj.download_url;
+					}
+					else { //we have objects whose type is neither file nor dir. This should be strange but we ignore
+						console.log('strange obj');
+					}
+				}
+		}
+		else {
+			// request error
+			console.log('HTTP error', xhr.status, xhr.statusText);
+		}
+	};
+	
+	// start request
+	xhr.send();
+	return dburl
+}
+
+
+
+
+
+
+
+
+async function parseURL(url) {
+	(async () => {
+		try {
+			var response = await fetch(url);
+			var data = await response.json();
+			//console.log(data);
+			for(var i = 0; i < data.length; i++) {
+				var obj = data[i];
+				if(obj.type=="dir") { //for a dir with call the function again with the URL of the dir.
+					parseURL(obj.url)
+				}
+				else if (obj.type=="file") { //for a file we add its name and url to our filelist dict.
+					filelist[obj.name] = obj.download_url;
+				}
+				else { //we have objects whose type is neither file nor dir. This should be strange but we ignore
+					console.log('strange obj');
+				}
+			}
+			
+		} catch (e) {
+			console.log('parseURL Problem');
+		}
+	})();
+}
+
+
+
+class DBinfo {
+	constructor(data) {
+		parser = new DOMParser();
+		this.xml = parser.parseFromString(data, "text/xml");
+		this.Version = xml.getElementsByTagName('Bricks')[0].attributes['version'].value
+		console.log(this.Version);
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+</script>
+
+</body>
+</html>
