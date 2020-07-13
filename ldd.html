@@ -32,22 +32,24 @@ class Converter {
 function FindDBURL(){
 	var dburl = 'https://api.github.com/repos/sttng/LDD-DB/contents/'
 	let xhr = new XMLHttpRequest();
-	xhr.open('GET', dburl);
+	xhr.open('GET', dburl, false);  // `false` makes the request synchronous
 	
 	// request state change event
 	xhr.onreadystatechange = function() {
 		
 		// request completed?
-		if (xhr.readyState !== 4) return;
-	
+		if (xhr.readyState !== 4) {//return;
+			console.log('readyState error in FindDBURL:', xhr.status, xhr.statusText);
+		}
+		
 		if (xhr.status === 200) {
 			// request successful - show response
 			//console.log(xhr.responseText);
 		}
 		else {
 			// request error
-			console.log('HTTP error', xhr.status, xhr.statusText);
 			dburl = false;
+			console.log('HTTP error in FindDBURL:', xhr.status, xhr.statusText);
 		}
 	};
 	
@@ -92,7 +94,6 @@ class DBURLReader {
 		
 			if (xhr.status === 200) {
 				// request successful - show response
-				//console.log(xhr.responseText);
 				var data = JSON.parse(xhr.responseText)
 				//console.log(JSON.stringify(data, null, "\t"));
 				for(var i = 0; i < data.length; i++) {
@@ -123,14 +124,13 @@ class DBURLReader {
 
 
 //Start
-converter = new Converter()
-//dvbu= new DBURLReader('https://api.github.com/repos/sttng/LDD-DB/contents/')
 if (FindDBURL()) {
+	converter = new Converter()
 	converter.LoadDBURL(dbURLlocation = FindDBURL())
 	
 }
 else {
-	alert("no LDD database found please install LEGO-Digital-Designer")
+	alert("LDD database not available. Please look for LEGO-Digital-Designer database.")
 }
 
 
