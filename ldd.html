@@ -9,13 +9,6 @@
 <p id="demo"></p>
 
 <script>
-var filelist = {};
-//var y = parse2('https://api.github.com/repos/sttng/LDD-DB/contents/')
-//console.log(filelist);
-//document.getElementById("demo").innerHTML = y;
-
-//const mu = await FindDBURL();
-
 
 class Converter {
 	
@@ -69,7 +62,8 @@ class DBURLReader {
 		this.parse(this.location);
 		console.log(this.filelist)
 		for (var item in this.filelist) {
-			console.log('key:' + item + ' value:' + this.filelist[item]);
+			alert('hehhee')
+			console.log('key-schluessel:' + item + ' value:' + this.filelist[item]);
 		}
 		if(this.fileexist('Materials.xml') && this.fileexist('info.xml')){
 			alert('mumu')
@@ -219,8 +213,6 @@ class DBinfo {
 		console.log(this.Version);
 	}
 }
-
-
 
 
 
