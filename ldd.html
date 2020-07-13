@@ -65,17 +65,22 @@ class DBURLReader {
 		this.location = dburl;
 		this.dbinfo = '';
 		this.parse(this.location);
+		console.log(this.filelist)
+		for (var item in this.filelist) {
+			console.log('key:' + item + ' value:' + this.filelist[item]);
+		}
 		if(this.fileexist('Materials.xml') && this.fileexist('info.xml')){
 			alert('mumu')
 		}
 	}
 	
 	fileexist(filename) {
-		return this.filelist[filename];
+		var self = this;
+		return self.filelist[filename];
 	}
 	
-	parse(dburl){
-		alert('mama '+ dburl)
+	parse(dburl) {
+		var self = this;
 		let xhr = new XMLHttpRequest();
 		xhr.open('GET', dburl);
 		
@@ -89,15 +94,14 @@ class DBURLReader {
 				// request successful - show response
 				//console.log(xhr.responseText);
 				var data = JSON.parse(xhr.responseText)
-				alert(data)
+				//console.log(JSON.stringify(data, null, "\t"));
 				for(var i = 0; i < data.length; i++) {
 						var obj = data[i];
 						if(obj.type=="dir") { //for a dir with call the function again with the URL of the dir.
-							alert('dir')
-							parse(obj.url)
+							self.parse(obj.url)
 						}
 						else if (obj.type=="file") { //for a file we add its name and url to our filelist dict.
-							this.filelist[obj.name] = obj.download_url;
+							self.filelist[obj.name] = obj.download_url;
 						}
 						else { //we have objects whose type is neither file nor dir. This should be strange but we ignore
 							console.log('strange obj');
