@@ -60,11 +60,14 @@ class DBURLReader {
 		this.location = dburl;
 		this.dbinfo = '';
 		this.parse(this.location);
-		console.log(this.filelist)
-		for (var item in this.filelist) {
-			alert('hehhee')
-			console.log('key-schluessel:' + item + ' value:' + this.filelist[item]);
+		console.log(JSON.stringify(this.filelist))
+		console.log(Object.keys(this.filelist).length)
+		for(var key in this.filelist) {
+			var value = this.filelist[key];
+			console.leg(value)
+		// do something with "key" and "value" variables
 		}
+		
 		if(this.fileexist('Materials.xml') && this.fileexist('info.xml')){
 			alert('mumu')
 		}
@@ -213,6 +216,8 @@ class DBinfo {
 		console.log(this.Version);
 	}
 }
+
+
 
 
 
