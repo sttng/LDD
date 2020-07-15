@@ -23,7 +23,7 @@ class Converter {
 
 
 function FindDBURL(){
-	var dburl = 'https://api.github.com/repos/sttng/LDD-DB/contents/'
+	var dburl = 'https://api.github.com/repos/sttng/LDD-DB/contents/?access_token=0c8d5b77e090e3ddaefc24a708aec7eb90a1293c'
 	let xhr = new XMLHttpRequest();
 	xhr.open('GET', dburl, false);  // `false` makes the request synchronous
 	
@@ -60,11 +60,12 @@ class DBURLReader {
 		this.location = dburl;
 		this.dbinfo = '';
 		this.parse(this.location);
-		console.log(JSON.stringify(this.filelist))
+		var mu = JSON.stringify(this.filelist)
+		console.log(this.filelist)
 		console.log(Object.keys(this.filelist).length)
 		for(var key in this.filelist) {
 			var value = this.filelist[key];
-			console.leg(value)
+			console.log(value)
 		// do something with "key" and "value" variables
 		}
 		
@@ -81,7 +82,7 @@ class DBURLReader {
 	parse(dburl) {
 		var self = this;
 		let xhr = new XMLHttpRequest();
-		xhr.open('GET', dburl);
+		xhr.open('GET', dburl, false);
 		
 		// request state change event
 		xhr.onreadystatechange = function() {
@@ -96,7 +97,7 @@ class DBURLReader {
 				for(var i = 0; i < data.length; i++) {
 						var obj = data[i];
 						if(obj.type=="dir") { //for a dir with call the function again with the URL of the dir.
-							self.parse(obj.url)
+							self.parse(obj.url + '&?access_token=0c8d5b77e090e3ddaefc24a708aec7eb90a1293c')
 						}
 						else if (obj.type=="file") { //for a file we add its name and url to our filelist dict.
 							self.filelist[obj.name] = obj.download_url;
