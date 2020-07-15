@@ -10,12 +10,30 @@
 
 <script>
 
+class DBinfo {
+	constructor(data) {
+		var parser = new DOMParser();
+		var xml = parser.parseFromString(data, "text/xml");
+		var Version = xml.getElementsByTagName('Bricks')[0].attributes['version'].value
+		console.log('DB Version: ' + Version);
+		return Version
+	}
+}
+
 class Converter {
 	
 	LoadDBURL(dbURLlocation){
-		var dbreader = new DBURLReader(dbURLlocation)
-		//this.database = dbreader
-		alert('Here' + dbURLlocation)
+		this.database = new DBURLReader(dbURLlocation)
+		if(this.database.initok && this.database.fileexist('Materials.xml') && this.database.fileexist('localizedStrings.loc')){
+			alert('heyy')
+			this.allMaterials = new Materials(this.database.filelist['Materials.xml'].read())
+		
+		}
+		else {
+			alert('no')
+		}
+		
+		
 		
 	}
 	
@@ -26,16 +44,50 @@ class Materials {
 	
 	constructor(data) {
 		this.Materials = {}
-		parser = new DOMParser();
-		xml = parser.parseFromString(data,"text/xml");
-		for (node in xml.firstChild.childNodes) {
+		var parser = new DOMParser();
+		var xml = parser.parseFromString(data,"text/xml");
+		//console.log(xml.firstChild.childNodes)
+		
+		var nodes = xml.firstChild.childNodes;
+		for (var i = 0; i < nodes.length ;i++) {
+			var node = nodes[i]
 			if (node.nodeName == 'Material') {
-				self.Materials[node.getAttribute('MatID')] = Material(node.getAttribute('MatID'),r=int(node.getAttribute('Red')), g=int(node.getAttribute('Green')), b=int(node.getAttribute('Blue')), a=int(node.getAttribute('Alpha')), mtype=str(node.getAttribute('MaterialType')))
+				this.Materials[node.getAttribute('MatID')] = new Material(node.getAttribute('MatID'), parseInt(node.getAttribute('Red')), parseInt(node.getAttribute('Green')), parseInt(node.getAttribute('Red')), parseInt(node.getAttribute('Blue')), parseInt(node.getAttribute('Alpha')), node.getAttribute('MaterialType'))
+			}
+			
+		}
+	}
+	
+	setLOC(loc){
+		for (var key in loc.values){
+			if (key in this.Materials){
+				this.Materials[key].name = loc.values[key].replace(" ", "_")
 			}
 		}
-
+	}
+	
+	getMaterialbyId(mid) {
+		return this.Materials[mid]
 	}
 
+}
+
+class Material {
+	
+	constructor(id, r, g, b, a, mtype) {
+		this.id = id
+		this.name = ''
+		this.mattype = mtype
+		this.r = parseFloat(r)
+		this.g = parseFloat(g)
+		this.b = parseFloat(b)
+		this.a = parseFloat(a)
+	}
+
+	string(){
+		out = ('Red: ' + this.r + ' Green: ' + this.g + ' Blue: '+ this.b + ' Aplha: ' + this.a)
+		return out;
+	}
 }
 
 function FindDBURL(){
@@ -90,8 +142,6 @@ class DBURLFile {
 			if (xhr.status === 200) {
 				// request successful - show response
 				fileContent = xhr.responseText;
-				console.log(fileContent);
-				
 			}
 			else {
 				// request error
@@ -113,12 +163,15 @@ class DBURLReader {
 		this.location = dburl;
 		this.dbinfo = '';
 		this.parse(this.location);
+		
 		// console.log(JSON.stringify(this.filelist))
 		
 		if(this.fileexist('Materials.xml') && this.fileexist('info.xml')){
-			var mu = this.filelist['info.xml'].read()
-			var test = new DBinfo(mu)
-			alert('mumu')
+			this.dbinfo = new DBinfo(this.filelist['info.xml'].read());
+			this.initok = true
+		}
+		else{
+			alert("db url ERROR")
 		}
 	}
 	
@@ -257,14 +310,7 @@ async function parseURL(url) {
 
 
 
-class DBinfo {
-	constructor(data) {
-		parser = new DOMParser();
-		this.xml = parser.parseFromString(data, "text/xml");
-		this.Version = xml.getElementsByTagName('Bricks')[0].attributes['version'].value
-		console.log(this.Version);
-	}
-}
+
 
 
 
