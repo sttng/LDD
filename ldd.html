@@ -22,19 +22,35 @@ class Converter {
 }
 
 
+class Materials {
+	
+	constructor(data) {
+		this.Materials = {}
+		parser = new DOMParser();
+		xml = parser.parseFromString(data,"text/xml");
+		for (node in xml.firstChild.childNodes) {
+			if (node.nodeName == 'Material') {
+				self.Materials[node.getAttribute('MatID')] = Material(node.getAttribute('MatID'),r=int(node.getAttribute('Red')), g=int(node.getAttribute('Green')), b=int(node.getAttribute('Blue')), a=int(node.getAttribute('Alpha')), mtype=str(node.getAttribute('MaterialType')))
+			}
+		}
+
+	}
+
+}
+
 function FindDBURL(){
 	var dburl = 'https://api.github.com/repos/sttng/LDD-DB/contents/?access_token=0c8d5b77e090e3ddaefc24a708aec7eb90a1293c'
 	let xhr = new XMLHttpRequest();
 	xhr.open('GET', dburl, false);  // `false` makes the request synchronous
-	
+
 	// request state change event
 	xhr.onreadystatechange = function() {
 		
 		// request completed?
 		if (xhr.readyState !== 4) {//return;
+			dburl = false;
 			console.log('readyState error in FindDBURL:', xhr.status, xhr.statusText);
 		}
-		
 		if (xhr.status === 200) {
 			// request successful - show response
 			//console.log(xhr.responseText);
@@ -51,6 +67,43 @@ function FindDBURL(){
 	return dburl
 }
 
+class DBURLFile {
+
+	constructor(urlHandle, name) {
+		this.urlHandle = urlHandle
+		this.name = name
+	}
+
+	read() {
+		var fileContent
+		var self = this;
+		let xhr = new XMLHttpRequest();
+		xhr.open('GET', self.urlHandle, false);
+		
+			// request state change event
+		xhr.onreadystatechange = function() {
+			
+			// request completed?
+			if (xhr.readyState !== 4) {//return;
+				console.log('readyState error in DBURLFile:', xhr.status, xhr.statusText);
+			}
+			if (xhr.status === 200) {
+				// request successful - show response
+				fileContent = xhr.responseText;
+				console.log(fileContent);
+				
+			}
+			else {
+				// request error
+				console.log('HTTP error in DBURLFile:', xhr.status, xhr.statusText);
+			}
+		};
+		
+		// start request
+		xhr.send();
+		return fileContent
+	}
+}
 
 class DBURLReader {
 	
@@ -60,16 +113,11 @@ class DBURLReader {
 		this.location = dburl;
 		this.dbinfo = '';
 		this.parse(this.location);
-		var mu = JSON.stringify(this.filelist)
-		console.log(this.filelist)
-		console.log(Object.keys(this.filelist).length)
-		for(var key in this.filelist) {
-			var value = this.filelist[key];
-			console.log(value)
-		// do something with "key" and "value" variables
-		}
+		// console.log(JSON.stringify(this.filelist))
 		
 		if(this.fileexist('Materials.xml') && this.fileexist('info.xml')){
+			var mu = this.filelist['info.xml'].read()
+			var test = new DBinfo(mu)
 			alert('mumu')
 		}
 	}
@@ -100,7 +148,7 @@ class DBURLReader {
 							self.parse(obj.url + '&?access_token=0c8d5b77e090e3ddaefc24a708aec7eb90a1293c')
 						}
 						else if (obj.type=="file") { //for a file we add its name and url to our filelist dict.
-							self.filelist[obj.name] = obj.download_url;
+							self.filelist[obj.name] = new DBURLFile(obj.download_url, obj.download_url);
 						}
 						else { //we have objects whose type is neither file nor dir. This should be strange but we ignore
 							console.log('strange obj');
