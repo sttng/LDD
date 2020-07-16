@@ -7,7 +7,8 @@
 <p>This example calls a function which performs a calculation and returns the result:</p>
 
 <p id="demo"></p>
-
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.5.0/jszip.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip-utils/0.1.0/jszip-utils.min.js"></script>
 <script>
 
 class DBinfo {
@@ -20,33 +21,152 @@ class DBinfo {
 	}
 }
 
+
 class Converter {
 	
 	LoadDBURL(dbURLlocation){
 		this.database = new DBURLReader(dbURLlocation)
 		if(this.database.initok && this.database.fileexist('Materials.xml') && this.database.fileexist('localizedStrings.loc')){
-			alert('heyy')
 			this.allMaterials = new Materials(this.database.filelist['Materials.xml'].read())
-		
+			this.allMaterials.setLOC(new LOCReader(this.database.filelist['localizedStrings.loc'].read()))
 		}
-		else {
-			alert('no')
-		}
-		
-		
-		
 	}
 	
+	LoadScene(filename){
+		if(this.database.initok){
+			this.scene = new Scene(filename)
+		}
+	}
 }
 
 
-class Materials {
+class LOCReader {
+	constructor(data) {
+		this.offset = 0
+		this.values = {}
+		this.data = data
+		if (this.data[0].charCodeAt() == 50 && this.data[1].charCodeAt() == 0){
+			
+			this.offset += 2
+			while (this.offset < this.data.length){
+				var key = this.NextString().replace('Material', '')
+				var value = this.NextString()
+				this.values[key] = value
+			}
+		}
+	}
 	
+	NextString(){
+		var out =''
+		var t = this.data[this.offset].charCodeAt()
+		this.offset += 1
+		while (t != 0){
+			out = out + String.fromCharCode(t)
+			t = this.data[this.offset].charCodeAt()
+			this.offset += 1
+		}
+		return out;
+	}
+}
+
+
+class SceneCamera{
+	constructor(node){
+		this.refID = node.getAttribute('refID')
+	}
+}
+
+
+class Scene{
+	constructor(file){
+		this.Bricks = []
+		this.Scenecamera = []
+		this.Groups = []
+		var xmldata =''
+		if (file.endsWith('.lxfml')){
+			var lxfmlfile = new DBURLFile(file,file)
+			xmldata = lxfmlfile.read()
+		}
+		else if (file.endsWith('.lxf')){
+			alert('IMAGE100.LXFML')
+			
+			var promise = new JSZip.external.Promise(function (resolve, reject) {
+				JSZipUtils.getBinaryContent(file, function(err, data) {
+					if (err) {
+						reject(err);
+					} else {
+						resolve(data);
+					}
+				});
+			});
+
+			promise.then(JSZip.loadAsync)                     // 2) chain with the zip promise
+			.then(function(zip) {
+				return zip.file("IMAGE100.LXFML").async("string"); // 3) chain with the text content promise
+			})
+			.then(function success(text) {                    // 4) display the result
+				
+				xmldata = text
+				console.log(xmldata)
+				
+				
+				
+			}, function error(e) {
+				console.log(e)
+			});
+		}
+		else {
+			return
+		}
+		
+		var parser = new DOMParser();
+		var xml = parser.parseFromString(xmldata, "text/xml");
+		this.Name = xml.firstChild.getAttribute('name')
+		console.log(this.Name)
+		
+		var nodes = xml.firstChild.childNodes;
+		for (var i = 0; i < nodes.length ;i++) {
+			var node = nodes[i]
+			if (node.nodeName == 'Meta'){
+				var childnodes = node.childNodes
+				for (var j = 0; j < childnodes.length ;j++) {
+					var childnode = childnodes[j]
+					if (childnode.nodeName == 'BrickSet'){
+						this.Version = childnode.getAttribute('version')
+					}
+				}
+			}
+			else if (node.nodeName == 'Cameras'){
+				var childnodes = node.childNodes
+				for (var j = 0; j < childnodes.length ;j++) {
+					var childnode = childnodes[j]
+					if (childnode.nodeName == 'Camera'){
+						
+						alert(childnode)
+					}
+				}
+			}
+			else if (node.nodeName == 'Bricks'){
+				var childnodes = node.childNodes
+				for (var j = 0; j < childnodes.length ;j++) {
+					var childnode = childnodes[j]
+					if (childnode.nodeName == 'Brick'){
+						
+						alert(childnode)
+					}
+				}
+			}
+		}
+
+	
+	}
+}
+
+class Materials {
 	constructor(data) {
 		this.Materials = {}
 		var parser = new DOMParser();
 		var xml = parser.parseFromString(data,"text/xml");
-		//console.log(xml.firstChild.childNodes)
 		
 		var nodes = xml.firstChild.childNodes;
 		for (var i = 0; i < nodes.length ;i++) {
@@ -72,8 +192,8 @@ class Materials {
 
 }
 
+
 class Material {
-	
 	constructor(id, r, g, b, a, mtype) {
 		this.id = id
 		this.name = ''
@@ -89,6 +209,7 @@ class Material {
 		return out;
 	}
 }
+
 
 function FindDBURL(){
 	var dburl = 'https://api.github.com/repos/sttng/LDD-DB/contents/?access_token=0c8d5b77e090e3ddaefc24a708aec7eb90a1293c'
@@ -120,7 +241,6 @@ function FindDBURL(){
 }
 
 class DBURLFile {
-
 	constructor(urlHandle, name) {
 		this.urlHandle = urlHandle
 		this.name = name
@@ -155,8 +275,8 @@ class DBURLFile {
 	}
 }
 
+
 class DBURLReader {
-	
 	constructor(dburl) {
 		this.filelist = {};
 		this.initok = false;
@@ -221,97 +341,16 @@ class DBURLReader {
 }
 
 
-
 //Start
 if (FindDBURL()) {
 	converter = new Converter()
 	converter.LoadDBURL(dbURLlocation = FindDBURL())
+	converter.LoadScene(filename = "https://raw.githubusercontent.com/sttng/LDD/master/test01.lxfml")
 	
 }
 else {
 	alert("LDD database not available. Please look for LEGO-Digital-Designer database.")
 }
-
-
-
-
-
-
-function parse2(dburl){
-	let xhr = new XMLHttpRequest();
-	xhr.open('GET', dburl);
-	
-	// request state change event
-	xhr.onreadystatechange = function() {
-		
-		// request completed?
-		if (xhr.readyState !== 4) return;
-	
-		if (xhr.status === 200) {
-			// request successful - show response
-			//console.log(xhr.responseText);
-			var data = JSON.parse(xhr.responseText)
-			for(var i = 0; i < data.length; i++) {
-					var obj = data[i];
-					if(obj.type=="dir") { //for a dir with call the function again with the URL of the dir.
-						//alert(obj.url)
-						parse2(obj.url)
-					}
-					else if (obj.type=="file") { //for a file we add its name and url to our filelist dict.
-						filelist[obj.name] = obj.download_url;
-					}
-					else { //we have objects whose type is neither file nor dir. This should be strange but we ignore
-						console.log('strange obj');
-					}
-				}
-		}
-		else {
-			// request error
-			console.log('HTTP error', xhr.status, xhr.statusText);
-		}
-	};
-	
-	// start request
-	xhr.send();
-	return dburl
-}
-
-
-
-
-
-
-
-
-async function parseURL(url) {
-	(async () => {
-		try {
-			var response = await fetch(url);
-			var data = await response.json();
-			//console.log(data);
-			for(var i = 0; i < data.length; i++) {
-				var obj = data[i];
-				if(obj.type=="dir") { //for a dir with call the function again with the URL of the dir.
-					parseURL(obj.url)
-				}
-				else if (obj.type=="file") { //for a file we add its name and url to our filelist dict.
-					filelist[obj.name] = obj.download_url;
-				}
-				else { //we have objects whose type is neither file nor dir. This should be strange but we ignore
-					console.log('strange obj');
-				}
-			}
-			
-		} catch (e) {
-			console.log('parseURL Problem');
-		}
-	})();
-}
-
-
-
-
-
 
 
 
