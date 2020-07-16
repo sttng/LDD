@@ -35,12 +35,13 @@ class Matrix3D{
 }
 
 class DBinfo {
+	//done
 	constructor(data) {
 		var parser = new DOMParser();
 		var xml = parser.parseFromString(data, "text/xml");
 		var Version = xml.getElementsByTagName('Bricks')[0].attributes['version'].value
 		console.log('DB Version: ' + Version);
-		return Version
+		return ('DB Version: ' + Version);
 	}
 }
 
@@ -64,6 +65,7 @@ class Converter {
 
 
 class LOCReader {
+	//done
 	constructor(data) {
 		this.offset = 0
 		this.values = {}
@@ -92,6 +94,12 @@ class LOCReader {
 	}
 }
 
+class Group{
+	//done
+	constructor(node){
+		this.partRefs =  node.getAttribute('partRefs').split(',')
+	}
+}
 
 class Bone{
 	//done
@@ -239,13 +247,38 @@ class Scene{
 					var childnode = childnodes[j]
 					if (childnode.nodeName == 'Brick'){
 						this.Bricks.push(new Brick(childnode))
-						//alert(childnode)
 					}
 				}
 			}
 			else if (node.nodeName == 'GroupSystems'){
-			
+				var childnodes = node.childNodes
+				for (var j = 0; j < childnodes.length ;j++) {
+					var childnode = childnodes[j]
+					if (childnode.nodeName == 'GroupSystem'){
+						var subchildnodes = childnode.childNodes
+						for (var k = 0; k < subchildnodes.length ;k++) {
+							var subchildnode = subchildnodes[k]
+							if (subchildnode.nodeName == 'Group'){
+								this.Groups.push(new Group(subchildnode))
+								console.log(this.Groups)
+							}
+						}
+					}
+				}
 			}
+			
+			for (const [i, m] of this.Groups.entries()) {
+				for (const brick of this.Bricks){
+					for (const part of brick.Parts){
+						console.log(part.refID)
+						if (part.refID == '0') {
+						
+						}
+					}
+				}
+			}
+			
+			
 		}
 
 	
