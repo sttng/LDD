@@ -9,10 +9,11 @@
 <p id="demo"></p>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.5.0/jszip.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip-utils/0.1.0/jszip-utils.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r118/three.min.js"></script>
 <script>
 
 class Matrix3D{
-
+	//done
 	constructor(n11=1,n12=0,n13=0,n14=0,n21=0,n22=1,n23=0,n24=0,n31=0,n32=0,n33=1,n34=0,n41=0,n42=0,n43=0,n44=1){
 		this.n11 = n11
 		this.n12 = n12
@@ -31,8 +32,65 @@ class Matrix3D{
 		this.n43 = n43
 		this.n44 = n44
 	}
+	
+	toString(){
+		return `[${this.n11}, ${this.n12}, ${this.n13}, ${this.n14}, ${this.n21}, ${this.n22}, ${this.n23}, ${this.n24}, ${this.n31}, ${this.n32}, ${this.n33}, ${this.n34}, ${this.n41}, ${this.n42}, ${this.n43}, ${this.n44}]`
+	}
+	
+	rotate(angle=0, axis=0){
+		var c = Math.cos(angle)
+		var s = Math.sin(angle)
+		var t = 1 - c
+		
+		var tx = t * axis.x
+		var ty = t * axis.y
+		var tz = t * axis.z
+		
+		var sx = s * axis.x
+		var sy = s * axis.y
+		var sz = s * axis.z
+		
+		this.n11 = c + axis.x * tx
+		this.n12 = axis.y * tx + sz
+		this.n13 = axis.z * tx - sy
+		this.n14 = 0
+		
+		this.n21 = axis.x * ty - sz
+		this.n22 = c + axis.y * ty
+		this.n23 = axis.z * ty + sx
+		this.n24 = 0
+		
+		this.n31 = axis.x * tz + sy
+		this.n32 = axis.y * tz - sx
+		this.n33 = c + axis.z * tz
+		this.n34 = 0
 
+		this.n41 = 0
+		this.n42 = 0
+		this.n43 = 0
+		this.n44 = 1
+	}
+	
+	mul(other){
+		return new Matrix3D(this.n11 * other.n11 + this.n21 * other.n12 + this.n31 * other.n13 + this.n41 * other.n14,
+			this.n12 * other.n11 + this.n22 * other.n12 + this.n32 * other.n13 + this.n42 * other.n14,
+			this.n13 * other.n11 + this.n23 * other.n12 + this.n33 * other.n13 + this.n43 * other.n14,
+			this.n14 * other.n11 + this.n24 * other.n12 + this.n34 * other.n13 + this.n44 * other.n14,
+			this.n11 * other.n21 + this.n21 * other.n22 + this.n31 * other.n23 + this.n41 * other.n24,
+			this.n12 * other.n21 + this.n22 * other.n22 + this.n32 * other.n23 + this.n42 * other.n24,
+			this.n13 * other.n21 + this.n23 * other.n22 + this.n33 * other.n23 + this.n43 * other.n24,
+			this.n14 * other.n21 + this.n24 * other.n22 + this.n34 * other.n23 + this.n44 * other.n24,
+			this.n11 * other.n31 + this.n21 * other.n32 + this.n31 * other.n33 + this.n41 * other.n34,
+			this.n12 * other.n31 + this.n22 * other.n32 + this.n32 * other.n33 + this.n42 * other.n34,
+			this.n13 * other.n31 + this.n23 * other.n32 + this.n33 * other.n33 + this.n43 * other.n34,
+			this.n14 * other.n31 + this.n24 * other.n32 + this.n34 * other.n33 + this.n44 * other.n34,
+			this.n11 * other.n41 + this.n21 * other.n42 + this.n31 * other.n43 + this.n41 * other.n44,
+			this.n12 * other.n41 + this.n22 * other.n42 + this.n32 * other.n43 + this.n42 * other.n44,
+			this.n13 * other.n41 + this.n23 * other.n42 + this.n33 * other.n43 + this.n43 * other.n44,
+			this.n14 * other.n41 + this.n24 * other.n42 + this.n34 * other.n43 + this.n44 * other.n44)
+	}
 }
+
 
 class DBinfo {
 	//done
@@ -60,6 +118,44 @@ class Converter {
 		if(this.database.initok){
 			this.scene = new Scene(filename)
 		}
+	}
+	
+	Export(filename){
+	
+		var x = (4 * 3);
+		document.getElementById("demo").innerHTML = x;
+		
+		var invert = new Matrix3D() 
+		//invert.n33 = -1 //uncomment to invert the Z-Axis
+		
+		var indexOffset = 1
+		var textOffset = 1
+		var usedmaterials = []
+		var geometriecache = {}
+		
+		
+		var total = this.scene.Bricks.length
+		var current = 0
+		console.log('Total: ' + total)
+		
+		for (const bri of this.scene.Bricks){
+			current += 1
+		
+			for (const pa of bri.Parts){
+				
+				if (!(pa.designID in geometriecache)) {
+					var geo = new Geometry(pa.designID, this.database)
+					console.log(geo)
+					geometriecache[pa.designID] = "yes"
+				}
+				else {
+					console.log(pa.designID + ' cashed')
+				
+				}
+			
+			}
+		}
+	
 	}
 }
 
@@ -172,6 +268,26 @@ class SceneCamera{
 	}
 }
 
+class Geometry {
+	constructor(designID, database){
+		this.designID = designID
+		this.Parts = {}
+		var GEOMETRIEPATH = 'Der Pfad'
+		
+		this.studsFields2D = []
+		var GeometryLocation = `[${GEOMETRIEPATH}${designID}.g`
+		var GeometryCount = 0
+		
+		while (GeometryLocation in database.filelist) {
+			this.Parts[GeometryCount] = GeometryReader(data=database.filelist[GeometryLocation].read())
+			GeometryCount += 1
+		
+		}
+	}
+
+
+}
+
 
 class Scene{
 	//partially done - need zip file handling
@@ -278,13 +394,12 @@ class Scene{
 				}
 			}
 		}
-		
 		console.log('Scene "'+ this.Name + '" Brickversion: ' + this.Version)
-	
 	}
 }
 
 class Materials {
+	//done
 	constructor(data) {
 		this.Materials = {}
 		var parser = new DOMParser();
@@ -311,11 +426,11 @@ class Materials {
 	getMaterialbyId(mid) {
 		return this.Materials[mid]
 	}
-
 }
 
 
 class Material {
+	//done
 	constructor(id, r, g, b, a, mtype) {
 		this.id = id
 		this.name = ''
@@ -470,18 +585,12 @@ if (FindDBURL()) {
 	converter = new Converter()
 	converter.LoadDBURL(dbURLlocation = FindDBURL())
 	converter.LoadScene(filename = "https://raw.githubusercontent.com/sttng/LDD/master/test01.lxfml")
+	converter.Export(filename = 'test.webgl')
 	
 }
 else {
 	alert("LDD database not available. Please look for LEGO-Digital-Designer database.")
 }
-
-
-
-
-
-
-
 
 
 
