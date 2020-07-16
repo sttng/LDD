@@ -136,7 +136,6 @@ class Converter {
 		
 		var total = this.scene.Bricks.length
 		var current = 0
-		console.log('Total: ' + total)
 		
 		for (const bri of this.scene.Bricks){
 			current += 1
@@ -145,11 +144,10 @@ class Converter {
 				
 				if (!(pa.designID in geometriecache)) {
 					var geo = new Geometry(pa.designID, this.database)
-					console.log(geo)
-					geometriecache[pa.designID] = "yes"
+					//console.log(geo)
+					geometriecache[pa.designID] = geo
 				}
 				else {
-					console.log(pa.designID + ' cashed')
 				
 				}
 			
@@ -268,19 +266,69 @@ class SceneCamera{
 	}
 }
 
+
+class GeometryReader{
+	constructor(data){
+		this.offset = 0
+		this.data = data
+		this.positions = []
+		this.normals = []
+		this.textures = []
+		this.faces = []
+		this.bonemap = {}
+		this.texCount = 0
+		this.outpositions = []
+		this.outnormals = []
+		//console.log(this.readInt())
+		
+		this.data = this.stringToArrayBuffer(data)
+		this.view = new Uint8Array(this.data);
+		//console.log(view2[5])
+		
+		if (this.readInt() == 1111961649){
+			this.valueCount = this.readInt()
+			this.indexCount = this.readInt()
+			this.faceCount = this.indexCount / 3
+			var options = this.readInt()
+			console.log(this.valueCount)
+
+		}
+		
+		
+	}
+	
+	stringToArrayBuffer(str) {
+		var buf = new ArrayBuffer(str.length);
+		var bufView = new Uint8Array(buf);
+		for (var i=0, strLen=str.length; i<strLen; i++) {
+			bufView[i] = str.charCodeAt(i);
+		}
+		return buf;
+	}
+	
+	readInt(){
+		//var ret = (this.view[this.offset+0]<<24) + (this.view[this.offset+1]<<16)+ (this.view[this.offset+2]<<8) + (this.view[this.offset+3])
+		var ret = (this.view[this.offset+0]) + (this.view[this.offset+1]<<8)+ (this.view[this.offset+2]<<16) + (this.view[this.offset+3]<<24)
+		this.offset += 4
+		return ret
+	}
+}
+
+
 class Geometry {
 	constructor(designID, database){
 		this.designID = designID
 		this.Parts = {}
-		var GEOMETRIEPATH = 'Der Pfad'
+		var GEOMETRIEPATH = 'Primitives/LOD0/'
 		
 		this.studsFields2D = []
-		var GeometryLocation = `[${GEOMETRIEPATH}${designID}.g`
+		var GeometryLocation = `${GEOMETRIEPATH}${designID}.g`
 		var GeometryCount = 0
 		
 		while (GeometryLocation in database.filelist) {
-			this.Parts[GeometryCount] = GeometryReader(data=database.filelist[GeometryLocation].read())
+			this.Parts[GeometryCount] = new GeometryReader(database.filelist[GeometryLocation].read())
 			GeometryCount += 1
+			GeometryLocation = `${GEOMETRIEPATH}${designID}.g${GeometryCount}`
 		
 		}
 	}
@@ -449,7 +497,7 @@ class Material {
 
 
 function FindDBURL(){
-	var dburl = 'https://api.github.com/repos/sttng/LDD-DB/contents/'
+	var dburl = 'https://api.github.com/repos/sttng/LDD-DB/git/trees/master?recursive=1'
 	let xhr = new XMLHttpRequest();
 	xhr.open('GET', dburl, false);  // `false` makes the request synchronous
 	xhr.setRequestHeader("Authorization", "token 0c8d5b77e090e3ddaefc24a708aec7eb90a1293c");
@@ -490,7 +538,7 @@ class DBURLFile {
 		let xhr = new XMLHttpRequest();
 		xhr.open('GET', self.urlHandle, false);
 		
-			// request state change event
+		// request state change event
 		xhr.onreadystatechange = function() {
 			
 			// request completed?
@@ -554,18 +602,18 @@ class DBURLReader {
 				// request successful - show response
 				var data = JSON.parse(xhr.responseText)
 				//console.log(JSON.stringify(data, null, "\t"));
-				for(var i = 0; i < data.length; i++) {
-						var obj = data[i];
-						if(obj.type=="dir") { //for a dir with call the function again with the URL of the dir.
-							self.parse(obj.url)
-						}
-						else if (obj.type=="file") { //for a file we add its name and url to our filelist dict.
-							self.filelist[obj.name] = new DBURLFile(obj.download_url, obj.download_url);
-						}
-						else { //we have objects whose type is neither file nor dir. This should be strange but we ignore
-							console.log('strange obj');
-						}
+				for(var i = 0; i < data.tree.length; i++) {
+					var obj = data.tree[i];
+					if (obj.type == 'tree'){
+						// nothing todo
 					}
+					else if (obj.type == 'blob'){
+						self.filelist[obj.path] = new DBURLFile('https://raw.githubusercontent.com/sttng/LDD-DB/master/' + obj.path, obj.path)
+					}
+					else {
+						console.log('Strange object parsed: ' + obj.type)
+					}
+				}
 			}
 			else {
 				// request error
@@ -575,7 +623,6 @@ class DBURLReader {
 		
 		// start request
 		xhr.send();
-		return dburl
 	}
 }
 
@@ -591,7 +638,6 @@ if (FindDBURL()) {
 else {
 	alert("LDD database not available. Please look for LEGO-Digital-Designer database.")
 }
-
 
 
 </script>
