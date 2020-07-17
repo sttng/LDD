@@ -1,878 +1,727 @@
-#!/usr/bin/env python
-# pylddlib version 0.4.9
-# based on pyldd2obj version 0.4.8 - Copyright (c) 2019 by jonnysp
-#
-# Updates:
-# 0.4.9.1 improved custom2DField handling, fixed decorations bug, improved material assignments handling
-# 0.4.9 updates to support reading extracted db.lif from db folder
-#
-# License: MIT License
-#
+<!DOCTYPE html>
+<html>
+<body>
 
-import os
-import sys
-import math
-import struct
-import zipfile
-from xml.dom import minidom
-import time
+<h2>JavaScript Functions</h2>
 
-if sys.version_info < (3, 0):
-	reload(sys)
-	sys.setdefaultencoding('utf-8')
+<p>This example calls a function which performs a calculation and returns the result:</p>
 
-PRIMITIVEPATH = '/Primitives/'
-GEOMETRIEPATH = PRIMITIVEPATH + 'LOD0/'
-DECORATIONPATH = '/Decorations/'
-MATERIALNAMESPATH = '/MaterialNames/'
+<p id="demo"></p>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.5.0/jszip.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip-utils/0.1.0/jszip-utils.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r118/three.min.js"></script>
+<script>
 
-LOGOONSTUDSCONNTYPE = {"0:4", "0:4:1", "0:4:2", "0:4:33", "2:4:1", "2:4:34"}
-
-class Matrix3D:
-	def __init__(self, n11=1,n12=0,n13=0,n14=0,n21=0,n22=1,n23=0,n24=0,n31=0,n32=0,n33=1,n34=0,n41=0,n42=0,n43=0,n44=1):
-		self.n11 = n11
-		self.n12 = n12
-		self.n13 = n13
-		self.n14 = n14
-		self.n21 = n21
-		self.n22 = n22
-		self.n23 = n23
-		self.n24 = n24
-		self.n31 = n31
-		self.n32 = n32
-		self.n33 = n33
-		self.n34 = n34
-		self.n41 = n41
-		self.n42 = n42
-		self.n43 = n43
-		self.n44 = n44
-
-	def __str__(self):
-		return '[{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15}]'.format(self.n11, self.n12, self.n13,self.n14,self.n21, self.n22, self.n23,self.n24,self.n31, self.n32, self.n33,self.n34,self.n41, self.n42, self.n43,self.n44)
-
-	def rotate(self,angle=0,axis=0):
-		c = math.cos(angle)
-		s = math.sin(angle)
-		t = 1 - c
-
-		tx = t * axis.x
-		ty = t * axis.y
-		tz = t * axis.z
-
-		sx = s * axis.x
-		sy = s * axis.y
-		sz = s * axis.z
-
-		self.n11 = c + axis.x * tx
-		self.n12 = axis.y * tx + sz
-		self.n13 = axis.z * tx - sy
-		self.n14 = 0
-
-		self.n21 = axis.x * ty - sz
-		self.n22 = c + axis.y * ty
-		self.n23 = axis.z * ty + sx
-		self.n24 = 0
-
-		self.n31 = axis.x * tz + sy
-		self.n32 = axis.y * tz - sx
-		self.n33 = c + axis.z * tz
-		self.n34 = 0
-
-		self.n41 = 0
-		self.n42 = 0
-		self.n43 = 0
-		self.n44 = 1
-
-	def __mul__(self, other): 
-		return Matrix3D(
-			self.n11 * other.n11 + self.n21 * other.n12 + self.n31 * other.n13 + self.n41 * other.n14,
-			self.n12 * other.n11 + self.n22 * other.n12 + self.n32 * other.n13 + self.n42 * other.n14,
-			self.n13 * other.n11 + self.n23 * other.n12 + self.n33 * other.n13 + self.n43 * other.n14,
-			self.n14 * other.n11 + self.n24 * other.n12 + self.n34 * other.n13 + self.n44 * other.n14,
-			self.n11 * other.n21 + self.n21 * other.n22 + self.n31 * other.n23 + self.n41 * other.n24,
-			self.n12 * other.n21 + self.n22 * other.n22 + self.n32 * other.n23 + self.n42 * other.n24,
-			self.n13 * other.n21 + self.n23 * other.n22 + self.n33 * other.n23 + self.n43 * other.n24,
-			self.n14 * other.n21 + self.n24 * other.n22 + self.n34 * other.n23 + self.n44 * other.n24,
-			self.n11 * other.n31 + self.n21 * other.n32 + self.n31 * other.n33 + self.n41 * other.n34,
-			self.n12 * other.n31 + self.n22 * other.n32 + self.n32 * other.n33 + self.n42 * other.n34,
-			self.n13 * other.n31 + self.n23 * other.n32 + self.n33 * other.n33 + self.n43 * other.n34,
-			self.n14 * other.n31 + self.n24 * other.n32 + self.n34 * other.n33 + self.n44 * other.n34,
-			self.n11 * other.n41 + self.n21 * other.n42 + self.n31 * other.n43 + self.n41 * other.n44,
-			self.n12 * other.n41 + self.n22 * other.n42 + self.n32 * other.n43 + self.n42 * other.n44,
-			self.n13 * other.n41 + self.n23 * other.n42 + self.n33 * other.n43 + self.n43 * other.n44,
-			self.n14 * other.n41 + self.n24 * other.n42 + self.n34 * other.n43 + self.n44 * other.n44
- 			)
-
-class Point3D:
-	def __init__(self, x=0,y=0,z=0):
-		self.x = x
-		self.y = y
-		self.z = z
-
-	def __str__(self):
-		return '[{0},{1},{2}]'.format(self.x, self.y,self.z)
-
-	def string(self,prefix = "v"):
-		return '{0} {1:f} {2:f} {3:f}\n'.format(prefix ,self.x , self.y, self.z)
-
-	def transformW(self,matrix):
-		x = matrix.n11 * self.x + matrix.n21 * self.y + matrix.n31 * self.z
-		y = matrix.n12 * self.x + matrix.n22 * self.y + matrix.n32 * self.z
-		z = matrix.n13 * self.x + matrix.n23 * self.y + matrix.n33 * self.z
-		self.x = x
-		self.y = y
-		self.z = z
-
-	def transform(self,matrix):
-		x = matrix.n11 * self.x + matrix.n21 * self.y + matrix.n31 * self.z + matrix.n41
-		y = matrix.n12 * self.x + matrix.n22 * self.y + matrix.n32 * self.z + matrix.n42
-		z = matrix.n13 * self.x + matrix.n23 * self.y + matrix.n33 * self.z + matrix.n43
-		self.x = x
-		self.y = y
-		self.z = z
-
-	def copy(self):
-		return Point3D(x=self.x,y=self.y,z=self.z)
-
-class Point2D:
-	def __init__(self, x=0,y=0):
-		self.x = x
-		self.y = y
-	def __str__(self):
-		return '[{0},{1}]'.format(self.x, self.y * -1)
-	def string(self,prefix="t"):
-		return '{0} {1:f} {2:f}\n'.format(prefix , self.x, self.y * -1 )
-	def copy(self):
-		return Point2D(x=self.x,y=self.y)
-
-class Face:
-	def __init__(self,a=0,b=0,c=0):
-		self.a = a
-		self.b = b
-		self.c = c
-	def string(self,prefix="f", indexOffset=0 ,textureoffset=0):
-		if textureoffset == 0:
-			return prefix + ' {0}//{0} {1}//{1} {2}//{2}\n'.format(self.a + indexOffset, self.b + indexOffset, self.c + indexOffset)
-		else:
-			return prefix + ' {0}/{3}/{0} {1}/{4}/{1} {2}/{5}/{2}\n'.format(self.a + indexOffset, self.b + indexOffset, self.c + indexOffset,self.a + textureoffset, self.b + textureoffset, self.c + textureoffset)
-	def __str__(self):
-		return '[{0},{1},{2}]'.format(self.a, self.b, self.c)
-
-class Group:
-	def __init__(self, node):
-		self.partRefs = node.getAttribute('partRefs').split(',')
-		
-class Bone:
-	def __init__(self, node):
-		self.refID = node.getAttribute('refID')
-		(a, b, c, d, e, f, g, h, i, x, y, z) = map(float, node.getAttribute('transformation').split(','))
-		self.matrix = Matrix3D(n11=a,n12=b,n13=c,n14=0,n21=d,n22=e,n23=f,n24=0,n31=g,n32=h,n33=i,n34=0,n41=x,n42=y,n43=z,n44=1)
-
-class Part:
-	def __init__(self, node):
-		self.isGrouped = False
-		self.GroupIDX = 0
-		self.Bones = []
-		self.refID = node.getAttribute('refID')
-		self.designID = node.getAttribute('designID')
-		self.materials = list(map(str, node.getAttribute('materials').split(',')))
-		
-		lastm = '0'
-		for i, m in enumerate(self.materials):
-			if (m == '0'):
-				self.materials[i] = lastm
-			else:
-				lastm = m
-		if node.hasAttribute('decoration'):
-			self.decoration = list(map(str,node.getAttribute('decoration').split(',')))
-		for childnode in node.childNodes:
-			if childnode.nodeName == 'Bone':
-				self.Bones.append(Bone(node=childnode)) 
-
-class Brick:
-	def __init__(self, node):
-		self.refID = node.getAttribute('refID')
-		self.designID = node.getAttribute('designID')
-		self.Parts = []
-		for childnode in node.childNodes:
-			if childnode.nodeName == 'Part':
-				self.Parts.append(Part(node=childnode))
-
-class SceneCamera:
-	def __init__(self, node):
-		self.refID = node.getAttribute('refID')
-		(a, b, c, d, e, f, g, h, i, x, y, z) = map(float, node.getAttribute('transformation').split(','))
-		self.matrix = Matrix3D(n11=a,n12=b,n13=c,n14=0,n21=d,n22=e,n23=f,n24=0,n31=g,n32=h,n33=i,n34=0,n41=x,n42=y,n43=z,n44=1)
-		self.fieldOfView = float(node.getAttribute('fieldOfView'))
-		self.distance = float(node.getAttribute('distance'))
-
-class Scene:
-	def __init__(self, file):
-		self.Bricks = []
-		self.Scenecamera = []
-		self.Groups = []
-
-		if file.endswith('.lxfml'):
-			with open(file, "rb") as file:
-				data = file.read()
-		elif file.endswith('.lxf'):
-			zf = zipfile.ZipFile(file, 'r')
-			data = zf.read('IMAGE100.LXFML')
-		else:
-			return
-
-		xml = minidom.parseString(data)
-		self.Name = xml.firstChild.getAttribute('name')
-				
-		for node in xml.firstChild.childNodes: 
-			if node.nodeName == 'Meta':
-				for childnode in node.childNodes:
-					if childnode.nodeName == 'BrickSet':
-						self.Version = str(childnode.getAttribute('version'))
-			elif node.nodeName == 'Cameras':
-				for childnode in node.childNodes:
-					if childnode.nodeName == 'Camera':
-						self.Scenecamera.append(SceneCamera(node=childnode))
-			elif node.nodeName == 'Bricks':
-				for childnode in node.childNodes:
-					if childnode.nodeName == 'Brick':
-						self.Bricks.append(Brick(node=childnode))
-			elif node.nodeName == 'GroupSystems':
-				for childnode in node.childNodes:
-					if childnode.nodeName == 'GroupSystem':
-						for childnode in childnode.childNodes:
-							if childnode.nodeName == 'Group':
-								self.Groups.append(Group(node=childnode))
-
-		for i in range(len(self.Groups)):
-			for brick in self.Bricks:
-				for part in brick.Parts:
-					if part.refID in self.Groups[i].partRefs:
-						part.isGrouped = True
-						part.GroupIDX = i
-
-		print('Scene "'+ self.Name + '" Brickversion: ' + str(self.Version))
-
-class GeometryReader:
-	def __init__(self, data):
-		self.offset = 0
-		self.data = data
-		self.positions = []
-		self.normals = []
-		self.textures = []
-		self.faces = []
-		self.bonemap = {}
-		self.texCount = 0
-		self.outpositions = []
-		self.outnormals = []
-
-		if self.readInt() == 1111961649:
-			self.valueCount = self.readInt()
-			self.indexCount = self.readInt()
-			self.faceCount = int(self.indexCount / 3)
-			options = self.readInt()
-
-			for i in range(0, self.valueCount):
-				self.positions.append(Point3D(x=self.readFloat(),y= self.readFloat(),z=self.readFloat()))
-
-			for i in range(0, self.valueCount):
-				 self.normals.append(Point3D(x=self.readFloat(),y= self.readFloat(),z=self.readFloat()))
-
-			if (options & 3) == 3:
-				self.texCount = self.valueCount
-				for i in range(0, self.valueCount):
-					self.textures.append(Point2D(x=self.readFloat(), y=self.readFloat()))
-
-			for i in range(0, self.faceCount):
-				self.faces.append(Face(a=self.readInt(),b=self.readInt(),c=self.readInt()))
-
-			if (options & 48) == 48:
-				num = self.readInt()
-				self.offset += (num * 4) + (self.indexCount * 4)
-				num = self.readInt()
-				self.offset += (3 * num * 4) + (self.indexCount * 4)
-
-			bonelength = self.readInt()
-			self.bonemap = [0] * self.valueCount
-
-			if (bonelength > self.valueCount) or (bonelength > self.faceCount):
-				datastart = self.offset
-				self.offset += bonelength
-				for i in range(0, self.valueCount):
-					boneoffset = self.readInt() + 4
-					self.bonemap[i] = self.read_Int(datastart + boneoffset)
+class Matrix3D{
+	//done
+	constructor(n11=1,n12=0,n13=0,n14=0,n21=0,n22=1,n23=0,n24=0,n31=0,n32=0,n33=1,n34=0,n41=0,n42=0,n43=0,n44=1){
+		this.n11 = n11
+		this.n12 = n12
+		this.n13 = n13
+		this.n14 = n14
+		this.n21 = n21
+		this.n22 = n22
+		this.n23 = n23
+		this.n24 = n24
+		this.n31 = n31
+		this.n32 = n32
+		this.n33 = n33
+		this.n34 = n34
+		this.n41 = n41
+		this.n42 = n42
+		this.n43 = n43
+		this.n44 = n44
+	}
 	
-	def read_Int(self,_offset):
-		if sys.version_info < (3, 0):
-			return int(struct.unpack_from('i', self.data, _offset)[0])
-		else:
-			return int.from_bytes(self.data[_offset:_offset + 4], byteorder='little')
-
-	def readInt(self):
-		if sys.version_info < (3, 0):
-			ret = int(struct.unpack_from('i', self.data, self.offset)[0])
-		else:
-			ret = int.from_bytes(self.data[self.offset:self.offset + 4], byteorder='little')
-		self.offset += 4
-		return ret
-
-	def readFloat(self):
-		ret = float(struct.unpack_from('f', self.data, self.offset)[0])
-		self.offset += 4
-		return ret
-
-class Geometry:
-	def __init__(self, designID, database):
-		self.designID = designID
-		self.Parts = {}
-		
-		self.studsFields2D = []
-		
-		GeometryLocation = '{0}{1}{2}'.format(GEOMETRIEPATH, designID,'.g')
-		GeometryCount = 0
-		while str(GeometryLocation) in database.filelist:
-			self.Parts[GeometryCount] = GeometryReader(data=database.filelist[GeometryLocation].read())
-			GeometryCount += 1
-			GeometryLocation = '{0}{1}{2}{3}'.format(GEOMETRIEPATH, designID,'.g',GeometryCount)
-
-		primitive = Primitive(data = database.filelist[PRIMITIVEPATH + designID + '.xml'].read())
-		self.Partname = primitive.Designname
-		self.studsFields2D = primitive.Fields2D
-		
-		# preflex
-		for part in self.Parts:
-			# transform
-			for i, b in enumerate(primitive.Bones):
-				# positions
-				for j, p in enumerate(self.Parts[part].positions):
-					if (self.Parts[part].bonemap[j] == i):
-						self.Parts[part].positions[j].transform(b.matrix)
-				# normals
-				for k, n in enumerate(self.Parts[part].normals):
-					if (self.Parts[part].bonemap[k] == i):
-						self.Parts[part].normals[k].transformW(b.matrix)
-
-	def valuecount(self):
-		count = 0
-		for part in self.Parts:
-			count += self.Parts[part].valueCount
-		return count
-
-	def facecount(self):
-		count = 0
-		for part in self.Parts:
-			count += self.Parts[part].faceCount
-		return count
-
-	def texcount(self):
-		count = 0
-		for part in self.Parts:
-			count += self.Parts[part].texCount
-		return count
-
-class Bone2:
-	def __init__(self,boneId=0, angle=0, ax=0, ay=0, az=0, tx=0, ty=0, tz=0):
-		self.boneId = boneId
-		rotationMatrix = Matrix3D()
-		rotationMatrix.rotate(angle = -angle * math.pi / 180.0,axis = Point3D(x=ax,y=ay,z=az))
-		p = Point3D(x=tx,y=ty,z=tz)
-		p.transformW(rotationMatrix)
-		rotationMatrix.n41 -= p.x
-		rotationMatrix.n42 -= p.y
-		rotationMatrix.n43 -= p.z
-		self.matrix = rotationMatrix
-
-class Field2D:
-	def __init__(self, type=0, width=0, height=0, angle=0, ax=0, ay=0, az=0, tx=0, ty=0, tz=0, field2DRawData='none'):
-		self.type = type
-		self.field2DRawData = field2DRawData
-		rotationMatrix = Matrix3D()
-		rotationMatrix.rotate(angle = -angle * math.pi / 180.0, axis = Point3D(x=ax,y=ay,z=az))
-		p = Point3D(x=tx,y=ty,z=tz)
-		p.transformW(rotationMatrix)
-		rotationMatrix.n41 -= p.x
-		rotationMatrix.n42 -= p.y
-		rotationMatrix.n43 -= p.z
-		self.matrix = rotationMatrix
-		self.custom2DField = []
-		
-		#The height and width are always double the number of studs. The contained text is a 2D array that is always height + 1 and width + 1.
-		rows_count = height + 1
-		cols_count = width + 1
-		# creation looks reverse
-		# create an array of "cols_count" cols, for each of the "rows_count" rows
-		#	all elements are initialized to 0
-		self.custom2DField = [[0 for j in range(cols_count)] for i in range(rows_count)]
-		custom2DFieldString = field2DRawData.replace('\r', '').replace('\n', '').replace(' ', '')
-		custom2DFieldArr = custom2DFieldString.strip().split(',')
-		#custom2DFieldArr = [item.strip() for item in custom2DFieldArr]
-		
-		k = 0
-		for i in range(rows_count):
-			for j in range(cols_count):
-				self.custom2DField[i][j] = custom2DFieldArr[k]
-				k += 1
-		
-	def __str__(self):
-		return '[type="{0}" transform="{1}" custom2DField="{2}"]'.format(self.type, self.matrix, self.custom2DField)
-
-class Primitive:
-	def __init__(self, data):
-		self.Designname = ''
-		self.Bones = []
-		self.Fields2D = []
-		self.PhysicsAttributes = {}
-		self.Bounding = {}
-		self.GeometryBounding = {}
-		xml = minidom.parseString(data)
-		for node in xml.firstChild.childNodes: 
-			if node.nodeName == 'Flex': 
-				for node in node.childNodes:
-					if node.nodeName == 'Bone':
-						self.Bones.append(Bone2(boneId=int(node.getAttribute('boneId')), angle=float(node.getAttribute('angle')), ax=float(node.getAttribute('ax')), ay=float(node.getAttribute('ay')), az=float(node.getAttribute('az')), tx=float(node.getAttribute('tx')), ty=float(node.getAttribute('ty')), tz=float(node.getAttribute('tz'))))
-			elif node.nodeName == 'Annotations':
-				for childnode in node.childNodes:
-					if childnode.nodeName == 'Annotation' and childnode.hasAttribute('designname'):
-						self.Designname = childnode.getAttribute('designname')
-			elif node.nodeName == 'PhysicsAttributes':
-				self.PhysicsAttributes = {"inertiaTensor": node.getAttribute('inertiaTensor')}
-				self.PhysicsAttributes = {"centerOfMass": node.getAttribute('centerOfMass')}
-				self.PhysicsAttributes = {"mass": node.getAttribute('mass')}
-				self.PhysicsAttributes = {"frictionType": node.getAttribute('frictionType')}				
-			elif node.nodeName == 'Bounding':
-				for childnode in node.childNodes:
-					if childnode.nodeName == 'AABB':
-						self.Bounding = {"minX": childnode.getAttribute('minX')}
-						self.Bounding = {"minY": childnode.getAttribute('minY')}
-						self.Bounding = {"minZ": childnode.getAttribute('minZ')}
-						self.Bounding = {"maxX": childnode.getAttribute('maxX')}
-						self.Bounding = {"maxY": childnode.getAttribute('maxY')}
-						self.Bounding = {"maxZ": childnode.getAttribute('maxZ')}
-			elif node.nodeName == 'GeometryBounding':
-				for childnode in node.childNodes:
-					if childnode.nodeName == 'AABB':
-						self.GeometryBounding = {"minX": childnode.getAttribute('minX')}
-						self.GeometryBounding = {"minY": childnode.getAttribute('minY')}
-						self.GeometryBounding = {"minZ": childnode.getAttribute('minZ')}
-						self.GeometryBounding = {"maxX": childnode.getAttribute('maxX')}
-						self.GeometryBounding = {"maxY": childnode.getAttribute('maxY')}
-						self.GeometryBounding = {"maxZ": childnode.getAttribute('maxZ')}
-			elif node.nodeName == 'Connectivity':
-				for childnode in node.childNodes:
-					if childnode.nodeName == 'Custom2DField':
-						self.Fields2D.append(Field2D(type=int(childnode.getAttribute('type')), width=int(childnode.getAttribute('width')), height=int(childnode.getAttribute('height')), angle=float(childnode.getAttribute('angle')), ax=float(childnode.getAttribute('ax')), ay=float(childnode.getAttribute('ay')), az=float(childnode.getAttribute('az')), tx=float(childnode.getAttribute('tx')), ty=float(childnode.getAttribute('ty')), tz=float(childnode.getAttribute('tz')), field2DRawData=str(childnode.firstChild.data)))
-
-class LOCReader:
-	def __init__(self, data):
-		self.offset = 0
-		self.values = {}
-		self.data = data
-		if sys.version_info < (3, 0):
-			if ord(self.data[0]) == 50 and ord(self.data[1]) == 0:
-				self.offset += 2
-				while self.offset < len(self.data):
-					key = self.NextString().replace('Material', '')
-					value = self.NextString()
-					self.values[key] = value
-		else:
-			if int(self.data[0]) == 50 and int(self.data[1]) == 0:
-				self.offset += 2
-				while self.offset < len(self.data):
-					key = self.NextString().replace('Material', '')
-					value = self.NextString()
-					self.values[key] = value
-
-	def NextString(self):
-		out = ''
-		if sys.version_info < (3, 0):
-			t = ord(self.data[self.offset])
-			self.offset += 1
-			while not t == 0:
-				out = '{0}{1}'.format(out,chr(t))
-				t = ord(self.data[self.offset])
-				self.offset += 1
-		else:
-			t = int(self.data[self.offset])
-			self.offset += 1
-			while not t == 0:
-				out = '{0}{1}'.format(out,chr(t))
-				t = int(self.data[self.offset])
-				self.offset += 1
-		return out
-
-class Materials:
-	def __init__(self, data):
-		self.Materials = {}
-		xml = minidom.parseString(data)
-		for node in xml.firstChild.childNodes: 
-			if node.nodeName == 'Material':
-				self.Materials[node.getAttribute('MatID')] = Material(node.getAttribute('MatID'),r=int(node.getAttribute('Red')), g=int(node.getAttribute('Green')), b=int(node.getAttribute('Blue')), a=int(node.getAttribute('Alpha')), mtype=str(node.getAttribute('MaterialType')))
-
-	def setLOC(self, loc):
-		for key in loc.values:
-			if key in self.Materials:
-				self.Materials[key].name = loc.values[key].replace(" ", "_")
-
-	def getMaterialbyId(self, mid):
-		return self.Materials[mid]
-
-class Material:
-	def __init__(self,id, r, g, b, a, mtype):
-		self.id = id
-		self.name = ''
-		self.mattype = mtype
-		self.r = float(r)
-		self.g = float(g)
-		self.b = float(b)
-		self.a = float(a)
-	def string(self):
-		out = 'Kd {0} {1} {2}\nKa 1.600000 1.600000 1.600000\nKs 0.400000 0.400000 0.400000\nNs 3.482202\nTf 1 1 1\n'.format( self.r / 255, self.g / 255,self.b / 255) 
-		if self.a < 255:
-			out += 'Ni 1.575\n' + 'd {0}'.format(0.05) + '\n' + 'Tr {0}\n'.format(0.05)
-		return out
-
-class DBinfo:
-	def __init__(self, data):
-		xml = minidom.parseString(data)
-		self.Version = xml.getElementsByTagName('Bricks')[0].attributes['version'].value
-		print('DB Version: ' + str(self.Version))
-
-class DBFolderFile:
-	def __init__(self, name, handle):
-		self.handle = handle
-		self.name = name
-
-	def read(self):
-		reader = open(self.handle, "rb")
-		try:
-			filecontent = reader.read()
-			reader.close()
-			return filecontent
-		finally:
-			reader.close()
-		
-class LIFFile:
-	def __init__(self, name, offset, size, handle):
-		self.handle = handle
-		self.name = name
-		self.offset = offset
-		self.size = size
-
-	def read(self):
-		self.handle.seek(self.offset, 0)
-		return self.handle.read(self.size)
-
-class DBFolderReader:
-	def __init__(self, folder):
-		self.filelist = {}
-		self.initok = False
-		self.location = folder
-		self.dbinfo = None
-		
-		try:
-			os.path.isdir(self.location)
-		except Exception as e:
-			self.initok = False
-			print("db folder read FAIL")
-			return
-		else:
-			self.parse()
-			if self.fileexist(os.path.join(self.location,'Materials.xml')) and self.fileexist(os.path.join(self.location, 'info.xml')):
-				self.dbinfo = DBinfo(data=self.filelist[os.path.join(self.location,'info.xml')].read())
-				print("db folder OK.")
-				self.initok = True
-			else:
-				print("db folder ERROR")
-				
-	def fileexist(self, filename):
-		return filename in self.filelist
-
-	def parse(self):
-		for path, subdirs, files in os.walk(self.location):
-			for name in files:
-				entryName = os.path.join(path, name)
-				self.filelist[entryName] = DBFolderFile(name=entryName, handle=entryName)
+	toString(){
+		return `[${this.n11}, ${this.n12}, ${this.n13}, ${this.n14}, ${this.n21}, ${this.n22}, ${this.n23}, ${this.n24}, ${this.n31}, ${this.n32}, ${this.n33}, ${this.n34}, ${this.n41}, ${this.n42}, ${this.n43}, ${this.n44}]`
+	}
 	
-class LIFReader:
-	def __init__(self, file):
-		self.packedFilesOffset = 84
-		self.filelist = {}
-		self.initok = False
-		self.location = file
-		self.dbinfo = None
-
-		try:
-			self.filehandle = open(self.location, "rb")
-			self.filehandle.seek(0, 0)
-		except Exception as e:
-			self.initok = False
-			print("Database FAIL")
-			return
-		else:
-			if self.filehandle.read(4).decode() == "LIFF":
-				self.parse(prefix='', offset=self.readInt(offset=72) + 64)
-				if self.fileexist('/Materials.xml') and self.fileexist('/info.xml'):
-					self.dbinfo = DBinfo(data=self.filelist['/info.xml'].read())
-					print("Database OK.")
-					self.initok = True
-				else:
-					print("Database ERROR")
-			else:
-				print("Database FAIL")
-				self.initok = False
-
-	def fileexist(self,filename):
-		return filename in self.filelist
-
-	def parse(self, prefix='', offset=0):
-		if prefix == '':
-			offset += 36
-		else:
-			offset += 4
-
-		count = self.readInt(offset=offset)
-
-		for i in range(0, count):
-			offset += 4
-			entryType = self.readShort(offset=offset)
-			offset += 6
-
-			entryName = '{0}{1}'.format(prefix,'/');
-			self.filehandle.seek(offset + 1, 0)
-			if sys.version_info < (3, 0):
-				t = ord(self.filehandle.read(1))
-			else:
-				t = int.from_bytes(self.filehandle.read(1), byteorder='big')
-
-			while not t == 0:
-				entryName ='{0}{1}'.format(entryName,chr(t))
-				self.filehandle.seek(1, 1)
-				if sys.version_info < (3, 0):
-					t = ord(self.filehandle.read(1))
-				else:
-					t = int.from_bytes(self.filehandle.read(1), byteorder='big')
-
-				offset += 2
-
-			offset += 6
-			self.packedFilesOffset += 20
-
-			if entryType == 1:
-				offset = self.parse(prefix=entryName, offset=offset)
-			elif entryType == 2:
-				fileSize = self.readInt(offset=offset) - 20
-				self.filelist[entryName] = LIFFile(name=entryName, offset=self.packedFilesOffset, size=fileSize, handle=self.filehandle)
-				offset += 24
-				self.packedFilesOffset += fileSize
-
-		return offset
-
-	def readInt(self, offset=0):
-		self.filehandle.seek(offset, 0)
-		if sys.version_info < (3, 0):
-			return int(struct.unpack('>i', self.filehandle.read(4))[0])
-		else:
-			return int.from_bytes(self.filehandle.read(4), byteorder='big')
-
-	def readShort(self, offset=0):
-		self.filehandle.seek(offset, 0)
-		if sys.version_info < (3, 0):
-			return int(struct.unpack('>h', self.filehandle.read(2))[0])
-		else:
-			return int.from_bytes(self.filehandle.read(2), byteorder='big')
-
-class Converter:
-	def LoadDBFolder(self, dbfolderlocation):
-		self.database = DBFolderReader(folder=dbfolderlocation)
-		if self.database.initok and self.database.fileexist(os.path.join(dbfolderlocation,'Materials.xml')) and self.database.fileexist(MATERIALNAMESPATH + 'EN/localizedStrings.loc'):
-			self.allMaterials = Materials(data=self.database.filelist[os.path.join(dbfolderlocation,'Materials.xml')].read());
-			self.allMaterials.setLOC(loc=LOCReader(data=self.database.filelist[MATERIALNAMESPATH + 'EN/localizedStrings.loc'].read()))
-
-	def LoadDatabase(self,databaselocation):
-		self.database = LIFReader(file=databaselocation)
-
-		if self.database.initok and self.database.fileexist('/Materials.xml') and self.database.fileexist(MATERIALNAMESPATH + 'EN/localizedStrings.loc'):
-			self.allMaterials = Materials(data=self.database.filelist['/Materials.xml'].read());
-			self.allMaterials.setLOC(loc=LOCReader(data=self.database.filelist[MATERIALNAMESPATH + 'EN/localizedStrings.loc'].read()))
-
-	def LoadScene(self,filename):
-		if self.database.initok:
-			self.scene = Scene(file=filename)
-
-	def Export(self,filename):
-		invert = Matrix3D() 
-		#invert.n33 = -1 #uncomment to invert the Z-Axis
+	rotate(angle=0, axis=0){
+		var c = Math.cos(angle)
+		var s = Math.sin(angle)
+		var t = 1 - c
 		
-		indexOffset = 1
-		textOffset = 1
-		usedmaterials = []
-		geometriecache = {}
-
-		start_time = time.time()
-
-		out = open(filename + ".obj", "w+")
-		out.write("mtllib " + filename + ".mtl" + '\n\n')
-		outtext = open(filename + ".mtl", "w+")
+		var tx = t * axis.x
+		var ty = t * axis.y
+		var tz = t * axis.z
 		
-		total = len(self.scene.Bricks)
-		current = 0
+		var sx = s * axis.x
+		var sy = s * axis.y
+		var sz = s * axis.z
+		
+		this.n11 = c + axis.x * tx
+		this.n12 = axis.y * tx + sz
+		this.n13 = axis.z * tx - sy
+		this.n14 = 0
+		
+		this.n21 = axis.x * ty - sz
+		this.n22 = c + axis.y * ty
+		this.n23 = axis.z * ty + sx
+		this.n24 = 0
+		
+		this.n31 = axis.x * tz + sy
+		this.n32 = axis.y * tz - sx
+		this.n33 = c + axis.z * tz
+		this.n34 = 0
 
-		for bri in self.scene.Bricks:
+		this.n41 = 0
+		this.n42 = 0
+		this.n43 = 0
+		this.n44 = 1
+	}
+	
+	mul(other){
+		return new Matrix3D(this.n11 * other.n11 + this.n21 * other.n12 + this.n31 * other.n13 + this.n41 * other.n14,
+			this.n12 * other.n11 + this.n22 * other.n12 + this.n32 * other.n13 + this.n42 * other.n14,
+			this.n13 * other.n11 + this.n23 * other.n12 + this.n33 * other.n13 + this.n43 * other.n14,
+			this.n14 * other.n11 + this.n24 * other.n12 + this.n34 * other.n13 + this.n44 * other.n14,
+			this.n11 * other.n21 + this.n21 * other.n22 + this.n31 * other.n23 + this.n41 * other.n24,
+			this.n12 * other.n21 + this.n22 * other.n22 + this.n32 * other.n23 + this.n42 * other.n24,
+			this.n13 * other.n21 + this.n23 * other.n22 + this.n33 * other.n23 + this.n43 * other.n24,
+			this.n14 * other.n21 + this.n24 * other.n22 + this.n34 * other.n23 + this.n44 * other.n24,
+			this.n11 * other.n31 + this.n21 * other.n32 + this.n31 * other.n33 + this.n41 * other.n34,
+			this.n12 * other.n31 + this.n22 * other.n32 + this.n32 * other.n33 + this.n42 * other.n34,
+			this.n13 * other.n31 + this.n23 * other.n32 + this.n33 * other.n33 + this.n43 * other.n34,
+			this.n14 * other.n31 + this.n24 * other.n32 + this.n34 * other.n33 + this.n44 * other.n34,
+			this.n11 * other.n41 + this.n21 * other.n42 + this.n31 * other.n43 + this.n41 * other.n44,
+			this.n12 * other.n41 + this.n22 * other.n42 + this.n32 * other.n43 + this.n42 * other.n44,
+			this.n13 * other.n41 + this.n23 * other.n42 + this.n33 * other.n43 + this.n43 * other.n44,
+			this.n14 * other.n41 + this.n24 * other.n42 + this.n34 * other.n43 + this.n44 * other.n44)
+	}
+}
+
+class Point3D{
+	constructor(x=0,y=0,z=0){
+		this.x = x
+		this.y = y
+		this.z = z
+	}
+}
+
+
+class Point2D{
+	constructor(x=0,y=0){
+		this.x = x
+		this.y = y
+	}
+}
+
+
+class Face{
+	constructor(a=0,b=0,c=0){
+		this.a = a
+		this.b = b
+		this.c = c
+	}
+}
+
+class DBinfo {
+	//done
+	constructor(data) {
+		var parser = new DOMParser();
+		var xml = parser.parseFromString(data, "text/xml");
+		var Version = xml.getElementsByTagName('Bricks')[0].attributes['version'].value
+		console.log('DB Version: ' + Version);
+		return ('DB Version: ' + Version);
+	}
+}
+
+
+class Converter {
+	
+	LoadDBURL(dbURLlocation){
+		this.database = new DBURLReader(dbURLlocation)
+		if(this.database.initok && this.database.fileexist('Materials.xml') && this.database.fileexist('localizedStrings.loc')){
+			this.allMaterials = new Materials(this.database.filelist['Materials.xml'].read())
+			this.allMaterials.setLOC(new LOCReader(this.database.filelist['localizedStrings.loc'].read()))
+		}
+	}
+	
+	LoadScene(filename){
+		if(this.database.initok){
+			this.scene = new Scene(filename)
+		}
+	}
+	
+	Export(filename){
+	
+		var x = (4 * 3);
+		document.getElementById("demo").innerHTML = x;
+		
+		var invert = new Matrix3D() 
+		//invert.n33 = -1 //uncomment to invert the Z-Axis
+		
+		var indexOffset = 1
+		var textOffset = 1
+		var usedmaterials = []
+		var geometriecache = {}
+		
+		
+		var total = this.scene.Bricks.length
+		var current = 0
+		
+		for (const bri of this.scene.Bricks){
 			current += 1
-
-			for pa in bri.Parts:
-
-				if pa.designID not in geometriecache:
-					geo = Geometry(designID=pa.designID, database=self.database)
-					progress(current ,total , "(" + geo.designID + ") " + geo.Partname, ' ')
-					geometriecache[pa.designID] = geo
-				else:
-					geo = geometriecache[pa.designID]
-
-					progress(current ,total , "(" + geo.designID + ") " + geo.Partname ,'-')
-
-				out.write("o\n")
-
-				for part in geo.Parts:
-					geo.Parts[part].outpositions = [elem.copy() for elem in geo.Parts[part].positions]
-					geo.Parts[part].outnormals = [elem.copy() for elem in geo.Parts[part].normals]
-
-					for i, b in enumerate(pa.Bones):
-						# positions
-						for j, p in enumerate(geo.Parts[part].outpositions):
-							if (geo.Parts[part].bonemap[j] == i):
-								p.transform( invert * b.matrix)
-						# normals
-						for k, n in enumerate(geo.Parts[part].outnormals):
-							if (geo.Parts[part].bonemap[k] == i):
-								n.transformW( invert * b.matrix)
-
-					for point in geo.Parts[part].outpositions:
-						out.write(point.string("v")) 
-
-					for normal in geo.Parts[part].outnormals:
-						out.write(normal.string("vn"))
-
-					for text in geo.Parts[part].textures:
-						out.write(text.string("vt")) 
-
-				decoCount = 0
-				out.write("g " + "(" + geo.designID + ") " + geo.Partname + '\n')
-				for part in geo.Parts:
-
-					
-					#try catch here for possible problems in materials assignment of various g, g1, g2, .. files in lxf file
-					try:
-						materialCurrentPart = pa.materials[part]
-					except IndexError:
-						print 'WARNING: {0}.g{1} has NO material assignment in lxf. Replaced with color 9. Fix {0}.xml faces values.'.format(pa.designID, part)
-						materialCurrentPart = '9'
-					
-					lddmat = self.allMaterials.getMaterialbyId(materialCurrentPart)
-					matname = lddmat.name
-
-					deco = '0'
-					if hasattr(pa, 'decoration') and len(geo.Parts[part].textures) > 0:
-						#if decoCount <= len(pa.decoration):
-						if decoCount < len(pa.decoration):
-							deco = pa.decoration[decoCount]
-						decoCount += 1
-	
-					extfile = ''
-					if not deco == '0':
-						extfile = deco + '.png'
-						matname += "_" + deco
-						decofilename = DECORATIONPATH + deco + '.png'
-						if not os.path.isfile(extfile) and self.database.fileexist(decofilename):
-							with open(extfile, "wb") as f:
-								f.write(self.database.filelist[decofilename].read())
-								f.close()
-
-					if not matname in usedmaterials:
-						usedmaterials.append(matname)
-						outtext.write("newmtl " + matname + '\n')
-						outtext.write(lddmat.string())
-						if not deco == '0':
-							outtext.write("map_Kd " + deco + ".png" + '\n')
-
-					out.write("usemtl " + matname + '\n') 
-					for face in geo.Parts[part].faces:
-						if len(geo.Parts[part].textures) > 0:
-							out.write(face.string("f",indexOffset,textOffset))  
-						else:
-							out.write(face.string("f",indexOffset)) 
-
-					indexOffset += len(geo.Parts[part].outpositions)
-					textOffset += len(geo.Parts[part].textures) 
-				# -----------------------------------------------------------------
-				out.write('\n')
-
-		sys.stdout.write('%s\r' % ('                                                                                                 '))
-		print("--- %s seconds ---" % (time.time() - start_time))
-
-
-def FindDBFolder():
-	if os.name =='posix':
-		return str(os.path.join(str(os.getenv('USERPROFILE') or os.getenv('HOME')),'Library','Application Support','LEGO Company','LEGO Digital Designer','db'))
-	else:
-		return str(os.path.join(str(os.getenv('USERPROFILE') or os.getenv('HOME')),'AppData','Roaming','LEGO Company','LEGO Digital Designer','db'))
-
-def setDBFolderVars(dbfolderlocation):
-	global PRIMITIVEPATH
-	global GEOMETRIEPATH
-	global DECORATIONPATH
-	global MATERIALNAMESPATH
-	PRIMITIVEPATH = dbfolderlocation + '/Primitives/'
-	GEOMETRIEPATH = dbfolderlocation + '/Primitives/LOD0/'
-	DECORATIONPATH = dbfolderlocation + '/Decorations/'
-	MATERIALNAMESPATH = dbfolderlocation + '/MaterialNames/'
-
-def FindDatabase():
-	if os.name =='posix':
-		return str(os.path.join(str(os.getenv('USERPROFILE') or os.getenv('HOME')),'Library','Application Support','LEGO Company','LEGO Digital Designer','db.lif'))
-	else:
-		return str(os.path.join(str(os.getenv('USERPROFILE') or os.getenv('HOME')),'AppData','Roaming','LEGO Company','LEGO Digital Designer','db.lif'))
-	
-def progress(count, total, status='', suffix = ''):
-	bar_len = 40
-	filled_len = int(round(bar_len * count / float(total)))
-	percents = round(100.0 * count / float(total), 1)
-	bar = '#' * filled_len + '-' * (bar_len - filled_len)
-	sys.stdout.write('Progress: [%s] %s%s %s %s\r' % (bar, percents, '%', suffix, '                                                 '))
-	sys.stdout.write('Progress: [%s] %s%s %s %s\r' % (bar, percents, '%', suffix, status))
-	sys.stdout.flush()
-
-def main():
-	print("- - - pyldd2obj - - -")
-	print("          _ ")
-	print("         [_]")
-	print("       /|   |\\")
-	print("      ()'---' C")
-	print("        | | |")
-	print("        [=|=]")
-	print("")
-	print("- - - - - - - - - - - -")
-	try:
-		lxf_filename = sys.argv[1]
-		obj_filename = sys.argv[2]
-	except Exception as e:
-		print("Missing Paramenter:" + sys.argv[0] + " infile.lfx exportname (without extension)")
-		return
-
-	converter = Converter()
-	if os.path.isdir(FindDBFolder()):
-		print "Found DB folder. Will use this instead of db.lif!"
-		setDBFolderVars(dbfolderlocation = FindDBFolder())
-		converter.LoadDBFolder(dbfolderlocation = FindDBFolder())
-		converter.LoadScene(filename=lxf_filename)
-		converter.Export(filename=obj_filename)
 		
-	elif os.path.exists(FindDatabase()):
-		converter.LoadDatabase(databaselocation = FindDatabase())
-		converter.LoadScene(filename=lxf_filename)
-		converter.Export(filename=obj_filename)
-	else:
-		print("no LDD database found please install LEGO-Digital-Designer")
+			for (const pa of bri.Parts){
+				
+				if (!(pa.designID in geometriecache)) {
+					var geo = new Geometry(pa.designID, this.database)
+					//console.log(geo)
+					geometriecache[pa.designID] = geo
+				}
+				else {
+				
+				}
+			
+			}
+		}
+	
+	}
+}
 
-if __name__ == "__main__":
-	main()
+
+class LOCReader {
+	//done
+	constructor(data) {
+		this.offset = 0
+		this.values = {}
+		this.data = data
+		if (this.data[0].charCodeAt() == 50 && this.data[1].charCodeAt() == 0){
+			
+			this.offset += 2
+			while (this.offset < this.data.length){
+				var key = this.NextString().replace('Material', '')
+				var value = this.NextString()
+				this.values[key] = value
+			}
+		}
+	}
+	
+	NextString(){
+		var out =''
+		var t = this.data[this.offset].charCodeAt()
+		this.offset += 1
+		while (t != 0){
+			out = out + String.fromCharCode(t)
+			t = this.data[this.offset].charCodeAt()
+			this.offset += 1
+		}
+		return out;
+	}
+}
+
+class Group{
+	//done
+	constructor(node){
+		this.partRefs =  node.getAttribute('partRefs').split(',')
+	}
+}
+
+class Bone{
+	//done
+	constructor(node){
+		this.refID = node.getAttribute('refID')
+		let [a, b, c, d, e, f, g, h, i, x, y, z] = node.getAttribute('transformation').split(',').map(parseFloat);
+		this.matrix = new Matrix3D(a,b,c,0,d,e,f,0,g,h,i,0,x,y,z,1);
+	}
+}
+
+
+class Part{
+	//done
+	constructor(node){
+		this.isGrouped = false
+		this.GroupIDX = 0
+		this.Bones = []
+		this.refID = node.getAttribute('refID')
+		this.designID = node.getAttribute('designID')
+		this.materials =  node.getAttribute('materials').split(',')
+		
+		var lastm = '0'
+		for (const [i, m] of this.materials.entries()) {
+			if (m == '0'){
+				this.materials[i] = lastm
+			}
+			else {
+				lastm = m
+			}
+		}
+
+		if (node.hasAttribute('decoration')){
+			this.decoration = node.getAttribute('decoration').split(',')
+		}
+		var childnodes = node.childNodes
+		for (var j = 0; j < childnodes.length ;j++) {
+			var childnode = childnodes[j]
+			if (childnode.nodeName == 'Bone'){
+				this.Bones.push(new Bone(childnode))
+			}
+		}
+	}
+}
+
+
+class Brick{
+	//done
+	constructor(node){
+		this.refID = node.getAttribute('refID')
+		this.designID = node.getAttribute('designID')
+		this.Parts = []
+		var childnodes = node.childNodes
+		for (var j = 0; j < childnodes.length ;j++) {
+			var childnode = childnodes[j]
+			if (childnode.nodeName == 'Part'){
+				this.Parts.push(new Part(childnode))
+			}
+		}
+	}
+}
+
+class SceneCamera{
+	//done
+	constructor(node){
+		this.refID = node.getAttribute('refID')
+		let [a, b, c, d, e, f, g, h, i, x, y, z] = node.getAttribute('transformation').split(',').map(parseFloat);
+		this.matrix = new Matrix3D(a,b,c,0,d,e,f,0,g,h,i,0,x,y,z,1);
+		this.fieldOfView = parseFloat(node.getAttribute('fieldOfView'));
+		this.distance = parseFloat(node.getAttribute('distance'));
+	}
+}
+
+
+class GeometryReader{
+	constructor(data){
+		this.offset = 0
+		this.data = data
+		this.positions = []
+		this.normals = []
+		this.textures = []
+		this.faces = []
+		this.bonemap = []
+		this.texCount = 0
+		this.outpositions = []
+		this.outnormals = []
+		
+		this.data = this.stringToArrayBuffer(data)
+		this.view = new Uint8Array(this.data);
+		
+		if (this.readInt() == 1111961649){
+			this.valueCount = this.readInt()
+			this.indexCount = this.readInt()
+			this.faceCount = this.indexCount / 3
+			var options = this.readInt()
+			
+			for (var i = 0; i <= this.valueCount ;i++) {
+				this.positions.push(new Point3D(this.readFloat(), this.readFloat(), this.readFloat()))
+			}
+			for (var i = 0; i <= this.valueCount ;i++) {
+				this.normals.push(new Point3D(this.readFloat(), this.readFloat(), this.readFloat()))
+			}
+			if ((options & 3) == 3){
+				this.texCount = this.valueCount
+				for (var i = 0; i <= this.valueCount ;i++) {
+					this.textures.push(new Point2D(this.readFloat(), this.readFloat()))
+				}
+			}
+			for (var i = 0; i <= this.faceCount ;i++) {
+				this.faces.push(new Face(this.readInt(), this.readInt(), this.readInt()))
+			}
+			if ((options & 48) == 48){
+				var num = this.readInt()
+				console.log(num)
+				this.offset += (num * 4) + (this.indexCount * 4)
+				num = this.readInt()
+				this.offset += (3 * num * 4) + (this.indexCount * 4)
+			}
+			
+			var bonelength = this.readInt()
+			
+			this.bonemap.length = this.valueCount
+			this.bonemap.fill(0);
+			
+			if ((bonelength > this.valueCount) || (bonelength > this.faceCount)){
+				var datastart = this.offset
+				this.offset += bonelength
+				for (var i = 0; i <= this.valueCount ;i++) {
+					var boneoffset = this.readInt() //+4
+					//console.log(boneoffset)
+					this.bonemap[i] = this.read_Int(datastart + boneoffset)
+				}
+			}
+		}
+	}
+	
+	stringToArrayBuffer(str) {
+		var buf = new ArrayBuffer(str.length);
+		var bufView = new Uint8Array(buf);
+		for (var i=0, strLen=str.length; i<strLen; i++) {
+			bufView[i] = str.charCodeAt(i);
+		}
+		return buf;
+	}
+	
+	read_Int(_offset){
+		//console.log(_offset)
+		var ret = (this.view[_offset+0]) + (this.view[_offset+1]<<8)+ (this.view[_offset+2]<<16) + (this.view[_offset+3]<<24)
+		//console.log(ret)
+		return ret
+	}
+	
+	readInt(){
+		//var ret = (this.view[this.offset+0]<<24) + (this.view[this.offset+1]<<16)+ (this.view[this.offset+2]<<8) + (this.view[this.offset+3])
+		var ret = (this.view[this.offset+0]) + (this.view[this.offset+1]<<8)+ (this.view[this.offset+2]<<16) + (this.view[this.offset+3]<<24)
+		this.offset += 4
+		return ret
+	}
+	
+	readFloat(){
+		var tempdata = [(this.view[this.offset+0]), (this.view[this.offset+1]), (this.view[this.offset+2]), (this.view[this.offset+3])];
+		// Create a buffer
+		var buf = new ArrayBuffer(4);
+		// Create a data view of it
+		var view = new DataView(buf);
+
+		// set bytes
+		tempdata.forEach(function (b, i) {
+			view.setUint8(i, b);
+		});
+
+		// Read the bits as a float; note that by doing this, we're implicitly converting it from a 32-bit float into JavaScript's native 64-bit double
+		var number = view.getFloat32(0);
+		this.offset += 4
+		return number
+	}
+}
+
+
+class Geometry {
+	constructor(designID, database){
+		this.designID = designID
+		this.Parts = {}
+		var GEOMETRIEPATH = 'Primitives/LOD0/'
+		
+		this.studsFields2D = []
+		var GeometryLocation = `${GEOMETRIEPATH}${designID}.g`
+		var GeometryCount = 0
+		
+		while (GeometryLocation in database.filelist) {
+			this.Parts[GeometryCount] = new GeometryReader(database.filelist[GeometryLocation].read())
+			GeometryCount += 1
+			GeometryLocation = `${GEOMETRIEPATH}${designID}.g${GeometryCount}`
+		
+		}
+	}
+
+
+}
+
+
+class Scene{
+	//partially done - need zip file handling
+	constructor(file){
+		this.Bricks = []
+		this.Scenecamera = []
+		this.Groups = []
+		var xmldata =''
+		if (file.endsWith('.lxfml')){
+			var lxfmlfile = new DBURLFile(file,file)
+			xmldata = lxfmlfile.read()
+		}
+		else if (file.endsWith('.lxf')){
+			alert('IMAGE100.LXFML')
+			
+			var promise = new JSZip.external.Promise(function (resolve, reject) {
+				JSZipUtils.getBinaryContent(file, function(err, data) {
+					if (err) {
+						reject(err);
+					} else {
+						resolve(data);
+					}
+				});
+			});
+
+			promise.then(JSZip.loadAsync)                     // 2) chain with the zip promise
+			.then(function(zip) {
+				return zip.file("IMAGE100.LXFML").async("string"); // 3) chain with the text content promise
+			})
+			.then(function success(text) {                    // 4) display the result
+				
+				xmldata = text
+				console.log(xmldata)
+				
+				
+				
+			}, function error(e) {
+				console.log(e)
+			});
+		}
+		else {
+			return
+		}
+		
+		var parser = new DOMParser();
+		var xml = parser.parseFromString(xmldata, "text/xml");
+		this.Name = xml.firstChild.getAttribute('name')
+		
+		var nodes = xml.firstChild.childNodes;
+		for (var i = 0; i < nodes.length ;i++) {
+			var node = nodes[i]
+			if (node.nodeName == 'Meta'){
+				var childnodes = node.childNodes
+				for (var j = 0; j < childnodes.length ;j++) {
+					var childnode = childnodes[j]
+					if (childnode.nodeName == 'BrickSet'){
+						this.Version = childnode.getAttribute('version')
+					}
+				}
+			}
+			else if (node.nodeName == 'Cameras'){
+				var childnodes = node.childNodes
+				for (var j = 0; j < childnodes.length ;j++) {
+					var childnode = childnodes[j]
+					if (childnode.nodeName == 'Camera'){
+						this.Scenecamera.push(new SceneCamera(childnode))
+					}
+				}
+			}
+			else if (node.nodeName == 'Bricks'){
+				var childnodes = node.childNodes
+				for (var j = 0; j < childnodes.length ;j++) {
+					var childnode = childnodes[j]
+					if (childnode.nodeName == 'Brick'){
+						this.Bricks.push(new Brick(childnode))
+					}
+				}
+			}
+			else if (node.nodeName == 'GroupSystems'){
+				var childnodes = node.childNodes
+				for (var j = 0; j < childnodes.length ;j++) {
+					var childnode = childnodes[j]
+					if (childnode.nodeName == 'GroupSystem'){
+						var subchildnodes = childnode.childNodes
+						for (var k = 0; k < subchildnodes.length ;k++) {
+							var subchildnode = subchildnodes[k]
+							if (subchildnode.nodeName == 'Group'){
+								this.Groups.push(new Group(subchildnode))
+							}
+						}
+					}
+				}
+			}
+					
+		}
+		
+		for (const [i, m] of this.Groups.entries()) {
+			for (const brick of this.Bricks){
+				for (const part of brick.Parts){
+					if (m.partRefs.indexOf(part.refID) !== -1) { 
+						part.isGrouped = true
+						part.GroupIDX = i
+					}
+				}
+			}
+		}
+		console.log('Scene "'+ this.Name + '" Brickversion: ' + this.Version)
+	}
+}
+
+class Materials {
+	//done
+	constructor(data) {
+		this.Materials = {}
+		var parser = new DOMParser();
+		var xml = parser.parseFromString(data,"text/xml");
+		
+		var nodes = xml.firstChild.childNodes;
+		for (var i = 0; i < nodes.length ;i++) {
+			var node = nodes[i]
+			if (node.nodeName == 'Material') {
+				this.Materials[node.getAttribute('MatID')] = new Material(node.getAttribute('MatID'), parseInt(node.getAttribute('Red')), parseInt(node.getAttribute('Green')), parseInt(node.getAttribute('Red')), parseInt(node.getAttribute('Blue')), parseInt(node.getAttribute('Alpha')), node.getAttribute('MaterialType'))
+			}
+			
+		}
+	}
+	
+	setLOC(loc){
+		for (var key in loc.values){
+			if (key in this.Materials){
+				this.Materials[key].name = loc.values[key].replace(" ", "_")
+			}
+		}
+	}
+	
+	getMaterialbyId(mid) {
+		return this.Materials[mid]
+	}
+}
+
+
+class Material {
+	//done
+	constructor(id, r, g, b, a, mtype) {
+		this.id = id
+		this.name = ''
+		this.mattype = mtype
+		this.r = parseFloat(r)
+		this.g = parseFloat(g)
+		this.b = parseFloat(b)
+		this.a = parseFloat(a)
+	}
+
+	string(){
+		out = ('Red: ' + this.r + ' Green: ' + this.g + ' Blue: '+ this.b + ' Aplha: ' + this.a)
+		return out;
+	}
+}
+
+
+function FindDBURL(){
+	var dburl = 'https://api.github.com/repos/sttng/LDD-DB/git/trees/master?recursive=1'
+	let xhr = new XMLHttpRequest();
+	xhr.open('GET', dburl, false);  // `false` makes the request synchronous
+	xhr.setRequestHeader("Authorization", "token 0c8d5b77e090e3ddaefc24a708aec7eb90a1293c");
+
+	// request state change event
+	xhr.onreadystatechange = function() {
+		
+		// request completed?
+		if (xhr.readyState !== 4) {//return;
+			dburl = false;
+			console.log('readyState error in FindDBURL:', xhr.status, xhr.statusText);
+		}
+		if (xhr.status === 200) {
+			// request successful - show response
+			//console.log(xhr.responseText);
+		}
+		else {
+			// request error
+			dburl = false;
+			console.log('HTTP error in FindDBURL:', xhr.status, xhr.statusText);
+		}
+	};
+	
+	// start request
+	xhr.send();
+	return dburl
+}
+
+class DBURLFile {
+	constructor(urlHandle, name) {
+		this.urlHandle = urlHandle
+		this.name = name
+	}
+
+	read() {
+		var fileContent
+		var self = this;
+		let xhr = new XMLHttpRequest();
+		xhr.open('GET', self.urlHandle, false);
+		
+		// request state change event
+		xhr.onreadystatechange = function() {
+			
+			// request completed?
+			if (xhr.readyState !== 4) {//return;
+				console.log('readyState error in DBURLFile:', xhr.status, xhr.statusText);
+			}
+			if (xhr.status === 200) {
+				// request successful - show response
+				fileContent = xhr.responseText;
+			}
+			else {
+				// request error
+				console.log('HTTP error in DBURLFile:', xhr.status, xhr.statusText);
+			}
+		};
+		
+		// start request
+		xhr.send();
+		return fileContent
+	}
+}
+
+
+class DBURLReader {
+	constructor(dburl) {
+		this.filelist = {};
+		this.initok = false;
+		this.location = dburl;
+		this.dbinfo = '';
+		this.parse(this.location);
+		
+		// console.log(JSON.stringify(this.filelist))
+		
+		if(this.fileexist('Materials.xml') && this.fileexist('info.xml')){
+			this.dbinfo = new DBinfo(this.filelist['info.xml'].read());
+			this.initok = true
+		}
+		else{
+			alert("db url ERROR")
+		}
+	}
+	
+	fileexist(filename) {
+		var self = this;
+		return self.filelist[filename];
+	}
+	
+	parse(dburl) {
+		var self = this;
+		let xhr = new XMLHttpRequest();
+		xhr.open('GET', dburl, false);
+		xhr.setRequestHeader("Authorization", "token 0c8d5b77e090e3ddaefc24a708aec7eb90a1293c");
+		
+		// request state change event
+		xhr.onreadystatechange = function() {
+			
+			// request completed?
+			if (xhr.readyState !== 4) return;
+		
+			if (xhr.status === 200) {
+				// request successful - show response
+				var data = JSON.parse(xhr.responseText)
+				//console.log(JSON.stringify(data, null, "\t"));
+				for(var i = 0; i < data.tree.length; i++) {
+					var obj = data.tree[i];
+					if (obj.type == 'tree'){
+						// nothing todo
+					}
+					else if (obj.type == 'blob'){
+						self.filelist[obj.path] = new DBURLFile('https://raw.githubusercontent.com/sttng/LDD-DB/master/' + obj.path, obj.path)
+					}
+					else {
+						console.log('Strange object parsed: ' + obj.type)
+					}
+				}
+			}
+			else {
+				// request error
+				console.log('HTTP error', xhr.status, xhr.statusText);
+			}
+		};
+		
+		// start request
+		xhr.send();
+	}
+}
+
+
+//Start
+if (FindDBURL()) {
+	converter = new Converter()
+	converter.LoadDBURL(dbURLlocation = FindDBURL())
+	converter.LoadScene(filename = "https://raw.githubusercontent.com/sttng/LDD/master/test01.lxfml")
+	converter.Export(filename = 'test.webgl')
+	
+}
+else {
+	alert("LDD database not available. Please look for LEGO-Digital-Designer database.")
+}
+
+
+</script>
+
+</body>
+</html>
