@@ -299,7 +299,7 @@ class GeometryReader{
 		this.normals = []
 		this.textures = []
 		this.faces = []
-		this.bonemap = {}
+		this.bonemap = []
 		this.texCount = 0
 		this.outpositions = []
 		this.outnormals = []
@@ -337,14 +337,16 @@ class GeometryReader{
 			}
 			
 			var bonelength = this.readInt()
-			this.bonemap = [0] * this.valueCount
+			this.bonemap.length = this.valueCount
+			this.bonemap.fill(0);
+			
 			
 			if ((bonelength > this.valueCount) || (bonelength > this.faceCount)){
 				var datastart = this.offset
 				this.offset += bonelength
 				for (var i = 0; i <= this.valueCount ;i++) {
 					var boneoffset = this.readInt() + 4
-					this.bonemap[i] = 'a' //this.read_Int(datastart + boneoffset)
+					this.bonemap[i] = this.read_Int(datastart + boneoffset)
 				}
 			
 			}
