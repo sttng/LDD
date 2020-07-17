@@ -91,6 +91,30 @@ class Matrix3D{
 	}
 }
 
+class Point3D{
+	constructor(x=0,y=0,z=0){
+		this.x = x
+		this.y = y
+		this.z = z
+	}
+}
+
+
+class Point2D{
+	constructor(x=0,y=0){
+		this.x = x
+		this.y = y
+	}
+}
+
+
+class Face{
+	constructor(a=0,b=0,c=0){
+		this.a = a
+		this.b = b
+		this.c = c
+	}
+}
 
 class DBinfo {
 	//done
@@ -279,7 +303,6 @@ class GeometryReader{
 		this.texCount = 0
 		this.outpositions = []
 		this.outnormals = []
-		//console.log(this.readInt())
 		
 		this.data = this.stringToArrayBuffer(data)
 		this.view = new Uint8Array(this.data);
@@ -290,8 +313,41 @@ class GeometryReader{
 			this.indexCount = this.readInt()
 			this.faceCount = this.indexCount / 3
 			var options = this.readInt()
-			console.log(this.valueCount)
-
+			
+			for (var i = 0; i <= this.valueCount ;i++) {
+				this.positions.push(new Point3D(this.readFloat(), this.readFloat(), this.readFloat()))
+			}
+			for (var i = 0; i <= this.valueCount ;i++) {
+				this.normals.push(new Point3D(this.readFloat(), this.readFloat(), this.readFloat()))
+			}
+			if ((options & 3) == 3){
+				this.texCount = this.valueCount
+				for (var i = 0; i <= this.valueCount ;i++) {
+					this.textures.push(new Point2D(this.readFloat(), this.readFloat(), this.readFloat()))
+				}
+			}
+			for (var i = 0; i <= this.faceCount ;i++) {
+				this.faces.push(new Face(this.readFloat(), this.readFloat(), this.readFloat()))
+			}
+			if ((options & 48) == 48){
+				var num = this.readInt()
+				this.offset += (num * 4) + (this.indexCount * 4)
+				num = this.readInt()
+				this.offset += (3 * num * 4) + (this.indexCount * 4)
+			}
+			
+			var bonelength = this.readInt()
+			this.bonemap = [0] * this.valueCount
+			
+			if ((bonelength > this.valueCount) || (bonelength > this.faceCount)){
+				var datastart = this.offset
+				this.offset += bonelength
+				for (var i = 0; i <= this.valueCount ;i++) {
+					var boneoffset = this.readInt() + 4
+					this.bonemap[i] = 'a' //this.read_Int(datastart + boneoffset)
+				}
+			
+			}
 		}
 		
 		
@@ -306,11 +362,33 @@ class GeometryReader{
 		return buf;
 	}
 	
+	read_Int(_offset){
+	
+	}
+	
 	readInt(){
 		//var ret = (this.view[this.offset+0]<<24) + (this.view[this.offset+1]<<16)+ (this.view[this.offset+2]<<8) + (this.view[this.offset+3])
 		var ret = (this.view[this.offset+0]) + (this.view[this.offset+1]<<8)+ (this.view[this.offset+2]<<16) + (this.view[this.offset+3]<<24)
 		this.offset += 4
 		return ret
+	}
+	
+	readFloat(){
+		var tempdata = [(this.view[this.offset+0]), (this.view[this.offset+1]), (this.view[this.offset+2]), (this.view[this.offset+3])];
+		// Create a buffer
+		var buf = new ArrayBuffer(4);
+		// Create a data view of it
+		var view = new DataView(buf);
+
+		// set bytes
+		tempdata.forEach(function (b, i) {
+			view.setUint8(i, b);
+		});
+
+		// Read the bits as a float; note that by doing this, we're implicitly converting it from a 32-bit float into JavaScript's native 64-bit double
+		var number = view.getFloat32(0);
+		this.offset += 4
+		return number
 	}
 }
 
