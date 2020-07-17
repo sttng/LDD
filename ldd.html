@@ -306,7 +306,6 @@ class GeometryReader{
 		
 		this.data = this.stringToArrayBuffer(data)
 		this.view = new Uint8Array(this.data);
-		//console.log(view2[5])
 		
 		if (this.readInt() == 1111961649){
 			this.valueCount = this.readInt()
@@ -340,19 +339,16 @@ class GeometryReader{
 			this.bonemap.length = this.valueCount
 			this.bonemap.fill(0);
 			
-			
 			if ((bonelength > this.valueCount) || (bonelength > this.faceCount)){
 				var datastart = this.offset
 				this.offset += bonelength
 				for (var i = 0; i <= this.valueCount ;i++) {
-					var boneoffset = this.readInt() + 4
+					var boneoffset = this.readInt() //+4
+					console.log(boneoffset)
 					this.bonemap[i] = this.read_Int(datastart + boneoffset)
 				}
-			
 			}
 		}
-		
-		
 	}
 	
 	stringToArrayBuffer(str) {
@@ -365,7 +361,10 @@ class GeometryReader{
 	}
 	
 	read_Int(_offset){
-	
+		//console.log(_offset)
+		var ret = (this.view[_offset+0]) + (this.view[_offset+1]<<8)+ (this.view[_offset+2]<<16) + (this.view[_offset+3]<<24)
+		//console.log(ret)
+		return ret
 	}
 	
 	readInt(){
