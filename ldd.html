@@ -38,7 +38,7 @@ class Matrix3D{
 		return `[${this.n11}, ${this.n12}, ${this.n13}, ${this.n14}, ${this.n21}, ${this.n22}, ${this.n23}, ${this.n24}, ${this.n31}, ${this.n32}, ${this.n33}, ${this.n34}, ${this.n41}, ${this.n42}, ${this.n43}, ${this.n44}]`
 	}
 	
-	rotate(angle=0, axis=0){
+	rotate(angle, axis){
 		var c = Math.cos(angle)
 		var s = Math.sin(angle)
 		var t = 1 - c
@@ -332,6 +332,7 @@ class SceneCamera{
 
 
 class GeometryReader{
+	//done
 	constructor(data){
 		this.offset = 0
 		this.data = data
@@ -435,9 +436,12 @@ class Geometry {
 		this.designID = designID
 		this.Parts = {}
 		var GEOMETRIEPATH = 'Primitives/LOD0/'
+		var PRIMITIVEPATH = 'Primitives/'
 		
 		this.studsFields2D = []
 		var GeometryLocation = `${GEOMETRIEPATH}${designID}.g`
+		var PrimitiveLocation = `${PRIMITIVEPATH}${designID}.xml`
+
 		var GeometryCount = 0
 		
 		while (GeometryLocation in database.filelist) {
@@ -445,10 +449,67 @@ class Geometry {
 			GeometryCount += 1
 			GeometryLocation = `${GEOMETRIEPATH}${designID}.g${GeometryCount}`
 		}
+		var primitive = new Primitive(database.filelist[PrimitiveLocation].read())
+
 	}
 
 
 }
+
+
+class Bone2 {
+	constructor(boneId=0, angle=0, ax=0, ay=0, az=0, tx=0, ty=0, tz=0){
+		this.boneId = boneId
+		var rotationMatrix = new Matrix3D()
+		rotationMatrix.rotate(-angle * Math.PI / 180.0, new Point3D(ax, ay, az))
+		var p = new Point3D(tx, ty, tz)
+		p.transformW(rotationMatrix)
+		rotationMatrix.n41 -= p.x
+		rotationMatrix.n42 -= p.y
+		rotationMatrix.n43 -= p.z
+		this.matrix = rotationMatrix
+	}
+}
+
+
+class Primitive {
+	constructor(data){
+		this.Designname = ''
+		this.Bones = []
+		this.Fields2D = []
+		this.PhysicsAttributes = {}
+		this.Bounding = {}
+		this.GeometryBounding = {}
+		var parser = new DOMParser();
+		var xml = parser.parseFromString(data,"text/xml");
+		
+		var nodes = xml.firstChild.childNodes;
+		for (var i = 0; i < nodes.length ;i++) {
+			var node = nodes[i]
+			if (node.nodeName == 'Flex'){
+				var childnodes = node.childNodes
+				for (var j = 0; j < childnodes.length ;j++) {
+					var childnode = childnodes[j]
+					if (childnode.nodeName == 'Bone'){
+						this.Bones.push(new Bone2(parseInt(childnode.getAttribute('boneId')), parseFloat(childnode.getAttribute('angle')), parseFloat(childnode.getAttribute('ax')), parseFloat(childnode.getAttribute('ay')), parseFloat(childnode.getAttribute('az')), parseFloat(childnode.getAttribute('tx')), parseFloat(childnode.getAttribute('ty')), parseFloat(childnode.getAttribute('tz'))))
+					}
+				}
+				
+				
+				
+				
+			}
+			else if (node.nodeName == 'Annotations'){
+			
+			}
+			
+		}
+
+	}
+
+}
+
+
 
 
 class Scene{
