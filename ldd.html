@@ -350,7 +350,6 @@ class GeometryReader{
 		for (var i = 0; i < data.length; i++ ) {
 			this.binary += String.fromCharCode(data.charCodeAt(i) & 255)
 		}
-		
 		this.data = Base64Binary.decodeArrayBuffer(btoa(this.binary)); 
 		this.view = new Uint8Array(this.data);
 		
@@ -450,6 +449,12 @@ class Geometry {
 			GeometryLocation = `${GEOMETRIEPATH}${designID}.g${GeometryCount}`
 		}
 		var primitive = new Primitive(database.filelist[PrimitiveLocation].read())
+		this.Partname = primitive.Designname
+		this.studsFields2D = primitive.Fields2D
+		
+		for (const part of this.Parts) { 
+			
+		}
 
 	}
 
@@ -458,6 +463,7 @@ class Geometry {
 
 
 class Bone2 {
+	//done
 	constructor(boneId=0, angle=0, ax=0, ay=0, az=0, tx=0, ty=0, tz=0){
 		this.boneId = boneId
 		var rotationMatrix = new Matrix3D()
@@ -472,7 +478,40 @@ class Bone2 {
 }
 
 
+class Field2D{
+	//done
+	constructor(type=0, width=0, height=0, angle=0, ax=0, ay=0, az=0, tx=0, ty=0, tz=0, field2DRawData='none'){
+		this.type = type
+		this.field2DRawData = field2DRawData
+		var rotationMatrix = new Matrix3D()
+		rotationMatrix.rotate(-angle * Math.PI / 180.0, new Point3D(ax, ay, az))
+		var p = new Point3D(tx, ty, tz)
+		p.transformW(rotationMatrix)
+		rotationMatrix.n41 -= p.x
+		rotationMatrix.n42 -= p.y
+		rotationMatrix.n43 -= p.z
+		this.matrix = rotationMatrix
+		this.custom2DField = []
+		
+		var rows_count = height + 1
+		var cols_count = width + 1
+		this.custom2DField = new Array(rows_count).fill(new Array(cols_count).fill(0));
+		var custom2DFieldString = field2DRawData.replace(/[\r\n\x0B\x0C\u0085\u2028\u2029]+/g, '').replace(/\s/g, '')
+		var custom2DFieldArr = custom2DFieldString.split(',')
+		
+		var k = 0
+		for (var i = 0; i < rows_count ;i++) {
+			for (var j = 0; j < cols_count ;j++){
+				this.custom2DField[i][j] = custom2DFieldArr[k]
+				k += 1
+			}
+		}
+	}
+}
+
+
 class Primitive {
+	//done
 	constructor(data){
 		this.Designname = ''
 		this.Bones = []
@@ -494,19 +533,28 @@ class Primitive {
 						this.Bones.push(new Bone2(parseInt(childnode.getAttribute('boneId')), parseFloat(childnode.getAttribute('angle')), parseFloat(childnode.getAttribute('ax')), parseFloat(childnode.getAttribute('ay')), parseFloat(childnode.getAttribute('az')), parseFloat(childnode.getAttribute('tx')), parseFloat(childnode.getAttribute('ty')), parseFloat(childnode.getAttribute('tz'))))
 					}
 				}
-				
-				
-				
-				
 			}
 			else if (node.nodeName == 'Annotations'){
+				var childnodes = node.childNodes
+				for (var j = 0; j < childnodes.length ;j++) {
+					var childnode = childnodes[j]
+					if (childnode.nodeName == 'Annotation' && childnode.hasAttribute('designname')){
+						this.Designname = childnode.getAttribute('designname')
+					}
+				}
 			
 			}
-			
+			else if (node.nodeName == 'Connectivity'){
+				var childnodes = node.childNodes
+				for (var j = 0; j < childnodes.length ;j++) {
+					var childnode = childnodes[j]
+					if (childnode.nodeName == 'Custom2DField'){
+						this.Fields2D.push(new Field2D(parseInt(childnode.getAttribute('type')), parseInt(childnode.getAttribute('width')), parseInt(childnode.getAttribute('height')), parseFloat(childnode.getAttribute('angle')), parseFloat(childnode.getAttribute('ax')), parseFloat(childnode.getAttribute('ay')), parseFloat(childnode.getAttribute('az')), parseFloat(childnode.getAttribute('tx')), parseFloat(childnode.getAttribute('ty')), parseFloat(childnode.getAttribute('tz')), (childnode.firstChild.data)))
+					}
+				}
+			}
 		}
-
 	}
-
 }
 
 
