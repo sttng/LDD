@@ -10,6 +10,7 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.5.0/jszip.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip-utils/0.1.0/jszip-utils.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r118/three.min.js"></script>
+<script type="text/javascript" src="base64-binary.js"></script>
 <script>
 
 class Matrix3D{
@@ -304,29 +305,40 @@ class GeometryReader{
 		this.outpositions = []
 		this.outnormals = []
 		
-		this.data = this.stringToArrayBuffer(data)
+		this.binary = "";
+		
+		for (var i = 0; i < data.length; i++ ) {
+			this.binary += String.fromCharCode(data.charCodeAt(i) & 255)
+		}
+		
+		this.data = Base64Binary.decodeArrayBuffer(btoa(this.binary)); 
+		
+		//console.log(byteArray)
+		
+		//this.data = this.stringToArrayBuffer(this.binary)
 		this.view = new Uint8Array(this.data);
 		
 		if (this.readInt() == 1111961649){
 			this.valueCount = this.readInt()
 			this.indexCount = this.readInt()
 			this.faceCount = this.indexCount / 3
+			console.log(this.faceCount)
 			var options = this.readInt()
 			
-			for (var i = 0; i <= this.valueCount ;i++) {
+			for (var i = 0; i < this.valueCount ;i++) {
 				this.positions.push(new Point3D(this.readFloat(), this.readFloat(), this.readFloat()))
 			}
-			for (var i = 0; i <= this.valueCount ;i++) {
+			for (var i = 0; i < this.valueCount ;i++) {
 				this.normals.push(new Point3D(this.readFloat(), this.readFloat(), this.readFloat()))
 			}
 			if ((options & 3) == 3){
 				this.texCount = this.valueCount
-				for (var i = 0; i <= this.valueCount ;i++) {
-					this.textures.push(new Point2D(this.readFloat(), this.readFloat(), this.readFloat()))
+				for (var i = 0; i < this.valueCount ;i++) {
+					this.textures.push(new Point2D(this.readFloat(), this.readFloat()))
 				}
 			}
-			for (var i = 0; i <= this.faceCount ;i++) {
-				this.faces.push(new Face(this.readFloat(), this.readFloat(), this.readFloat()))
+			for (var i = 0; i < this.faceCount ;i++) {
+				this.faces.push(new Face(this.readInt(), this.readInt(), this.readInt()))
 			}
 			if ((options & 48) == 48){
 				var num = this.readInt()
@@ -342,23 +354,19 @@ class GeometryReader{
 			if ((bonelength > this.valueCount) || (bonelength > this.faceCount)){
 				var datastart = this.offset
 				this.offset += bonelength
-				for (var i = 0; i <= this.valueCount ;i++) {
+				for (var i = 0; i < this.valueCount ;i++) {
 					var boneoffset = this.readInt() //+4
-					console.log(boneoffset)
+					//console.log(boneoffset)
 					this.bonemap[i] = this.read_Int(datastart + boneoffset)
 				}
 			}
 		}
+		
+		console.log(this.positions)
+		console.log(this.normals)
+		console.log(this.faces)
 	}
 	
-	stringToArrayBuffer(str) {
-		var buf = new ArrayBuffer(str.length);
-		var bufView = new Uint8Array(buf);
-		for (var i=0, strLen=str.length; i<strLen; i++) {
-			bufView[i] = str.charCodeAt(i);
-		}
-		return buf;
-	}
 	
 	read_Int(_offset){
 		//console.log(_offset)
@@ -371,11 +379,12 @@ class GeometryReader{
 		//var ret = (this.view[this.offset+0]<<24) + (this.view[this.offset+1]<<16)+ (this.view[this.offset+2]<<8) + (this.view[this.offset+3])
 		var ret = (this.view[this.offset+0]) + (this.view[this.offset+1]<<8)+ (this.view[this.offset+2]<<16) + (this.view[this.offset+3]<<24)
 		this.offset += 4
+		console.log(ret)
 		return ret
 	}
 	
 	readFloat(){
-		var tempdata = [(this.view[this.offset+0]), (this.view[this.offset+1]), (this.view[this.offset+2]), (this.view[this.offset+3])];
+		var tempdata = [(this.view[this.offset+3]), (this.view[this.offset+2]), (this.view[this.offset+1]), (this.view[this.offset+0])];
 		// Create a buffer
 		var buf = new ArrayBuffer(4);
 		// Create a data view of it
@@ -383,7 +392,7 @@ class GeometryReader{
 
 		// set bytes
 		tempdata.forEach(function (b, i) {
-			view.setUint8(i, b);
+			view.setInt8(i, b);
 		});
 
 		// Read the bits as a float; note that by doing this, we're implicitly converting it from a 32-bit float into JavaScript's native 64-bit double
@@ -616,6 +625,8 @@ class DBURLFile {
 		var self = this;
 		let xhr = new XMLHttpRequest();
 		xhr.open('GET', self.urlHandle, false);
+		// Hack to pass bytes through unprocessed.
+		xhr.overrideMimeType('text/plain; charset=x-user-defined');
 		
 		// request state change event
 		xhr.onreadystatechange = function() {
@@ -710,7 +721,7 @@ class DBURLReader {
 if (FindDBURL()) {
 	converter = new Converter()
 	converter.LoadDBURL(dbURLlocation = FindDBURL())
-	converter.LoadScene(filename = "https://raw.githubusercontent.com/sttng/LDD/master/test01.lxfml")
+	converter.LoadScene(filename = "https://raw.githubusercontent.com/sttng/LDD/master/min.lxfml")
 	converter.Export(filename = 'test.webgl')
 	
 }
