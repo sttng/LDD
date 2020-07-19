@@ -93,10 +93,37 @@ class Matrix3D{
 }
 
 class Point3D{
+	//done
 	constructor(x=0,y=0,z=0){
 		this.x = x
 		this.y = y
 		this.z = z
+	}
+	
+	toString(){
+		return `[${this.x}, ${this.y}, ${this.z}]`
+	}
+	
+	transformW(matrix){
+		var x = matrix.n11 * this.x + matrix.n21 * this.y + matrix.n31 * this.z
+		var y = matrix.n12 * this.x + matrix.n22 * this.y + matrix.n32 * this.z
+		var z = matrix.n13 * this.x + matrix.n23 * this.y + matrix.n33 * this.z
+		this.x = x
+		this.y = y
+		this.z = z
+	}
+	
+	transform(matrix){
+		var x = matrix.n11 * this.x + matrix.n21 * this.y + matrix.n31 * this.z + matrix.n41
+		var y = matrix.n12 * this.x + matrix.n22 * this.y + matrix.n32 * this.z + matrix.n42
+		var z = matrix.n13 * this.x + matrix.n23 * this.y + matrix.n33 * this.z + matrix.n43
+		this.x = x
+		this.y = y
+		this.z = z
+	}
+	
+	copy(){
+		return new Point3D(this.x, this.y, this.z)
 	}
 }
 
@@ -106,6 +133,14 @@ class Point2D{
 		this.x = x
 		this.y = y
 	}
+	
+	toString(){
+		return `[${this.x}, ${this.y}]`
+	}
+	
+	copy(){
+		return new Point2D(this.x, this.y)
+	}
 }
 
 
@@ -114,6 +149,10 @@ class Face{
 		this.a = a
 		this.b = b
 		this.c = c
+	}
+	
+	toString(){
+		return `[${this.a}, ${this.b}, ${this.c}]`
 	}
 }
 
@@ -312,17 +351,12 @@ class GeometryReader{
 		}
 		
 		this.data = Base64Binary.decodeArrayBuffer(btoa(this.binary)); 
-		
-		//console.log(byteArray)
-		
-		//this.data = this.stringToArrayBuffer(this.binary)
 		this.view = new Uint8Array(this.data);
 		
 		if (this.readInt() == 1111961649){
 			this.valueCount = this.readInt()
 			this.indexCount = this.readInt()
 			this.faceCount = this.indexCount / 3
-			console.log(this.faceCount)
 			var options = this.readInt()
 			
 			for (var i = 0; i < this.valueCount ;i++) {
@@ -355,18 +389,12 @@ class GeometryReader{
 				var datastart = this.offset
 				this.offset += bonelength
 				for (var i = 0; i < this.valueCount ;i++) {
-					var boneoffset = this.readInt() //+4
-					//console.log(boneoffset)
+					var boneoffset = this.readInt() + 4
 					this.bonemap[i] = this.read_Int(datastart + boneoffset)
 				}
 			}
 		}
-		
-		console.log(this.positions)
-		console.log(this.normals)
-		console.log(this.faces)
 	}
-	
 	
 	read_Int(_offset){
 		//console.log(_offset)
@@ -379,15 +407,14 @@ class GeometryReader{
 		//var ret = (this.view[this.offset+0]<<24) + (this.view[this.offset+1]<<16)+ (this.view[this.offset+2]<<8) + (this.view[this.offset+3])
 		var ret = (this.view[this.offset+0]) + (this.view[this.offset+1]<<8)+ (this.view[this.offset+2]<<16) + (this.view[this.offset+3]<<24)
 		this.offset += 4
-		console.log(ret)
+		//console.log(ret)
 		return ret
 	}
 	
 	readFloat(){
 		var tempdata = [(this.view[this.offset+3]), (this.view[this.offset+2]), (this.view[this.offset+1]), (this.view[this.offset+0])];
-		// Create a buffer
+		// Create a buffer and a data view of it
 		var buf = new ArrayBuffer(4);
-		// Create a data view of it
 		var view = new DataView(buf);
 
 		// set bytes
@@ -417,7 +444,6 @@ class Geometry {
 			this.Parts[GeometryCount] = new GeometryReader(database.filelist[GeometryLocation].read())
 			GeometryCount += 1
 			GeometryLocation = `${GEOMETRIEPATH}${designID}.g${GeometryCount}`
-		
 		}
 	}
 
@@ -721,7 +747,7 @@ class DBURLReader {
 if (FindDBURL()) {
 	converter = new Converter()
 	converter.LoadDBURL(dbURLlocation = FindDBURL())
-	converter.LoadScene(filename = "https://raw.githubusercontent.com/sttng/LDD/master/min.lxfml")
+	converter.LoadScene(filename = "https://raw.githubusercontent.com/sttng/LDD/master/test01.lxfml")
 	converter.Export(filename = 'test.webgl')
 	
 }
