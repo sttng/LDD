@@ -15,10 +15,19 @@
         </Bone>
       </Part>
     </Brick>
+    <Brick refID="1" designID="15533">
+      <Part refID="1" designID="15533" materials="24">
+        <Bone refID="1" transformation="0,0,-0.99999988079071044921875,0,0.999999821186065673828125,0,1,0,0,-0.4000000059604644775390625,0,-0.4000000059604644775390625">
+        </Bone>
+      </Part>
+    </Brick>
   </Bricks>
   <RigidSystems>
     <RigidSystem>
       <Rigid refID="0" transformation="1,0,0,0,1,0,0,0,1,-1.2000000476837158203125,0,0.4000000059604644775390625" boneRefs="0"/>
+    </RigidSystem>
+    <RigidSystem>
+      <Rigid refID="1" transformation="0,0,-0.99999988079071044921875,0,0.999999821186065673828125,0,1,0,0,-0.4000000059604644775390625,0,-0.4000000059604644775390625" boneRefs="1"/>
     </RigidSystem>
   </RigidSystems>
   <GroupSystems>
