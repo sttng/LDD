@@ -21,9 +21,9 @@
         </Bone>
       </Part>
     </Brick>
-    <Brick refID="2" designID="30137">
-      <Part refID="2" designID="30137" materials="321">
-        <Bone refID="2" transformation="1,0,0,0,1,0,0,0,1,-2.7999999523162841796875,0,-2.7999999523162841796875">
+    <Brick refID="2" designID="15533">
+      <Part refID="2" designID="15533" materials="321">
+        <Bone refID="2" transformation="-1,0,0,0,0.99999988079071044921875,0,0,0,-1,-1.19999980926513671875,0,-2.8000004291534423828125">
         </Bone>
       </Part>
     </Brick>
@@ -36,7 +36,7 @@
       <Rigid refID="1" transformation="0.3222272098064422607421875,0,-0.946662247180938720703125,0,1,0,0.946662247180938720703125,0,0.3222272098064422607421875,0.6577816009521484375,0,0.442670404911041259765625" boneRefs="1"/>
     </RigidSystem>
     <RigidSystem>
-      <Rigid refID="2" transformation="1,0,0,0,1,0,0,0,1,-2.7999999523162841796875,0,-2.7999999523162841796875" boneRefs="2"/>
+      <Rigid refID="2" transformation="-1,0,0,0,0.99999988079071044921875,0,0,0,-1,-1.19999980926513671875,0,-2.8000004291534423828125" boneRefs="2"/>
     </RigidSystem>
   </RigidSystems>
   <GroupSystems>
