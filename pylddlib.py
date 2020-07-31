@@ -1,8 +1,9 @@
 #!/usr/bin/env python
-# pylddlib version 0.4.9
+# pylddlib version 0.4.9.2
 # based on pyldd2obj version 0.4.8 - Copyright (c) 2019 by jonnysp
 #
 # Updates:
+# 0.4.9.2 changed handling of material = 0 for a part. Now a 0 will choose the 1st material (the base material of a part) and not the previous material of the subpart before. This will fix "Chicken Helmet Part 11262". It may break other parts and this change needs further regression.
 # 0.4.9.1 improved custom2DField handling, fixed decorations bug, improved material assignments handling
 # 0.4.9 updates to support reading extracted db.lif from db folder
 #
@@ -180,7 +181,8 @@ class Part:
 		lastm = '0'
 		for i, m in enumerate(self.materials):
 			if (m == '0'):
-				self.materials[i] = lastm
+				# self.materials[i] = lastm
+				self.materials[i] = self.materials[0] #in case of 0 choose the 'base' material
 			else:
 				lastm = m
 		if node.hasAttribute('decoration'):
