@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 
 #
-# LegoToR Version 0.5.1 - Copyright (c) 2020 by m2m
+# LegoToR Version 0.5.1.1 - Copyright (c) 2020 by m2m
 # based on pyldd2obj Version 0.4.8 - Copyright (c) 2019 by jonnysp 
 # LegoToR parses LXF files and command line parameters to create a renderman compliant rib file.
 # 
 # Usage: ./LegoToR.py /Users/username/Documents/LEGO\ Creations/Models/mylxffile.lxf -v -np
 #
 # Updates:
-#
+# 0.5.1.1 Some transparent material improvements.
 # 0.5.1   Added reading correct focus distance from lxf file camera, allowing for correct depth-of-field rendering.
 # 0.5.0.9 Fixed decorations bug, improved material assignments handling
 # 0.5.0.8 Improved custom2DField handling, adjusted logoonstuds height to better accommodate new custom bricks, fixed decorations bug, improved material assignments handling
@@ -43,7 +43,7 @@ import shutil
 import ParseCommandLine as cl
 import random
 
-__version__ = '0.5.1'
+__version__ = '0.5.1.1'
 compression = zipfile.ZIP_DEFLATED
 PRMANPATH = '/Applications/Pixar/RenderManProServer-23.3/'
 
@@ -132,7 +132,26 @@ Pattern "PxrBlend" "Blend{0}"
 			rgb_or_dec_str = '{0} {1} {2}'.format(self.r, self.g, self.b)
 			
 		if self.materialType == 'Transparent':
-			bxdf_mat_str = texture_strg + '''Pattern "PxrFractal" "Unevenness" 
+			bxdf_mat_str = texture_strg + '''Pattern "PxrColorCorrect" "Trans_BaseColor{0}" 
+	"{1}color inputRGB" [{2}]
+	"float inputMask" [1.0] 
+	"int invertMask" [0] 
+	"float mixMask" [1.0] 
+	"vector inputMin" [0. 0. 0.] 
+	"vector inputMax" [1. 1. 1.] 
+	"vector gamma" [2.5 2.5 2.5] 
+	"vector contrast" [0.0 0.0 0.0] 
+	"vector contrastPivot" [0.5 0.5 0.5] 
+	"color rgbGain"  [1.2 1.2 1.2] 
+	"vector hsv"  [0.0 1.0 1.0] 
+	"float exposure"  [0] 
+	"vector outputMin"  [0. 0. 0.] 
+	"vector outputMax"  [1. 1. 1.] 
+	"int clampOutput"  [0] 
+	"vector clampMin"  [0. 0. 0.] 
+	"vector clampMax"  [1. 1. 1.] 
+
+Pattern "PxrFractal" "Unevenness" 
 	"int surfacePosition" [0]
 	"int layers" [1]
 	"float frequency" [0.8]
@@ -164,7 +183,7 @@ Pattern "PxrNormalMap" "PxrNormalMap1"
 
 Bxdf "PxrSurface" "Transparent {0}"
 	"float diffuseGain" [0]
-	"{1}color diffuseColor" [{2}]
+	#"reference color diffuseColor" ["Trans_BaseColor{0}:resultRGB"]
 	"float diffuseRoughness" [0]
 	"float diffuseExponent" [1]
 	"normal diffuseBumpNormal" [0 0 0]
@@ -276,9 +295,9 @@ Bxdf "PxrSurface" "Transparent {0}"
 	"color irradianceTint" [1 1 1]
 	"float irradianceRoughness" [0]
 	"float unitLength" [0.1]
-	"float refractionGain" [0.95]
+	"float refractionGain" [1.0]
 	"float reflectionGain" [0.95]
-	"{1}color refractionColor" [{2}]
+	"reference color refractionColor" ["Trans_BaseColor{0}:resultRGB"]
 	"float glassRoughness" [0.001]
 	"float glassRefractionRoughness" [-1]
 	"float glassAnisotropy" [0]
