@@ -41,7 +41,7 @@ sudo pip install pyside2
 ```terminal
 export RMANTREE=/Applications/Pixar/RenderManProServer-23.4/
 #export PYTHONPATH="$PYTHONPATH:/opt/local/lib/python2.7/site-packages"
-#export PYTHONPATH="$PYTHONPATH:/opt/local/bin"
+#export PATH="$PATH:/opt/local/bin"
 
 python USD/build_scripts/build_usd.py --prman /opt/local/USD
 #python USD/build_scripts/build_usd.py --embree --embree-location /opt/local/lib --prman /opt/local/USD
