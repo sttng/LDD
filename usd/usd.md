@@ -62,7 +62,7 @@ See documentation at http://openusd.org/docs/RenderMan-USD-Imaging-Plugin.html f
 | ------------- | ------------- |
 | Xcode         | 10.311.3.1 (11C504) |
 | C++ Compiler  | AppleClang 10.0.1 |
-| CMake         | 3.17.0        |
+| CMake         | 3.18.3        |
 | Python        | 2.7.10        |
 | Boost         | 1.61.0        |
 | Intel TBB     |               |
@@ -72,11 +72,11 @@ See documentation at http://openusd.org/docs/RenderMan-USD-Imaging-Plugin.html f
 | OpenColorIO   |               |
 | OSL           |               |
 | Ptex          |               |
-| PySide2       | 5.14.2        |
+| PySide2       | 5.15.1        |
 | Shiboken (as required by PySide2) | 5.14.2        |
 | PyOpenGL      | 3.1.5         |
 | Embree        |               |
-| RenderMan     | 23.2          |
+| RenderMan     | 23.4          |
 | Alembic       |               |
 | OpenEXR       | 2.2.0         |
 | Katana        |               |
