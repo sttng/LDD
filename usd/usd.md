@@ -1,8 +1,8 @@
 1) Download cmake, extract it, add cmake to path:
 ```
-curl -L -o ~/Downloads/cmake-3.17.0-Darwin-x86_64.tar.gz https://github.com/Kitware/CMake/releases/download/v3.17.0/cmake-3.17.0-Darwin-x86_64.tar.gz
-tar -xzvf  ~/Downloads/cmake-3.17.0-Darwin-x86_64.tar.gz -C ~/Downloads/
-mv ~/Downloads/cmake-3.17.0-Darwin-x86_64/CMake.app /Applications/
+curl -L -o ~/Downloads/cmake-3.18.3-Darwin-x86_64.tar.gz https://github.com/Kitware/CMake/releases/download/v3.18.3/cmake-3.18.3-Darwin-x86_64.tar.gz
+tar -xzvf  ~/Downloads/cmake-3.18.3-Darwin-x86_64.tar.gz -C ~/Downloads/
+mv ~/Downloads/cmake-3.18.3-Darwin-x86_64/CMake.app /Applications/
 
 export PATH="$PATH:/Applications/CMake.app/Contents/bin"
 ```
@@ -21,7 +21,7 @@ sudo chmod -R 777 /opt/local/USD/
 git clone https://github.com/PixarAnimationStudios/USD
 cd USD
 git checkout dev
-git pull
+
 cd ..
 ```
 
@@ -39,8 +39,9 @@ sudo pip install pyside2
 
 4) Set RenderMan environment variable: RMTREE. Start building.
 ```terminal
-export RMANTREE=/Applications/Pixar/RenderManProServer-23.2/
+export RMANTREE=/Applications/Pixar/RenderManProServer-23.4/
 #export PYTHONPATH="$PYTHONPATH:/opt/local/lib/python2.7/site-packages"
+#export PYTHONPATH="$PYTHONPATH:/opt/local/bin"
 
 python USD/build_scripts/build_usd.py --prman /opt/local/USD
 #python USD/build_scripts/build_usd.py --embree --embree-location /opt/local/lib --prman /opt/local/USD
