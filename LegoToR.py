@@ -1,16 +1,17 @@
 #!/usr/bin/env python
 
 #
-# LegoToR Version 0.5.1.2 - Copyright (c) 2020 by m2m
+# LegoToR Version 0.5.2 - Copyright (c) 2020 by m2m
 # based on pyldd2obj Version 0.4.8 - Copyright (c) 2019 by jonnysp 
 # LegoToR parses LXF files and command line parameters to create a renderman compliant rib file.
 # 
 # Usage: ./LegoToR.py /Users/username/Documents/LEGO\ Creations/Models/mylxffile.lxf -v -np
 #
 # Updates:
+# 0.5.2 improved Windows and Python 3 compatibility
 # 0.5.1.2 Support new lego colors added in the latest LDD mod.
 # 0.5.1.1 Some transparent material improvements.
-# 0.5.1   Added reading correct focus distance from lxf file camera, allowing for correct depth-of-field rendering.
+# 0.5.1 Added reading correct focus distance from lxf file camera, allowing for correct depth-of-field rendering.
 # 0.5.0.9 Fixed decorations bug, improved material assignments handling
 # 0.5.0.8 Improved custom2DField handling, adjusted logoonstuds height to better accommodate new custom bricks, fixed decorations bug, improved material assignments handling
 # 0.5.0.7 DB folder support for modifications (such as custom bricks) in addition to db.lif support
@@ -44,9 +45,10 @@ import shutil
 import ParseCommandLine as cl
 import random
 
-__version__ = '0.5.1.2'
+__version__ = '0.5.2'
 compression = zipfile.ZIP_DEFLATED
 PRMANPATH = '/Applications/Pixar/RenderManProServer-23.4/'
+PRMANDIR = os.path.basename(os.path.normpath(PRMANPATH))
 
 class Materials:
 	def __init__(self, data):
@@ -1063,7 +1065,7 @@ def FindRmtree():
 		if rmtree is not None:
 			return str(rmtree)
 		else:
-			print('RMANTREE environment variable not set correctly. Set with: setx RMANTREE "C:\Program Files\Pixar\RenderManProServer-23.3\" /M')
+			print('RMANTREE environment variable not set correctly. Set with: setx RMANTREE "C:\Program Files\Pixar\{0}\" /M'.format(PRMANDIR))
 			exit()
 
 

@@ -1,14 +1,15 @@
 #!/usr/bin/env python
 
 #
-# LegoToRHD Version 0.5.1 - Copyright (c) 2020 by m2m
+# LegoToRHD Version 0.5.2 - Copyright (c) 2020 by m2m
 # based on pyldd2obj Version 0.4.8 - Copyright (c) 2019 by jonnysp 
 # LegoToRHD parses LXF files and command line parameters to create USDA compliant files.
 # 
 # Usage: ./LegoToRHD.py /Users/username/Documents/LEGO\ Creations/Models/mylxffile.lxf -np
 #
 # Updates:
-# 0.5.1   added reading correct focus distance from lxf file camera
+# 0.5.2 improved Windows and Python 3 compatibility
+# 0.5.1 added reading correct focus distance from lxf file camera
 # 0.5.0.3 improved custom2DField handling, adjusted logoonstuds height to better accommodate new custom bricks, fixed decorations bug, improved material assignments handling
 # 0.5.0.2 db folder support for modifications (such as custom bricks) in addition to db.lif support
 # 0.5.0.1 more logo on studs supported
@@ -39,7 +40,7 @@ import shutil
 import ParseCommandLine as cl
 import random
 
-__version__ = "0.5.1"
+__version__ = "0.5.2"
 
 compression = zipfile.ZIP_STORED #uncompressed archive for USDZ, otherwise would use ZIP_DEFLATED, the usual zip compression
 

@@ -1,8 +1,9 @@
 #!/usr/bin/env python
-# pylddlib version 0.4.9.2
+# pylddlib version 0.4.9.3
 # based on pyldd2obj version 0.4.8 - Copyright (c) 2019 by jonnysp
 #
 # Updates:
+# 0.4.9.3 improved Windows and Python 3 compatibility
 # 0.4.9.2 changed handling of material = 0 for a part. Now a 0 will choose the 1st material (the base material of a part) and not the previous material of the subpart before. This will fix "Chicken Helmet Part 11262". It may break other parts and this change needs further regression.
 # 0.4.9.1 improved custom2DField handling, fixed decorations bug, improved material assignments handling
 # 0.4.9 updates to support reading extracted db.lif from db folder
@@ -767,7 +768,7 @@ class Converter:
 					try:
 						materialCurrentPart = pa.materials[part]
 					except IndexError:
-						print 'WARNING: {0}.g{1} has NO material assignment in lxf. Replaced with color 9. Fix {0}.xml faces values.'.format(pa.designID, part)
+						print('WARNING: {0}.g{1} has NO material assignment in lxf. Replaced with color 9. Fix {0}.xml faces values.'.format(pa.designID, part))
 						materialCurrentPart = '9'
 					
 					lddmat = self.allMaterials.getMaterialbyId(materialCurrentPart)
@@ -845,7 +846,7 @@ def progress(count, total, status='', suffix = ''):
 	sys.stdout.flush()
 
 def main():
-	print("- - - pyldd2obj - - -")
+	print("- - - pylddlib - - -")
 	print("          _ ")
 	print("         [_]")
 	print("       /|   |\\")
@@ -863,7 +864,7 @@ def main():
 
 	converter = Converter()
 	if os.path.isdir(FindDBFolder()):
-		print "Found DB folder. Will use this instead of db.lif!"
+		print("Found DB folder. Will use this instead of db.lif!")
 		setDBFolderVars(dbfolderlocation = FindDBFolder())
 		converter.LoadDBFolder(dbfolderlocation = FindDBFolder())
 		converter.LoadScene(filename=lxf_filename)
