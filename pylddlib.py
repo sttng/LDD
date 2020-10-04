@@ -1,8 +1,9 @@
 #!/usr/bin/env python
-# pylddlib version 0.4.9.3
+# pylddlib version 0.4.9.4
 # based on pyldd2obj version 0.4.8 - Copyright (c) 2019 by jonnysp
 #
 # Updates:
+# 0.4.9.4 improved lif.db checking for crucial files (because of the infamous botched 4.3.12 LDD Windows update.
 # 0.4.9.3 improved Windows and Python 3 compatibility
 # 0.4.9.2 changed handling of material = 0 for a part. Now a 0 will choose the 1st material (the base material of a part) and not the previous material of the subpart before. This will fix "Chicken Helmet Part 11262". It may break other parts and this change needs further regression.
 # 0.4.9.1 improved custom2DField handling, fixed decorations bug, improved material assignments handling
@@ -580,12 +581,12 @@ class DBFolderReader:
 			return
 		else:
 			self.parse()
-			if self.fileexist(os.path.join(self.location,'Materials.xml')) and self.fileexist(os.path.join(self.location, 'info.xml')):
+			if self.fileexist(os.path.join(self.location,'Materials.xml')) and self.fileexist(os.path.join(self.location, 'info.xml')) and self.fileexist(os.path.join(self.location, MATERIALNAMESPATH, 'EN/localizedStrings.loc')):
 				self.dbinfo = DBinfo(data=self.filelist[os.path.join(self.location,'info.xml')].read())
-				print("db folder OK.")
+				print("DB folder OK.")
 				self.initok = True
 			else:
-				print("db folder ERROR")
+				print("DB folder ERROR")
 				
 	def fileexist(self, filename):
 		return filename in self.filelist
@@ -614,7 +615,7 @@ class LIFReader:
 		else:
 			if self.filehandle.read(4).decode() == "LIFF":
 				self.parse(prefix='', offset=self.readInt(offset=72) + 64)
-				if self.fileexist('/Materials.xml') and self.fileexist('/info.xml'):
+				if self.fileexist('/Materials.xml') and self.fileexist('/info.xml') and self.fileexist(MATERIALNAMESPATH + 'EN/localizedStrings.loc'):
 					self.dbinfo = DBinfo(data=self.filelist['/info.xml'].read())
 					print("Database OK.")
 					self.initok = True
