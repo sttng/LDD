@@ -856,7 +856,7 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 								f.close()
 
 								if os.path.exists(FindRmtree()):
-									txmake_cmd = FindRmtree() + 'bin' + os.sep + 'txmake -t:8 -compression zip -mode clamp -resize up {0} {1}.tex'.format(extfile, deco)
+									txmake_cmd = '"' + FindRmtree() + 'bin' + os.sep + 'txmake" -t:8 -compression zip -mode clamp -resize up {0} {1}.tex'.format(extfile, deco)
 									os.system(txmake_cmd)
 									os.remove(extfile)
 								else:
