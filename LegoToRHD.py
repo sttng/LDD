@@ -1,13 +1,14 @@
 #!/usr/bin/env python
 
 #
-# LegoToRHD Version 0.5.2 - Copyright (c) 2020 by m2m
+# LegoToRHD Version 0.5.2.1 - Copyright (c) 2020 by m2m
 # based on pyldd2obj Version 0.4.8 - Copyright (c) 2019 by jonnysp 
 # LegoToRHD parses LXF files and command line parameters to create USDA compliant files.
 # 
 # Usage: ./LegoToRHD.py /Users/username/Documents/LEGO\ Creations/Models/mylxffile.lxf -np
 #
 # Updates:
+# 0.5.2.1 corrected Windows path handling bugs
 # 0.5.2 improved Windows and Python 3 compatibility
 # 0.5.1 added reading correct focus distance from lxf file camera
 # 0.5.0.3 improved custom2DField handling, adjusted logoonstuds height to better accommodate new custom bricks, fixed decorations bug, improved material assignments handling
@@ -40,7 +41,7 @@ import shutil
 import ParseCommandLine as cl
 import random
 
-__version__ = "0.5.2"
+__version__ = "0.5.2.1"
 
 compression = zipfile.ZIP_STORED #uncompressed archive for USDZ, otherwise would use ZIP_DEFLATED, the usual zip compression
 
@@ -704,8 +705,8 @@ def main():
 	os.remove(obj_filename + '.usda')
 	os.remove('rib_header.rib')
 		
-	print("\nNow start usdcat to convert from usda to usdc with :\n./usdcat -f -o {0}{1}_Scene.usdc {0}{1}_Scene.usda".format(cl.args.searcharchive, os.sep + obj_filename))
-	print("\nFinally put the file into an usdz archive with:./usdzconvert {0}{1}_Scene.usdc\n".format(cl.args.searcharchive, os.sep + obj_filename))
+	print("\nNow start usdcat to convert from usda to usdc with :\n./usdcat -f -o {0}{1}_Scene.usdc {0}{1}_Scene.usda".format(cl.args.searcharchive, '/' + obj_filename))
+	print("\nFinally put the file into an usdz archive with:./usdzconvert {0}{1}_Scene.usdc\n".format(cl.args.searcharchive, '/' + obj_filename))
 
 if __name__ == "__main__":
 	main()

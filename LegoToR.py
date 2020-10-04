@@ -1,13 +1,14 @@
 #!/usr/bin/env python
 
 #
-# LegoToR Version 0.5.2 - Copyright (c) 2020 by m2m
+# LegoToR Version 0.5.2.1 - Copyright (c) 2020 by m2m
 # based on pyldd2obj Version 0.4.8 - Copyright (c) 2019 by jonnysp 
 # LegoToR parses LXF files and command line parameters to create a renderman compliant rib file.
 # 
 # Usage: ./LegoToR.py /Users/username/Documents/LEGO\ Creations/Models/mylxffile.lxf -v -np
 #
 # Updates:
+# 0.5.2.1 corrected Windows path handling bugs
 # 0.5.2 improved Windows and Python 3 compatibility
 # 0.5.1.2 Support new lego colors added in the latest LDD mod.
 # 0.5.1.1 Some transparent material improvements.
@@ -44,8 +45,9 @@ import datetime
 import shutil
 import ParseCommandLine as cl
 import random
+import posixpath
 
-__version__ = '0.5.2'
+__version__ = '0.5.2.1'
 compression = zipfile.ZIP_DEFLATED
 PRMANPATH = '/Applications/Pixar/RenderManProServer-23.4/'
 PRMANDIR = os.path.basename(os.path.normpath(PRMANPATH))
@@ -1063,6 +1065,9 @@ def FindRmtree():
 	else:
 		rmtree = os.getenv('RMANTREE')
 		if rmtree is not None:
+			rmtree = os.path.normpath(rmtree)
+			rmtree = rmtree.split(os.sep)
+			rmtree = posixpath.join(*rmtree)
 			return str(rmtree)
 		else:
 			print('RMANTREE environment variable not set correctly. Set with: setx RMANTREE "C:\Program Files\Pixar\{0}\" /M'.format(PRMANDIR))
@@ -1119,7 +1124,7 @@ DisplayChannel "normal normal_var" "string source" "normal Nn" "string statistic
 DisplayChannel "vector forward" "string source" "vector motionFore"
 DisplayChannel "vector backward" "string source" "vector motionBack"
 
-'''.format(__version__, datetime.datetime.now(), str(searcharchive) + os.sep, FindRmtree(), str(searchtexture) + os.sep, pixelvar, width, height, '.' + os.sep + str(infile), integrator, srate)
+'''.format(__version__, datetime.datetime.now(), str(searcharchive), FindRmtree(), str(searchtexture), pixelvar, width, height, './' + str(infile), integrator, srate)
 
 	with open('rib_header.rib', 'w') as file_writer:
 		file_writer.write(rib_header)
@@ -1170,9 +1175,9 @@ def main():
 	os.remove(obj_filename + '.rib')
 	os.remove('rib_header.rib')
 		
-	print('\nNow start Renderman with (for preview):\n  prman -d it -t:-2 {0}{1}_Scene.rib'.format(cl.args.searcharchive, os.sep + obj_filename))
-	print('Or start Renderman with (for final mode without preview):\n  prman -t:-2 -checkpoint 1m {0}{1}_Scene.rib'.format(cl.args.searcharchive, os.sep + obj_filename))
-	print('\nFinally denoise the final output with:  denoise {0}{1}.beauty.001.exr\n'.format(cl.args.searcharchive, os.sep + obj_filename))
+	print('\nNow start Renderman with (for preview):\n  prman -d it -t:-2 {0}{1}_Scene.rib'.format(cl.args.searcharchive, '/' + obj_filename))
+	print('Or start Renderman with (for final mode without preview):\n  prman -t:-2 -checkpoint 1m {0}{1}_Scene.rib'.format(cl.args.searcharchive, '/' + obj_filename))
+	print('\nFinally denoise the final output with:  denoise {0}{1}.beauty.001.exr\n'.format(cl.args.searcharchive, '/' + obj_filename))
 
 
 if __name__ == "__main__":
