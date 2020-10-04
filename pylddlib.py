@@ -535,31 +535,11 @@ class Material:
 			out += 'Ni 1.575\n' + 'd {0}'.format(0.05) + '\n' + 'Tr {0}\n'.format(0.05)
 		return out
 
-class bcolors:
-	HEADER = '\033[95m'
-	OKBLUE = '\033[94m'
-	OKGREEN = '\033[92m'
-	WARNING = '\033[93m'
-	FAIL = '\033[91m'
-	ENDC = '\033[0m'
-	BOLD = '\033[1m'
-	UNDERLINE = '\033[4m'
-
 class DBinfo:
 	def __init__(self, data):
 		xml = minidom.parseString(data)
 		self.Version = xml.getElementsByTagName('Bricks')[0].attributes['version'].value
-		
-		if self.Version == '777':
-			print(bcolors.FAIL + 'DB Version: ' + str(self.Version) + bcolors.ENDC)
-			print(bcolors.FAIL + '\nWARNING: It seems like you have infamous 4.3.12 version of LDD installed. This will likely not work. Please https://www.eurobricks.com/forum/index.php?/forums/topic/149308-lego-digital-designer-install-problem/&do=findComment&comment=3113312 to check how-to install LDD 4.3.11 on Win10.\n' + bcolors.ENDC)
-			raw_input('Press Enter to continue.')
-			
-		elif self.Version == '2670':
-			print(bcolors.OKGREEN + 'DB Version: ' + str(self.Version) + bcolors.ENDC)
-		
-		else:
-			print('DB Version: ' + str(self.Version))
+		print('DB Version: ' + str(self.Version))
 
 class DBFolderFile:
 	def __init__(self, name, handle):
