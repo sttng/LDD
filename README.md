@@ -8,10 +8,12 @@ pylddlib.py is an 'improved' version of pyldd2obj.py. It adds support for LDD mo
 pyldd2obj.py developed by jonnysp (https://github.com/jonnysp) will read in a Lego Digital Designer .lxf scene file and construct a corresponding Alias|Waveform .obj and .mtl scene from it.
 
 ## LifToObj (deprecated)
-**deprecated - it is suggested to use pyldd2obj/pylddlib instead** LifToObj.py uses LIFExtractor.py from JrMasterModelBuilder (https://github.com/JrMasterModelBuilder/LIF-Extractor) to extract the Lego Digital Designer LIF library first and then converts the LDD .g geometry files to Alias|Waveform .obj files.
+**deprecated - it is suggested to use pyldd2obj/pylddlib instead**
+LifToObj.py uses LIFExtractor.py from JrMasterModelBuilder (https://github.com/JrMasterModelBuilder/LIF-Extractor) to extract the Lego Digital Designer LIF library first and then converts the LDD .g geometry files to Alias|Waveform .obj files.
 
 ## LxfToRib (deprecated)
-**deprecated - it is suggested to use LegoToR instead** LxfToRib.py will read in a Lego Digital Designer .lxf scene file and construct a Renderman .rib file of the scene by using BrickReader.py and ObjToRib2.py to convert the bricks of the scenes (from .g to .obj and finally to .rib) and use the relevant scene information to place the bricks accordingly (rotation, translation).
+**deprecated - it is suggested to use LegoToR instead**
+LxfToRib.py will read in a Lego Digital Designer .lxf scene file and construct a Renderman .rib file of the scene by using BrickReader.py and ObjToRib2.py to convert the bricks of the scenes (from .g to .obj and finally to .rib) and use the relevant scene information to place the bricks accordingly (rotation, translation).
 
 ## ObjToRib2
 ObjToRib2.py will read in a Alias|Waveform .obj file, construct geometry from it and write out a Renderman .rib file of it.
