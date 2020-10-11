@@ -1,13 +1,14 @@
 #!/usr/bin/env python
 
 #
-# LegoToR Version 0.5.2.1 - Copyright (c) 2020 by m2m
+# LegoToR Version 0.5.3 - Copyright (c) 2020 by m2m
 # based on pyldd2obj Version 0.4.8 - Copyright (c) 2019 by jonnysp 
 # LegoToR parses LXF files and command line parameters to create a renderman compliant rib file.
 # 
 # Usage: ./LegoToR.py /Users/username/Documents/LEGO\ Creations/Models/mylxffile.lxf -v -np
 #
 # Updates:
+# 0.5.3 improved brick-seams generation
 # 0.5.2.1 corrected Windows path handling bugs
 # 0.5.2 improved Windows and Python 3 compatibility
 # 0.5.1.2 Support new lego colors added in the latest LDD mod.
@@ -47,7 +48,7 @@ import ParseCommandLine as cl
 import random
 import posixpath
 
-__version__ = '0.5.2.1'
+__version__ = '0.5.3'
 compression = zipfile.ZIP_DEFLATED
 PRMANPATH = '/Applications/Pixar/RenderManProServer-23.4/'
 PRMANDIR = os.path.basename(os.path.normpath(PRMANPATH))
