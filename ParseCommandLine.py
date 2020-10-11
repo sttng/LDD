@@ -43,6 +43,7 @@ else:
 useplane = True
 usenormal = True
 uselogoonstuds = True
+usecsvcolors = True
 
 def ParseCommandLine(_filename) :
 	global filename
@@ -53,6 +54,7 @@ def ParseCommandLine(_filename) :
 	global useplane
 	global usenormal
 	global uselogoonstuds
+	global usecsvcolors
 	
 	parser = argparse.ArgumentParser(description = 'Modify LegoToR render parameters')
 	
@@ -111,6 +113,7 @@ def ParseCommandLine(_filename) :
 	parser.add_argument('-np', '--noplane', action = 'count', help = 'disable ground plane. Useful for space ships!')
 	parser.add_argument('-nn', '--nonormals', action = 'count', help = 'disable writing of normals, as some normals in LDD may have problems')
 	parser.add_argument('-nl', '--nologo', action = 'count', help = 'disable logo on studs')
+	parser.add_argument('-nc', '--nocsv', action = 'count', help = 'disable reading of color values from csv file. Use LDD built-in colors instead')
 
 	
 	args = parser.parse_args()
@@ -199,3 +202,5 @@ def ParseCommandLine(_filename) :
 		usenormal = False
 	if args.nologo:
 		uselogoonstuds = False
+	if args.nocsv:
+		usecsvcolors = False

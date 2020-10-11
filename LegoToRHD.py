@@ -59,8 +59,12 @@ class Materials:
 		xml = minidom.parseString(data)
 		for node in xml.firstChild.childNodes: 
 			if node.nodeName == 'Material':
-				self.MaterialsRi[node.getAttribute('MatID')] = MaterialRi(materialId=node.getAttribute('MatID'), r=int(material_id_dict[node.getAttribute('MatID')][0]), g=int(material_id_dict[node.getAttribute('MatID')][1]), b=int(material_id_dict[node.getAttribute('MatID')][2]), materialType=str(material_id_dict[node.getAttribute('MatID')][3]))
-
+				usecsvcolors = True #Need to take from cl.args later
+				if usecsvcolors == True:
+					self.MaterialsRi[node.getAttribute('MatID')] = MaterialRi(materialId=node.getAttribute('MatID'), r=int(material_id_dict[node.getAttribute('MatID')][0]), g=int(material_id_dict[node.getAttribute('MatID')][1]), b=int(material_id_dict[node.getAttribute('MatID')][2]), materialType=str(material_id_dict[node.getAttribute('MatID')][3]))
+				elif usecsvcolors == False:
+					self.MaterialsRi[node.getAttribute('MatID')] = MaterialRi(materialId=node.getAttribute('MatID'),r=int(node.getAttribute('Red')), g=int(node.getAttribute('Green')), b=int(node.getAttribute('Blue')), materialType=str(material_id_dict[node.getAttribute('MatID')][3]))
+	
 	def setLOC(self, loc):
 		for key in loc.values:
 			if key in self.MaterialsRi:
