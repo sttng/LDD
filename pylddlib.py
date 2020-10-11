@@ -328,7 +328,8 @@ class GeometryReader:
 class Geometry:
 	def __init__(self, designID, database):
 		self.designID = designID
-		self.Parts = {}
+		self.Parts = {} 
+		self.maxGeoBounding = -1
 		
 		self.studsFields2D = []
 		
@@ -342,7 +343,10 @@ class Geometry:
 		primitive = Primitive(data = database.filelist[PRIMITIVEPATH + designID + '.xml'].read())
 		self.Partname = primitive.Designname
 		self.studsFields2D = primitive.Fields2D
-		
+		#self.geoBounding = primitive.Bounding{"minX"}
+		geoBoundingList = [abs(float(primitive.Bounding['minX']) - float(primitive.Bounding['maxX'])), abs(float(primitive.Bounding['minY']) - float(primitive.Bounding['maxY'])), abs(float(primitive.Bounding['minZ']) - float(primitive.Bounding['maxZ']))]
+		geoBoundingList.sort() 
+		self.maxGeoBounding = geoBoundingList[-1]
 		# preflex
 		for part in self.Parts:
 			# transform
@@ -446,21 +450,11 @@ class Primitive:
 			elif node.nodeName == 'Bounding':
 				for childnode in node.childNodes:
 					if childnode.nodeName == 'AABB':
-						self.Bounding = {"minX": childnode.getAttribute('minX')}
-						self.Bounding = {"minY": childnode.getAttribute('minY')}
-						self.Bounding = {"minZ": childnode.getAttribute('minZ')}
-						self.Bounding = {"maxX": childnode.getAttribute('maxX')}
-						self.Bounding = {"maxY": childnode.getAttribute('maxY')}
-						self.Bounding = {"maxZ": childnode.getAttribute('maxZ')}
+						self.Bounding = {"minX": childnode.getAttribute('minX'), "minY": childnode.getAttribute('minY'), "minZ": childnode.getAttribute('minZ'), "maxX": childnode.getAttribute('maxX'), "maxY": childnode.getAttribute('maxY'), "maxZ": childnode.getAttribute('maxZ')}
 			elif node.nodeName == 'GeometryBounding':
 				for childnode in node.childNodes:
 					if childnode.nodeName == 'AABB':
-						self.GeometryBounding = {"minX": childnode.getAttribute('minX')}
-						self.GeometryBounding = {"minY": childnode.getAttribute('minY')}
-						self.GeometryBounding = {"minZ": childnode.getAttribute('minZ')}
-						self.GeometryBounding = {"maxX": childnode.getAttribute('maxX')}
-						self.GeometryBounding = {"maxY": childnode.getAttribute('maxY')}
-						self.GeometryBounding = {"maxZ": childnode.getAttribute('maxZ')}
+						self.GeometryBounding = {"minX": childnode.getAttribute('minX'), "minY": childnode.getAttribute('minY'), "minZ": childnode.getAttribute('minZ'), "maxX": childnode.getAttribute('maxX'), "maxY": childnode.getAttribute('maxY'), "maxZ": childnode.getAttribute('maxZ')}
 			elif node.nodeName == 'Connectivity':
 				for childnode in node.childNodes:
 					if childnode.nodeName == 'Custom2DField':
