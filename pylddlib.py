@@ -3,6 +3,7 @@
 # based on pyldd2obj version 0.4.8 - Copyright (c) 2019 by jonnysp
 #
 # Updates:
+# 0.4.9.6 preliminary Linux support
 # 0.4.9.5 corrected bug in incorrecting Bounding / GeometryBounding parsing of primitive xml file.
 # 0.4.9.4 improved lif.db checking for crucial files (because of the infamous botched 4.3.12 LDD Windows update).
 # 0.4.9.3 improved Windows and Python 3 compatibility
@@ -14,6 +15,7 @@
 #
 
 import os
+import platform
 import sys
 import math
 import struct
@@ -811,10 +813,14 @@ class Converter:
 
 
 def FindDBFolder():
-	if os.name =='posix':
+	if platform.system() == 'Darwin':
 		return str(os.path.join(str(os.getenv('USERPROFILE') or os.getenv('HOME')),'Library','Application Support','LEGO Company','LEGO Digital Designer','db'))
-	else:
+	elif platform.system() == 'Windows':
 		return str(os.path.join(str(os.getenv('USERPROFILE') or os.getenv('HOME')),'AppData','Roaming','LEGO Company','LEGO Digital Designer','db'))
+	elif platform.system() == 'Linux':
+		return str(os.path.join(str(os.getenv('USERPROFILE') or os.getenv('HOME')),'.wine','drive_c','users',os.getenv('USER'),'Application Data','LEGO Company','LEGO Digital Designer','db'))
+	else:
+		print('Your OS {0} is not supported yet.'.format(platform.system()))
 
 def setDBFolderVars(dbfolderlocation):
 	global PRIMITIVEPATH
@@ -827,10 +833,14 @@ def setDBFolderVars(dbfolderlocation):
 	MATERIALNAMESPATH = dbfolderlocation + '/MaterialNames/'
 
 def FindDatabase():
-	if os.name =='posix':
+	if platform.system() == 'Darwin':
 		return str(os.path.join(str(os.getenv('USERPROFILE') or os.getenv('HOME')),'Library','Application Support','LEGO Company','LEGO Digital Designer','db.lif'))
-	else:
+	elif platform.system() == 'Windows':
 		return str(os.path.join(str(os.getenv('USERPROFILE') or os.getenv('HOME')),'AppData','Roaming','LEGO Company','LEGO Digital Designer','db.lif'))
+	elif platform.system() == 'Linux':
+		return str(os.path.join(str(os.getenv('USERPROFILE') or os.getenv('HOME')),'.wine','drive_c','users',os.getenv('USER'),'Application Data','LEGO Company','LEGO Digital Designer','db.lif'))
+	else:
+		print('Your OS {0} is not supported yet.'.format(platform.system()))
 	
 def progress(count, total, status='', suffix = ''):
 	bar_len = 40

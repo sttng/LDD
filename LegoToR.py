@@ -8,6 +8,7 @@
 # Usage: ./LegoToR.py /Users/username/Documents/LEGO\ Creations/Models/mylxffile.lxf -v -np
 #
 # Updates:
+# 0.5.3.5 Preliminary Linux support
 # 0.5.3 improved brick-seams generation. Implement nocsv switch (-nc) to ignore using csv colors and use LDD build-in colors instead
 # 0.5.2.1 corrected Windows path handling bugs
 # 0.5.2 improved Windows and Python 3 compatibility
@@ -48,7 +49,7 @@ import ParseCommandLine as cl
 import random
 import posixpath
 
-__version__ = '0.5.3'
+__version__ = '0.5.3.5'
 compression = zipfile.ZIP_DEFLATED
 PRMANPATH = '/Applications/Pixar/RenderManProServer-23.4/'
 PRMANDIR = os.path.basename(os.path.normpath(PRMANPATH))
@@ -1063,14 +1064,14 @@ Display "{0}{1}{2}.beauty.001.exr" "openexr" "Ci,a,mse,albedo,albedo_var,diffuse
 		print('--- %s seconds ---' % (time.time() - start_time))
 
 def FindRmtree():
-	if os.name =='posix':
+	if platform.system() == 'Darwin':
 		rmtree = os.getenv('RMANTREE')
 		if rmtree is not None:
 			return str(rmtree)
 		else:
 			print('RMANTREE environment variable not set correctly. Set with: \n\nexport RMANTREE={0}\nexport PATH="$PATH:$RMANTREE/bin"\n'.format(PRMANPATH))
 			exit()
-	else:
+	elif platform.system() == 'Windows':
 		rmtree = os.getenv('RMANTREE')
 		if rmtree is not None:
 			rmtree = os.path.normpath(rmtree)
@@ -1080,7 +1081,8 @@ def FindRmtree():
 		else:
 			print('RMANTREE environment variable not set correctly. Set with: setx RMANTREE "C:\Program Files\Pixar\{0}\" /M'.format(PRMANDIR))
 			exit()
-
+	elif platform.system() == 'Linux':
+		print('Linux RMANTREE envvar settings here. Still need to be defined.')
 
 def generate_rib_header(infile, srate, pixelvar, width, height, fov, fstop, searcharchive, searchtexture, integrator, integratorParams, useplane, usenormal, uselogoonstuds, usecsvcolors):
 	cwd = os.getcwd()
