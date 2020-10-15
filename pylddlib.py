@@ -346,10 +346,14 @@ class Geometry:
 		primitive = Primitive(data = database.filelist[PRIMITIVEPATH + designID + '.xml'].read())
 		self.Partname = primitive.Designname
 		self.studsFields2D = primitive.Fields2D
-		#self.geoBounding = primitive.Bounding{"minX"}
-		geoBoundingList = [abs(float(primitive.Bounding['minX']) - float(primitive.Bounding['maxX'])), abs(float(primitive.Bounding['minY']) - float(primitive.Bounding['maxY'])), abs(float(primitive.Bounding['minZ']) - float(primitive.Bounding['maxZ']))]
-		geoBoundingList.sort() 
-		self.maxGeoBounding = geoBoundingList[-1]
+		try:
+			geoBoundingList = [abs(float(primitive.Bounding['minX']) - float(primitive.Bounding['maxX'])), abs(float(primitive.Bounding['minY']) - float(primitive.Bounding['maxY'])), abs(float(primitive.Bounding['minZ']) - float(primitive.Bounding['maxZ']))]
+			geoBoundingList.sort() 
+			self.maxGeoBounding = geoBoundingList[-1]
+		except KeyError as e:
+			print( e )# representation: "<exceptions.ZeroDivisionError instance at 0x817426c>"
+		
+			
 		# preflex
 		for part in self.Parts:
 			# transform
