@@ -3,6 +3,7 @@
 # based on pyldd2obj version 0.4.8 - Copyright (c) 2019 by jonnysp
 #
 # Updates:
+# 0.4.9.7 corrected bug in incorrecting parsing of primitive xml file, when it contains comments.
 # 0.4.9.6 preliminary Linux support
 # 0.4.9.5 corrected bug in incorrecting Bounding / GeometryBounding parsing of primitive xml file.
 # 0.4.9.4 improved lif.db checking for crucial files (because of the infamous botched 4.3.12 LDD Windows update).
@@ -351,7 +352,7 @@ class Geometry:
 			geoBoundingList.sort() 
 			self.maxGeoBounding = geoBoundingList[-1]
 		except KeyError as e:
-			print( e )# representation: "<exceptions.ZeroDivisionError instance at 0x817426c>"
+			print('\nBounding errror in part {0}: {1}\n'.format(designID, e))
 		
 			
 		# preflex
@@ -440,7 +441,9 @@ class Primitive:
 		self.Bounding = {}
 		self.GeometryBounding = {}
 		xml = minidom.parseString(data)
-		for node in xml.firstChild.childNodes: 
+		#print(xml.firstChild.__class__.__name__.lower() )
+		root = xml.documentElement
+		for node in root.childNodes:  #for node in xml.firstChild.childNodes:
 			if node.nodeName == 'Flex': 
 				for node in node.childNodes:
 					if node.nodeName == 'Bone':
@@ -453,7 +456,7 @@ class Primitive:
 				self.PhysicsAttributes = {"inertiaTensor": node.getAttribute('inertiaTensor')}
 				self.PhysicsAttributes = {"centerOfMass": node.getAttribute('centerOfMass')}
 				self.PhysicsAttributes = {"mass": node.getAttribute('mass')}
-				self.PhysicsAttributes = {"frictionType": node.getAttribute('frictionType')}				
+				self.PhysicsAttributes = {"frictionType": node.getAttribute('frictionType')}
 			elif node.nodeName == 'Bounding':
 				for childnode in node.childNodes:
 					if childnode.nodeName == 'AABB':
