@@ -3,7 +3,7 @@
 # based on pyldd2obj version 0.4.8 - Copyright (c) 2019 by jonnysp
 #
 # Updates:
-# 0.4.9.7 corrected bug in incorrecting parsing of primitive xml file, when it contains comments.
+# 0.4.9.7 corrected bug in incorrecting parsing of primitive xml file, when it contains comments. Add support LDDLIFTREE env var to set location of db.lif.
 # 0.4.9.6 preliminary Linux support
 # 0.4.9.5 corrected bug in incorrecting Bounding / GeometryBounding parsing of primitive xml file.
 # 0.4.9.4 improved lif.db checking for crucial files (because of the infamous botched 4.3.12 LDD Windows update).
@@ -818,17 +818,6 @@ class Converter:
 		sys.stdout.write('%s\r' % ('                                                                                                 '))
 		print("--- %s seconds ---" % (time.time() - start_time))
 
-
-def FindDBFolder():
-	if platform.system() == 'Darwin':
-		return str(os.path.join(str(os.getenv('USERPROFILE') or os.getenv('HOME')),'Library','Application Support','LEGO Company','LEGO Digital Designer','db'))
-	elif platform.system() == 'Windows':
-		return str(os.path.join(str(os.getenv('USERPROFILE') or os.getenv('HOME')),'AppData','Roaming','LEGO Company','LEGO Digital Designer','db'))
-	elif platform.system() == 'Linux':
-		return str(os.path.join(str(os.getenv('USERPROFILE') or os.getenv('HOME')),'.wine','drive_c','users',os.getenv('USER'),'Application Data','LEGO Company','LEGO Digital Designer','db'))
-	else:
-		print('Your OS {0} is not supported yet.'.format(platform.system()))
-
 def setDBFolderVars(dbfolderlocation):
 	global PRIMITIVEPATH
 	global GEOMETRIEPATH
@@ -845,23 +834,30 @@ def FindDatabase():
 		if os.path.isdir(str(lddliftree)): #LDDLIFTREE points to folder
 			return str(lddliftree)
 		elif os.path.isfile(str(lddliftree)): #LDDLIFTREE points to file (should be db.lif)
+			return str(lddliftree)
 	
 	else: #Env variable LDDLIFTREE not set. Check for default locations per different platform.
 		if platform.system() == 'Darwin':
 			if os.path.isdir(str(os.path.join(str(os.getenv('USERPROFILE') or os.getenv('HOME')),'Library','Application Support','LEGO Company','LEGO Digital Designer','db'))):
-				return dir
+				return str(os.path.join(str(os.getenv('USERPROFILE') or os.getenv('HOME')),'Library','Application Support','LEGO Company','LEGO Digital Designer','db'))
 			elif os.path.isfile(str(os.path.join(str(os.getenv('USERPROFILE') or os.getenv('HOME')),'Library','Application Support','LEGO Company','LEGO Digital Designer','db.lif'))):
-				return file
+				return str(os.path.join(str(os.getenv('USERPROFILE') or os.getenv('HOME')),'Library','Application Support','LEGO Company','LEGO Digital Designer','db.lif'))
+			else:
+				print("no LDD database found please install LEGO-Digital-Designer")
 		elif platform.system() == 'Windows':
 			if os.path.isdir(str(os.path.join(str(os.getenv('USERPROFILE') or os.getenv('HOME')),'AppData','Roaming','LEGO Company','LEGO Digital Designer','db'))):
-				return dir
+				return str(os.path.join(str(os.getenv('USERPROFILE') or os.getenv('HOME')),'AppData','Roaming','LEGO Company','LEGO Digital Designer','db'))
 			elif os.path.isfile(str(os.path.join(str(os.getenv('USERPROFILE') or os.getenv('HOME')),'AppData','Roaming','LEGO Company','LEGO Digital Designer','db.lif'))):
-				return file
+				return str(os.path.join(str(os.getenv('USERPROFILE') or os.getenv('HOME')),'AppData','Roaming','LEGO Company','LEGO Digital Designer','db.lif'))
+			else:
+				print("no LDD database found please install LEGO-Digital-Designer")
 		elif platform.system() == 'Linux':
 			if os.path.isdir(str(os.path.join(str(os.getenv('USERPROFILE') or os.getenv('HOME')),'.wine','drive_c','users',os.getenv('USER'),'Application Data','LEGO Company','LEGO Digital Designer','db'))):
-				return dir
+				return str(os.path.join(str(os.getenv('USERPROFILE') or os.getenv('HOME')),'.wine','drive_c','users',os.getenv('USER'),'Application Data','LEGO Company','LEGO Digital Designer','db'))
 			elif os.path.isfile(str(os.path.join(str(os.getenv('USERPROFILE') or os.getenv('HOME')),'.wine','drive_c','users',os.getenv('USER'),'Application Data','LEGO Company','LEGO Digital Designer','db.lif'))):
-				return file
+				return str(os.path.join(str(os.getenv('USERPROFILE') or os.getenv('HOME')),'.wine','drive_c','users',os.getenv('USER'),'Application Data','LEGO Company','LEGO Digital Designer','db.lif'))
+			else:
+				print("no LDD database found please install LEGO-Digital-Designer")
 		else:
 			print('Your OS {0} is not supported yet.'.format(platform.system()))
 	
@@ -892,14 +888,14 @@ def main():
 		return
 
 	converter = Converter()
-	if os.path.isdir(FindDBFolder()):
+	if os.path.isdir(FindDatabase()):
 		print("Found DB folder. Will use this instead of db.lif!")
-		setDBFolderVars(dbfolderlocation = FindDBFolder())
-		converter.LoadDBFolder(dbfolderlocation = FindDBFolder())
+		setDBFolderVars(dbfolderlocation = FindDatabase())
+		converter.LoadDBFolder(dbfolderlocation = FindDatabase())
 		converter.LoadScene(filename=lxf_filename)
 		converter.Export(filename=obj_filename)
 		
-	elif os.path.exists(FindDatabase()):
+	elif os.path.isfile(FindDatabase()):
 		converter.LoadDatabase(databaselocation = FindDatabase())
 		converter.LoadScene(filename=lxf_filename)
 		converter.Export(filename=obj_filename)
