@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# pylddlib version 0.4.9.5
+# pylddlib version 0.4.9.7
 # based on pyldd2obj version 0.4.8 - Copyright (c) 2019 by jonnysp
 #
 # Updates:
