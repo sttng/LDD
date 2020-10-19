@@ -443,7 +443,9 @@ class Primitive:
 		xml = minidom.parseString(data)
 		#print(xml.firstChild.__class__.__name__.lower() )
 		root = xml.documentElement
-		for node in root.childNodes:  #for node in xml.firstChild.childNodes:
+		for node in root.childNodes:
+			if node.__class__.__name__.lower() == 'comment':
+				self.comment = node.[0].nodeValue
 			if node.nodeName == 'Flex': 
 				for node in node.childNodes:
 					if node.nodeName == 'Bone':
@@ -453,10 +455,7 @@ class Primitive:
 					if childnode.nodeName == 'Annotation' and childnode.hasAttribute('designname'):
 						self.Designname = childnode.getAttribute('designname')
 			elif node.nodeName == 'PhysicsAttributes':
-				self.PhysicsAttributes = {"inertiaTensor": node.getAttribute('inertiaTensor')}
-				self.PhysicsAttributes = {"centerOfMass": node.getAttribute('centerOfMass')}
-				self.PhysicsAttributes = {"mass": node.getAttribute('mass')}
-				self.PhysicsAttributes = {"frictionType": node.getAttribute('frictionType')}
+				self.PhysicsAttributes = {"inertiaTensor": node.getAttribute('inertiaTensor'),"centerOfMass": node.getAttribute('centerOfMass'),"mass": node.getAttribute('mass'),"frictionType": node.getAttribute('frictionType')}
 			elif node.nodeName == 'Bounding':
 				for childnode in node.childNodes:
 					if childnode.nodeName == 'AABB':
@@ -469,6 +468,8 @@ class Primitive:
 				for childnode in node.childNodes:
 					if childnode.nodeName == 'Custom2DField':
 						self.Fields2D.append(Field2D(type=int(childnode.getAttribute('type')), width=int(childnode.getAttribute('width')), height=int(childnode.getAttribute('height')), angle=float(childnode.getAttribute('angle')), ax=float(childnode.getAttribute('ax')), ay=float(childnode.getAttribute('ay')), az=float(childnode.getAttribute('az')), tx=float(childnode.getAttribute('tx')), ty=float(childnode.getAttribute('ty')), tz=float(childnode.getAttribute('tz')), field2DRawData=str(childnode.firstChild.data)))
+			elif node.nodeName == 'Decoration':
+				self.Decoration = {"faces": node.getAttribute('faces'), "subMaterialRedirectLookupTable": node.getAttribute('subMaterialRedirectLookupTable')}
 
 class LOCReader:
 	def __init__(self, data):
