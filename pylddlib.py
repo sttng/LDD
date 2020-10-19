@@ -3,7 +3,7 @@
 # based on pyldd2obj version 0.4.8 - Copyright (c) 2019 by jonnysp
 #
 # Updates:
-# 0.4.9.7 corrected bug in incorrect parsing of primitive xml file specifically comments. Add support LDDLIFTREE env var to set location of db.lif.
+# 0.4.9.7 corrected bug in incorrect parsing of primitive xml file, specifically comments. Add support LDDLIFTREE env var to set location of db.lif.
 # 0.4.9.6 preliminary Linux support
 # 0.4.9.5 corrected bug in incorrect Bounding / GeometryBounding parsing of primitive xml file.
 # 0.4.9.4 improved lif.db checking for crucial files (because of the infamous botched 4.3.12 LDD Windows update).
