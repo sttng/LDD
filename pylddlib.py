@@ -840,14 +840,30 @@ def setDBFolderVars(dbfolderlocation):
 	MATERIALNAMESPATH = dbfolderlocation + '/MaterialNames/'
 
 def FindDatabase():
-	if platform.system() == 'Darwin':
-		return str(os.path.join(str(os.getenv('USERPROFILE') or os.getenv('HOME')),'Library','Application Support','LEGO Company','LEGO Digital Designer','db.lif'))
-	elif platform.system() == 'Windows':
-		return str(os.path.join(str(os.getenv('USERPROFILE') or os.getenv('HOME')),'AppData','Roaming','LEGO Company','LEGO Digital Designer','db.lif'))
-	elif platform.system() == 'Linux':
-		return str(os.path.join(str(os.getenv('USERPROFILE') or os.getenv('HOME')),'.wine','drive_c','users',os.getenv('USER'),'Application Data','LEGO Company','LEGO Digital Designer','db.lif'))
-	else:
-		print('Your OS {0} is not supported yet.'.format(platform.system()))
+	lddliftree = os.getenv('LDDLIFTREE')
+	if lddliftree is not None:
+		if os.path.isdir(str(lddliftree)): #LDDLIFTREE points to folder
+			return str(lddliftree)
+		elif os.path.isfile(str(lddliftree)): #LDDLIFTREE points to file (should be db.lif)
+	
+	else: #Env variable LDDLIFTREE not set. Check for default locations per different platform.
+		if platform.system() == 'Darwin':
+			if os.path.isdir(str(os.path.join(str(os.getenv('USERPROFILE') or os.getenv('HOME')),'Library','Application Support','LEGO Company','LEGO Digital Designer','db'))):
+				return dir
+			elif os.path.isfile(str(os.path.join(str(os.getenv('USERPROFILE') or os.getenv('HOME')),'Library','Application Support','LEGO Company','LEGO Digital Designer','db.lif'))):
+				return file
+		elif platform.system() == 'Windows':
+			if os.path.isdir(str(os.path.join(str(os.getenv('USERPROFILE') or os.getenv('HOME')),'AppData','Roaming','LEGO Company','LEGO Digital Designer','db'))):
+				return dir
+			elif os.path.isfile(str(os.path.join(str(os.getenv('USERPROFILE') or os.getenv('HOME')),'AppData','Roaming','LEGO Company','LEGO Digital Designer','db.lif'))):
+				return file
+		elif platform.system() == 'Linux':
+			if os.path.isdir(str(os.path.join(str(os.getenv('USERPROFILE') or os.getenv('HOME')),'.wine','drive_c','users',os.getenv('USER'),'Application Data','LEGO Company','LEGO Digital Designer','db'))):
+				return dir
+			elif os.path.isfile(str(os.path.join(str(os.getenv('USERPROFILE') or os.getenv('HOME')),'.wine','drive_c','users',os.getenv('USER'),'Application Data','LEGO Company','LEGO Digital Designer','db.lif'))):
+				return file
+		else:
+			print('Your OS {0} is not supported yet.'.format(platform.system()))
 	
 def progress(count, total, status='', suffix = ''):
 	bar_len = 40
