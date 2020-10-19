@@ -3,9 +3,9 @@
 # based on pyldd2obj version 0.4.8 - Copyright (c) 2019 by jonnysp
 #
 # Updates:
-# 0.4.9.7 corrected bug in incorrecting parsing of primitive xml file, when it contains comments. Add support LDDLIFTREE env var to set location of db.lif.
+# 0.4.9.7 corrected bug in incorrect parsing of primitive xml file specifically comments. Add support LDDLIFTREE env var to set location of db.lif.
 # 0.4.9.6 preliminary Linux support
-# 0.4.9.5 corrected bug in incorrecting Bounding / GeometryBounding parsing of primitive xml file.
+# 0.4.9.5 corrected bug in incorrect Bounding / GeometryBounding parsing of primitive xml file.
 # 0.4.9.4 improved lif.db checking for crucial files (because of the infamous botched 4.3.12 LDD Windows update).
 # 0.4.9.3 improved Windows and Python 3 compatibility
 # 0.4.9.2 changed handling of material = 0 for a part. Now a 0 will choose the 1st material (the base material of a part) and not the previous material of the subpart before. This will fix "Chicken Helmet Part 11262". It may break other parts and this change needs further regression.
