@@ -1,13 +1,14 @@
 #!/usr/bin/env python
 
 #
-# LegoToR Version 0.5.3 - Copyright (c) 2020 by m2m
+# LegoToR Version 0.5.3.6 - Copyright (c) 2020 by m2m
 # based on pyldd2obj Version 0.4.8 - Copyright (c) 2019 by jonnysp 
 # LegoToR parses LXF files and command line parameters to create a renderman compliant rib file.
 # 
 # Usage: ./LegoToR.py /Users/username/Documents/LEGO\ Creations/Models/mylxffile.lxf -v -np
 #
 # Updates:
+# 0.5.3.6 Corrected bug in incorrecting parsing of primitive xml file, when it contains comments. Add support LDDLIFTREE env var to set location of db.lif.
 # 0.5.3.5 Preliminary Linux support
 # 0.5.3 improved brick-seams generation. Implement nocsv switch (-nc) to ignore using csv colors and use LDD build-in colors instead
 # 0.5.2.1 corrected Windows path handling bugs
@@ -49,7 +50,7 @@ import ParseCommandLine as cl
 import random
 import posixpath
 
-__version__ = '0.5.3.5'
+__version__ = '0.5.3.6'
 compression = zipfile.ZIP_DEFLATED
 PRMANPATH = '/Applications/Pixar/RenderManProServer-23.4/'
 PRMANDIR = os.path.basename(os.path.normpath(PRMANPATH))
@@ -1155,20 +1156,20 @@ def main():
 
 	converter = Converter()
 	print('LegoToR Version ' + __version__)
-	if os.path.isdir(FindDBFolder()):
+	if os.path.isdir(FindDatabase()):
 		print('Found DB folder. Will use DB folder instead of db.lif file!')
 		global PRIMITIVEPATH
 		global GEOMETRIEPATH
 		global DECORATIONPATH
 		global MATERIALNAMESPATH
-		setDBFolderVars(dbfolderlocation = FindDBFolder()) #Required to set in pylddlib... dirty !
-		PRIMITIVEPATH = FindDBFolder() + '/Primitives/'
-		GEOMETRIEPATH = FindDBFolder() + '/Primitives/LOD0/'
-		DECORATIONPATH = FindDBFolder() + '/Decorations/'
-		MATERIALNAMESPATH = FindDBFolder() + '/MaterialNames/'
-		converter.LoadDBFolder(dbfolderlocation = FindDBFolder())
+		setDBFolderVars(dbfolderlocation = FindDatabase()) #Required to set in pylddlib... dirty !
+		PRIMITIVEPATH = FindDatabase() + '/Primitives/'
+		GEOMETRIEPATH = FindDatabase() + '/Primitives/LOD0/'
+		DECORATIONPATH = FindDatabase() + '/Decorations/'
+		MATERIALNAMESPATH = FindDatabase() + '/MaterialNames/'
+		converter.LoadDBFolder(dbfolderlocation = FindDatabase())
 		
-	elif os.path.exists(FindDatabase()):
+	elif os.path.isfile(FindDatabase()):
 		converter.LoadDatabase(databaselocation = FindDatabase())
 		
 	else:
