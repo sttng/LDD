@@ -1,12 +1,13 @@
 #!/usr/bin/env python
 
 #
-# LegoToRHD Version 0.5.3.5 on 0.4.8 - Copyright (c) 2019 by jonnysp 
+# LegoToRHD Version 0.5.3.6 on 0.4.8 - Copyright (c) 2019 by jonnysp 
 # LegoToRHD parses LXF files and command line parameters to create USDA compliant files.
 # 
 # Usage: ./LegoToRHD.py /Users/username/Documents/LEGO\ Creations/Models/mylxffile.lxf -np
 #
 # Updates:
+# 0.5.3.6 corrected bug in incorrecting parsing of primitive xml file, when it contains comments. Add support LDDLIFTREE env var to set location of db.lif.
 # 0.5.3.5 Preliminary Linux support
 # 0.5.3 improved brick-seams generation. Implement nocsv switch (-nc) to ignore using csv colors and use LDD build-in colors instead
 # 0.5.2.1 corrected Windows path handling bugs
@@ -42,7 +43,7 @@ import shutil
 import ParseCommandLine as cl
 import random
 
-__version__ = "0.5.3.5"
+__version__ = "0.5.3.6"
 
 compression = zipfile.ZIP_STORED #uncompressed archive for USDZ, otherwise would use ZIP_DEFLATED, the usual zip compression
 
@@ -683,18 +684,18 @@ def main():
 
 	converter = Converter()
 	print('LegoToRHD Version ' + __version__)
-	if os.path.isdir(FindDBFolder()):
+	if os.path.isdir(FindDatabase()):
 		print('Found DB folder. Will use DB folder instead of db.lif!')
 		global PRIMITIVEPATH
 		global GEOMETRIEPATH
 		global DECORATIONPATH
 		global MATERIALNAMESPATH
-		setDBFolderVars(dbfolderlocation = FindDBFolder()) #Required to set in pylddlib... dirty !
-		PRIMITIVEPATH = FindDBFolder() + '/Primitives/'
-		GEOMETRIEPATH = FindDBFolder() + '/Primitives/LOD0/'
-		DECORATIONPATH = FindDBFolder() + '/Decorations/'
-		MATERIALNAMESPATH = FindDBFolder() + '/MaterialNames/'
-		converter.LoadDBFolder(dbfolderlocation = FindDBFolder())
+		setDBFolderVars(dbfolderlocation = FindDatabase()) #Required to set in pylddlib... dirty !
+		PRIMITIVEPATH = FindDatabase() + '/Primitives/'
+		GEOMETRIEPATH = FindDatabase() + '/Primitives/LOD0/'
+		DECORATIONPATH = FindDatabase() + '/Decorations/'
+		MATERIALNAMESPATH = FindDatabase() + '/MaterialNames/'
+		converter.LoadDBFolder(dbfolderlocation = FindDatabase())
 	
 	elif os.path.exists(FindDatabase()):
 		converter.LoadDatabase(databaselocation = FindDatabase())
