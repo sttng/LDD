@@ -434,6 +434,14 @@ class Field2D:
 
 class CollisionBox:
 	def __init__(self, sX=0, sY=0, sZ=0, angle=0, ax=0, ay=0, az=0, tx=0, ty=0, tz=0):
+		rotationMatrix = Matrix3D()
+		rotationMatrix.rotate(angle = -angle * math.pi / 180.0, axis = Point3D(x=ax,y=ay,z=az))
+		p = Point3D(x=tx,y=ty,z=tz)
+		p.transformW(rotationMatrix)
+		rotationMatrix.n41 -= p.x
+		rotationMatrix.n42 -= p.y
+		rotationMatrix.n43 -= p.z
+		self.matrix = rotationMatrix
 
 class Primitive:
 	def __init__(self, data):
