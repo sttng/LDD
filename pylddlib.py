@@ -432,6 +432,9 @@ class Field2D:
 	def __str__(self):
 		return '[type="{0}" transform="{1}" custom2DField="{2}"]'.format(self.type, self.matrix, self.custom2DField)
 
+class CollisionBox:
+	def __init__(self, sX=0, sY=0, sZ=0, angle=0, ax=0, ay=0, az=0, tx=0, ty=0, tz=0):
+
 class Primitive:
 	def __init__(self, data):
 		self.Designname = ''
