@@ -7,7 +7,7 @@
 # Usage: ./LegoToRHD.py /Users/username/Documents/LEGO\ Creations/Models/mylxffile.lxf -np
 #
 # Updates:
-# 0.5.3.6 corrected bug in incorrecting parsing of primitive xml file, when it contains comments. Add support LDDLIFTREE env var to set location of db.lif.
+# 0.5.3.6 corrected bug in incorrect parsing of primitive xml file, specifically comments. Add support LDDLIFTREE env var to set location of db.lif.
 # 0.5.3.5 Preliminary Linux support
 # 0.5.3 improved brick-seams generation. Implement nocsv switch (-nc) to ignore using csv colors and use LDD build-in colors instead
 # 0.5.2.1 corrected Windows path handling bugs
