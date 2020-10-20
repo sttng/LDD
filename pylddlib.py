@@ -442,6 +442,10 @@ class CollisionBox:
 		rotationMatrix.n42 -= p.y
 		rotationMatrix.n43 -= p.z
 		self.matrix = rotationMatrix
+		self.corner = Point3D(x=sX,y=sY,z=sZ)
+	
+	def __str__(self):
+		return '[0,0,0] [{0},0,0] [0,{1},0] [{0},{1},0] [0,0,{2}] [0,{1},{2}] [{0},0,{2}] [{0},{1},{2}]'.format(self.x, self.y,self.z)
 
 class Primitive:
 	def __init__(self, data):
