@@ -1190,6 +1190,5 @@ def main():
 	print('Or start Renderman with (for final mode without preview):\n  prman -t:-2 -checkpoint 1m {0}{1}_Scene.rib'.format(cl.args.searcharchive, '/' + obj_filename))
 	print('\nFinally denoise the final output with:  denoise {0}{1}.beauty.001.exr\n'.format(cl.args.searcharchive, '/' + obj_filename))
 
-
 if __name__ == "__main__":
 	main()
