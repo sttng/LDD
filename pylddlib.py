@@ -452,6 +452,7 @@ class Primitive:
 		self.Designname = ''
 		self.Bones = []
 		self.Fields2D = []
+		self.CollisionBoxes = []
 		self.PhysicsAttributes = {}
 		self.Bounding = {}
 		self.GeometryBounding = {}
@@ -468,6 +469,10 @@ class Primitive:
 				for childnode in node.childNodes:
 					if childnode.nodeName == 'Annotation' and childnode.hasAttribute('designname'):
 						self.Designname = childnode.getAttribute('designname')
+			elif node.nodeName == 'Collision':
+				for childnode in node.childNodes:
+					if childnode.nodeName == 'Box':
+						self.CollisionBoxes.append(CollisionBox(sX==float(childnode.getAttribute('sX')), sY==float(childnode.getAttribute('sY')), sZ==float(childnode.getAttribute('sZ')), angle=float(childnode.getAttribute('angle')), ax=float(childnode.getAttribute('ax')), ay=float(childnode.getAttribute('ay')), az=float(childnode.getAttribute('az')), tx=float(childnode.getAttribute('tx')), ty=float(childnode.getAttribute('ty')), tz=float(childnode.getAttribute('tz')))
 			elif node.nodeName == 'PhysicsAttributes':
 				self.PhysicsAttributes = {"inertiaTensor": node.getAttribute('inertiaTensor'),"centerOfMass": node.getAttribute('centerOfMass'),"mass": node.getAttribute('mass'),"frictionType": node.getAttribute('frictionType')}
 			elif node.nodeName == 'Bounding':
