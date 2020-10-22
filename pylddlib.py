@@ -3,9 +3,9 @@
 # based on pyldd2obj version 0.4.8 - Copyright (c) 2019 by jonnysp
 #
 # Updates:
-# 0.4.9.7 corrected bug in incorrect parsing of primitive xml file, specifically comments. Add support LDDLIFTREE env var to set location of db.lif.
+# 0.4.9.7 corrected bug of incorrectly parsing the primitive xml file, specifically with comments. Add support LDDLIFTREE envirnment variable to set location of db.lif.
 # 0.4.9.6 preliminary Linux support
-# 0.4.9.5 corrected bug in incorrect Bounding / GeometryBounding parsing of primitive xml file.
+# 0.4.9.5 corrected bug of incorrectly Bounding / GeometryBounding parsing the primitive xml file.
 # 0.4.9.4 improved lif.db checking for crucial files (because of the infamous botched 4.3.12 LDD Windows update).
 # 0.4.9.3 improved Windows and Python 3 compatibility
 # 0.4.9.2 changed handling of material = 0 for a part. Now a 0 will choose the 1st material (the base material of a part) and not the previous material of the subpart before. This will fix "Chicken Helmet Part 11262". It may break other parts and this change needs further regression.
@@ -333,8 +333,7 @@ class Geometry:
 	def __init__(self, designID, database):
 		self.designID = designID
 		self.Parts = {} 
-		self.maxGeoBounding = -1
-		
+		self.maxGeoBounding = -1	
 		self.studsFields2D = []
 		
 		GeometryLocation = '{0}{1}{2}'.format(GEOMETRIEPATH, designID,'.g')
@@ -353,8 +352,7 @@ class Geometry:
 			self.maxGeoBounding = geoBoundingList[-1]
 		except KeyError as e:
 			print('\nBounding errror in part {0}: {1}\n'.format(designID, e))
-		
-			
+					
 		# preflex
 		for part in self.Parts:
 			# transform
@@ -409,6 +407,7 @@ class Field2D:
 		rotationMatrix.n41 -= p.x
 		rotationMatrix.n42 -= p.y
 		rotationMatrix.n43 -= p.z
+		
 		self.matrix = rotationMatrix
 		self.custom2DField = []
 		
@@ -417,11 +416,10 @@ class Field2D:
 		cols_count = width + 1
 		# creation looks reverse
 		# create an array of "cols_count" cols, for each of the "rows_count" rows
-		#	all elements are initialized to 0
+		# all elements are initialized to 0
 		self.custom2DField = [[0 for j in range(cols_count)] for i in range(rows_count)]
 		custom2DFieldString = field2DRawData.replace('\r', '').replace('\n', '').replace(' ', '')
 		custom2DFieldArr = custom2DFieldString.strip().split(',')
-		#custom2DFieldArr = [item.strip() for item in custom2DFieldArr]
 		
 		k = 0
 		for i in range(rows_count):
@@ -441,11 +439,22 @@ class CollisionBox:
 		rotationMatrix.n41 -= p.x
 		rotationMatrix.n42 -= p.y
 		rotationMatrix.n43 -= p.z
+		
 		self.matrix = rotationMatrix
 		self.corner = Point3D(x=sX,y=sY,z=sZ)
+		self.positions = []
+		
+		self.positions.append(Point3D(x=0, y=0, z=0))
+		self.positions.append(Point3D(x=sX, y=0, z=0))
+		self.positions.append(Point3D(x=0, y=sY, z=0))
+		self.positions.append(Point3D(x=sX, y=sY, z=0))
+		self.positions.append(Point3D(x=0, y=0, z=sZ))
+		self.positions.append(Point3D(x=0, y=sY, z=sZ))
+		self.positions.append(Point3D(x=sX ,y=0, z=sZ))
+		self.positions.append(Point3D(x=sX ,y=sY, z=sZ))
 	
 	def __str__(self):
-		return '[0,0,0] [{0},0,0] [0,{1},0] [{0},{1},0] [0,0,{2}] [0,{1},{2}] [{0},0,{2}] [{0},{1},{2}]'.format(self.x, self.y,self.z)
+		return '[0,0,0] [{0},0,0] [0,{1},0] [{0},{1},0] [0,0,{2}] [0,{1},{2}] [{0},0,{2}] [{0},{1},{2}]'.format(self.corner.x, self.corner.y, self.corner.z)
 
 class Primitive:
 	def __init__(self, data):
@@ -472,7 +481,7 @@ class Primitive:
 			elif node.nodeName == 'Collision':
 				for childnode in node.childNodes:
 					if childnode.nodeName == 'Box':
-						self.CollisionBoxes.append(CollisionBox(sX==float(childnode.getAttribute('sX')), sY==float(childnode.getAttribute('sY')), sZ==float(childnode.getAttribute('sZ')), angle=float(childnode.getAttribute('angle')), ax=float(childnode.getAttribute('ax')), ay=float(childnode.getAttribute('ay')), az=float(childnode.getAttribute('az')), tx=float(childnode.getAttribute('tx')), ty=float(childnode.getAttribute('ty')), tz=float(childnode.getAttribute('tz')))
+						self.CollisionBoxes.append(CollisionBox(sX=float(childnode.getAttribute('sX')), sY=float(childnode.getAttribute('sY')), sZ=float(childnode.getAttribute('sZ')), angle=float(childnode.getAttribute('angle')), ax=float(childnode.getAttribute('ax')), ay=float(childnode.getAttribute('ay')), az=float(childnode.getAttribute('az')), tx=float(childnode.getAttribute('tx')), ty=float(childnode.getAttribute('ty')), tz=float(childnode.getAttribute('tz'))))
 			elif node.nodeName == 'PhysicsAttributes':
 				self.PhysicsAttributes = {"inertiaTensor": node.getAttribute('inertiaTensor'),"centerOfMass": node.getAttribute('centerOfMass'),"mass": node.getAttribute('mass'),"frictionType": node.getAttribute('frictionType')}
 			elif node.nodeName == 'Bounding':
