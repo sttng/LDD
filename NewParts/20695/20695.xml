@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<LEGOPrimitive versionMajor="1" versionMinor="0">
+  <Annotations>
+    <Annotation aliases="20695" />
+    <Annotation designname="MINI HAT NO.7-ASS." />
+    <Annotation maingroupid="244" />
+    <Annotation maingroupname="FIGURE, HEAD CLOTHING" />
+    <Annotation platformid="200" />
+    <Annotation platformname="SYSTEM" />
+    <Annotation version="1" />
+  </Annotations>
+  <Collision>
+    <Box sX="0.103137" sY="0.285489" sZ="0.103137" angle="45" ax="0" ay="1" az="0" tx="0" ty="0.505" tz="0" />
+    <Box sX="0.4918" sY="0.132635" sZ="0.4918" angle="45" ax="0" ay="1" az="0" tx="0" ty="0.1426" tz="0" />
+    <Box sX="0.329507" sY="0.46819" sZ="0.124389" angle="0" ax="1" ay="0" az="0" tx="0" ty="-0.4782" tz="0.661" />
+    <Box sX="0.329507" sY="0.46819" sZ="0.124389" angle="180" ax="0" ay="1" az="0" tx="0" ty="-0.4782" tz="-0.661" />
+    <Box sX="0.329507" sY="0.46819" sZ="0.124389" angle="120" ax="0" ay="1" az="0" tx="0.5724" ty="-0.4782" tz="-0.3305" />
+    <Box sX="0.329507" sY="0.46819" sZ="0.124389" angle="60" ax="0" ay="1" az="0" tx="0.5724" ty="-0.4782" tz="0.3305" />
+    <Box sX="0.329507" sY="0.46819" sZ="0.124389" angle="60" ax="0" ay="1" az="0" tx="-0.5724" ty="-0.4782" tz="-0.3305" />
+    <Box sX="0.329507" sY="0.46819" sZ="0.124389" angle="120" ax="0" ay="1" az="0" tx="-0.5724" ty="-0.4782" tz="0.3305" />
+  </Collision>
+  <Connectivity>
+    <Custom2DField type="22" width="2" height="2" angle="0" ax="1" ay="0" az="0" tx="-0.4" ty="0" tz="-0.4">
+      29:0,29:0,29:0,
+      29:0,5:4:34,29:0,
+      29:0,29:0,29:0
+    </Custom2DField>
+    <Axel type="7" length="0.454441" requireGrabbing="0" startCapped="1" endCapped="0" angle="0" ax="1" ay="0" az="0" tx="0" ty="0.3461" tz="0" />
+    <Custom2DField type="22" width="2" height="2" angle="180" ax="1" ay="0" az="0" tx="-0.4" ty="0.8005" tz="0.4">
+      29:0,29:0,29:0,
+      29:0,9:4:32,29:0,
+      29:0,29:0,29:0
+    </Custom2DField>
+  </Connectivity>
+  <PhysicsAttributes inertiaTensor="0.51182218,0,0,0,0.51054205,0,0,0,0.51488817" centerOfMass="0,-0.079379,0.005609" mass="1" frictionType="0" />
+  <Bounding>
+    <AABB minX="-0.877731" minY="-0.959295" minZ="-0.866867" maxX="0.877731" maxY="0.800538" maxZ="0.878085" />
+  </Bounding>
+  <GeometryBounding>
+    <AABB minX="-0.877731" minY="-0.959295" minZ="-0.866867" maxX="0.877731" maxY="0.800538" maxZ="0.878085" />
+  </GeometryBounding>
+  <Decoration faces="2" subMaterialRedirectLookupTable="0,1" />
+</LEGOPrimitive>
