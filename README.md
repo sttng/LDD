@@ -70,6 +70,7 @@ https://rmanwiki.pixar.com/display/REN22/Checkpointing+and+Recovery
 * https://rmanwiki.pixar.com/display/REN22/Denoising
 * https://graphics.pixar.com/usd/docs/USD-Frequently-Asked-Questions.html#USDFrequentlyAskedQuestions-WhyIsn'tPythonFindingUSDModules?/
 * https://dusankovic.com/store/jVDY/lookdev-kit
+* https://1drv.ms/u/s!AknoMrVAVGZDaj7VSRVdRSiCkWA?e=J1neeP
 
 ## Lego plastic materials
 
