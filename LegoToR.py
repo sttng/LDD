@@ -52,7 +52,7 @@ import posixpath
 
 __version__ = '0.5.3.6'
 compression = zipfile.ZIP_DEFLATED
-PRMANPATH = '/Applications/Pixar/RenderManProServer-23.4/'
+PRMANPATH = '/Applications/Pixar/RenderManProServer-23.5/'
 PRMANDIR = os.path.basename(os.path.normpath(PRMANPATH))
 
 class Materials:
