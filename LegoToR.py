@@ -8,7 +8,7 @@
 # Usage: ./LegoToR.py /Users/username/Documents/LEGO\ Creations/Models/mylxffile.lxf -v -np
 #
 # Updates:
-# 0.5.3.6 Corrected bug in incorrect parsing of primitive xml file, specifically comments. Add support LDDLIFTREE env var to set location of db.lif.
+# 0.5.3.6 Corrected bug in incorrect parsing of primitive xml file, specifically comments. Add support LDDLIFTREE env var to set location of db.lif. Adjusted logoonstuds to be slightly higher
 # 0.5.3.5 Preliminary Linux support
 # 0.5.3 Improved brick-seams generation. Implement nocsv switch (-nc) to ignore using csv colors and use LDD build-in colors instead
 # 0.5.2.1 Corrected Windows path handling bugs
