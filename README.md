@@ -85,3 +85,13 @@ https://rmanwiki.pixar.com/display/REN22/Checkpointing+and+Recovery
 * http://trierlab.com/
 * https://drive.google.com/file/d/1qzIoAAUBAcaHVe8gVwXxLl1s0P76o0_D/view?usp=drivesdk
 
+## Old LDD Versions
+
+* https://web.archive.org/web/20190622154657/https://lc-www-live-s.legocdn.com/downloads/ldd2.0/installer/setupldd-pc-4_3_5.exe
+* https://web.archive.org/web/20190622154454/https://lc-www-live-s.legocdn.com/downloads/ldd2.0/installer/setupldd-pc-4_3_6.exe
+* https://web.archive.org/web/20190622154238/https://lc-www-live-s.legocdn.com/downloads/ldd2.0/installer/setupldd-pc-4_3_7.exe
+* https://web.archive.org/web/20190622153820/https://lc-www-live-s.legocdn.com/downloads/ldd2.0/installer/setupldd-pc-4_3_8.exe
+* https://web.archive.org/web/20190622153721/https://lc-www-live-s.legocdn.com/downloads/ldd2.0/installer/setupldd-pc-4_3_9.exe
+* https://web.archive.org/web/20190622153540/https://lc-www-live-s.legocdn.com/downloads/ldd2.0/installer/setupldd-pc-4_3_10.exe
+* https://web.archive.org/web/20190622153357/https://lc-www-live-s.legocdn.com/downloads/ldd2.0/installer/setupLDD-PC-4_3_11.exe
+
