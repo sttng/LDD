@@ -87,6 +87,7 @@ https://rmanwiki.pixar.com/display/REN22/Checkpointing+and+Recovery
 
 ## Old LDD Versions
 
+* https://web.archive.org/web/20190622155622/https://lc-www-live-s.legocdn.com/downloads/ldd2.0/installer/setupldd-pc-4_2_5.exe
 * https://web.archive.org/web/20190622154657/https://lc-www-live-s.legocdn.com/downloads/ldd2.0/installer/setupldd-pc-4_3_5.exe
 * https://web.archive.org/web/20190622154454/https://lc-www-live-s.legocdn.com/downloads/ldd2.0/installer/setupldd-pc-4_3_6.exe
 * https://web.archive.org/web/20190622154238/https://lc-www-live-s.legocdn.com/downloads/ldd2.0/installer/setupldd-pc-4_3_7.exe
