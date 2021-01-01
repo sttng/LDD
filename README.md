@@ -71,6 +71,8 @@ https://rmanwiki.pixar.com/display/REN22/Checkpointing+and+Recovery
 * https://graphics.pixar.com/usd/docs/USD-Frequently-Asked-Questions.html#USDFrequentlyAskedQuestions-WhyIsn'tPythonFindingUSDModules?/
 * https://dusankovic.com/store/jVDY/lookdev-kit
 * https://1drv.ms/u/s!AknoMrVAVGZDaj7VSRVdRSiCkWA?e=J1neeP
+* https://github.com/rioforce/LEGO-Textures
+* https://github.com/jpgerdeman/minifig-svg-decals
 
 ## Lego plastic materials
 
