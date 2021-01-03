@@ -4,6 +4,11 @@ You have to add DeveloperMode=1 after language=en in Preferences.ini located in 
 language=en
 DeveloperMode=1
 ```
+Other flags:
+
+```
+ShowExtendedBrickToolTip=1
+```
 
 ## Shortcuts
 
