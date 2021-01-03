@@ -69,9 +69,25 @@ Dump the keys of a table:
 ```
 dumptable = function(foo) local stuff="" for key in pairs(foo) do stuff=stuff .. key .. "\n" end error(stuff) end
 ```
-Dump the keys of global variable 'LDD':
+Dump the keys of global variable *LDD*:
 ```
 dumptable(LDD)
+```
+Output should be (on LDD 4.3.11):
+```
+controls
+commands
+UserHasAccessToBrand
+window
+GetDeveloperMode
+application
+brickPalletControl
+sceneManager
+controlManager
+tools
+sceneControl
+brickDatabase
+webCommunicator
 ```
 
 
