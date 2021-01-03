@@ -65,6 +65,16 @@ ShowExtendedBrickToolTip=1
 ## LUA console features
 Details here: https://www.rockraidersunited.com/topic/7912-ldd-lua-console/
 
+Dump the keys of a table: 
+```
+dumptable = function(foo) local stuff="" for key in pairs(foo) do stuff=stuff .. key .. "\n" end error(stuff) end
+```
+Dump the keys of global variable 'LDD':
+```
+dumptable(LDD)
+```
+
+
 ## Others
 
 Regarding the preference.ini file, there is one in the Program Files folder and one in the AppData folder. Some flags works in both but some are specific to one or the other.
