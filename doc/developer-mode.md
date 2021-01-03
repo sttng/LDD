@@ -69,10 +69,12 @@ Dump the keys of a table:
 ```
 dumptable = function(foo) local stuff="" for key in pairs(foo) do stuff=stuff .. key .. "\n" end error(stuff) end
 ```
+
 Dump the keys of global variable *LDD*:
 ```
 dumptable(LDD)
 ```
+
 Output should be (on LDD 4.3.11):
 ```
 controls
@@ -90,6 +92,26 @@ brickDatabase
 webCommunicator
 ```
 
+Dump the keys of an object/userdata:
+```
+dumpmetatable = function(foo) dumptable(getmetatable(foo).__index) end
+```
+
+Dump the keys of object *LDD.sceneControl*
+```
+dumpmetatable(LDD.sceneControl)
+```
+
+Output should be:
+
+```
+ResetCamera
+ZoomInOut
+RotateUpDown
+RotateLeftRight
+Create
+New
+```
 
 ## Others
 
