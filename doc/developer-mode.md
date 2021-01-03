@@ -65,7 +65,7 @@ ShowExtendedBrickToolTip=1
 ## LUA console features
 Details here: https://www.rockraidersunited.com/topic/7912-ldd-lua-console/
 
-Dump the keys of a table: 
+Define function to dump the keys of a table: 
 ```
 dumptable = function(foo) local stuff="" for key in pairs(foo) do stuff=stuff .. key .. "\n" end error(stuff) end
 ```
@@ -92,7 +92,7 @@ brickDatabase
 webCommunicator
 ```
 
-Dump the keys of an object/userdata:
+Define function dump the keys of an object/userdata:
 ```
 dumpmetatable = function(foo) dumptable(getmetatable(foo).__index) end
 ```
@@ -103,7 +103,6 @@ dumpmetatable(LDD.sceneControl)
 ```
 
 Output should be:
-
 ```
 ResetCamera
 ZoomInOut
@@ -111,6 +110,12 @@ RotateUpDown
 RotateLeftRight
 Create
 New
+```
+
+Define function print:
+
+```
+print = function(...) local items = {...} local final = "" for pos, item in pairs (items) do if (pos ~= 1) then final = final .. " " end final = final .. tostring(item) end error(final) end
 ```
 
 ## Others
