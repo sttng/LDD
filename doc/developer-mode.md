@@ -1,4 +1,4 @@
-You have to add DeveloperMode=1 after language=en in Preferences.ini
+You have to add DeveloperMode=1 after language=en in Preferences.ini located in /Users/USER NAME/Library/Application\ Support/LEGO\ Company/LEGO\ Digital\ Designer/ (macOS).
 
 ```
 language=en
