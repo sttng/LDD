@@ -92,6 +92,24 @@ brickDatabase
 webCommunicator
 ```
 
+Dump the keys of global variable *base*:
+```
+dumptable(base)
+```
+
+Output:
+```
+GetLocText
+SetPreference
+MillisecCurrentTime
+GetPreferenceAsBool
+GetApplicationVersion
+GetBuildType
+GetPlatformShortName
+GetPreferenceAsNumber
+GetPreference
+```
+
 Define function dump the keys of an object/userdata:
 ```
 dumpmetatable = function(foo) dumptable(getmetatable(foo).__index) end
@@ -117,10 +135,13 @@ Define function print:
 print = function(...) local items = {...} local final = "" for pos, item in pairs (items) do if (pos ~= 1) then final = final .. " " end final = final .. tostring(item) end error(final) end
 ```
 
-Example:
+Examples:
 ```
 print(LDD.GetDeveloperMode())
+
+print(base.GetBuildType())
 ```
+
 ## Others
 
 Regarding the preference.ini file, there is one in the Program Files folder and one in the AppData folder. Some flags works in both but some are specific to one or the other.
