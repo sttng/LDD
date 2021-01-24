@@ -217,9 +217,9 @@ class Converter:
 	def LoadDBFolder(self, dbfolderlocation):
 		self.database = DBFolderReader(folder=dbfolderlocation)
 
-		if self.database.initok and self.database.fileexist(os.path.join(dbfolderlocation,'Materials.xml')) and self.database.fileexist(MATERIALNAMESPATH + 'EN/localizedStrings.loc'):
+		if self.database.initok and self.database.fileexist(os.path.join(dbfolderlocation,'Materials.xml')) and self.database.fileexist(os.path.join(MATERIALNAMESPATH, 'EN' ,'localizedStrings.loc')):
 			self.allMaterials = Materials(data=self.database.filelist[os.path.join(dbfolderlocation,'Materials.xml')].read());
-			self.allMaterials.setLOC(loc=LOCReader(data=self.database.filelist[MATERIALNAMESPATH + 'EN/localizedStrings.loc'].read()))
+			self.allMaterials.setLOC(loc=LOCReader(data=self.database.filelist[os.path.join(MATERIALNAMESPATH + 'EN' ,'localizedStrings.loc')].read()))
 	
 	def LoadDatabase(self,databaselocation):
 		self.database = LIFReader(file=databaselocation)
@@ -691,10 +691,10 @@ def main():
 		global DECORATIONPATH
 		global MATERIALNAMESPATH
 		setDBFolderVars(dbfolderlocation = FindDatabase()) #Required to set in pylddlib... dirty !
-		PRIMITIVEPATH = FindDatabase() + '/Primitives/'
-		GEOMETRIEPATH = FindDatabase() + '/Primitives/LOD0/'
-		DECORATIONPATH = FindDatabase() + '/Decorations/'
-		MATERIALNAMESPATH = FindDatabase() + '/MaterialNames/'
+		PRIMITIVEPATH = os.path.join(FindDatabase(), 'Primitives', '')
+		GEOMETRIEPATH = os.path.join(FindDatabase(), 'Primitives', 'LOD0', '')
+		DECORATIONPATH = os.path.join(FindDatabase(), 'Decorations', '')
+		MATERIALNAMESPATH = os.path.join(FindDatabase(), 'MaterialNames', '')
 		converter.LoadDBFolder(dbfolderlocation = FindDatabase())
 	
 	elif os.path.exists(FindDatabase()):
