@@ -1,13 +1,15 @@
 #!/usr/bin/env python
 
 #
-# LegoToR Version 0.5.3.6 - Copyright (c) 2020 by m2m
+# LegoToR Version 0.5.3.8 - Copyright (c) 2021 by m2m
 # based on pyldd2obj Version 0.4.8 - Copyright (c) 2019 by jonnysp 
 # LegoToR parses LXF files and command line parameters to create a renderman compliant rib file.
 # 
 # Usage: ./LegoToR.py /Users/username/Documents/LEGO\ Creations/Models/mylxffile.lxf -v -np
 #
 # Updates:
+# 0.5.3.8 Improved compatibility with RenderMan 24 with removing (commenting out) "float g" paramter in materials
+# 0.5.3.7 Improved LDD material handling
 # 0.5.3.6 Corrected bug in incorrect parsing of primitive xml file, specifically comments. Add support LDDLIFTREE env var to set location of db.lif. Adjusted logoonstuds to be slightly higher
 # 0.5.3.5 Preliminary Linux support
 # 0.5.3 Improved brick-seams generation. Implement nocsv switch (-nc) to ignore using csv colors and use LDD build-in colors instead
@@ -50,9 +52,9 @@ import ParseCommandLine as cl
 import random
 import posixpath
 
-__version__ = '0.5.3.6'
+__version__ = '0.5.3.8'
 compression = zipfile.ZIP_DEFLATED
-PRMANPATH = '/Applications/Pixar/RenderManProServer-23.5/'
+PRMANPATH = '/Applications/Pixar/RenderManProServer-24.1/'
 PRMANDIR = os.path.basename(os.path.normpath(PRMANPATH))
 
 class Materials:
@@ -74,7 +76,12 @@ class Materials:
 					self.MaterialsRi[node.getAttribute('MatID')] = MaterialRi(materialId=node.getAttribute('MatID'), r=int(material_id_dict[node.getAttribute('MatID')][0]), g=int(material_id_dict[node.getAttribute('MatID')][1]), b=int(material_id_dict[node.getAttribute('MatID')][2]), materialType=str(material_id_dict[node.getAttribute('MatID')][3]))
 				elif usecsvcolors == False:
 					#print('Using colors from LDD')
-					self.MaterialsRi[node.getAttribute('MatID')] = MaterialRi(materialId=node.getAttribute('MatID'),r=int(node.getAttribute('Red')), g=int(node.getAttribute('Green')), b=int(node.getAttribute('Blue')), materialType=str(material_id_dict[node.getAttribute('MatID')][3]))
+					materialType = "Solid"
+					if str(node.getAttribute('MaterialType')) == "shinySteel":
+						materialType = "Metallic"
+					if int(node.getAttribute('Alpha')) < 255:
+						materialType = "Transparent"
+					self.MaterialsRi[node.getAttribute('MatID')] = MaterialRi(materialId=node.getAttribute('MatID'),r=int(node.getAttribute('Red')), g=int(node.getAttribute('Green')), b=int(node.getAttribute('Blue')), materialType=materialType)
 
 	def setLOC(self, loc):
 		for key in loc.values:
@@ -147,24 +154,24 @@ Pattern "PxrBlend" "Blend{0}"
 		if self.materialType == 'Transparent':
 			bxdf_mat_str = texture_strg + '''Pattern "PxrColorCorrect" "Trans_BaseColor{0}" 
 	"{1}color inputRGB" [{2}]
-	"float inputMask" [1.0] 
-	"int invertMask" [0] 
-	"float mixMask" [1.0] 
-	"vector inputMin" [0. 0. 0.] 
-	"vector inputMax" [1. 1. 1.] 
-	"vector gamma" [2.5 2.5 2.5] 
-	"vector contrast" [0.0 0.0 0.0] 
-	"vector contrastPivot" [0.5 0.5 0.5] 
-	"color rgbGain"  [1.2 1.2 1.2] 
-	"vector hsv"  [0.0 1.0 1.0] 
-	"float exposure"  [0] 
-	"vector outputMin"  [0. 0. 0.] 
-	"vector outputMax"  [1. 1. 1.] 
-	"int clampOutput"  [0] 
-	"vector clampMin"  [0. 0. 0.] 
-	"vector clampMax"  [1. 1. 1.] 
+	"float inputMask" [1.0]
+	"int invertMask" [0]
+	"float mixMask" [1.0]
+	"vector inputMin" [0. 0. 0.]
+	"vector inputMax" [1. 1. 1.]
+	"vector gamma" [2.5 2.5 2.5]
+	"vector contrast" [0.0 0.0 0.0]
+	"vector contrastPivot" [0.5 0.5 0.5]
+	"color rgbGain"  [1.2 1.2 1.2]
+	"vector hsv"  [0.0 1.0 1.0]
+	"float exposure" [0]
+	"vector outputMin" [0. 0. 0.]
+	"vector outputMax" [1. 1. 1.]
+	"int clampOutput" [0]
+	"vector clampMin" [0. 0. 0.]
+	"vector clampMax" [1. 1. 1.]
 
-Pattern "PxrFractal" "Unevenness" 
+Pattern "PxrFractal" "Unevenness"
 	"int surfacePosition" [0]
 	"int layers" [1]
 	"float frequency" [0.8]
@@ -325,7 +332,7 @@ Bxdf "PxrSurface" "Transparent {0}"
 	"int blocksVolumes" [0]
 	"color ssAlbedo" [0 0 0]
 	"color extinction" [0 0 0]
-	"float g" [0]
+	#"float g" [0]
 	"int multiScatter" [0]
 	"int enableOverlappingVolumes" [0]
 	"float glowGain" [0]
@@ -348,9 +355,30 @@ Bxdf "PxrSurface" "Transparent {0}"
 	"{1}color inputRGB" [{2}]
 	"float stops" [1.0]
 	
-Bxdf "PxrSurface" "Metallic {0}" "reference color specularFaceColor" ["Metallic_BaseColor{0}:resultRGB"] "reference color specularEdgeColor" ["Metallic_BaseColor{0}:resultRGB"] "reference color diffuseColor" ["Metallic_BaseColor{0}:resultRGB"]  "float diffuseGain" [0] "float diffuseRoughness" [0] "float diffuseExponent" [1] "normal diffuseBumpNormal" [0 0 0] "int diffuseDoubleSided" [0] "int diffuseBackUseDiffuseColor" [1] "color diffuseBackColor" [0.18 0.18 0.18] 
-			"float diffuseTransmitGain" [0] "color diffuseTransmitColor" [0.18 0.18 0.18] "int specularFresnelMode" [0] "float specularFresnelShape" [5] "color specularIor" [1.5 1.5 1.5] "color specularExtinctionCoeff" [0 0 0] "float specularRoughness" [0.492000014] 
-			"int specularModelType" [1] "float specularAnisotropy" [0] "vector specularAnisotropyDirection" [0 0 0] "normal specularBumpNormal" [0 0 0] "int specularDoubleSided" [0] "int roughSpecularFresnelMode" [0] "color roughSpecularFaceColor" [0 0 0] "color roughSpecularEdgeColor" [0 0 0] 
+Bxdf "PxrSurface" "Metallic {0}"
+	"reference color specularFaceColor" ["Metallic_BaseColor{0}:resultRGB"]
+	"reference color specularEdgeColor" ["Metallic_BaseColor{0}:resultRGB"]
+	"reference color diffuseColor" ["Metallic_BaseColor{0}:resultRGB"]
+	"float diffuseGain" [0]
+	"float diffuseRoughness" [0]
+	"float diffuseExponent" [1]
+	"normal diffuseBumpNormal" [0 0 0]
+	"int diffuseDoubleSided" [0]
+	"int diffuseBackUseDiffuseColor" [1]
+	"color diffuseBackColor" [0.18 0.18 0.18]
+	"float diffuseTransmitGain" [0]
+	"color diffuseTransmitColor" [0.18 0.18 0.18]
+	"int specularFresnelMode" [0]
+	"float specularFresnelShape" [5]
+	"color specularIor" [1.5 1.5 1.5]
+	"color specularExtinctionCoeff" [0 0 0]
+	"float specularRoughness" [0.492000014]
+	"int specularModelType" [1]
+	"float specularAnisotropy" [0]
+	"vector specularAnisotropyDirection" [0 0 0]
+	"normal specularBumpNormal" [0 0 0]
+	"int specularDoubleSided" [0]
+	"int roughSpecularFresnelMode" [0] "color roughSpecularFaceColor" [0 0 0] "color roughSpecularEdgeColor" [0 0 0] 
 			"float roughSpecularFresnelShape" [5] "color roughSpecularIor" [1.5 1.5 1.5] "color roughSpecularExtinctionCoeff" [0 0 0] "float roughSpecularRoughness" [0.600000024] "int roughSpecularModelType" [0] "float roughSpecularAnisotropy" [0] "vector roughSpecularAnisotropyDirection" [0 0 0] 
 			"normal roughSpecularBumpNormal" [0 0 0] "int roughSpecularDoubleSided" [0] "int clearcoatFresnelMode" [0] "color clearcoatFaceColor" [0.0199999996 0.0199999996 0.0199999996] "color clearcoatEdgeColor" [0.25 0.25 0.25] "float clearcoatFresnelShape" [5] "color clearcoatIor" [1.5 1.5 1.5] 
 			"color clearcoatExtinctionCoeff" [0 0 0] "float clearcoatThickness" [0] "color clearcoatAbsorptionTint" [0 0 0] "float clearcoatRoughness" [0.316227764] "int clearcoatModelType" [1] "float clearcoatAnisotropy" [0] "vector clearcoatAnisotropyDirection" [0 0 0] 
@@ -362,9 +390,31 @@ Bxdf "PxrSurface" "Metallic {0}" "reference color specularFaceColor" ["Metallic_
 			"float subsurfaceDiffuseSwitch" [1] "int subsurfaceDoubleSided" [0] "float subsurfaceTransmitGain" [0] "int considerBackside" [1] "int continuationRayMode" [0] "int maxContinuationHits" [2] "float followTopology" [0] "string subsurfaceSubset" [""] "float singlescatterGain" [0] "color singlescatterColor" [0.829999983 0.791000009 0.753000021] "float singlescatterMfp" [10] "color singlescatterMfpColor" [0.851000011 0.556999981 0.395000011] 
 			"float singlescatterDirectionality" [0] "float singlescatterIor" [1.29999995] "float singlescatterBlur" [0] "float singlescatterDirectGain" [0] "color singlescatterDirectGainTint" [1 1 1] "int singlescatterDoubleSided" [0] "int singlescatterConsiderBackside" [1] "int singlescatterContinuationRayMode" [0] "int singlescatterMaxContinuationHits" [2] "int singlescatterDirectGainMode" [0] "string singlescatterSubset" [""] "color irradianceTint" [1 1 1] 
 			"float irradianceRoughness" [0] "float unitLength" [0.100000001] "float refractionGain" [0] "float reflectionGain" [0] "color refractionColor" [1 1 1] "float glassRoughness" [0.100000001] "float glassRefractionRoughness" [-1] "float glassAnisotropy" [0] "vector glassAnisotropyDirection" [0 0 0] 
-			"normal glassBumpNormal" [0 0 0] "float glassIor" [1.5] "int mwWalkable" [0] "float mwIor" [-1] "int thinGlass" [0] "int ignoreFresnel" [0] "int ignoreAccumOpacity" [0] "int blocksVolumes" [0] "color ssAlbedo" [0 0 0] "color extinction" [0 0 0] 
-			"float g" [0] "int multiScatter" [0] "int enableOverlappingVolumes" [0] "float glowGain" [0] "color glowColor" [1 1 1] "int shadowBumpTerminator" [0] "color shadowColor" [0 0 0] "int shadowMode" [0] "float presence" [1] "int presenceCached" [1] "int mwStartable" [0] 
-			"float roughnessMollificationClamp" [32] "color userColor" [0 0 0] "int[1] utilityPattern" [0] #"string __materialid" ["MetallicSG{0}"]'''.format(self.materialId, ref_strg, rgb_or_dec_str, round(random.random(), 3))
+	"normal glassBumpNormal" [0 0 0]
+	"float glassIor" [1.5]
+	"int mwWalkable" [0]
+	"float mwIor" [-1]
+	"int thinGlass" [0]
+	"int ignoreFresnel" [0]
+	"int ignoreAccumOpacity" [0]
+	"int blocksVolumes" [0]
+	"color ssAlbedo" [0 0 0]
+	"color extinction" [0 0 0] 
+	#"float g" [0]
+	"int multiScatter" [0]
+	"int enableOverlappingVolumes" [0]
+	"float glowGain" [0]
+	"color glowColor" [1 1 1]
+	"int shadowBumpTerminator" [0]
+	"color shadowColor" [0 0 0]
+	"int shadowMode" [0]
+	"float presence" [1]
+	"int presenceCached" [1]
+	"int mwStartable" [0] 
+	"float roughnessMollificationClamp" [32]
+	"color userColor" [0 0 0]
+	"int[1] utilityPattern" [0]
+	#"string __materialid" ["MetallicSG{0}"]'''.format(self.materialId, ref_strg, rgb_or_dec_str, round(random.random(), 3))
 
 		elif (self.materialType == 'Chrome'):
 			bxdf_mat_str = texture_strg + '''Pattern "PxrExposure" "Chrome_BaseColor{0}"
@@ -514,7 +564,7 @@ Bxdf "PxrSurface" "Chrome {0}"
 	"int blocksVolumes" [0] 
 	"color ssAlbedo" [0 0 0] 
 	"color extinction" [0 0 0] 
-	"float g" [0] 
+	#"float g" [0] 
 	"int multiScatter" [0] 
 	"int enableOverlappingVolumes" [0] 
 	"float glowGain" [0] 
