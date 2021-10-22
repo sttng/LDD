@@ -1,8 +1,8 @@
 1) Download cmake, extract it, add cmake to path:
 ```
-curl -L -o ~/Downloads/cmake-3.18.3-Darwin-x86_64.tar.gz https://github.com/Kitware/CMake/releases/download/v3.18.3/cmake-3.18.3-Darwin-x86_64.tar.gz
-tar -xzvf  ~/Downloads/cmake-3.18.3-Darwin-x86_64.tar.gz -C ~/Downloads/
-mv ~/Downloads/cmake-3.18.3-Darwin-x86_64/CMake.app /Applications/
+curl -L -o ~/Downloads/cmake-3.21.3-Darwin-x86_64.tar.gz https://github.com/Kitware/CMake/releases/download/v3.21.3/cmake-3.21.3-Darwin-x86_64.tar.gz
+tar -xzvf  ~/Downloads/cmake-3.21.3-Darwin-x86_64.tar.gz -C ~/Downloads/
+mv ~/Downloads/cmake-3.21.3-Darwin-x86_64/CMake.app /Applications/
 
 export PATH="$PATH:/Applications/CMake.app/Contents/bin"
 ```
