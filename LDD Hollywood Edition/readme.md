@@ -1,6 +1,6 @@
 ## Notable Differences ##
 
-- the Windows Title bar revels the LDD Version to be named "LDD Hollywood Edition"
+- the Windows Title bar reveals the LDD Version to be named "LDD Hollywood Edition"
 - the Menu Bar has an extra "Developer" entry - most likely enabled via developer mode
 - there are 4 additional icons in the tool bar.
   - One additional selection arrow
