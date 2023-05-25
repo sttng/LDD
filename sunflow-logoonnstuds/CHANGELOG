@@ -1,8 +1,0 @@
-20160717
-========
-* UPGRADE: added AmbientOcclusion (as "type ambient") to my Mix and LinearGradient shaders
-* UPDATE: added some previously missing brick seams
-* UPDATE: added some previously missing LOS
-* UPDATE: added several options for "mat1" (WHITE) colorization in bublible_materials.sc (just uncomment the one you want to use)
-* FIX: rendering ended up in error if background (sky/horizon) would be visible in render
-* FIX: Rubber material did not look as expected
